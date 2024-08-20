@@ -50,7 +50,16 @@ class _AllMapControlsPageState extends State<AllMapControlsPage> {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: sdk.TrafficWidget(),
+                    child: Column(
+                      children: [
+                        sdk.TrafficWidget(
+                          roundedCorners: sdk.RoundedCorners.top(),
+                        ),
+                        sdk.ParkingWidget(
+                          roundedCorners: sdk.RoundedCorners.bottom(),
+                        ),
+                      ],
+                    ),
                   ),
                   Spacer(),
                   Align(

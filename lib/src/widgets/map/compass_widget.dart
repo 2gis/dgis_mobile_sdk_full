@@ -7,39 +7,25 @@ import '../../generated/dart_bindings.dart' as sdk;
 import '../../generated/stateful_channel.dart';
 import '../../util/plugin_name.dart';
 
-import 'map_widget_color_scheme.dart';
+import 'map_widget_theme.dart';
 import 'themed_map_controlling_widget.dart';
-import 'themed_map_controlling_widget_state.dart';
 
 /// Виджет управления компасом.
-class CompassWidget
-    extends ThemedMapControllingWidget<CompassWidgetColorScheme> {
+class CompassWidget extends ThemedMapControllingWidget<CompassWidgetTheme> {
   const CompassWidget({
     super.key,
-    CompassWidgetColorScheme? light,
-    CompassWidgetColorScheme? dark,
+    CompassWidgetTheme? light,
+    CompassWidgetTheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
+          light: light ?? CompassWidgetTheme.defaultLight,
+          dark: dark ?? CompassWidgetTheme.defaultDark,
         );
 
-  /// Цветовая схема виджета для светлого режима по умолчанию.
-  static const defaultLightColorScheme = CompassWidgetColorScheme(
-    surfaceColor: Color(0xffffffff),
-  );
-
-  /// Цветовая схема виджета для темного режима по умолчанию.
-  static const defaultDarkColorScheme = CompassWidgetColorScheme(
-    surfaceColor: Color(0xff121212),
-  );
-
   @override
-  ThemedMapControllingWidgetState<CompassWidget, CompassWidgetColorScheme>
-      createState() => _CompassWidgetState();
+  ThemedMapControllingWidgetState<CompassWidget, CompassWidgetTheme> createState() => _CompassWidgetState();
 }
 
-class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
-    CompassWidgetColorScheme> {
+class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget, CompassWidgetTheme> {
   late sdk.CompassControlModel model;
 
   StatefulChannel<sdk.Bearing>? bearingSubscription;
@@ -68,10 +54,10 @@ class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
           child: GestureDetector(
             onTap: () => model.onClicked(),
             child: Container(
-              width: 36,
-              height: 36,
+              width: theme.size,
+              height: theme.size,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceColor,
+                color: theme.surfaceColor,
                 shape: BoxShape.circle,
               ),
               child: Transform.rotate(
@@ -79,8 +65,8 @@ class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
                 child: SvgPicture.asset(
                   'packages/$pluginName/assets/icons/dgis_compass.svg',
                   fit: BoxFit.none,
-                  width: 24,
-                  height: 24,
+                  width: theme.iconSize,
+                  height: theme.iconSize,
                 ),
               ),
             ),
@@ -91,15 +77,41 @@ class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
   }
 }
 
-class CompassWidgetColorScheme extends MapWidgetColorScheme {
+class CompassWidgetTheme extends MapWidgetTheme {
+  final double size;
+  final double iconSize;
   final Color surfaceColor;
 
-  const CompassWidgetColorScheme({required this.surfaceColor});
+  const CompassWidgetTheme({
+    required this.surfaceColor,
+    required this.size,
+    required this.iconSize,
+  });
+
+  /// Цветовая схема виджета для светлого режима по умолчанию.
+  static const defaultLight = CompassWidgetTheme(
+    surfaceColor: Color(0xffffffff),
+    size: 40,
+    iconSize: 24,
+  );
+
+  /// Цветовая схема виджета для темного режима по умолчанию.
+  static const defaultDark = CompassWidgetTheme(
+    surfaceColor: Color(0xff121212),
+    size: 40,
+    iconSize: 24,
+  );
 
   @override
-  CompassWidgetColorScheme copyWith({Color? surfaceColor}) {
-    return CompassWidgetColorScheme(
+  CompassWidgetTheme copyWith({
+    Color? surfaceColor,
+    double? size,
+    double? iconSize,
+  }) {
+    return CompassWidgetTheme(
       surfaceColor: surfaceColor ?? this.surfaceColor,
+      size: size ?? this.size,
+      iconSize: iconSize ?? this.iconSize,
     );
   }
 }

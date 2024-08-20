@@ -22,7 +22,7 @@ extension SetAttributesNavigationParking on sdk.Map {
     const attributeName = 'navigatorOn';
     final attributeValue = attributes.getAttributeValue(attributeName);
     final oldValue = attributeValue.asBoolean;
-    if (oldValue != null && oldValue != isOn) {
+    if (oldValue != isOn) {
       attributes.setAttributeValue(
         attributeName,
         sdk.AttributeValue.boolean(isOn),
@@ -31,14 +31,13 @@ extension SetAttributesNavigationParking on sdk.Map {
   }
 
   bool isParkingOn() {
-    return attributes.getAttributeValue(parkingOnAttributeName).asBoolean ??
-        false;
+    return attributes.getAttributeValue(parkingOnAttributeName).asBoolean ?? false;
   }
 
   void setParkingOn({required bool isOn}) {
     final attributeValue = attributes.getAttributeValue(parkingOnAttributeName);
     final oldValue = attributeValue.asBoolean;
-    if (oldValue != null && oldValue != isOn) {
+    if (oldValue != isOn) {
       attributes.setAttributeValue(
         parkingOnAttributeName,
         sdk.AttributeValue.boolean(isOn),

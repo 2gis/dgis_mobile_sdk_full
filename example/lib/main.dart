@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'pages/add_objects.dart';
 import 'pages/all_map_controls.dart';
 import 'pages/benchmark.dart';
@@ -12,12 +14,12 @@ import 'pages/map_gestures.dart';
 import 'pages/map_objects_identification.dart';
 import 'pages/map_snapshot.dart';
 import 'pages/route_editor.dart';
+import 'pages/routes.dart';
 import 'pages/search_page.dart';
 import 'pages/stateless_screen_with_map.dart';
 import 'pages/traffic_widget.dart';
-import 'package:flutter/material.dart';
-
 import 'pages/common.dart';
+import 'pages/navigator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -82,11 +84,26 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => RouteEditorPage(title: 'Route editor')),
+              MaterialPageRoute(builder: (context) => RouteEditorPage(title: 'Route editor')),
             );
           },
-        )
+        ),
+        ListTile(
+          title: buildPageTitle('Routes list'),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RoutingPage(title: 'Routes list')),
+          ),
+        ),
+        ListTile(
+          title: buildPageTitle('Navigator Example'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NavigatorPage(title: 'Navigator Example')),
+            );
+          },
+        ),
       ],
     );
   }
@@ -99,8 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => AddObjectsPage(title: 'Add Objects')),
+              MaterialPageRoute(builder: (context) => AddObjectsPage(title: 'Add Objects')),
             );
           },
         ),
@@ -109,9 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AllMapControlsPage(title: 'All map widgets')),
+              MaterialPageRoute(builder: (context) => AllMapControlsPage(title: 'All map widgets')),
             );
           },
         ),
@@ -120,8 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => BenchmarkPage(title: 'Benchmark')),
+              MaterialPageRoute(builder: (context) => BenchmarkPage(title: 'Benchmark')),
             );
           },
         ),
@@ -130,9 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      CalcPositionPage(title: 'Calc position')),
+              MaterialPageRoute(builder: (context) => CalcPositionPage(title: 'Calc position')),
             );
           },
         ),
@@ -141,8 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => CameraMovesPage(title: 'Camera moves')),
+              MaterialPageRoute(builder: (context) => CameraMovesPage(title: 'Camera moves')),
             );
           },
         ),
@@ -151,8 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => ClusteringPage(title: 'Clustering')),
+              MaterialPageRoute(builder: (context) => ClusteringPage(title: 'Clustering')),
             );
           },
         ),
@@ -161,8 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => CopyrightPage(title: 'Copyright')),
+              MaterialPageRoute(builder: (context) => CopyrightPage(title: 'Copyright')),
             );
           },
         ),
@@ -171,9 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      DownloadTerritoriesPage(title: 'Download territories')),
+              MaterialPageRoute(builder: (context) => DownloadTerritoriesPage(title: 'Download territories')),
             );
           },
         ),
@@ -191,9 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      IndoorWidgetPage(title: 'Indoor Widget')),
+              MaterialPageRoute(builder: (context) => IndoorWidgetPage(title: 'Indoor Widget')),
             );
           },
         ),
@@ -202,8 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => MapGesturesPage(title: 'Map gestures')),
+              MaterialPageRoute(builder: (context) => MapGesturesPage(title: 'Map gestures')),
             );
           },
         ),
@@ -213,8 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MapObjectsIdentificationPage(
-                      title: 'Map objects identification')),
+                  builder: (context) => MapObjectsIdentificationPage(title: 'Map objects identification')),
             );
           },
         ),
@@ -223,8 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => MapSnapshotPage(title: 'Map snapshot')),
+              MaterialPageRoute(builder: (context) => MapSnapshotPage(title: 'Map snapshot')),
             );
           },
         ),
@@ -233,9 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => SimpleMapScreen(
-                      title: 'Simple map screen (stateless widget)')),
+              MaterialPageRoute(builder: (context) => SimpleMapScreen(title: 'Simple map screen (stateless widget)')),
             );
           },
         ),
@@ -244,9 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      TrafficWidgetPage(title: 'Traffic widget')),
+              MaterialPageRoute(builder: (context) => TrafficWidgetPage(title: 'Traffic widget')),
             );
           },
         ),
@@ -263,7 +260,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SearchPage(title: 'Search')),
+                builder: (context) => SearchPage(title: 'Search'),
+              ),
             );
           },
         ),

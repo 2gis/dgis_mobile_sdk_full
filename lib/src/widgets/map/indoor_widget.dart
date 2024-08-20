@@ -6,27 +6,25 @@ import 'package:flutter/material.dart';
 import '../../generated/dart_bindings.dart' as sdk;
 import '../shadow_gradient.dart';
 
-import 'map_widget_color_scheme.dart';
+import 'map_widget_theme.dart';
 import 'themed_map_controlling_widget.dart';
-import 'themed_map_controlling_widget_state.dart';
 
 // Виджет для переключения этажей в здании.
 // Представляет колонку с названиями этажей; активный этаж подсвечивается.
 // При нажатии на название этажа переключается этажный план.
 // Одновременно отображается не более 5 этажей; непоместившиеся можно прокручивать.
-class IndoorWidget extends ThemedMapControllingWidget<IndoorWidgetColorScheme> {
+class IndoorWidget extends ThemedMapControllingWidget<IndoorWidgetTheme> {
   const IndoorWidget({
-    IndoorWidgetColorScheme? light,
-    IndoorWidgetColorScheme? dark,
+    IndoorWidgetTheme? light,
+    IndoorWidgetTheme? dark,
     super.key,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
+          light: light ?? defaultLightTheme,
+          dark: dark ?? defaultDarkTheme,
         );
 
   /// Цветовая схема UI–элемента для светлого режима по умолчанию.
-  static const IndoorWidgetColorScheme defaultLightColorScheme =
-      IndoorWidgetColorScheme(
+  static const IndoorWidgetTheme defaultLightTheme = IndoorWidgetTheme(
     surfaceColor: Color(0xffffffff),
     selectedFloorColor: Color(0xFFCDE5F9),
     floorTextColor: Color(0xFF000000),
@@ -34,8 +32,7 @@ class IndoorWidget extends ThemedMapControllingWidget<IndoorWidgetColorScheme> {
   );
 
   /// Цветовая схема UI–элемента для темного режима по умолчанию.
-  static const IndoorWidgetColorScheme defaultDarkColorScheme =
-      IndoorWidgetColorScheme(
+  static const IndoorWidgetTheme defaultDarkTheme = IndoorWidgetTheme(
     surfaceColor: Color(0xff121212),
     selectedFloorColor: Color(0xFF16232D),
     floorTextColor: Color(0xffffffff),
@@ -43,12 +40,10 @@ class IndoorWidget extends ThemedMapControllingWidget<IndoorWidgetColorScheme> {
   );
 
   @override
-  ThemedMapControllingWidgetState<IndoorWidget, IndoorWidgetColorScheme>
-      createState() => _IndoorWidgetState();
+  ThemedMapControllingWidgetState<IndoorWidget, IndoorWidgetTheme> createState() => _IndoorWidgetState();
 }
 
-class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
-    IndoorWidgetColorScheme> {
+class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget, IndoorWidgetTheme> {
   final scrollController = ScrollController();
 
   static const singleElementHeight = 40.0;
@@ -118,7 +113,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
               return Container(
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceColor,
+                  color: theme.surfaceColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 height: quantity * singleElementHeight,
@@ -132,8 +127,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                     return ValueListenableBuilder(
                       valueListenable: activeLevel,
                       builder: (context, level, _) {
-                        final isSelected =
-                            level != null && levels[index] == levels[level];
+                        final isSelected = level != null && levels[index] == levels[level];
                         return Stack(
                           children: [
                             Material(
@@ -147,14 +141,13 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                                   );
                                 },
                                 contentPadding: EdgeInsets.zero,
-                                textColor: colorScheme.floorTextColor,
-                                splashColor: colorScheme.selectedFloorColor,
-                                selectedColor: colorScheme.floorTextColor,
+                                textColor: theme.floorTextColor,
+                                splashColor: theme.selectedFloorColor,
+                                selectedColor: theme.floorTextColor,
                                 selected: isSelected,
                                 minTileHeight: singleElementHeight,
                                 tileColor: Colors.transparent,
-                                selectedTileColor:
-                                    colorScheme.selectedFloorColor,
+                                selectedTileColor: theme.selectedFloorColor,
                                 title: Align(
                                   child: Text(
                                     maxLines: 1,
@@ -178,7 +171,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                                     height: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: colorScheme.floorMarkColor,
+                                      color: theme.floorMarkColor,
                                     ),
                                   ),
                                 ),
@@ -213,7 +206,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       height: singleElementHeight,
-                      color: colorScheme.surfaceColor,
+                      color: theme.surfaceColor,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(6),
                         topRight: Radius.circular(6),
@@ -243,7 +236,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       height: singleElementHeight,
-                      color: colorScheme.surfaceColor,
+                      color: theme.surfaceColor,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(6),
                         bottomRight: Radius.circular(6),
@@ -278,8 +271,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
     if (targetY - scrollController.offset < elementHeight) {
       scrollController.jumpTo(max(minScrollY, targetY - elementHeight));
     }
-    if (targetY - scrollController.offset >
-        (countBeforeScroll - 3) * elementHeight) {
+    if (targetY - scrollController.offset > (countBeforeScroll - 3) * elementHeight) {
       scrollController.jumpTo(
         min(maxScrollY, targetY - (countBeforeScroll - 3) * elementHeight),
       );
@@ -287,8 +279,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
   }
 
   void updateShadows() {
-    if (scrollController.hasClients &&
-        scrollController.position.maxScrollExtent > 0) {
+    if (scrollController.hasClients && scrollController.position.maxScrollExtent > 0) {
       final shouldShowAnyShadow = levelNames.value.length > 5;
       final maxScroll = scrollController.position.maxScrollExtent;
       final currentScroll = scrollController.offset;
@@ -299,13 +290,13 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
   }
 }
 
-class IndoorWidgetColorScheme extends MapWidgetColorScheme {
+class IndoorWidgetTheme extends MapWidgetTheme {
   final Color surfaceColor;
   final Color selectedFloorColor;
   final Color floorTextColor;
   final Color floorMarkColor;
 
-  const IndoorWidgetColorScheme({
+  const IndoorWidgetTheme({
     required this.surfaceColor,
     required this.selectedFloorColor,
     required this.floorTextColor,
@@ -313,13 +304,13 @@ class IndoorWidgetColorScheme extends MapWidgetColorScheme {
   });
 
   @override
-  IndoorWidgetColorScheme copyWith({
+  IndoorWidgetTheme copyWith({
     Color? surfaceColor,
     Color? selectedFloorColor,
     Color? floorTextColor,
     Color? floorMarkColor,
   }) {
-    return IndoorWidgetColorScheme(
+    return IndoorWidgetTheme(
       surfaceColor: surfaceColor ?? this.surfaceColor,
       selectedFloorColor: selectedFloorColor ?? this.selectedFloorColor,
       floorTextColor: floorTextColor ?? this.floorTextColor,

@@ -15,7 +15,7 @@ class MapTheme {
   /// Признак темы, определяющий режим (темный/светлый), для которого будет
   /// использоваться тема.
   /// При использовании ThemedMapControl, эти UI-элементы будут ориентироваться
-  /// на данный признак при выборе MapControlColorScheme
+  /// на данный признак при выборе MapControlTheme
   final MapThemeColorMode colorMode;
 
   const MapTheme({
