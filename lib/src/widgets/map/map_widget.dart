@@ -698,8 +698,10 @@ extension _MapBuilderApplyMapOptions on sdk.MapBuilder {
     } else {
       builder.addSource(sdk.DgisSource.createDgisSource(sdkContext));
     }
-
-    if (options.style != null) {
+    
+    if (options.stylePath != null) {
+      builder.setStyleFromFile(sdkContext, sdk.File(options.stylePath!));
+    } else if (options.style != null) {
       builder.setStyle(options.style!);
     } else if (options.styleFuture != null) {
       final style = await options.styleFuture!.value;

@@ -48,6 +48,8 @@ class MapOptions {
   /// Цвет фона до подгрузки стилей.
   final Color? backgroundColor;
 
+  final String? stylePath;
+
   MapOptions({
     this.position = const sdk.CameraPosition(
       point: sdk.GeoPoint(
@@ -70,6 +72,7 @@ class MapOptions {
     this.maxFps,
     this.powerSavingMaxFps,
     this.backgroundColor,
+    this.stylePath,
   });
 
   MapOptions copyWith({
@@ -85,6 +88,7 @@ class MapOptions {
     Optional<sdk.Fps?>? maxFps,
     Optional<sdk.Fps?>? powerSavingMaxFps,
     Optional<Color?>? backgroundColor,
+    Optional<String?>? stylePath,
   }) {
     return MapOptions(
       position: position ?? this.position,
@@ -103,6 +107,7 @@ class MapOptions {
       backgroundColor: backgroundColor != null
           ? backgroundColor.value
           : this.backgroundColor,
+      stylePath: stylePath != null ? stylePath.value : this.stylePath,
     );
   }
 }
