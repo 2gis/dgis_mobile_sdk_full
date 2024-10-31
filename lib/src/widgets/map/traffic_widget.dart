@@ -1,62 +1,39 @@
 import 'dart:async';
 
+import 'package:dgis_mobile_sdk_full/src/util/color_ramp.dart';
+import 'package:dgis_mobile_sdk_full/src/util/rounded_corners.dart';
+import 'package:dgis_mobile_sdk_full/src/widgets/map/base_map_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
 import '../../util/plugin_name.dart';
 import '../moving_segment_progress_indicator.dart';
-import '../widget_shadows.dart';
 
-import 'map_widget_color_scheme.dart';
+import 'map_widget_theme.dart';
 import 'themed_map_controlling_widget.dart';
-import 'themed_map_controlling_widget_state.dart';
 
 /// Виджет, отображающий пробочный балл в регионе и переключающий отображение
 /// пробок на карте.
 /// Может использоваться только как child в MapWidget на любом уровне вложенности.
-class TrafficWidget
-    extends ThemedMapControllingWidget<TrafficWidgetColorScheme> {
+class TrafficWidget extends ThemedMapControllingWidget<TrafficWidgetTheme> {
   const TrafficWidget({
     super.key,
-    TrafficWidgetColorScheme? light,
-    TrafficWidgetColorScheme? dark,
+    this.roundedCorners = const RoundedCorners.all(),
+    TrafficWidgetTheme? light,
+    TrafficWidgetTheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
+          light: light ?? TrafficWidgetTheme.defaultLight,
+          dark: dark ?? TrafficWidgetTheme.defaultDark,
         );
 
+  final RoundedCorners roundedCorners;
+
   @override
-  ThemedMapControllingWidgetState<TrafficWidget, TrafficWidgetColorScheme>
-      createState() => _TrafficWidgetState();
-
-  /// Цветовая схема UI–элемента для светлого режима по умолчанию.
-  static const TrafficWidgetColorScheme defaultLightColorScheme =
-      TrafficWidgetColorScheme(
-    heavyTrafficColor: Color(0xffd15536),
-    mediumTrafficColor: Color(0xffffba00),
-    lightTrafficColor: Color(0xff58a600),
-    unactiveColor: Color(0xffffffff),
-    surfaceColor: Color(0xffffffff),
-    iconColor: Color(0xff4d4d4d),
-    scoreTextColor: Color(0xff4d4d4d),
-  );
-
-  /// Цветовая схема UI–элемента для темного режима по умолчанию.
-  static const TrafficWidgetColorScheme defaultDarkColorScheme =
-      TrafficWidgetColorScheme(
-    heavyTrafficColor: Color(0xffd15536),
-    mediumTrafficColor: Color(0xffffba00),
-    lightTrafficColor: Color(0xff58a600),
-    unactiveColor: Color(0xff121212),
-    surfaceColor: Color(0xff121212),
-    iconColor: Color(0xffcccccc),
-    scoreTextColor: Color(0xffcccccc),
-  );
+  ThemedMapControllingWidgetState<TrafficWidget, TrafficWidgetTheme> createState() => _TrafficWidgetState();
 }
 
-class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
-    TrafficWidgetColorScheme> {
+class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget, TrafficWidgetTheme> {
   final ValueNotifier<sdk.TrafficControlState?> state = ValueNotifier(null);
 
   StreamSubscription<sdk.TrafficControlState>? stateSubscription;
@@ -85,73 +62,63 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
           maintainSize: true,
           maintainState: true,
           maintainAnimation: true,
-          visible: currentState != null &&
-              currentState.status != sdk.TrafficControlStatus.hidden,
-          child: GestureDetector(
+          child: BaseMapControl(
+            theme: theme.controlTheme,
+            isEnabled: currentState != null &&
+                currentState.status != sdk.TrafficControlStatus.disabled &&
+                currentState.status != sdk.TrafficControlStatus.hidden,
+            roundedCorners: widget.roundedCorners,
             onTap: () => model.onClicked(),
-            child: Stack(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      WidgetShadows.mapWidgetBoxShadow,
-                    ],
-                    color:
-                        currentState?.status == sdk.TrafficControlStatus.enabled
-                            ? _getTrafficColor(currentState?.score)
-                            : colorScheme.surfaceColor, // Inner color
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: currentState?.status ==
-                              sdk.TrafficControlStatus.enabled
-                          ? colorScheme.surfaceColor
-                          : _getTrafficColor(
-                              currentState?.score,
-                            ), // Border color
-                      width: 2, // Border width
-                    ),
-                  ),
-                  child: currentState?.score == null
-                      ? Center(
-                          child: SvgPicture.asset(
-                            'packages/$pluginName/assets/icons/dgis_traffic_icon.svg',
-                            width: 24,
-                            height: 24,
-                            fit: BoxFit.none,
-                            colorFilter: ColorFilter.mode(
-                              colorScheme.iconColor,
-                              BlendMode.srcIn,
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            currentState!.score.toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              leadingDistribution: TextLeadingDistribution.even,
-                              height: 1,
-                              color: colorScheme.scoreTextColor,
-                              fontSize: 19,
-                            ),
-                          ),
-                        ),
-                ),
-                Visibility(
-                  visible:
-                      currentState?.status == sdk.TrafficControlStatus.loading,
-                  child: MovingSegmentProgressIndicator(
-                    width: 44,
-                    height: 44,
-                    thickness: 2,
-                    color: colorScheme.lightTrafficColor,
+            child: Center(
+              child: switch ((currentState?.score, currentState?.status)) {
+                (_, sdk.TrafficControlStatus.loading) => MovingSegmentProgressIndicator(
+                    width: theme.controlTheme.iconSize,
+                    height: theme.controlTheme.iconSize,
+                    thickness: theme.borderWidth,
+                    color: theme.loaderColor,
                     segmentSize: 0.15,
                     duration: const Duration(milliseconds: 2500),
                   ),
-                ),
-              ],
+                (null, _) => Center(
+                    child: SvgPicture.asset(
+                      'packages/$pluginName/assets/icons/dgis_traffic.svg',
+                      width: 24,
+                      height: 24,
+                      fit: BoxFit.none,
+                      colorFilter: ColorFilter.mode(
+                        switch (currentState?.status) {
+                          sdk.TrafficControlStatus.enabled => theme.controlTheme.iconActiveColor,
+                          sdk.TrafficControlStatus.disabled => theme.controlTheme.iconDisabledColor,
+                          _ => theme.controlTheme.iconInactiveColor,
+                        },
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                (_, _) => Container(
+                    width: theme.controlTheme.iconSize,
+                    height: theme.controlTheme.iconSize,
+                    decoration: BoxDecoration(
+                      color: currentState?.status == sdk.TrafficControlStatus.enabled
+                          ? _getTrafficColor(currentState?.score)
+                          : theme.controlTheme.surfaceColor, // Inner color
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: _getTrafficColor(
+                          currentState?.score,
+                        ),
+                        width: 2, // Border width
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        currentState!.score.toString(),
+                        textAlign: TextAlign.center,
+                        style: theme.scoreTextStyle,
+                      ),
+                    ),
+                  ),
+              },
             ),
           ),
         );
@@ -161,54 +128,99 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
 
   Color _getTrafficColor(int? score) {
     if (score == null) {
-      return colorScheme.unactiveColor;
-    } else if (score <= 3) {
-      return colorScheme.lightTrafficColor;
-    } else if (score <= 6) {
-      return colorScheme.mediumTrafficColor;
+      return theme.controlTheme.iconInactiveColor;
     } else {
-      return colorScheme.heavyTrafficColor;
+      return theme.trafficColor.getColor(score);
     }
   }
 }
 
-class TrafficWidgetColorScheme extends MapWidgetColorScheme {
-  final Color heavyTrafficColor;
-  final Color mediumTrafficColor;
-  final Color lightTrafficColor;
-  final Color unactiveColor;
-  final Color surfaceColor;
-  final Color iconColor;
-  final Color scoreTextColor;
+class TrafficWidgetTheme extends MapWidgetTheme {
+  final ColorRamp<int> trafficColor;
+  final double borderWidth;
+  final Color loaderColor;
+  final TextStyle scoreTextStyle;
+  final MapControlTheme controlTheme;
 
-  const TrafficWidgetColorScheme({
-    required this.heavyTrafficColor,
-    required this.mediumTrafficColor,
-    required this.lightTrafficColor,
-    required this.unactiveColor,
-    required this.surfaceColor,
-    required this.iconColor,
-    required this.scoreTextColor,
+  const TrafficWidgetTheme({
+    required this.trafficColor,
+    required this.borderWidth,
+    required this.loaderColor,
+    required this.scoreTextStyle,
+    required this.controlTheme,
   });
 
+  static const TrafficWidgetTheme defaultLight = TrafficWidgetTheme(
+    trafficColor: ColorRamp(
+      colors: [
+        ColorMark(
+          color: Color(0xff58a600),
+          maxValue: 3,
+        ),
+        ColorMark(
+          color: Color(0xffffba00),
+          maxValue: 6,
+        ),
+        ColorMark(
+          color: Color(0xffd15536),
+          maxValue: 999,
+        ),
+      ],
+    ),
+    borderWidth: 2,
+    loaderColor: Color(0xff58a600),
+    scoreTextStyle: TextStyle(
+      leadingDistribution: TextLeadingDistribution.even,
+      height: 1,
+      color: Color(0xff4d4d4d),
+      fontSize: 19,
+    ),
+    controlTheme: MapControlTheme.defaultLight,
+  );
+
+  /// Цветовая схема UI–элемента для темного режима по умолчанию.
+  static const TrafficWidgetTheme defaultDark = TrafficWidgetTheme(
+    trafficColor: ColorRamp(
+      colors: [
+        ColorMark(
+          color: Color(0xff58a600),
+          maxValue: 3,
+        ),
+        ColorMark(
+          color: Color(0xffffba00),
+          maxValue: 6,
+        ),
+        ColorMark(
+          color: Color(0xffd15536),
+          maxValue: 999,
+        ),
+      ],
+    ),
+    borderWidth: 2,
+    loaderColor: Color(0xff58a600),
+    scoreTextStyle: TextStyle(
+      leadingDistribution: TextLeadingDistribution.even,
+      height: 1,
+      color: Colors.white,
+      fontSize: 19,
+    ),
+    controlTheme: MapControlTheme.defaultDark,
+  );
+
   @override
-  TrafficWidgetColorScheme copyWith({
-    Color? heavyTrafficColor,
-    Color? mediumTrafficColor,
-    Color? lightTrafficColor,
-    Color? unactiveColor,
-    Color? surfaceColor,
-    Color? iconColor,
-    Color? scoreTextColor,
+  TrafficWidgetTheme copyWith({
+    ColorRamp<int>? trafficColor,
+    double? borderWidth,
+    Color? loaderColor,
+    TextStyle? scoreTextStyle,
+    MapControlTheme? controlTheme,
   }) {
-    return TrafficWidgetColorScheme(
-      heavyTrafficColor: heavyTrafficColor ?? this.heavyTrafficColor,
-      mediumTrafficColor: mediumTrafficColor ?? this.mediumTrafficColor,
-      lightTrafficColor: lightTrafficColor ?? this.lightTrafficColor,
-      unactiveColor: unactiveColor ?? this.unactiveColor,
-      surfaceColor: surfaceColor ?? this.surfaceColor,
-      iconColor: iconColor ?? this.iconColor,
-      scoreTextColor: scoreTextColor ?? this.scoreTextColor,
+    return TrafficWidgetTheme(
+      trafficColor: trafficColor ?? this.trafficColor,
+      borderWidth: borderWidth ?? this.borderWidth,
+      loaderColor: loaderColor ?? this.loaderColor,
+      scoreTextStyle: scoreTextStyle ?? this.scoreTextStyle,
+      controlTheme: controlTheme ?? this.controlTheme,
     );
   }
 }
