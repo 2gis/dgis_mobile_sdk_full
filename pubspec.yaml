@@ -37,3 +37,6 @@ flutter:
         pluginClass: AndroidJniPlugin
       ios:
         pluginClass: MobileSDKPlugin
+      aurora:
+        ffiPlugin: true
+        pluginClass: DgisMobileSdkPluginFull
