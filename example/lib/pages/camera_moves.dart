@@ -140,7 +140,6 @@ class _CameraMovesState extends State<CameraMovesPage> {
         map.addSource(locationSource);
       })
       ..copyrightAlignment = Alignment.bottomLeft;
-    await checkLocationPermissions(locationService!);
   }
 
   void _show() {

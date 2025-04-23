@@ -74,24 +74,21 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
   void initState() {
     super.initState();
     loader = sdk.ImageLoader(sdkContext);
-    final locationService = sdk.LocationService(sdkContext);
-    checkLocationPermissions(locationService).then((_) {
-      mapWidgetController.getMapAsync((map) {
-        final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
-        map.addSource(locationSource);
-        routeEditor = sdk.RouteEditor(sdkContext);
-        routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor);
-        map.addSource(routeEditorSource);
-        sdkMap = map;
-        map.camera.position = const sdk.CameraPosition(
-          point: sdk.GeoPoint(
-            latitude: sdk.Latitude(55.35),
-            longitude: sdk.Longitude(37.42),
-          ),
-          zoom: sdk.Zoom(10),
-        );
-        mapObjectManager = sdk.MapObjectManager(map);
-      });
+    mapWidgetController.getMapAsync((map) {
+      final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
+      map.addSource(locationSource);
+      routeEditor = sdk.RouteEditor(sdkContext);
+      routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor);
+      map.addSource(routeEditorSource);
+      sdkMap = map;
+      map.camera.position = const sdk.CameraPosition(
+        point: sdk.GeoPoint(
+          latitude: sdk.Latitude(55.35),
+          longitude: sdk.Longitude(37.42),
+        ),
+        zoom: sdk.Zoom(10),
+      );
+      mapObjectManager = sdk.MapObjectManager(map);
     });
     _updateRouteSearchOptions();
   }
