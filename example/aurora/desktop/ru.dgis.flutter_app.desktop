@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=flutter_app
+Comment=A new Flutter project.
+Icon=ru.dgis.flutter_app
+Exec=/usr/bin/ru.dgis.flutter_app
+X-Nemo-Application-Type=silica-qt5
+
+[X-Application]
+Permissions=Audio;Sensors;SecureStorage;DeviceInfo;Internet;Location;UserDirs
+OrganizationName=ru.dgis
+ApplicationName=flutter_app
