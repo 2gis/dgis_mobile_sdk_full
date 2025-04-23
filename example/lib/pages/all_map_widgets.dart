@@ -19,12 +19,9 @@ class _AllMapWidgetsPageState extends State<AllMapWidgetsPage> {
   @override
   void initState() {
     super.initState();
-    final locationService = sdk.LocationService(sdkContext);
-    checkLocationPermissions(locationService).then((_) {
-      mapWidgetController.getMapAsync((map) {
-        final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
-        map.addSource(locationSource);
-      });
+    mapWidgetController.getMapAsync((map) {
+      final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
+      map.addSource(locationSource);
     });
   }
 

@@ -42,7 +42,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> initialize() async {
-    await checkLocationPermissions(locationService);
   }
 
   void _showObjectCard(sdk.DirectoryObject objectInfo) {
