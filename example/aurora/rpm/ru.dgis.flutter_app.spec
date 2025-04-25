@@ -10,6 +10,7 @@ Source0: %{name}-%{version}.tar.zst
 
 BuildRequires: cmake
 BuildRequires: ninja
+BuildRequires: pkgconfig(runtime-manager-qt5)
 
 %description
 %{summary}.
