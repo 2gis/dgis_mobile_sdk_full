@@ -21,6 +21,7 @@ class DgisSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
       child: ColoredBox(
         color: searchBarBackgroundColor,
         child: Padding(
