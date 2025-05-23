@@ -374,9 +374,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                 ),
                 child: SvgPicture.asset(
                   'packages/$pluginName/assets/icons/navigation/dgis_menu.svg',
-                  fit: BoxFit.none,
-                  width: 24,
-                  height: 24,
+                  fit: BoxFit.scaleDown,
+                  width: colorScheme.iconSize,
+                  height: colorScheme.iconSize,
                   colorFilter: ColorFilter.mode(
                     colorScheme.iconColor,
                     BlendMode.srcIn,
@@ -459,9 +459,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                           padding: const EdgeInsets.all(6),
                           child: SvgPicture.asset(
                             'packages/$pluginName/assets/icons/navigation/dgis_sound.svg',
-                            fit: BoxFit.none,
-                            width: 24,
-                            height: 24,
+                            fit: BoxFit.scaleDown,
+                            width: colorScheme.iconSize,
+                            height: colorScheme.iconSize,
                             colorFilter: ColorFilter.mode(
                               colorScheme.soundIconColor,
                               BlendMode.srcIn,
@@ -492,9 +492,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                       children: [
                         SvgPicture.asset(
                           'packages/$pluginName/assets/icons/navigation/dgis_route.svg',
-                          fit: BoxFit.none,
-                          width: 24,
-                          height: 24,
+                          fit: BoxFit.scaleDown,
+                          width: colorScheme.iconSize,
+                          height: colorScheme.iconSize,
                           colorFilter: ColorFilter.mode(
                             colorScheme.iconColor,
                             BlendMode.srcIn,
@@ -510,9 +510,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                         const Spacer(),
                         SvgPicture.asset(
                           'packages/$pluginName/assets/icons/navigation/dgis_chevron.svg',
-                          fit: BoxFit.none,
-                          width: 24,
-                          height: 24,
+                          fit: BoxFit.scaleDown,
+                          width: colorScheme.iconSize,
+                          height: colorScheme.iconSize,
                           colorFilter: ColorFilter.mode(
                             colorScheme.iconColor,
                             BlendMode.srcIn,

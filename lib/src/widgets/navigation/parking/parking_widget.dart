@@ -70,7 +70,7 @@ class _NavigationParkingWidgetState extends ThemedMapControllingWidgetState<
               'packages/$pluginName/assets/icons/dgis_parking.svg',
               width: colorScheme.iconSize,
               height: colorScheme.iconSize,
-              fit: BoxFit.none,
+              fit: BoxFit.scaleDown,
               colorFilter: ColorFilter.mode(
                 state.isActive
                     ? colorScheme.iconActiveColor

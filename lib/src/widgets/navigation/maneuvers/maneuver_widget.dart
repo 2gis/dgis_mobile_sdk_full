@@ -163,7 +163,7 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                             scaleX: maneuverIcon.$2 ? -1 : 1,
                             child: SvgPicture.asset(
                               maneuverIcon.$1,
-                              fit: BoxFit.none,
+                              fit: BoxFit.scaleDown,
                               width: colorScheme.mainManeuverTheme.iconSize,
                               height: colorScheme.mainManeuverTheme.iconSize,
                             ),

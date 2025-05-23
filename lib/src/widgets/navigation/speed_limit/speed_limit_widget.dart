@@ -127,7 +127,7 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                               alignment: Alignment.bottomCenter,
                               child: SvgPicture.asset(
                                 cameraIcon,
-                                fit: BoxFit.none,
+                                fit: BoxFit.scaleDown,
                                 width: colorScheme.speedometerTheme.iconSize,
                                 height:
                                     colorScheme.speedometerTheme.iconSize * 2,
