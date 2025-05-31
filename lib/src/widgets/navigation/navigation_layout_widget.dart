@@ -221,8 +221,8 @@ class _NavigationLayoutWidgetState
             ),
           ),
         const Spacer(),
-        if (widget._zoomWidgetBuilder != null)
-          widget._zoomWidgetBuilder!.call(zoomController),
+        // if (widget._zoomWidgetBuilder != null)
+        //   widget._zoomWidgetBuilder!.call(zoomController),
         const Spacer(),
         if (widget._compassWidgetBuilder != null)
           widget._compassWidgetBuilder!.call(compassController),
@@ -630,7 +630,7 @@ class _NavigationLayoutWidgetState
         ManeuverController(navigationManager: widget.navigationManager);
     myLocationController = MyLocationController(map: map);
     parkingController = ParkingController(map: map);
-    zoomController = ZoomController(map: map);
+    // zoomController = ZoomController(map: map);
     speedLimitController =
         SpeedLimitController(navigationManager: widget.navigationManager);
     trafficLineController =
@@ -665,7 +665,7 @@ class _NavigationLayoutWidgetState
     maneuverController.dispose();
     myLocationController.dispose();
     parkingController.dispose();
-    zoomController.dispose();
+    // zoomController.dispose();
     speedLimitController.dispose();
     trafficLineController.dispose();
     trafficController.dispose();
