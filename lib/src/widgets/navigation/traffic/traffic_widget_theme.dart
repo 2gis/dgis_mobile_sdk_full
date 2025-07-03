@@ -11,6 +11,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
   final Color loaderColor;
   final TextStyle scoreTextStyle;
   final Size scoreStrokeSize;
+  final double iconSize;
   final NavigationMapControlTheme controlTheme;
 
   const TrafficWidgetTheme({
@@ -19,6 +20,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     required this.borderWidth,
     required this.loaderColor,
     required this.scoreTextStyle,
+    required this.iconSize,
     required this.controlTheme,
   });
 
@@ -49,6 +51,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
       color: DgisColorScheme.dimmedGrey,
       fontSize: 19,
     ),
+    iconSize: 24,
     controlTheme: NavigationMapControlTheme.defaultLight,
   );
 
@@ -79,6 +82,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
       color: DgisColorScheme.dimmedSurfaceLight,
       fontSize: 19,
     ),
+    iconSize: 24,
     controlTheme: NavigationMapControlTheme.defaultDark,
   );
 
@@ -89,6 +93,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     double? borderWidth,
     Color? loaderColor,
     TextStyle? scoreTextStyle,
+    double? iconSize,
     NavigationMapControlTheme? controlTheme,
   }) {
     return TrafficWidgetTheme(
@@ -97,6 +102,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
       borderWidth: borderWidth ?? this.borderWidth,
       loaderColor: loaderColor ?? this.loaderColor,
       scoreTextStyle: scoreTextStyle ?? this.scoreTextStyle,
+      iconSize: iconSize ?? this.iconSize,
       controlTheme: controlTheme ?? this.controlTheme,
     );
   }

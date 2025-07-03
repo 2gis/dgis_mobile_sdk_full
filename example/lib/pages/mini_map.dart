@@ -20,7 +20,7 @@ class _MiniMapPageState extends State<MiniMapPage> {
   final sdkContext = AppContainer().initializeSdk();
   final pinAssetsPath = 'assets/icons/pin.png';
   final _imageCache = <String, sdk.Image>{};
-  final simulationSpeed = 50.0;
+  final simulationSpeed = 80.0 * 1000 / 3600;
 
   sdk.Map? sdkMap;
   sdk.Map? miniMap;
@@ -66,13 +66,19 @@ class _MiniMapPageState extends State<MiniMapPage> {
     mapWidgetController.getMapAsync((map) {
       sdkMap = map;
     });
-    miniMapWidgetController.getMapAsync((map) {
-      miniMap = map;
-    });
-    finishMiniMapWidgetController.getMapAsync((map) {
-      finishMiniMap = map;
-      mapObjectManager = sdk.MapObjectManager(map);
-    });
+    miniMapWidgetController
+      ..getMapAsync((map) {
+        miniMap = map;
+        miniMap?.interactive = false;
+      })
+      ..maxFps = const sdk.Fps(20);
+    finishMiniMapWidgetController
+      ..getMapAsync((map) {
+        finishMiniMap = map;
+        finishMiniMap?.interactive = false;
+        mapObjectManager = sdk.MapObjectManager(map);
+      })
+      ..maxFps = const sdk.Fps(10);
   }
 
   @override

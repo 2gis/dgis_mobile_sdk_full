@@ -20,4 +20,32 @@ class SearchWidgetColorScheme {
     required this.objectListBackgroundColor,
     this.searchBarTextStyle,
   });
+
+  SearchWidgetColorScheme copyWith({
+    Color? searchBarBackgroundColor,
+    Color? searchBarTextFieldColor,
+    TextStyle? searchBarTextStyle,
+    Color? objectCardTileColor,
+    TextStyle? objectCardHighlightedTextStyle,
+    TextStyle? objectCardNormalTextStyle,
+    Color? objectListSeparatorColor,
+    Color? objectListBackgroundColor,
+  }) {
+    return SearchWidgetColorScheme(
+      searchBarBackgroundColor:
+          searchBarBackgroundColor ?? this.searchBarBackgroundColor,
+      searchBarTextFieldColor:
+          searchBarTextFieldColor ?? this.searchBarTextFieldColor,
+      searchBarTextStyle: searchBarTextStyle ?? this.searchBarTextStyle,
+      objectCardTileColor: objectCardTileColor ?? this.objectCardTileColor,
+      objectCardHighlightedTextStyle:
+          objectCardHighlightedTextStyle ?? this.objectCardHighlightedTextStyle,
+      objectCardNormalTextStyle:
+          objectCardNormalTextStyle ?? this.objectCardNormalTextStyle,
+      objectListSeparatorColor:
+          objectListSeparatorColor ?? this.objectListSeparatorColor,
+      objectListBackgroundColor:
+          objectListBackgroundColor ?? this.objectListBackgroundColor,
+    );
+  }
 }

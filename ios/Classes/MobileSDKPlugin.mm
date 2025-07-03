@@ -94,15 +94,22 @@ NSInteger const kDefaultSize = 100;
 		{
 			return;
 		}
+		else if ([call.method isEqualToString:@"getScreenFps"])
+		{
+			NSInteger refreshRate = [UIScreen mainScreen].maximumFramesPerSecond;
+			result(@(refreshRate));
+			return;
+		}
 		else if ([call.method isEqualToString:@"dispose"])
 		{
 			NSNumber * textureId = arguments[@"textureId"];
 			if (textureId)
 			{
-				[self.flutterTextureRegistry unregisterTexture:[textureId unsignedIntegerValue]];
 				[self.renders removeObjectForKey:textureId];
+				[self.flutterTextureRegistry unregisterTexture:[textureId unsignedIntegerValue]];
 			}
-			if (_textureCache) {
+			if (_textureCache)
+			{
 				CVMetalTextureCacheFlush(_textureCache, 0);
 			}
 		}

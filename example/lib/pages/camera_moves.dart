@@ -97,6 +97,13 @@ class _CameraMovesState extends State<CameraMovesPage> {
   }
 
   @override
+  void dispose() {
+    locationSubscription?.cancel();
+    moveCameraCancellable?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),

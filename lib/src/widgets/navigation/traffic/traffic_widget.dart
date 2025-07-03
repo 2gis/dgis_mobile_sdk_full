@@ -83,9 +83,9 @@ class _NavigationTrafficWidgetState extends ThemedMapControllingWidgetState<
                 (null, _) => Center(
                     child: SvgPicture.asset(
                       'packages/$pluginName/assets/icons/dgis_traffic_icon.svg',
-                      width: 24,
-                      height: 24,
-                      fit: BoxFit.none,
+                      width: colorScheme.iconSize,
+                      height: colorScheme.iconSize,
+                      fit: BoxFit.scaleDown,
                       colorFilter: ColorFilter.mode(
                         switch (currentState.status) {
                           sdk.TrafficControlStatus.enabled =>

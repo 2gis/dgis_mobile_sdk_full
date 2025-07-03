@@ -69,7 +69,7 @@ class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
               iconAssetName,
               width: colorScheme.iconSize,
               height: colorScheme.iconSize,
-              fit: BoxFit.none,
+              fit: BoxFit.scaleDown,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           ),

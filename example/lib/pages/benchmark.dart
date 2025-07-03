@@ -27,7 +27,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
   CancelableOperation<sdk.CameraAnimatedMoveResult>? moveCameraCancellable;
   StreamSubscription<sdk.Location?>? locationSubscription;
   double lastFps = 0;
-  StreamSubscription<sdk.Fps>? _fpsSubscription;
+  StreamSubscription<sdk.Fps>? fpsSubscription;
 
   //TODO: Сделать получение максимального фпс для девайса
   double maxFps = 120;
@@ -40,15 +40,16 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
 
   @override
   void dispose() {
-    _fpsSubscription?.cancel();
+    fpsSubscription?.cancel();
     locationSubscription?.cancel();
+    moveCameraCancellable?.cancel();
     super.dispose();
   }
 
   Future<void> _startFpsTracking() async {
-    await _fpsSubscription?.cancel();
+    await fpsSubscription?.cancel();
     fpsValues.clear();
-    _fpsSubscription = mapWidgetController.fpsChannel.listen((fps) {
+    fpsSubscription = mapWidgetController.fpsChannel.listen((fps) {
       setState(() {
         lastFps = fps.value.toDouble();
         fpsValues.add(lastFps);
