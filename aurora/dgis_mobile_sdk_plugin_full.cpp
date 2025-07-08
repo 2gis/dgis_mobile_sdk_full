@@ -24,6 +24,7 @@ namespace Methods
 constexpr auto SetSurface = "setSurface";
 constexpr auto UpdateSurface = "updateSurface";
 constexpr auto Dispose = "dispose";
+constexpr auto GetScreenFps = "getScreenFps";
 
 } // namespace Methods
 
@@ -55,7 +56,7 @@ public:
 
 	~MapSurfacePixelBufferTexture()
 	{
-		release();
+		deinit();
 	}
 
 	[[nodiscard]] std::int64_t map_surface_id() const noexcept
@@ -114,7 +115,7 @@ private:
 		return true;
 	}
 
-	void release()
+	void deinit()
 	{
 		if (flutter_texture_id_ == -1)
 		{
@@ -167,6 +168,12 @@ public:
 		methodChannel_->SetMethodCallHandler(
 			[this](const MethodCall & call, std::unique_ptr<MethodResult> result)
 			{
+				if (call.method_name().compare(Methods::GetScreenFps) == 0)
+				{
+					result->Success(60);
+					return;
+				}
+
 				if (!call.arguments())
 				{
 					result->Error("NO_ARGS", "No arguments received");
