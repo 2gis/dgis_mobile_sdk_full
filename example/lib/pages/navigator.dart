@@ -137,6 +137,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
   @override
   void dispose() {
     _stopSpeedSimulation();
+    navigationManager.stop();
     super.dispose();
   }
 

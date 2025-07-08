@@ -891,7 +891,7 @@ Context makeSystemContext(
   var _a4 = vendorConfig._copyFromDartTo_CVendorConfig();
   var _a5 = locationProvider._copyFromDartTo_COptional_CLocationProvider();
   var _a6 = headingProvider._copyFromDartTo_COptional_CHeadingProvider();
-  _CContext res = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
+  _CResult_CContext res = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
   _a6._releaseIntermediate();
   _a5._releaseIntermediate();
   _a4._releaseIntermediate();
@@ -903,6 +903,72 @@ Context makeSystemContext(
   return t;
 }
 
+// MARK: - CError <-> _CError
+
+final class _CError extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CErrorBasicFunctions on _CError {
+  void _releaseIntermediate() {
+    _CError_release(this);
+  }
+}
+
+extension _CErrorToDart on _CError {
+  NativeException _toDart() {
+    final res = _CErrorGetDescription(_CErrorMakeDefault().._impl = _impl);
+    return NativeException(res.toDartString());
+  }
+}
+
+extension _DartTo_CError on NativeException {
+  _CError _copyFromDartTo_CError() {
+    _CString description = this.toString()._copyFromDartTo_CString();
+    final res = _CErrorCreateWithDescription(description._getData());
+    description._releaseIntermediate();
+    return res;
+  }
+}
+	
+// MARK: - Context <-> _CResult_CContext
+
+final class _CResult_CContextImpl extends ffi.Union {
+  
+  external _CContext _value;
+  external _CError _error;
+}
+
+final class _CResult_CContext extends ffi.Struct {
+  external _CResult_CContextImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CResult_CContextBasicFunctions on _CResult_CContext {
+  void _releaseIntermediate() {
+    _CResult_CContext_release(this);
+  }
+}
+
+extension _CResult_CContextToDart on _CResult_CContext {
+  Context _toDart() {
+    if (this._index == 0) {
+      return this._impl._value._toDart();
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+
+  _CContext _toCDart() {
+    if (this._index == 0) {
+      return this._impl._value;
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+}
+	
 // MARK: - KeyFromAsset
 
 /**
@@ -5903,6 +5969,7 @@ class EntranceInfo {
   final List<ApartmentRange> apartmentRanges;
   /** Геометрии для отображения входа на карте. */
   final EntranceGeometry? geometry;
+  final String? entranceNumber;
 
   const EntranceInfo({
     required this.id,
@@ -5910,7 +5977,8 @@ class EntranceInfo {
     required this.porchName,
     required this.porchNumber,
     required this.apartmentRanges,
-    required this.geometry
+    required this.geometry,
+    required this.entranceNumber
   });
 
   EntranceInfo copyWith({
@@ -5919,7 +5987,8 @@ class EntranceInfo {
     Optional<String?>? porchName,
     Optional<String?>? porchNumber,
     List<ApartmentRange>? apartmentRanges,
-    Optional<EntranceGeometry?>? geometry
+    Optional<EntranceGeometry?>? geometry,
+    Optional<String?>? entranceNumber
   }) {
     return EntranceInfo(
       id: id ?? this.id,
@@ -5927,7 +5996,8 @@ class EntranceInfo {
       porchName: porchName != null ? porchName.value : this.porchName,
       porchNumber: porchNumber != null ? porchNumber.value : this.porchNumber,
       apartmentRanges: apartmentRanges ?? this.apartmentRanges,
-      geometry: geometry != null ? geometry.value : this.geometry
+      geometry: geometry != null ? geometry.value : this.geometry,
+      entranceNumber: entranceNumber != null ? entranceNumber.value : this.entranceNumber
     );
   }
   @override
@@ -5939,11 +6009,12 @@ class EntranceInfo {
     other.porchName == porchName &&
     other.porchNumber == porchNumber &&
     other.apartmentRanges == apartmentRanges &&
-    other.geometry == geometry;
+    other.geometry == geometry &&
+    other.entranceNumber == entranceNumber;
 
   @override
   int get hashCode {
-    return Object.hash(id, buildingNumber, porchName, porchNumber, apartmentRanges, geometry);
+    return Object.hash(id, buildingNumber, porchName, porchNumber, apartmentRanges, geometry, entranceNumber);
   }
 
 }
@@ -5960,6 +6031,8 @@ final class _CEntranceInfo extends ffi.Struct {
 
   external _COptional_CEntranceGeometry geometry;
 
+  external _COptional_CString entranceNumber;
+
 }
 // MARK: - EntranceInfo <-> _CEntranceInfo
 
@@ -5971,7 +6044,8 @@ extension _CEntranceInfoToDart on _CEntranceInfo {
       porchName: this.porchName._toDart(),
       porchNumber: this.porchNumber._toDart(),
       apartmentRanges: this.apartmentRanges._toDart(),
-      geometry: this.geometry._toDart()
+      geometry: this.geometry._toDart(),
+      entranceNumber: this.entranceNumber._toDart()
     );
   }
 }
@@ -5985,6 +6059,7 @@ extension _DartTo_CEntranceInfo on EntranceInfo {
     res.porchNumber = this.porchNumber._copyFromDartTo_COptional_CString();
     res.apartmentRanges = this.apartmentRanges._copyFromDartTo_CArray_CApartmentRange();
     res.geometry = this.geometry._copyFromDartTo_COptional_CEntranceGeometry();
+    res.entranceNumber = this.entranceNumber._copyFromDartTo_COptional_CString();
     return res;
   }
 }
@@ -5995,6 +6070,7 @@ extension _CEntranceInfoRelease on _CEntranceInfo {
     porchNumber._releaseIntermediate();
     apartmentRanges._releaseIntermediate();
     geometry._releaseIntermediate();
+    entranceNumber._releaseIntermediate();
   }
 }
 
@@ -6801,6 +6877,108 @@ extension _CRubricIdRelease on _CRubricId {
   }
 }
 
+// MARK: - TradeLicense
+
+/** Лицензия организации. */
+class TradeLicense {
+  /**
+   Тип.
+  
+   - Note: Пустая строка означает отсутствие этого значения в данных.
+  */
+  final String type;
+  /** Номер. */
+  final String license;
+  /**
+   Форма собственности компании.
+  
+   - Note: Пустая строка означает отсутствие этого значения в данных.
+  */
+  final String legalForm;
+  /**
+   Дата, до которой действует лицензия.
+  
+   - Note: Пустая строка означает отсутствие этого значения в данных.
+  */
+  final String endDate;
+
+  const TradeLicense({
+    required this.type,
+    required this.license,
+    required this.legalForm,
+    required this.endDate
+  });
+
+  TradeLicense copyWith({
+    String? type,
+    String? license,
+    String? legalForm,
+    String? endDate
+  }) {
+    return TradeLicense(
+      type: type ?? this.type,
+      license: license ?? this.license,
+      legalForm: legalForm ?? this.legalForm,
+      endDate: endDate ?? this.endDate
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TradeLicense &&
+    other.runtimeType == runtimeType &&
+    other.type == type &&
+    other.license == license &&
+    other.legalForm == legalForm &&
+    other.endDate == endDate;
+
+  @override
+  int get hashCode {
+    return Object.hash(type, license, legalForm, endDate);
+  }
+
+}
+final class _CTradeLicense extends ffi.Struct {
+  external _CString type;
+
+  external _CString license;
+
+  external _CString legalForm;
+
+  external _CString endDate;
+
+}
+// MARK: - TradeLicense <-> _CTradeLicense
+
+extension _CTradeLicenseToDart on _CTradeLicense {
+  TradeLicense _toDart() {
+    return TradeLicense(
+      type: this.type._toDart(),
+      license: this.license._toDart(),
+      legalForm: this.legalForm._toDart(),
+      endDate: this.endDate._toDart()
+    );
+  }
+}
+
+extension _DartTo_CTradeLicense on TradeLicense {
+  _CTradeLicense _copyFromDartTo_CTradeLicense() {
+    final res = _CTradeLicenseMakeDefault();
+    res.type = this.type._copyFromDartTo_CString();
+    res.license = this.license._copyFromDartTo_CString();
+    res.legalForm = this.legalForm._copyFromDartTo_CString();
+    res.endDate = this.endDate._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CTradeLicenseRelease on _CTradeLicense {
+  void _releaseIntermediate() {
+    type._releaseIntermediate();
+    license._releaseIntermediate();
+    legalForm._releaseIntermediate();
+    endDate._releaseIntermediate();
+  }
+}
+
 // MARK: - ItemMarkerInfo
 
 /** Идентификатор объекта и его координаты. */
@@ -6827,6 +7005,13 @@ class ItemMarkerInfo implements ffi.Finalizable {
   }
   List<RubricId> get rubricIds {
     _CArray_CRubricId res = _CItemMarkerInfo_rubricIds(_CItemMarkerInfoMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** - Note: Для получения данной информации запросите дополнительную настройку ключа. */
+  TradeLicense? get tradeLicense {
+    _COptional_CTradeLicense res = _CItemMarkerInfo_tradeLicense(_CItemMarkerInfoMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -7129,6 +7314,42 @@ extension _CArray_CRubricIdBasicFunctions on _CArray_CRubricId {
   }
 }
 	
+// MARK: - TradeLicense? <-> _COptional_CTradeLicense
+
+final class _COptional_CTradeLicense extends ffi.Struct {
+  
+  external _CTradeLicense value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTradeLicenseBasicFunctions on _COptional_CTradeLicense {
+  void _releaseIntermediate() {
+    _COptional_CTradeLicense_release(this);
+  }
+}
+
+extension _COptional_CTradeLicenseToDart on _COptional_CTradeLicense {
+  TradeLicense? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTradeLicense on TradeLicense? {
+  _COptional_CTradeLicense _copyFromDartTo_COptional_CTradeLicense() {
+    final cOptional = _COptional_CTradeLicenseMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTradeLicense();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - List<List<WeekTimeInterval>> <-> _CArray_CArray_CWeekTimeInterval
 
 final class _CArray_CArray_CWeekTimeInterval extends ffi.Struct {
@@ -8272,96 +8493,6 @@ extension _DartTo_CSortingType on SortingType {
   }
 }
 	
-// MARK: - TradeLicense
-
-/** Лицензия организации. */
-class TradeLicense {
-  /** Тип. */
-  final String type;
-  /** Номер. */
-  final String license;
-  /** Форма собственности компании. */
-  final String legalForm;
-  /** Дата, до которой действует лицензия. */
-  final String endDate;
-
-  const TradeLicense({
-    required this.type,
-    required this.license,
-    required this.legalForm,
-    required this.endDate
-  });
-
-  TradeLicense copyWith({
-    String? type,
-    String? license,
-    String? legalForm,
-    String? endDate
-  }) {
-    return TradeLicense(
-      type: type ?? this.type,
-      license: license ?? this.license,
-      legalForm: legalForm ?? this.legalForm,
-      endDate: endDate ?? this.endDate
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TradeLicense &&
-    other.runtimeType == runtimeType &&
-    other.type == type &&
-    other.license == license &&
-    other.legalForm == legalForm &&
-    other.endDate == endDate;
-
-  @override
-  int get hashCode {
-    return Object.hash(type, license, legalForm, endDate);
-  }
-
-}
-final class _CTradeLicense extends ffi.Struct {
-  external _CString type;
-
-  external _CString license;
-
-  external _CString legalForm;
-
-  external _CString endDate;
-
-}
-// MARK: - TradeLicense <-> _CTradeLicense
-
-extension _CTradeLicenseToDart on _CTradeLicense {
-  TradeLicense _toDart() {
-    return TradeLicense(
-      type: this.type._toDart(),
-      license: this.license._toDart(),
-      legalForm: this.legalForm._toDart(),
-      endDate: this.endDate._toDart()
-    );
-  }
-}
-
-extension _DartTo_CTradeLicense on TradeLicense {
-  _CTradeLicense _copyFromDartTo_CTradeLicense() {
-    final res = _CTradeLicenseMakeDefault();
-    res.type = this.type._copyFromDartTo_CString();
-    res.license = this.license._copyFromDartTo_CString();
-    res.legalForm = this.legalForm._copyFromDartTo_CString();
-    res.endDate = this.endDate._copyFromDartTo_CString();
-    return res;
-  }
-}
-extension _CTradeLicenseRelease on _CTradeLicense {
-  void _releaseIntermediate() {
-    type._releaseIntermediate();
-    license._releaseIntermediate();
-    legalForm._releaseIntermediate();
-    endDate._releaseIntermediate();
-  }
-}
-
 // MARK: - UIMarkerInfo
 
 /** Идентификатор объекта с подписью. */
@@ -8498,6 +8629,2423 @@ extension _CWorkStatusRelease on _CWorkStatus {
   }
 }
 
+// MARK: - PublicTransportDirectoryPlatformDepartureInfo
+
+/** Справочная информация об отправлении с платформы. */
+class PublicTransportDirectoryPlatformDepartureInfo {
+  /** Идентификатор платформы. */
+  final DgisObjectId platformId;
+  /** Точное время проезда транспорта в формате HH:MM (в локальном для объекта часовом поясе). */
+  final DayTime departureTime;
+
+  const PublicTransportDirectoryPlatformDepartureInfo({
+    required this.platformId,
+    this.departureTime = const DayTime(hours: 0, minutes: 0)
+  });
+
+  PublicTransportDirectoryPlatformDepartureInfo copyWith({
+    DgisObjectId? platformId,
+    DayTime? departureTime
+  }) {
+    return PublicTransportDirectoryPlatformDepartureInfo(
+      platformId: platformId ?? this.platformId,
+      departureTime: departureTime ?? this.departureTime
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportDirectoryPlatformDepartureInfo &&
+    other.runtimeType == runtimeType &&
+    other.platformId == platformId &&
+    other.departureTime == departureTime;
+
+  @override
+  int get hashCode {
+    return Object.hash(platformId, departureTime);
+  }
+
+}
+final class _CPublicTransportDirectoryPlatformDepartureInfo extends ffi.Struct {
+  external _CDgisObjectId platformId;
+
+  external _CDayTime departureTime;
+
+}
+// MARK: - PublicTransportDirectoryPlatformDepartureInfo <-> _CPublicTransportDirectoryPlatformDepartureInfo
+
+extension _CPublicTransportDirectoryPlatformDepartureInfoToDart on _CPublicTransportDirectoryPlatformDepartureInfo {
+  PublicTransportDirectoryPlatformDepartureInfo _toDart() {
+    return PublicTransportDirectoryPlatformDepartureInfo(
+      platformId: this.platformId._toDart(),
+      departureTime: this.departureTime._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportDirectoryPlatformDepartureInfo on PublicTransportDirectoryPlatformDepartureInfo {
+  _CPublicTransportDirectoryPlatformDepartureInfo _copyFromDartTo_CPublicTransportDirectoryPlatformDepartureInfo() {
+    final res = _CPublicTransportDirectoryPlatformDepartureInfoMakeDefault();
+    res.platformId = this.platformId._copyFromDartTo_CDgisObjectId();
+    res.departureTime = this.departureTime._copyFromDartTo_CDayTime();
+    return res;
+  }
+}
+extension _CPublicTransportDirectoryPlatformDepartureInfoRelease on _CPublicTransportDirectoryPlatformDepartureInfo {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - PublicTransportDirectoryRouteDirectionNamesInfo
+
+/** Информация о наименованиях начальной и конечной остановках маршрута. */
+class PublicTransportDirectoryRouteDirectionNamesInfo {
+  /** Начальная остановка маршрута. */
+  final String fromName;
+  /** Конечная остановка маршрута. */
+  final String toName;
+
+  const PublicTransportDirectoryRouteDirectionNamesInfo({
+    required this.fromName,
+    required this.toName
+  });
+
+  PublicTransportDirectoryRouteDirectionNamesInfo copyWith({
+    String? fromName,
+    String? toName
+  }) {
+    return PublicTransportDirectoryRouteDirectionNamesInfo(
+      fromName: fromName ?? this.fromName,
+      toName: toName ?? this.toName
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportDirectoryRouteDirectionNamesInfo &&
+    other.runtimeType == runtimeType &&
+    other.fromName == fromName &&
+    other.toName == toName;
+
+  @override
+  int get hashCode {
+    return Object.hash(fromName, toName);
+  }
+
+}
+final class _CPublicTransportDirectoryRouteDirectionNamesInfo extends ffi.Struct {
+  external _CString fromName;
+
+  external _CString toName;
+
+}
+// MARK: - PublicTransportDirectoryRouteDirectionNamesInfo <-> _CPublicTransportDirectoryRouteDirectionNamesInfo
+
+extension _CPublicTransportDirectoryRouteDirectionNamesInfoToDart on _CPublicTransportDirectoryRouteDirectionNamesInfo {
+  PublicTransportDirectoryRouteDirectionNamesInfo _toDart() {
+    return PublicTransportDirectoryRouteDirectionNamesInfo(
+      fromName: this.fromName._toDart(),
+      toName: this.toName._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportDirectoryRouteDirectionNamesInfo on PublicTransportDirectoryRouteDirectionNamesInfo {
+  _CPublicTransportDirectoryRouteDirectionNamesInfo _copyFromDartTo_CPublicTransportDirectoryRouteDirectionNamesInfo() {
+    final res = _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault();
+    res.fromName = this.fromName._copyFromDartTo_CString();
+    res.toName = this.toName._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CPublicTransportDirectoryRouteDirectionNamesInfoRelease on _CPublicTransportDirectoryRouteDirectionNamesInfo {
+  void _releaseIntermediate() {
+    fromName._releaseIntermediate();
+    toName._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportRouteDirectionId
+
+/** Идентификатор направления маршрута общественного транспорта. */
+class PublicTransportRouteDirectionId {
+  final int value;
+
+  const PublicTransportRouteDirectionId([this.value = 0]);
+
+  PublicTransportRouteDirectionId copyWith({
+    int? value
+  }) {
+    return PublicTransportRouteDirectionId(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportRouteDirectionId &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CPublicTransportRouteDirectionId extends ffi.Struct {
+  @ffi.Uint64()
+  external int value;
+
+}
+// MARK: - PublicTransportRouteDirectionId <-> _CPublicTransportRouteDirectionId
+
+extension _CPublicTransportRouteDirectionIdToDart on _CPublicTransportRouteDirectionId {
+  PublicTransportRouteDirectionId _toDart() {
+    return PublicTransportRouteDirectionId(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportRouteDirectionId on PublicTransportRouteDirectionId {
+  _CPublicTransportRouteDirectionId _copyFromDartTo_CPublicTransportRouteDirectionId() {
+    final res = _CPublicTransportRouteDirectionIdMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CPublicTransportRouteDirectionIdRelease on _CPublicTransportRouteDirectionId {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - PublicTransportRouteDirectionType
+
+/** Тип направления маршрута общественного транспорта. */
+enum PublicTransportRouteDirectionType {
+  /** Прямое направление. */
+  forward(0),
+  /** Обратное направление. */
+  backward(1),
+  /** Дополнительное направление. */
+  additional(2),
+  /** Круговой маршрут с конечной остановкой. */
+  circular(3),
+  /** Замкнутый маршрут без конечной остановки. */
+  loop(4),
+  ;
+
+  const PublicTransportRouteDirectionType(this.rawValue);
+  final int rawValue;
+
+  static PublicTransportRouteDirectionType getByValue(int value) {
+    return PublicTransportRouteDirectionType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CPublicTransportRouteDirectionType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CPublicTransportRouteDirectionTypeBasicFunctions on _CPublicTransportRouteDirectionType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CPublicTransportRouteDirectionTypeToDart on _CPublicTransportRouteDirectionType {
+  PublicTransportRouteDirectionType _toDart() {
+    return PublicTransportRouteDirectionType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CPublicTransportRouteDirectionType on PublicTransportRouteDirectionType {
+  _CPublicTransportRouteDirectionType _copyFromDartTo_CPublicTransportRouteDirectionType() {
+    return _CPublicTransportRouteDirectionTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - PolylineGeometry
+
+/** Ломаная линия. */
+class PolylineGeometry extends Geometry implements ffi.Finalizable {
+  List<GeoPoint> get points {
+    _CArray_CGeoPoint res = _CPolylineGeometry_points(_CPolylineGeometryMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CPolylineGeometry_releasePtr);
+
+  PolylineGeometry._raw(ffi.Pointer<ffi.Void> p) : super._raw(p);
+  factory PolylineGeometry._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = PolylineGeometry._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory PolylineGeometry(
+    List<GeoPoint> points
+  ) {
+    var _a0 = points._copyFromDartTo_CArray_CGeoPoint();
+    _CPolylineGeometry res = _CPolylineGeometry_C_createWith_CArray_CGeoPoint(_a0);
+    _a0._releaseIntermediate();
+    return PolylineGeometry._create(res._impl);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PolylineGeometry &&
+    other.runtimeType == runtimeType &&
+    _CPolylineGeometry_cg_objectIdentifier(this._self) == _CPolylineGeometry_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CPolylineGeometry_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - PolylineGeometry <-> CPolylineGeometry
+
+final class _CPolylineGeometry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CPolylineGeometryBasicFunctions on _CPolylineGeometry {
+  void _releaseIntermediate() {
+    _CPolylineGeometry_release(_impl);
+  }
+
+  _CPolylineGeometry _retain() {
+    return _CPolylineGeometry_retain(_impl);
+  }
+}
+
+extension _CPolylineGeometryToDart on _CPolylineGeometry {
+  PolylineGeometry _toDart() {
+    return PolylineGeometry._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCPolylineGeometry on PolylineGeometry {
+  _CPolylineGeometry _copyFromDartTo_CPolylineGeometry() {
+    return (_CPolylineGeometryMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - GeoPoint? <-> _COptional_CGeoPoint
+
+final class _COptional_CGeoPoint extends ffi.Struct {
+  
+  external _CGeoPoint value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CGeoPointBasicFunctions on _COptional_CGeoPoint {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CGeoPointToDart on _COptional_CGeoPoint {
+  GeoPoint? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CGeoPoint on GeoPoint? {
+  _COptional_CGeoPoint _copyFromDartTo_COptional_CGeoPoint() {
+    final cOptional = _COptional_CGeoPointMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CGeoPoint();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - PublicTransportRouteGeometry
+
+/** Геометрия направления маршрута общественного транспорта. */
+class PublicTransportRouteGeometry {
+  /** Линия маршрута. */
+  final PolylineGeometry line;
+  /** Визуальный центр геометрии объекта. */
+  final GeoPoint? centroid;
+
+  const PublicTransportRouteGeometry({
+    required this.line,
+    required this.centroid
+  });
+
+  PublicTransportRouteGeometry copyWith({
+    PolylineGeometry? line,
+    Optional<GeoPoint?>? centroid
+  }) {
+    return PublicTransportRouteGeometry(
+      line: line ?? this.line,
+      centroid: centroid != null ? centroid.value : this.centroid
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportRouteGeometry &&
+    other.runtimeType == runtimeType &&
+    other.line == line &&
+    other.centroid == centroid;
+
+  @override
+  int get hashCode {
+    return Object.hash(line, centroid);
+  }
+
+}
+final class _CPublicTransportRouteGeometry extends ffi.Struct {
+  external _CPolylineGeometry line;
+
+  external _COptional_CGeoPoint centroid;
+
+}
+// MARK: - PublicTransportRouteGeometry <-> _CPublicTransportRouteGeometry
+
+extension _CPublicTransportRouteGeometryToDart on _CPublicTransportRouteGeometry {
+  PublicTransportRouteGeometry _toDart() {
+    return PublicTransportRouteGeometry(
+      line: this.line._toDart(),
+      centroid: this.centroid._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportRouteGeometry on PublicTransportRouteGeometry {
+  _CPublicTransportRouteGeometry _copyFromDartTo_CPublicTransportRouteGeometry() {
+    final res = _CPublicTransportRouteGeometryMakeDefault();
+    res.line = this.line._copyFromDartTo_CPolylineGeometry();
+    res.centroid = this.centroid._copyFromDartTo_COptional_CGeoPoint();
+    return res;
+  }
+}
+extension _CPublicTransportRouteGeometryRelease on _CPublicTransportRouteGeometry {
+  void _releaseIntermediate() {
+    line._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportRouteType
+
+/** Тип маршрута общественного транспорта. */
+enum PublicTransportRouteType {
+  /** Автобус. */
+  bus(0),
+  /** Троллейбус. */
+  trolleybus(1),
+  /** Трамвай. */
+  tram(2),
+  /** Маршрутное такси. */
+  shuttleBus(3),
+  /** Метро. */
+  metro(4),
+  /** Электропоезд. */
+  suburbanTrain(5),
+  /** Фуникулёр. */
+  funicularRailway(6),
+  /** Монорельс. */
+  monorail(7),
+  /** Водный транспорт. */
+  riverTransport(8),
+  /** Канатная дорога. */
+  cableCar(9),
+  /** Скоростной трамвай. */
+  lightRail(10),
+  /** Метротрамвай. */
+  premetro(11),
+  /** Лёгкое метро. */
+  lightMetro(12),
+  /** Аэроэкспресс. */
+  aeroexpress(13),
+  ;
+
+  const PublicTransportRouteType(this.rawValue);
+  final int rawValue;
+
+  static PublicTransportRouteType getByValue(int value) {
+    return PublicTransportRouteType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CPublicTransportRouteType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CPublicTransportRouteTypeBasicFunctions on _CPublicTransportRouteType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CPublicTransportRouteTypeToDart on _CPublicTransportRouteType {
+  PublicTransportRouteType _toDart() {
+    return PublicTransportRouteType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CPublicTransportRouteType on PublicTransportRouteType {
+  _CPublicTransportRouteType _copyFromDartTo_CPublicTransportRouteType() {
+    return _CPublicTransportRouteTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - int? <-> _COptional_uint32_t
+
+final class _COptional_uint32_t extends ffi.Struct {
+  @ffi.Uint32()
+  external int value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_uint32_tBasicFunctions on _COptional_uint32_t {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_uint32_tToDart on _COptional_uint32_t {
+  int? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value;
+  }
+}
+
+extension _DartTo_COptional_uint32_t on int? {
+  _COptional_uint32_t _copyFromDartTo_COptional_uint32_t() {
+    final cOptional = _COptional_uint32_tMakeDefault();
+    if (this != null) {
+      cOptional.value = this!;
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - PublicTransportPlatformTransition
+
+/** Справочная информация о маршруте общественного транспорта, на который можно пересесть на остановочной платформе. */
+class PublicTransportPlatformTransition {
+  /** Идентификатор связанного маршрута. */
+  final DgisObjectId routeId;
+  /** Название связанного маршрута. */
+  final String routeName;
+  /** Тип маршрута. */
+  final PublicTransportRouteType routeType;
+  /** Цветовое кодирование маршрута. */
+  final int? color;
+  /** Идентификатор остановки. */
+  final DgisObjectId stationId;
+  /** Название остановки или станции. */
+  final String stationName;
+
+  const PublicTransportPlatformTransition({
+    required this.routeId,
+    required this.routeName,
+    required this.routeType,
+    required this.color,
+    required this.stationId,
+    required this.stationName
+  });
+
+  PublicTransportPlatformTransition copyWith({
+    DgisObjectId? routeId,
+    String? routeName,
+    PublicTransportRouteType? routeType,
+    Optional<int?>? color,
+    DgisObjectId? stationId,
+    String? stationName
+  }) {
+    return PublicTransportPlatformTransition(
+      routeId: routeId ?? this.routeId,
+      routeName: routeName ?? this.routeName,
+      routeType: routeType ?? this.routeType,
+      color: color != null ? color.value : this.color,
+      stationId: stationId ?? this.stationId,
+      stationName: stationName ?? this.stationName
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportPlatformTransition &&
+    other.runtimeType == runtimeType &&
+    other.routeId == routeId &&
+    other.routeName == routeName &&
+    other.routeType == routeType &&
+    other.color == color &&
+    other.stationId == stationId &&
+    other.stationName == stationName;
+
+  @override
+  int get hashCode {
+    return Object.hash(routeId, routeName, routeType, color, stationId, stationName);
+  }
+
+}
+final class _CPublicTransportPlatformTransition extends ffi.Struct {
+  external _CDgisObjectId routeId;
+
+  external _CString routeName;
+
+  external _CPublicTransportRouteType routeType;
+
+  external _COptional_uint32_t color;
+
+  external _CDgisObjectId stationId;
+
+  external _CString stationName;
+
+}
+// MARK: - PublicTransportPlatformTransition <-> _CPublicTransportPlatformTransition
+
+extension _CPublicTransportPlatformTransitionToDart on _CPublicTransportPlatformTransition {
+  PublicTransportPlatformTransition _toDart() {
+    return PublicTransportPlatformTransition(
+      routeId: this.routeId._toDart(),
+      routeName: this.routeName._toDart(),
+      routeType: this.routeType._toDart(),
+      color: this.color._toDart(),
+      stationId: this.stationId._toDart(),
+      stationName: this.stationName._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportPlatformTransition on PublicTransportPlatformTransition {
+  _CPublicTransportPlatformTransition _copyFromDartTo_CPublicTransportPlatformTransition() {
+    final res = _CPublicTransportPlatformTransitionMakeDefault();
+    res.routeId = this.routeId._copyFromDartTo_CDgisObjectId();
+    res.routeName = this.routeName._copyFromDartTo_CString();
+    res.routeType = this.routeType._copyFromDartTo_CPublicTransportRouteType();
+    res.color = this.color._copyFromDartTo_COptional_uint32_t();
+    res.stationId = this.stationId._copyFromDartTo_CDgisObjectId();
+    res.stationName = this.stationName._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CPublicTransportPlatformTransitionRelease on _CPublicTransportPlatformTransition {
+  void _releaseIntermediate() {
+    routeName._releaseIntermediate();
+    stationName._releaseIntermediate();
+  }
+}
+
+// MARK: - List<PublicTransportPlatformTransition> <-> _CArray_CPublicTransportPlatformTransition
+
+final class _CArray_CPublicTransportPlatformTransition extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportPlatformTransitionToDart on _CArray_CPublicTransportPlatformTransition {
+  List<PublicTransportPlatformTransition> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportPlatformTransition on List<PublicTransportPlatformTransition> {
+  _CArray_CPublicTransportPlatformTransition _copyFromDartTo_CArray_CPublicTransportPlatformTransition() {
+    final cArray = _CArray_CPublicTransportPlatformTransitionmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportPlatformTransition();
+        _CArray_CPublicTransportPlatformTransitionaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportPlatformTransitionBasicFunctions on _CArray_CPublicTransportPlatformTransition {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportPlatformTransition_release(this);
+  }
+
+  static final _listToFill = <PublicTransportPlatformTransition>[];
+
+  static void _iterate(_CPublicTransportPlatformTransition item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportPlatformTransition> _fillFromC() {
+    _forEach_CArray_CPublicTransportPlatformTransition(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportPlatformTransition)>(_iterate));
+    final result = List<PublicTransportPlatformTransition>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportPlatform
+
+/** Справочная информация об остановочной платформе. */
+class PublicTransportPlatform {
+  /** Идентификатор остановочной платформы. */
+  final DgisObjectId id;
+  /**
+   Идентификатор остановки.
+   Например, автобусная остановка или станция метро, на которой находится платформа, или любая другая остановка.
+  */
+  final DgisObjectId stationId;
+  /** Название остановки. */
+  final String name;
+  /** Краткое описание места расположения остановочной платформы. */
+  final String? description;
+  /**
+   Справочная информация о других маршрутах общественного транспорта,
+   на которые можно пересесть на данной остановочной платформе.
+  */
+  final List<PublicTransportPlatformTransition> transitions;
+  /** Позиция. */
+  final GeoPoint? position;
+
+  const PublicTransportPlatform({
+    required this.id,
+    required this.stationId,
+    required this.name,
+    required this.description,
+    required this.transitions,
+    required this.position
+  });
+
+  PublicTransportPlatform copyWith({
+    DgisObjectId? id,
+    DgisObjectId? stationId,
+    String? name,
+    Optional<String?>? description,
+    List<PublicTransportPlatformTransition>? transitions,
+    Optional<GeoPoint?>? position
+  }) {
+    return PublicTransportPlatform(
+      id: id ?? this.id,
+      stationId: stationId ?? this.stationId,
+      name: name ?? this.name,
+      description: description != null ? description.value : this.description,
+      transitions: transitions ?? this.transitions,
+      position: position != null ? position.value : this.position
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportPlatform &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.stationId == stationId &&
+    other.name == name &&
+    other.description == description &&
+    other.transitions == transitions &&
+    other.position == position;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, stationId, name, description, transitions, position);
+  }
+
+}
+final class _CPublicTransportPlatform extends ffi.Struct {
+  external _CDgisObjectId id;
+
+  external _CDgisObjectId stationId;
+
+  external _CString name;
+
+  external _COptional_CString description;
+
+  external _CArray_CPublicTransportPlatformTransition transitions;
+
+  external _COptional_CGeoPoint position;
+
+}
+// MARK: - PublicTransportPlatform <-> _CPublicTransportPlatform
+
+extension _CPublicTransportPlatformToDart on _CPublicTransportPlatform {
+  PublicTransportPlatform _toDart() {
+    return PublicTransportPlatform(
+      id: this.id._toDart(),
+      stationId: this.stationId._toDart(),
+      name: this.name._toDart(),
+      description: this.description._toDart(),
+      transitions: this.transitions._toDart(),
+      position: this.position._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportPlatform on PublicTransportPlatform {
+  _CPublicTransportPlatform _copyFromDartTo_CPublicTransportPlatform() {
+    final res = _CPublicTransportPlatformMakeDefault();
+    res.id = this.id._copyFromDartTo_CDgisObjectId();
+    res.stationId = this.stationId._copyFromDartTo_CDgisObjectId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.description = this.description._copyFromDartTo_COptional_CString();
+    res.transitions = this.transitions._copyFromDartTo_CArray_CPublicTransportPlatformTransition();
+    res.position = this.position._copyFromDartTo_COptional_CGeoPoint();
+    return res;
+  }
+}
+extension _CPublicTransportPlatformRelease on _CPublicTransportPlatform {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    description._releaseIntermediate();
+    transitions._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportRouteGeometry? <-> _COptional_CPublicTransportRouteGeometry
+
+final class _COptional_CPublicTransportRouteGeometry extends ffi.Struct {
+  
+  external _CPublicTransportRouteGeometry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPublicTransportRouteGeometryBasicFunctions on _COptional_CPublicTransportRouteGeometry {
+  void _releaseIntermediate() {
+    _COptional_CPublicTransportRouteGeometry_release(this);
+  }
+}
+
+extension _COptional_CPublicTransportRouteGeometryToDart on _COptional_CPublicTransportRouteGeometry {
+  PublicTransportRouteGeometry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPublicTransportRouteGeometry on PublicTransportRouteGeometry? {
+  _COptional_CPublicTransportRouteGeometry _copyFromDartTo_COptional_CPublicTransportRouteGeometry() {
+    final cOptional = _COptional_CPublicTransportRouteGeometryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPublicTransportRouteGeometry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<PublicTransportPlatform> <-> _CArray_CPublicTransportPlatform
+
+final class _CArray_CPublicTransportPlatform extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportPlatformToDart on _CArray_CPublicTransportPlatform {
+  List<PublicTransportPlatform> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportPlatform on List<PublicTransportPlatform> {
+  _CArray_CPublicTransportPlatform _copyFromDartTo_CArray_CPublicTransportPlatform() {
+    final cArray = _CArray_CPublicTransportPlatformmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportPlatform();
+        _CArray_CPublicTransportPlatformaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportPlatformBasicFunctions on _CArray_CPublicTransportPlatform {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportPlatform_release(this);
+  }
+
+  static final _listToFill = <PublicTransportPlatform>[];
+
+  static void _iterate(_CPublicTransportPlatform item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportPlatform> _fillFromC() {
+    _forEach_CArray_CPublicTransportPlatform(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportPlatform)>(_iterate));
+    final result = List<PublicTransportPlatform>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportRouteDirection
+
+/** Направление маршрута общественного транспорта. */
+class PublicTransportRouteDirection {
+  /** Идентификатор направления маршрута. */
+  final PublicTransportRouteDirectionId id;
+  /** Тип направления маршрута. */
+  final PublicTransportRouteDirectionType type;
+  /** Геометрия направления маршрута. */
+  final PublicTransportRouteGeometry? geometry;
+  /** Последовательность остановочных платформ маршрута. */
+  final List<PublicTransportPlatform> platforms;
+
+  const PublicTransportRouteDirection({
+    required this.id,
+    required this.type,
+    required this.geometry,
+    required this.platforms
+  });
+
+  PublicTransportRouteDirection copyWith({
+    PublicTransportRouteDirectionId? id,
+    PublicTransportRouteDirectionType? type,
+    Optional<PublicTransportRouteGeometry?>? geometry,
+    List<PublicTransportPlatform>? platforms
+  }) {
+    return PublicTransportRouteDirection(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      geometry: geometry != null ? geometry.value : this.geometry,
+      platforms: platforms ?? this.platforms
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportRouteDirection &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.type == type &&
+    other.geometry == geometry &&
+    other.platforms == platforms;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, type, geometry, platforms);
+  }
+
+}
+final class _CPublicTransportRouteDirection extends ffi.Struct {
+  external _CPublicTransportRouteDirectionId id;
+
+  external _CPublicTransportRouteDirectionType type;
+
+  external _COptional_CPublicTransportRouteGeometry geometry;
+
+  external _CArray_CPublicTransportPlatform platforms;
+
+}
+// MARK: - PublicTransportRouteDirection <-> _CPublicTransportRouteDirection
+
+extension _CPublicTransportRouteDirectionToDart on _CPublicTransportRouteDirection {
+  PublicTransportRouteDirection _toDart() {
+    return PublicTransportRouteDirection(
+      id: this.id._toDart(),
+      type: this.type._toDart(),
+      geometry: this.geometry._toDart(),
+      platforms: this.platforms._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportRouteDirection on PublicTransportRouteDirection {
+  _CPublicTransportRouteDirection _copyFromDartTo_CPublicTransportRouteDirection() {
+    final res = _CPublicTransportRouteDirectionMakeDefault();
+    res.id = this.id._copyFromDartTo_CPublicTransportRouteDirectionId();
+    res.type = this.type._copyFromDartTo_CPublicTransportRouteDirectionType();
+    res.geometry = this.geometry._copyFromDartTo_COptional_CPublicTransportRouteGeometry();
+    res.platforms = this.platforms._copyFromDartTo_CArray_CPublicTransportPlatform();
+    return res;
+  }
+}
+extension _CPublicTransportRouteDirectionRelease on _CPublicTransportRouteDirection {
+  void _releaseIntermediate() {
+    geometry._releaseIntermediate();
+    platforms._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportDirectoryRouteDirectionNamesInfo? <-> _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo
+
+final class _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo extends ffi.Struct {
+  
+  external _CPublicTransportDirectoryRouteDirectionNamesInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoBasicFunctions on _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo {
+  void _releaseIntermediate() {
+    _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo_release(this);
+  }
+}
+
+extension _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoToDart on _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo {
+  PublicTransportDirectoryRouteDirectionNamesInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo on PublicTransportDirectoryRouteDirectionNamesInfo? {
+  _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo _copyFromDartTo_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo() {
+    final cOptional = _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPublicTransportDirectoryRouteDirectionNamesInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<PublicTransportRouteDirection> <-> _CArray_CPublicTransportRouteDirection
+
+final class _CArray_CPublicTransportRouteDirection extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportRouteDirectionToDart on _CArray_CPublicTransportRouteDirection {
+  List<PublicTransportRouteDirection> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportRouteDirection on List<PublicTransportRouteDirection> {
+  _CArray_CPublicTransportRouteDirection _copyFromDartTo_CArray_CPublicTransportRouteDirection() {
+    final cArray = _CArray_CPublicTransportRouteDirectionmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportRouteDirection();
+        _CArray_CPublicTransportRouteDirectionaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportRouteDirectionBasicFunctions on _CArray_CPublicTransportRouteDirection {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportRouteDirection_release(this);
+  }
+
+  static final _listToFill = <PublicTransportRouteDirection>[];
+
+  static void _iterate(_CPublicTransportRouteDirection item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportRouteDirection> _fillFromC() {
+    _forEach_CArray_CPublicTransportRouteDirection(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirection)>(_iterate));
+    final result = List<PublicTransportRouteDirection>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportDirectoryRouteInfo
+
+/** Справочная информация о маршруте общественного транспорта. */
+class PublicTransportDirectoryRouteInfo {
+  /** Идентификатор маршрута. */
+  final DgisObjectId id;
+  /** Название маршрута. */
+  final String name;
+  /** Цветовое кодирование маршрута. */
+  final int? color;
+  /** Информация о наименованиях начальной и конечной остановках маршрута. */
+  final PublicTransportDirectoryRouteDirectionNamesInfo? fromToStationNames;
+  /**
+   Направления маршрута.
+   Для остановочной платформы (тип ObjectType.StationPlatform)
+   может не содержать информацию о направлениях, которые проходят через платформу.
+   Для получения направлений необходимо сделать поисковой запрос с идентификатором маршрута.
+  */
+  final List<PublicTransportRouteDirection> directions;
+
+  const PublicTransportDirectoryRouteInfo({
+    required this.id,
+    required this.name,
+    required this.color,
+    required this.fromToStationNames,
+    required this.directions
+  });
+
+  PublicTransportDirectoryRouteInfo copyWith({
+    DgisObjectId? id,
+    String? name,
+    Optional<int?>? color,
+    Optional<PublicTransportDirectoryRouteDirectionNamesInfo?>? fromToStationNames,
+    List<PublicTransportRouteDirection>? directions
+  }) {
+    return PublicTransportDirectoryRouteInfo(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color != null ? color.value : this.color,
+      fromToStationNames: fromToStationNames != null ? fromToStationNames.value : this.fromToStationNames,
+      directions: directions ?? this.directions
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportDirectoryRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.name == name &&
+    other.color == color &&
+    other.fromToStationNames == fromToStationNames &&
+    other.directions == directions;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, name, color, fromToStationNames, directions);
+  }
+
+}
+final class _CPublicTransportDirectoryRouteInfo extends ffi.Struct {
+  external _CDgisObjectId id;
+
+  external _CString name;
+
+  external _COptional_uint32_t color;
+
+  external _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo fromToStationNames;
+
+  external _CArray_CPublicTransportRouteDirection directions;
+
+}
+// MARK: - PublicTransportDirectoryRouteInfo <-> _CPublicTransportDirectoryRouteInfo
+
+extension _CPublicTransportDirectoryRouteInfoToDart on _CPublicTransportDirectoryRouteInfo {
+  PublicTransportDirectoryRouteInfo _toDart() {
+    return PublicTransportDirectoryRouteInfo(
+      id: this.id._toDart(),
+      name: this.name._toDart(),
+      color: this.color._toDart(),
+      fromToStationNames: this.fromToStationNames._toDart(),
+      directions: this.directions._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportDirectoryRouteInfo on PublicTransportDirectoryRouteInfo {
+  _CPublicTransportDirectoryRouteInfo _copyFromDartTo_CPublicTransportDirectoryRouteInfo() {
+    final res = _CPublicTransportDirectoryRouteInfoMakeDefault();
+    res.id = this.id._copyFromDartTo_CDgisObjectId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.color = this.color._copyFromDartTo_COptional_uint32_t();
+    res.fromToStationNames = this.fromToStationNames._copyFromDartTo_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo();
+    res.directions = this.directions._copyFromDartTo_CArray_CPublicTransportRouteDirection();
+    return res;
+  }
+}
+extension _CPublicTransportDirectoryRouteInfoRelease on _CPublicTransportDirectoryRouteInfo {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    fromToStationNames._releaseIntermediate();
+    directions._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportIntervalWorkingHours
+
+/** Время действия интервального расписания. */
+class PublicTransportIntervalWorkingHours {
+  /** Время начала действия интервального расписания (в локальном для объекта часовом поясе) в системе UNIX. */
+  final int startTime;
+  /** Время начала действия интервального расписания в системе UNIX по UTC. */
+  final int startTimeUtc;
+  /** Время окончания действия интервального расписания (в локальном для объекта часовом поясе) в системе UNIX. */
+  final int finishTime;
+  /** Время окончания действия интервального расписания в системе UNIX по UTC. */
+  final int finishTimeUtc;
+
+  const PublicTransportIntervalWorkingHours({
+    this.startTime = 0,
+    this.startTimeUtc = 0,
+    this.finishTime = 0,
+    this.finishTimeUtc = 0
+  });
+
+  PublicTransportIntervalWorkingHours copyWith({
+    int? startTime,
+    int? startTimeUtc,
+    int? finishTime,
+    int? finishTimeUtc
+  }) {
+    return PublicTransportIntervalWorkingHours(
+      startTime: startTime ?? this.startTime,
+      startTimeUtc: startTimeUtc ?? this.startTimeUtc,
+      finishTime: finishTime ?? this.finishTime,
+      finishTimeUtc: finishTimeUtc ?? this.finishTimeUtc
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportIntervalWorkingHours &&
+    other.runtimeType == runtimeType &&
+    other.startTime == startTime &&
+    other.startTimeUtc == startTimeUtc &&
+    other.finishTime == finishTime &&
+    other.finishTimeUtc == finishTimeUtc;
+
+  @override
+  int get hashCode {
+    return Object.hash(startTime, startTimeUtc, finishTime, finishTimeUtc);
+  }
+
+}
+final class _CPublicTransportIntervalWorkingHours extends ffi.Struct {
+  @ffi.Uint64()
+  external int startTime;
+
+  @ffi.Uint64()
+  external int startTimeUtc;
+
+  @ffi.Uint64()
+  external int finishTime;
+
+  @ffi.Uint64()
+  external int finishTimeUtc;
+
+}
+// MARK: - PublicTransportIntervalWorkingHours <-> _CPublicTransportIntervalWorkingHours
+
+extension _CPublicTransportIntervalWorkingHoursToDart on _CPublicTransportIntervalWorkingHours {
+  PublicTransportIntervalWorkingHours _toDart() {
+    return PublicTransportIntervalWorkingHours(
+      startTime: this.startTime,
+      startTimeUtc: this.startTimeUtc,
+      finishTime: this.finishTime,
+      finishTimeUtc: this.finishTimeUtc
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportIntervalWorkingHours on PublicTransportIntervalWorkingHours {
+  _CPublicTransportIntervalWorkingHours _copyFromDartTo_CPublicTransportIntervalWorkingHours() {
+    final res = _CPublicTransportIntervalWorkingHoursMakeDefault();
+    res.startTime = this.startTime;
+    res.startTimeUtc = this.startTimeUtc;
+    res.finishTime = this.finishTime;
+    res.finishTimeUtc = this.finishTimeUtc;
+    return res;
+  }
+}
+extension _CPublicTransportIntervalWorkingHoursRelease on _CPublicTransportIntervalWorkingHours {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - PublicTransportIntervalWorkingHours? <-> _COptional_CPublicTransportIntervalWorkingHours
+
+final class _COptional_CPublicTransportIntervalWorkingHours extends ffi.Struct {
+  
+  external _CPublicTransportIntervalWorkingHours value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPublicTransportIntervalWorkingHoursBasicFunctions on _COptional_CPublicTransportIntervalWorkingHours {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CPublicTransportIntervalWorkingHoursToDart on _COptional_CPublicTransportIntervalWorkingHours {
+  PublicTransportIntervalWorkingHours? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPublicTransportIntervalWorkingHours on PublicTransportIntervalWorkingHours? {
+  _COptional_CPublicTransportIntervalWorkingHours _copyFromDartTo_COptional_CPublicTransportIntervalWorkingHours() {
+    final cOptional = _COptional_CPublicTransportIntervalWorkingHoursMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPublicTransportIntervalWorkingHours();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - PublicTransportIntervalSchedule
+
+/** Интервальное расписание. */
+class PublicTransportIntervalSchedule {
+  /** Период следования транспорта в минутах. */
+  final int period;
+  /** Время действия интервального расписания. */
+  final PublicTransportIntervalWorkingHours? workHours;
+
+  const PublicTransportIntervalSchedule({
+    this.period = 0,
+    required this.workHours
+  });
+
+  PublicTransportIntervalSchedule copyWith({
+    int? period,
+    Optional<PublicTransportIntervalWorkingHours?>? workHours
+  }) {
+    return PublicTransportIntervalSchedule(
+      period: period ?? this.period,
+      workHours: workHours != null ? workHours.value : this.workHours
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportIntervalSchedule &&
+    other.runtimeType == runtimeType &&
+    other.period == period &&
+    other.workHours == workHours;
+
+  @override
+  int get hashCode {
+    return Object.hash(period, workHours);
+  }
+
+}
+final class _CPublicTransportIntervalSchedule extends ffi.Struct {
+  @ffi.Uint8()
+  external int period;
+
+  external _COptional_CPublicTransportIntervalWorkingHours workHours;
+
+}
+// MARK: - PublicTransportIntervalSchedule <-> _CPublicTransportIntervalSchedule
+
+extension _CPublicTransportIntervalScheduleToDart on _CPublicTransportIntervalSchedule {
+  PublicTransportIntervalSchedule _toDart() {
+    return PublicTransportIntervalSchedule(
+      period: this.period,
+      workHours: this.workHours._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportIntervalSchedule on PublicTransportIntervalSchedule {
+  _CPublicTransportIntervalSchedule _copyFromDartTo_CPublicTransportIntervalSchedule() {
+    final res = _CPublicTransportIntervalScheduleMakeDefault();
+    res.period = this.period;
+    res.workHours = this.workHours._copyFromDartTo_COptional_CPublicTransportIntervalWorkingHours();
+    return res;
+  }
+}
+extension _CPublicTransportIntervalScheduleRelease on _CPublicTransportIntervalSchedule {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - List<int> <-> _CArray_uint64_t
+
+final class _CArray_uint64_t extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_uint64_tToDart on _CArray_uint64_t {
+  List<int> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_uint64_t on List<int> {
+  _CArray_uint64_t _copyFromDartTo_CArray_uint64_t() {
+    final cArray = _CArray_uint64_tmakeEmpty();
+    forEach((item) {
+        final cItem = item;
+        _CArray_uint64_taddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_uint64_tBasicFunctions on _CArray_uint64_t {
+  void _releaseIntermediate() {
+    _CArray_uint64_t_release(this);
+  }
+
+  static final _listToFill = <int>[];
+
+  static void _iterate(int item) {
+    _listToFill.add(item);
+  }
+
+  List<int> _fillFromC() {
+    _forEach_CArray_uint64_t(this, ffi.Pointer.fromFunction<ffi.Void Function(ffi.Uint64)>(_iterate));
+    final result = List<int>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportPreciseSchedule
+
+/** Точное расписание проезда общественного транспорта через платформу. */
+class PublicTransportPreciseSchedule {
+  /** Точное время проезда транспорта в формате HH:MM (в локальном для объекта часовом поясе). */
+  final DayTime preciseTime;
+  /** Массив с временем следующих рейсов (в локальном для объекта часовом поясе). */
+  final List<int> nextTrips;
+  /** Массив с временем следующих рейсов в UTC. */
+  final List<int> nextTripsUtc;
+
+  const PublicTransportPreciseSchedule({
+    required this.preciseTime,
+    required this.nextTrips,
+    required this.nextTripsUtc
+  });
+
+  PublicTransportPreciseSchedule copyWith({
+    DayTime? preciseTime,
+    List<int>? nextTrips,
+    List<int>? nextTripsUtc
+  }) {
+    return PublicTransportPreciseSchedule(
+      preciseTime: preciseTime ?? this.preciseTime,
+      nextTrips: nextTrips ?? this.nextTrips,
+      nextTripsUtc: nextTripsUtc ?? this.nextTripsUtc
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportPreciseSchedule &&
+    other.runtimeType == runtimeType &&
+    other.preciseTime == preciseTime &&
+    other.nextTrips == nextTrips &&
+    other.nextTripsUtc == nextTripsUtc;
+
+  @override
+  int get hashCode {
+    return Object.hash(preciseTime, nextTrips, nextTripsUtc);
+  }
+
+}
+final class _CPublicTransportPreciseSchedule extends ffi.Struct {
+  external _CDayTime preciseTime;
+
+  external _CArray_uint64_t nextTrips;
+
+  external _CArray_uint64_t nextTripsUtc;
+
+}
+// MARK: - PublicTransportPreciseSchedule <-> _CPublicTransportPreciseSchedule
+
+extension _CPublicTransportPreciseScheduleToDart on _CPublicTransportPreciseSchedule {
+  PublicTransportPreciseSchedule _toDart() {
+    return PublicTransportPreciseSchedule(
+      preciseTime: this.preciseTime._toDart(),
+      nextTrips: this.nextTrips._toDart(),
+      nextTripsUtc: this.nextTripsUtc._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportPreciseSchedule on PublicTransportPreciseSchedule {
+  _CPublicTransportPreciseSchedule _copyFromDartTo_CPublicTransportPreciseSchedule() {
+    final res = _CPublicTransportPreciseScheduleMakeDefault();
+    res.preciseTime = this.preciseTime._copyFromDartTo_CDayTime();
+    res.nextTrips = this.nextTrips._copyFromDartTo_CArray_uint64_t();
+    res.nextTripsUtc = this.nextTripsUtc._copyFromDartTo_CArray_uint64_t();
+    return res;
+  }
+}
+extension _CPublicTransportPreciseScheduleRelease on _CPublicTransportPreciseSchedule {
+  void _releaseIntermediate() {
+    nextTrips._releaseIntermediate();
+    nextTripsUtc._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportSchedule
+
+/** Расписание следования транспорта. */
+final class PublicTransportSchedule {
+  final Object? _value;
+  final int _index;
+
+  PublicTransportSchedule._raw(this._value, this._index);
+
+  PublicTransportSchedule.intervalSchedule(PublicTransportIntervalSchedule value) : this._raw(value, 0);
+  PublicTransportSchedule.preciseSchedule(PublicTransportPreciseSchedule value) : this._raw(value, 1);
+
+  bool get isIntervalSchedule => this._index == 0;
+  PublicTransportIntervalSchedule? get asIntervalSchedule => this.isIntervalSchedule ? this._value as PublicTransportIntervalSchedule : null;
+
+  bool get isPreciseSchedule => this._index == 1;
+  PublicTransportPreciseSchedule? get asPreciseSchedule => this.isPreciseSchedule ? this._value as PublicTransportPreciseSchedule : null;
+
+  T match<T>({
+    required T Function(PublicTransportIntervalSchedule value) intervalSchedule,
+    required T Function(PublicTransportPreciseSchedule value) preciseSchedule,
+  }) {
+    return switch (this._index) {
+      0 => intervalSchedule(this._value as PublicTransportIntervalSchedule),
+      1 => preciseSchedule(this._value as PublicTransportPreciseSchedule),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "PublicTransportSchedule(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportSchedule &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _CPublicTransportScheduleImpl extends ffi.Union {
+  external _CPublicTransportIntervalSchedule _intervalSchedule;
+  external _CPublicTransportPreciseSchedule _preciseSchedule;
+}
+
+final class _CPublicTransportSchedule extends ffi.Struct {
+  external _CPublicTransportScheduleImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CPublicTransportScheduleBasicFunctions on _CPublicTransportSchedule {
+  void _releaseIntermediate() {
+    _CPublicTransportSchedule_release(this);
+  }
+}
+	
+// MARK: - PublicTransportSchedule <-> CPublicTransportSchedule
+
+extension _CPublicTransportScheduleToDart on _CPublicTransportSchedule {
+  PublicTransportSchedule _toDart() {
+    return switch (this._index) {
+      0 => PublicTransportSchedule.intervalSchedule(this._impl._intervalSchedule._toDart()),
+      1 => PublicTransportSchedule.preciseSchedule(this._impl._preciseSchedule._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_CPublicTransportSchedule on PublicTransportSchedule {
+  _CPublicTransportSchedule _copyFromDartTo_CPublicTransportSchedule() {
+    var res = _CPublicTransportScheduleMakeDefault();
+    this.match<void>(
+      intervalSchedule: (PublicTransportIntervalSchedule value) {
+        res._impl._intervalSchedule = value._copyFromDartTo_CPublicTransportIntervalSchedule();
+        res._index = 0;
+      },
+      preciseSchedule: (PublicTransportPreciseSchedule value) {
+        res._impl._preciseSchedule = value._copyFromDartTo_CPublicTransportPreciseSchedule();
+        res._index = 1;
+      },
+    );
+    return res;
+  }
+}
+
+// MARK: - PublicTransportPlatformSchedule
+
+/** Расписание платформы. */
+class PublicTransportPlatformSchedule {
+  /** Расписание следования транспорта. */
+  final PublicTransportSchedule schedule;
+  /** Время наступления события (в локальном для объекта часовом поясе). */
+  final int startTime;
+  /** Время наступления события в UTC. */
+  final int startTimeUtc;
+
+  const PublicTransportPlatformSchedule({
+    required this.schedule,
+    this.startTime = 0,
+    this.startTimeUtc = 0
+  });
+
+  PublicTransportPlatformSchedule copyWith({
+    PublicTransportSchedule? schedule,
+    int? startTime,
+    int? startTimeUtc
+  }) {
+    return PublicTransportPlatformSchedule(
+      schedule: schedule ?? this.schedule,
+      startTime: startTime ?? this.startTime,
+      startTimeUtc: startTimeUtc ?? this.startTimeUtc
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportPlatformSchedule &&
+    other.runtimeType == runtimeType &&
+    other.schedule == schedule &&
+    other.startTime == startTime &&
+    other.startTimeUtc == startTimeUtc;
+
+  @override
+  int get hashCode {
+    return Object.hash(schedule, startTime, startTimeUtc);
+  }
+
+}
+final class _CPublicTransportPlatformSchedule extends ffi.Struct {
+  external _CPublicTransportSchedule schedule;
+
+  @ffi.Uint64()
+  external int startTime;
+
+  @ffi.Uint64()
+  external int startTimeUtc;
+
+}
+// MARK: - PublicTransportPlatformSchedule <-> _CPublicTransportPlatformSchedule
+
+extension _CPublicTransportPlatformScheduleToDart on _CPublicTransportPlatformSchedule {
+  PublicTransportPlatformSchedule _toDart() {
+    return PublicTransportPlatformSchedule(
+      schedule: this.schedule._toDart(),
+      startTime: this.startTime,
+      startTimeUtc: this.startTimeUtc
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportPlatformSchedule on PublicTransportPlatformSchedule {
+  _CPublicTransportPlatformSchedule _copyFromDartTo_CPublicTransportPlatformSchedule() {
+    final res = _CPublicTransportPlatformScheduleMakeDefault();
+    res.schedule = this.schedule._copyFromDartTo_CPublicTransportSchedule();
+    res.startTime = this.startTime;
+    res.startTimeUtc = this.startTimeUtc;
+    return res;
+  }
+}
+extension _CPublicTransportPlatformScheduleRelease on _CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    schedule._releaseIntermediate();
+  }
+}
+
+// MARK: - int? <-> _COptional_uint8_t
+
+final class _COptional_uint8_t extends ffi.Struct {
+  @ffi.Uint8()
+  external int value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_uint8_tBasicFunctions on _COptional_uint8_t {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_uint8_tToDart on _COptional_uint8_t {
+  int? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value;
+  }
+}
+
+extension _DartTo_COptional_uint8_t on int? {
+  _COptional_uint8_t _copyFromDartTo_COptional_uint8_t() {
+    final cOptional = _COptional_uint8_tMakeDefault();
+    if (this != null) {
+      cOptional.value = this!;
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<PublicTransportDirectoryPlatformDepartureInfo> <-> _CArray_CPublicTransportDirectoryPlatformDepartureInfo
+
+final class _CArray_CPublicTransportDirectoryPlatformDepartureInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportDirectoryPlatformDepartureInfoToDart on _CArray_CPublicTransportDirectoryPlatformDepartureInfo {
+  List<PublicTransportDirectoryPlatformDepartureInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportDirectoryPlatformDepartureInfo on List<PublicTransportDirectoryPlatformDepartureInfo> {
+  _CArray_CPublicTransportDirectoryPlatformDepartureInfo _copyFromDartTo_CArray_CPublicTransportDirectoryPlatformDepartureInfo() {
+    final cArray = _CArray_CPublicTransportDirectoryPlatformDepartureInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportDirectoryPlatformDepartureInfo();
+        _CArray_CPublicTransportDirectoryPlatformDepartureInfoaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportDirectoryPlatformDepartureInfoBasicFunctions on _CArray_CPublicTransportDirectoryPlatformDepartureInfo {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportDirectoryPlatformDepartureInfo_release(this);
+  }
+
+  static final _listToFill = <PublicTransportDirectoryPlatformDepartureInfo>[];
+
+  static void _iterate(_CPublicTransportDirectoryPlatformDepartureInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportDirectoryPlatformDepartureInfo> _fillFromC() {
+    _forEach_CArray_CPublicTransportDirectoryPlatformDepartureInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportDirectoryPlatformDepartureInfo)>(_iterate));
+    final result = List<PublicTransportDirectoryPlatformDepartureInfo>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportNearTripSchedule
+
+/** Интервальное расписание. */
+class PublicTransportNearTripSchedule {
+  /** Период следования транспорта в минутах. */
+  final int? period;
+  /** Расписание отправлений для платформ. */
+  final List<PublicTransportDirectoryPlatformDepartureInfo> platformTimes;
+
+  const PublicTransportNearTripSchedule({
+    required this.period,
+    required this.platformTimes
+  });
+
+  PublicTransportNearTripSchedule copyWith({
+    Optional<int?>? period,
+    List<PublicTransportDirectoryPlatformDepartureInfo>? platformTimes
+  }) {
+    return PublicTransportNearTripSchedule(
+      period: period != null ? period.value : this.period,
+      platformTimes: platformTimes ?? this.platformTimes
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportNearTripSchedule &&
+    other.runtimeType == runtimeType &&
+    other.period == period &&
+    other.platformTimes == platformTimes;
+
+  @override
+  int get hashCode {
+    return Object.hash(period, platformTimes);
+  }
+
+}
+final class _CPublicTransportNearTripSchedule extends ffi.Struct {
+  external _COptional_uint8_t period;
+
+  external _CArray_CPublicTransportDirectoryPlatformDepartureInfo platformTimes;
+
+}
+// MARK: - PublicTransportNearTripSchedule <-> _CPublicTransportNearTripSchedule
+
+extension _CPublicTransportNearTripScheduleToDart on _CPublicTransportNearTripSchedule {
+  PublicTransportNearTripSchedule _toDart() {
+    return PublicTransportNearTripSchedule(
+      period: this.period._toDart(),
+      platformTimes: this.platformTimes._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportNearTripSchedule on PublicTransportNearTripSchedule {
+  _CPublicTransportNearTripSchedule _copyFromDartTo_CPublicTransportNearTripSchedule() {
+    final res = _CPublicTransportNearTripScheduleMakeDefault();
+    res.period = this.period._copyFromDartTo_COptional_uint8_t();
+    res.platformTimes = this.platformTimes._copyFromDartTo_CArray_CPublicTransportDirectoryPlatformDepartureInfo();
+    return res;
+  }
+}
+extension _CPublicTransportNearTripScheduleRelease on _CPublicTransportNearTripSchedule {
+  void _releaseIntermediate() {
+    platformTimes._releaseIntermediate();
+  }
+}
+
+// MARK: - core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>> <-> _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule
+
+final class _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleToDart on _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule {
+  core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule on core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>> {
+  _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule _copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule() {
+    final cDict = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CPublicTransportRouteDirectionId();
+        final cValue = v._copyFromDartTo_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule();
+        _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleBasicFunctions on _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release(this);
+  }
+
+  static final _mapToFill = <PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>>{};
+
+  static void _iterate(_CPublicTransportRouteDirectionId key, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>> _fillFromC() {
+    _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule value)>(_iterate));
+    final result = core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>> <-> _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule
+
+final class _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleToDart on _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule {
+  core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule on core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>> {
+  _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule _copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule() {
+    final cDict = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CPublicTransportRouteDirectionId();
+        final cValue = v._copyFromDartTo_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule();
+        _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleBasicFunctions on _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release(this);
+  }
+
+  static final _mapToFill = <PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>>{};
+
+  static void _iterate(_CPublicTransportRouteDirectionId key, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>> _fillFromC() {
+    _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule value)>(_iterate));
+    final result = core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule> <-> _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule
+
+final class _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleToDart on _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule {
+  core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule on core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule> {
+  _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule _copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule() {
+    final cDict = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CPublicTransportRouteDirectionId();
+        final cValue = v._copyFromDartTo_CPublicTransportIntervalSchedule();
+        _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleaddElement(cDict, cKey, cValue);
+        
+        
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleBasicFunctions on _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_release(this);
+  }
+
+  static final _mapToFill = <PublicTransportRouteDirectionId, PublicTransportIntervalSchedule>{};
+
+  static void _iterate(_CPublicTransportRouteDirectionId key, _CPublicTransportIntervalSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule> _fillFromC() {
+    _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportIntervalSchedule value)>(_iterate));
+    final result = core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportDirectoryRouteScheduleInfo
+
+/** Справочная информация о расписаниях платформ и направлений на маршруте. */
+class PublicTransportDirectoryRouteScheduleInfo {
+  /** Расписания для платформ до конца дня. */
+  final core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>> fullDayPlatforms;
+  /** Ближайшие рейсы для направлений до конечной платформы. */
+  final core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>> nearTrips;
+  /** Ближайшие интервальные расписания для направлений. */
+  final core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule> intervalTrips;
+
+  const PublicTransportDirectoryRouteScheduleInfo({
+    required this.fullDayPlatforms,
+    required this.nearTrips,
+    required this.intervalTrips
+  });
+
+  PublicTransportDirectoryRouteScheduleInfo copyWith({
+    core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>>? fullDayPlatforms,
+    core.Map<PublicTransportRouteDirectionId, core.Map<DgisObjectId, PublicTransportNearTripSchedule>>? nearTrips,
+    core.Map<PublicTransportRouteDirectionId, PublicTransportIntervalSchedule>? intervalTrips
+  }) {
+    return PublicTransportDirectoryRouteScheduleInfo(
+      fullDayPlatforms: fullDayPlatforms ?? this.fullDayPlatforms,
+      nearTrips: nearTrips ?? this.nearTrips,
+      intervalTrips: intervalTrips ?? this.intervalTrips
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportDirectoryRouteScheduleInfo &&
+    other.runtimeType == runtimeType &&
+    other.fullDayPlatforms == fullDayPlatforms &&
+    other.nearTrips == nearTrips &&
+    other.intervalTrips == intervalTrips;
+
+  @override
+  int get hashCode {
+    return Object.hash(fullDayPlatforms, nearTrips, intervalTrips);
+  }
+
+}
+final class _CPublicTransportDirectoryRouteScheduleInfo extends ffi.Struct {
+  external _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule fullDayPlatforms;
+
+  external _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule nearTrips;
+
+  external _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule intervalTrips;
+
+}
+// MARK: - PublicTransportDirectoryRouteScheduleInfo <-> _CPublicTransportDirectoryRouteScheduleInfo
+
+extension _CPublicTransportDirectoryRouteScheduleInfoToDart on _CPublicTransportDirectoryRouteScheduleInfo {
+  PublicTransportDirectoryRouteScheduleInfo _toDart() {
+    return PublicTransportDirectoryRouteScheduleInfo(
+      fullDayPlatforms: this.fullDayPlatforms._toDart(),
+      nearTrips: this.nearTrips._toDart(),
+      intervalTrips: this.intervalTrips._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportDirectoryRouteScheduleInfo on PublicTransportDirectoryRouteScheduleInfo {
+  _CPublicTransportDirectoryRouteScheduleInfo _copyFromDartTo_CPublicTransportDirectoryRouteScheduleInfo() {
+    final res = _CPublicTransportDirectoryRouteScheduleInfoMakeDefault();
+    res.fullDayPlatforms = this.fullDayPlatforms._copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule();
+    res.nearTrips = this.nearTrips._copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule();
+    res.intervalTrips = this.intervalTrips._copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule();
+    return res;
+  }
+}
+extension _CPublicTransportDirectoryRouteScheduleInfoRelease on _CPublicTransportDirectoryRouteScheduleInfo {
+  void _releaseIntermediate() {
+    fullDayPlatforms._releaseIntermediate();
+    nearTrips._releaseIntermediate();
+    intervalTrips._releaseIntermediate();
+  }
+}
+
+// MARK: - core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>> <-> _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule
+
+final class _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleToDart on _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule {
+  core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule on core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>> {
+  _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule _copyFromDartTo_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule() {
+    final cDict = _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CDgisObjectId();
+        final cValue = v._copyFromDartTo_CArray_CPublicTransportPlatformSchedule();
+        _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleBasicFunctions on _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release(this);
+  }
+
+  static final _mapToFill = <DgisObjectId, List<PublicTransportPlatformSchedule>>{};
+
+  static void _iterate(_CDgisObjectId key, _CArray_CPublicTransportPlatformSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>> _fillFromC() {
+    _forEach_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId, _CArray_CPublicTransportPlatformSchedule value)>(_iterate));
+    final result = core.Map<DgisObjectId, List<PublicTransportPlatformSchedule>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - List<PublicTransportPlatformSchedule> <-> _CArray_CPublicTransportPlatformSchedule
+
+final class _CArray_CPublicTransportPlatformSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportPlatformScheduleToDart on _CArray_CPublicTransportPlatformSchedule {
+  List<PublicTransportPlatformSchedule> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportPlatformSchedule on List<PublicTransportPlatformSchedule> {
+  _CArray_CPublicTransportPlatformSchedule _copyFromDartTo_CArray_CPublicTransportPlatformSchedule() {
+    final cArray = _CArray_CPublicTransportPlatformSchedulemakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportPlatformSchedule();
+        _CArray_CPublicTransportPlatformScheduleaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportPlatformScheduleBasicFunctions on _CArray_CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportPlatformSchedule_release(this);
+  }
+
+  static final _listToFill = <PublicTransportPlatformSchedule>[];
+
+  static void _iterate(_CPublicTransportPlatformSchedule item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportPlatformSchedule> _fillFromC() {
+    _forEach_CArray_CPublicTransportPlatformSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportPlatformSchedule)>(_iterate));
+    final result = List<PublicTransportPlatformSchedule>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<DgisObjectId, PublicTransportNearTripSchedule> <-> _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule
+
+final class _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleToDart on _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule {
+  core.Map<DgisObjectId, PublicTransportNearTripSchedule> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule on core.Map<DgisObjectId, PublicTransportNearTripSchedule> {
+  _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule _copyFromDartTo_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule() {
+    final cDict = _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CDgisObjectId();
+        final cValue = v._copyFromDartTo_CPublicTransportNearTripSchedule();
+        _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleBasicFunctions on _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release(this);
+  }
+
+  static final _mapToFill = <DgisObjectId, PublicTransportNearTripSchedule>{};
+
+  static void _iterate(_CDgisObjectId key, _CPublicTransportNearTripSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<DgisObjectId, PublicTransportNearTripSchedule> _fillFromC() {
+    _forEach_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportNearTripSchedule value)>(_iterate));
+    final result = core.Map<DgisObjectId, PublicTransportNearTripSchedule>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo> <-> _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo
+
+final class _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoToDart on _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo {
+  core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo on core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo> {
+  _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo _copyFromDartTo_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo() {
+    final cDict = _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfomakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CDgisObjectId();
+        final cValue = v._copyFromDartTo_CPublicTransportDirectoryRouteScheduleInfo();
+        _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoBasicFunctions on _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo {
+  void _releaseIntermediate() {
+    _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_release(this);
+  }
+
+  static final _mapToFill = <DgisObjectId, PublicTransportDirectoryRouteScheduleInfo>{};
+
+  static void _iterate(_CDgisObjectId key, _CPublicTransportDirectoryRouteScheduleInfo value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo> _fillFromC() {
+    _forEach_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportDirectoryRouteScheduleInfo value)>(_iterate));
+    final result = core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>> <-> _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule
+
+final class _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleToDart on _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule {
+  core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule on core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>> {
+  _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule _copyFromDartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule() {
+    final cDict = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CDgisObjectId();
+        final cValue = v._copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule();
+        _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleBasicFunctions on _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release(this);
+  }
+
+  static final _mapToFill = <DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>>{};
+
+  static void _iterate(_CDgisObjectId key, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>> _fillFromC() {
+    _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule value)>(_iterate));
+    final result = core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>> <-> _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule
+
+final class _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleToDart on _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule {
+  core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule on core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>> {
+  _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule _copyFromDartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule() {
+    final cDict = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CDgisObjectId();
+        final cValue = v._copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule();
+        _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleBasicFunctions on _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release(this);
+  }
+
+  static final _mapToFill = <DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>>{};
+
+  static void _iterate(_CDgisObjectId key, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>> _fillFromC() {
+    _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule value)>(_iterate));
+    final result = core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicTransportDirectoryScheduleInfo
+
+/** Справочная информация о расписаниях платформ и направлений. */
+class PublicTransportDirectoryScheduleInfo {
+  /** Справочная информация о расписаниях платформ и направлений для маршрутов. */
+  final core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo> routeSchedules;
+  /**
+   Расписания для платформы по маршутам до конца дня.
+   Поле будет заполнено для объекта типа ObjectType.StationPlatform.
+  
+   Массив с объектами PublicTransportPlatformSchedule
+   представляет последовательность расписаний, следующих друг за другом.
+   Например:
+   1. Транспорт отправляется с периодом в 2 минуты (period)
+   начиная с 1747353600 (start_time) и заканчивая 1747360800 (finish_time)
+   2. Далее отправляется по расписанию в 12:15 - precise_time, 12:30 и 13:00
+  */
+  final core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>> fullDayPlatforms;
+  /**
+   Ближайшие рейсы для направлений по маршрутам до конечной платформы.
+   Поле будет заполнено для объекта типа ObjectType.StationPlatform.
+  */
+  final core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>> nearTrips;
+
+  const PublicTransportDirectoryScheduleInfo({
+    required this.routeSchedules,
+    required this.fullDayPlatforms,
+    required this.nearTrips
+  });
+
+  PublicTransportDirectoryScheduleInfo copyWith({
+    core.Map<DgisObjectId, PublicTransportDirectoryRouteScheduleInfo>? routeSchedules,
+    core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>>? fullDayPlatforms,
+    core.Map<DgisObjectId, core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>>? nearTrips
+  }) {
+    return PublicTransportDirectoryScheduleInfo(
+      routeSchedules: routeSchedules ?? this.routeSchedules,
+      fullDayPlatforms: fullDayPlatforms ?? this.fullDayPlatforms,
+      nearTrips: nearTrips ?? this.nearTrips
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportDirectoryScheduleInfo &&
+    other.runtimeType == runtimeType &&
+    other.routeSchedules == routeSchedules &&
+    other.fullDayPlatforms == fullDayPlatforms &&
+    other.nearTrips == nearTrips;
+
+  @override
+  int get hashCode {
+    return Object.hash(routeSchedules, fullDayPlatforms, nearTrips);
+  }
+
+}
+final class _CPublicTransportDirectoryScheduleInfo extends ffi.Struct {
+  external _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo routeSchedules;
+
+  external _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule fullDayPlatforms;
+
+  external _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule nearTrips;
+
+}
+// MARK: - PublicTransportDirectoryScheduleInfo <-> _CPublicTransportDirectoryScheduleInfo
+
+extension _CPublicTransportDirectoryScheduleInfoToDart on _CPublicTransportDirectoryScheduleInfo {
+  PublicTransportDirectoryScheduleInfo _toDart() {
+    return PublicTransportDirectoryScheduleInfo(
+      routeSchedules: this.routeSchedules._toDart(),
+      fullDayPlatforms: this.fullDayPlatforms._toDart(),
+      nearTrips: this.nearTrips._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportDirectoryScheduleInfo on PublicTransportDirectoryScheduleInfo {
+  _CPublicTransportDirectoryScheduleInfo _copyFromDartTo_CPublicTransportDirectoryScheduleInfo() {
+    final res = _CPublicTransportDirectoryScheduleInfoMakeDefault();
+    res.routeSchedules = this.routeSchedules._copyFromDartTo_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo();
+    res.fullDayPlatforms = this.fullDayPlatforms._copyFromDartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule();
+    res.nearTrips = this.nearTrips._copyFromDartTo_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule();
+    return res;
+  }
+}
+extension _CPublicTransportDirectoryScheduleInfoRelease on _CPublicTransportDirectoryScheduleInfo {
+  void _releaseIntermediate() {
+    routeSchedules._releaseIntermediate();
+    fullDayPlatforms._releaseIntermediate();
+    nearTrips._releaseIntermediate();
+  }
+}
+
+// MARK: - core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>> <-> _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule
+
+final class _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleToDart on _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule {
+  core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule on core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>> {
+  _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule _copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule() {
+    final cDict = _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CPublicTransportRouteDirectionId();
+        final cValue = v._copyFromDartTo_CArray_CPublicTransportPlatformSchedule();
+        _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleBasicFunctions on _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release(this);
+  }
+
+  static final _mapToFill = <PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>{};
+
+  static void _iterate(_CPublicTransportRouteDirectionId key, _CArray_CPublicTransportPlatformSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>> _fillFromC() {
+    _forEach_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CArray_CPublicTransportPlatformSchedule value)>(_iterate));
+    final result = core.Map<PublicTransportRouteDirectionId, List<PublicTransportPlatformSchedule>>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule> <-> _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule
+
+final class _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleToDart on _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule {
+  core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule on core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule> {
+  _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule _copyFromDartTo_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule() {
+    final cDict = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CPublicTransportRouteDirectionId();
+        final cValue = v._copyFromDartTo_CPublicTransportNearTripSchedule();
+        _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElement(cDict, cKey, cValue);
+        
+        cValue._releaseIntermediate();
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleBasicFunctions on _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule {
+  void _releaseIntermediate() {
+    _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release(this);
+  }
+
+  static final _mapToFill = <PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>{};
+
+  static void _iterate(_CPublicTransportRouteDirectionId key, _CPublicTransportNearTripSchedule value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule> _fillFromC() {
+    _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportNearTripSchedule value)>(_iterate));
+    final result = core.Map<PublicTransportRouteDirectionId, PublicTransportNearTripSchedule>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - AddressAdmDiv
 
 /** Объект административного деления. */
@@ -8980,7 +11528,11 @@ class Address {
   final String? postCode;
   /** Уникальный почтовый код здания. */
   final String? buildingCode;
-  /** Код ФИАС объекта. */
+  /**
+   Код ФИАС объекта.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   final String? fiasCode;
   /**
    Комментарий к адресу.
@@ -9127,6 +11679,8 @@ class DirectoryObject implements ffi.Finalizable {
   /**
    Дополнительная информация заголовка
    Пример: "(кв. 1-12)"
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
   */
   String get titleAddition {
     _CString res = _CDirectoryObject_titleAddition(_CDirectoryObjectMakeDefault().._impl=_self);
@@ -9221,26 +11775,42 @@ class DirectoryObject implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
-  /** Идентификатор этажа, на котором расположен объект. */
+  /**
+   Идентификатор этажа, на котором расположен объект.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   LevelId? get levelId {
     _COptional_CLevelId res = _CDirectoryObject_levelId(_CDirectoryObjectMakeDefault().._impl=_self);
     return res._toDart();
   }
-  /** Информация об этажных планах здания. */
+  /**
+   Информация об этажных планах здания.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   BuildingLevels? get buildingLevels {
     _COptional_CBuildingLevels res = _CDirectoryObject_buildingLevels(_CDirectoryObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
   }
-  /** Информация о входах. */
+  /**
+   Информация о входах.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   List<EntranceInfo> get entrances {
     _CArray_CEntranceInfo res = _CDirectoryObject_entrances(_CDirectoryObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
   }
-  /** Данные о лицензии организации. */
+  /**
+   Данные о лицензии организации.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   TradeLicense? get tradeLicense {
     _COptional_CTradeLicense res = _CDirectoryObject_tradeLicense(_CDirectoryObjectMakeDefault().._impl=_self);
     final t = res._toDart();
@@ -9275,9 +11845,41 @@ class DirectoryObject implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
-  /** Связанные в объединённую карточку объекты. */
+  /**
+   Связанные в объединённую карточку объекты.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
   List<GroupItem> get group {
     _CArray_CGroupItem res = _CDirectoryObject_group(_CDirectoryObjectMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /**
+   Справочная информация о маршрутах общественного транспорта.
+   Поле заполняется только при поиске по идентификатору объекта.
+  
+   Для маршрута (тип ObjectType.Route) содержит информацию только об одном маршруте.
+   Для остановочной платформы (тип ObjectType.StationPlatform), станции метро (тип ObjectType.StationMetro) и
+   входа на станцию (тип ObjectType.StationEntrance) содержит информацию обо всех маршрутах, которые проходят через
+   объект.
+  */
+  List<PublicTransportDirectoryRouteInfo> get routeInfos {
+    _CArray_CPublicTransportDirectoryRouteInfo res = _CDirectoryObject_routeInfos(_CDirectoryObjectMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /**
+   Справочная информация о идентификаторах платформ общественного транспорта.
+   Поле заполняется только при поиске по идентификатору объекта.
+  
+   Для входа на станцию (тип ObjectType.StationEntrance) и станции метро (тип ObjectType.StationMetro) содержит
+   информацию обо всех идентификаторах платформ.
+  */
+  List<DgisObjectId> get platformIds {
+    _CArray_CDgisObjectId res = _CDirectoryObject_platformIds(_CDirectoryObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -9312,6 +11914,20 @@ class DirectoryObject implements ffi.Finalizable {
   )  {
     var _a1 = type._copyFromDartTo_CFormattingType();
     _COptional_CFormattedAddress res = _CDirectoryObject_formattedAddress_CFormattingType(_CDirectoryObjectMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Информация о расписаниях платформ и направлений.
+  
+   - Parameter departureTimeUtc: Время в системе UNIX по UTC, на которое необходимо получить расписание.
+  */
+  CancelableOperation<PublicTransportDirectoryScheduleInfo?> publicTransportScheduleInfo(
+    int departureTimeUtc
+  )  {
+    _CFuture_COptional_CPublicTransportDirectoryScheduleInfo res = _CDirectoryObject_publicTransportScheduleInfo_uint64_t(_CDirectoryObjectMakeDefault().._impl=_self, departureTimeUtc);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -9843,42 +12459,6 @@ extension _CArray_CEntranceInfoBasicFunctions on _CArray_CEntranceInfo {
   }
 }
 	
-// MARK: - TradeLicense? <-> _COptional_CTradeLicense
-
-final class _COptional_CTradeLicense extends ffi.Struct {
-  
-  external _CTradeLicense value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CTradeLicenseBasicFunctions on _COptional_CTradeLicense {
-  void _releaseIntermediate() {
-    _COptional_CTradeLicense_release(this);
-  }
-}
-
-extension _COptional_CTradeLicenseToDart on _COptional_CTradeLicense {
-  TradeLicense? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CTradeLicense on TradeLicense? {
-  _COptional_CTradeLicense _copyFromDartTo_COptional_CTradeLicense() {
-    final cOptional = _COptional_CTradeLicenseMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CTradeLicense();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - ChargingStation? <-> _COptional_CChargingStation
 
 final class _COptional_CChargingStation extends ffi.Struct {
@@ -9991,6 +12571,250 @@ extension _CArray_CGroupItemBasicFunctions on _CArray_CGroupItem {
     final result = List<GroupItem>.from(_listToFill);
     _listToFill.clear();
     return result;
+  }
+}
+	
+// MARK: - List<PublicTransportDirectoryRouteInfo> <-> _CArray_CPublicTransportDirectoryRouteInfo
+
+final class _CArray_CPublicTransportDirectoryRouteInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportDirectoryRouteInfoToDart on _CArray_CPublicTransportDirectoryRouteInfo {
+  List<PublicTransportDirectoryRouteInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportDirectoryRouteInfo on List<PublicTransportDirectoryRouteInfo> {
+  _CArray_CPublicTransportDirectoryRouteInfo _copyFromDartTo_CArray_CPublicTransportDirectoryRouteInfo() {
+    final cArray = _CArray_CPublicTransportDirectoryRouteInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportDirectoryRouteInfo();
+        _CArray_CPublicTransportDirectoryRouteInfoaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportDirectoryRouteInfoBasicFunctions on _CArray_CPublicTransportDirectoryRouteInfo {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportDirectoryRouteInfo_release(this);
+  }
+
+  static final _listToFill = <PublicTransportDirectoryRouteInfo>[];
+
+  static void _iterate(_CPublicTransportDirectoryRouteInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportDirectoryRouteInfo> _fillFromC() {
+    _forEach_CArray_CPublicTransportDirectoryRouteInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportDirectoryRouteInfo)>(_iterate));
+    final result = List<PublicTransportDirectoryRouteInfo>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - List<DgisObjectId> <-> _CArray_CDgisObjectId
+
+final class _CArray_CDgisObjectId extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CDgisObjectIdToDart on _CArray_CDgisObjectId {
+  List<DgisObjectId> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CDgisObjectId on List<DgisObjectId> {
+  _CArray_CDgisObjectId _copyFromDartTo_CArray_CDgisObjectId() {
+    final cArray = _CArray_CDgisObjectIdmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CDgisObjectId();
+        _CArray_CDgisObjectIdaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CDgisObjectIdBasicFunctions on _CArray_CDgisObjectId {
+  void _releaseIntermediate() {
+    _CArray_CDgisObjectId_release(this);
+  }
+
+  static final _listToFill = <DgisObjectId>[];
+
+  static void _iterate(_CDgisObjectId item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<DgisObjectId> _fillFromC() {
+    _forEach_CArray_CDgisObjectId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId)>(_iterate));
+    final result = List<DgisObjectId>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - CancelableOperation<PublicTransportDirectoryScheduleInfo?> <-> _CFuture_COptional_CPublicTransportDirectoryScheduleInfo
+
+final class _CFuture_COptional_CPublicTransportDirectoryScheduleInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable {
+  final Completer<PublicTransportDirectoryScheduleInfo?> completer;
+  final _CFuture_COptional_CPublicTransportDirectoryScheduleInfo _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_COptional_CPublicTransportDirectoryScheduleInfoBasicFunctions on _CFuture_COptional_CPublicTransportDirectoryScheduleInfo {
+  void _releaseIntermediate() {
+    _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_release(this);
+  }
+
+  _CFuture_COptional_CPublicTransportDirectoryScheduleInfo _retain() {
+    return _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_retain(this);
+  }
+}
+
+extension _CFuture_COptional_CPublicTransportDirectoryScheduleInfoToDart on _CFuture_COptional_CPublicTransportDirectoryScheduleInfo {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable>{};
+
+  static void valueFunction(_COptional_CPublicTransportDirectoryScheduleInfo cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<PublicTransportDirectoryScheduleInfo?> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<PublicTransportDirectoryScheduleInfo?>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_COptional_CPublicTransportDirectoryScheduleInfoReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_COptional_CPublicTransportDirectoryScheduleInfo on CancelableOperation<PublicTransportDirectoryScheduleInfo?> {
+  _CFuture_COptional_CPublicTransportDirectoryScheduleInfo _copyFromDartTo_CFuture_COptional_CPublicTransportDirectoryScheduleInfo() {
+    return _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefault();
+  }
+}
+	
+// MARK: - PublicTransportDirectoryScheduleInfo? <-> _COptional_CPublicTransportDirectoryScheduleInfo
+
+final class _COptional_CPublicTransportDirectoryScheduleInfo extends ffi.Struct {
+  
+  external _CPublicTransportDirectoryScheduleInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPublicTransportDirectoryScheduleInfoBasicFunctions on _COptional_CPublicTransportDirectoryScheduleInfo {
+  void _releaseIntermediate() {
+    _COptional_CPublicTransportDirectoryScheduleInfo_release(this);
+  }
+}
+
+extension _COptional_CPublicTransportDirectoryScheduleInfoToDart on _COptional_CPublicTransportDirectoryScheduleInfo {
+  PublicTransportDirectoryScheduleInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPublicTransportDirectoryScheduleInfo on PublicTransportDirectoryScheduleInfo? {
+  _COptional_CPublicTransportDirectoryScheduleInfo _copyFromDartTo_COptional_CPublicTransportDirectoryScheduleInfo() {
+    final cOptional = _COptional_CPublicTransportDirectoryScheduleInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPublicTransportDirectoryScheduleInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - CCancellable <-> _CCancellable
+
+final class _CCancellable extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CCancellableBasicFunctions on _CCancellable {
+  void _releaseIntermediate() {
+    _CCancellable_release(this);
+  }
+
+  _CCancellable _retain() {
+    return _CCancellable_retain(this);
+  }
+
+  void _cancel() {
+    _CCancellableCancel(this);
+    this._releaseIntermediate();
   }
 }
 	
@@ -10269,55 +13093,6 @@ extension _DartTo_COptional_CPage on Page? {
     return cOptional;
   }
 }
-// MARK: - CCancellable <-> _CCancellable
-
-final class _CCancellable extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CCancellableBasicFunctions on _CCancellable {
-  void _releaseIntermediate() {
-    _CCancellable_release(this);
-  }
-
-  _CCancellable _retain() {
-    return _CCancellable_retain(this);
-  }
-
-  void _cancel() {
-    _CCancellableCancel(this);
-    this._releaseIntermediate();
-  }
-}
-	
-// MARK: - CError <-> _CError
-
-final class _CError extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CErrorBasicFunctions on _CError {
-  void _releaseIntermediate() {
-    _CError_release(this);
-  }
-}
-
-extension _CErrorToDart on _CError {
-  NativeException _toDart() {
-    final res = _CErrorGetDescription(_CErrorMakeDefault().._impl = _impl);
-    return NativeException(res.toDartString());
-  }
-}
-
-extension _DartTo_CError on NativeException {
-  _CError _copyFromDartTo_CError() {
-    _CString description = this.toString()._copyFromDartTo_CString();
-    final res = _CErrorCreateWithDescription(description._getData());
-    description._releaseIntermediate();
-    return res;
-  }
-}
-	
 // MARK: - WidgetType
 
 /** Тип виджета. */
@@ -11708,6 +14483,11 @@ class SearchResult implements ffi.Finalizable {
     bool res = _CSearchResult_autoUseFirstResult(_CSearchResultMakeDefault().._impl=_self);
     return res;
   }
+  /** Признак того, что запрошены объекты поблизости. */
+  bool get nearbyRequested {
+    bool res = _CSearchResult_nearbyRequested(_CSearchResultMakeDefault().._impl=_self);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CSearchResult_releasePtr);
 
@@ -11913,13 +14693,13 @@ extension _CGeometryToDart on _CGeometry {
         final res = Geometry._create(_retain()._impl);
         return res;
       case 1:
-        final res = PointGeometry._create(_retain()._impl);
+        final res = PolylineGeometry._create(_retain()._impl);
         return res;
       case 2:
-        final res = PolygonGeometry._create(_retain()._impl);
+        final res = PointGeometry._create(_retain()._impl);
         return res;
       case 3:
-        final res = PolylineGeometry._create(_retain()._impl);
+        final res = PolygonGeometry._create(_retain()._impl);
         return res;
       case 4:
         final res = ComplexGeometry._create(_retain()._impl);
@@ -12332,49 +15112,6 @@ extension _CArray_CUIMarkerInfoBasicFunctions on _CArray_CUIMarkerInfo {
   List<UIMarkerInfo> _fillFromC() {
     _forEach_CArray_CUIMarkerInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CUIMarkerInfo)>(_iterate));
     final result = List<UIMarkerInfo>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - List<DgisObjectId> <-> _CArray_CDgisObjectId
-
-final class _CArray_CDgisObjectId extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CDgisObjectIdToDart on _CArray_CDgisObjectId {
-  List<DgisObjectId> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CDgisObjectId on List<DgisObjectId> {
-  _CArray_CDgisObjectId _copyFromDartTo_CArray_CDgisObjectId() {
-    final cArray = _CArray_CDgisObjectIdmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CDgisObjectId();
-        _CArray_CDgisObjectIdaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CDgisObjectIdBasicFunctions on _CArray_CDgisObjectId {
-  void _releaseIntermediate() {
-    _CArray_CDgisObjectId_release(this);
-  }
-
-  static final _listToFill = <DgisObjectId>[];
-
-  static void _iterate(_CDgisObjectId item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<DgisObjectId> _fillFromC() {
-    _forEach_CArray_CDgisObjectId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId)>(_iterate));
-    final result = List<DgisObjectId>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -14437,6 +17174,19 @@ class SearchQueryBuilder implements ffi.Finalizable {
     return t;
   }
 
+  /**
+   Указание поисковому движку использовать режима поиска рядом с пользователем.
+   Сильно повышает значимость расстояния от пользователя.
+  */
+  SearchQueryBuilder setSearchNearby(
+    bool searchNearby
+  )  {
+    _CSearchQueryBuilder res = _CSearchQueryBuilder_setSearchNearby_bool(_CSearchQueryBuilderMakeDefault().._impl=_self, searchNearby);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
   /** Сформировать поисковый запрос. */
   SearchQuery build()  {
     _CSearchQuery res = _CSearchQueryBuilder_build(_CSearchQueryBuilderMakeDefault().._impl=_self);
@@ -14690,6 +17440,19 @@ class SuggestQueryBuilder implements ffi.Finalizable {
     var _a1 = locale._copyFromDartTo_COptional_CLocale();
     _CSuggestQueryBuilder res = _CSuggestQueryBuilder_setLocale_COptional_CLocale(_CSuggestQueryBuilderMakeDefault().._impl=_self, _a1);
     _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Указание поисковому движку использовать режим поиска рядом с пользователем.
+   Сильно повышает значимость расстояния от пользователя.
+  */
+  SuggestQueryBuilder setSearchNearby(
+    bool searchNearby
+  )  {
+    _CSuggestQueryBuilder res = _CSuggestQueryBuilder_setSearchNearby_bool(_CSuggestQueryBuilderMakeDefault().._impl=_self, searchNearby);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -15760,6 +18523,14 @@ class PackedSearchQuery implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  /**
+   Указание поисковому движку использовать режим поиска рядом с пользователем.
+   Сильно повышает значимость расстояния от пользователя.
+  */
+  bool get searchNearby {
+    bool res = _CPackedSearchQuery_searchNearby(_CPackedSearchQueryMakeDefault().._impl=_self);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CPackedSearchQuery_releasePtr);
 
@@ -15965,42 +18736,6 @@ extension _DartTo_COptional_COrgId on OrgId? {
     final cOptional = _COptional_COrgIdMakeDefault();
     if (this != null) {
       cOptional.value = this!._copyFromDartTo_COrgId();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - GeoPoint? <-> _COptional_CGeoPoint
-
-final class _COptional_CGeoPoint extends ffi.Struct {
-  
-  external _CGeoPoint value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CGeoPointBasicFunctions on _COptional_CGeoPoint {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CGeoPointToDart on _COptional_CGeoPoint {
-  GeoPoint? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CGeoPoint on GeoPoint? {
-  _COptional_CGeoPoint _copyFromDartTo_COptional_CGeoPoint() {
-    final cOptional = _COptional_CGeoPointMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CGeoPoint();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -16277,77 +19012,6 @@ extension _CPolygonGeometryToDart on _CPolygonGeometry {
 extension _DartToCPolygonGeometry on PolygonGeometry {
   _CPolygonGeometry _copyFromDartTo_CPolygonGeometry() {
     return (_CPolygonGeometryMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - PolylineGeometry
-
-/** Ломаная линия. */
-class PolylineGeometry extends Geometry implements ffi.Finalizable {
-  List<GeoPoint> get points {
-    _CArray_CGeoPoint res = _CPolylineGeometry_points(_CPolylineGeometryMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CPolylineGeometry_releasePtr);
-
-  PolylineGeometry._raw(ffi.Pointer<ffi.Void> p) : super._raw(p);
-  factory PolylineGeometry._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = PolylineGeometry._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  factory PolylineGeometry(
-    List<GeoPoint> points
-  ) {
-    var _a0 = points._copyFromDartTo_CArray_CGeoPoint();
-    _CPolylineGeometry res = _CPolylineGeometry_C_createWith_CArray_CGeoPoint(_a0);
-    _a0._releaseIntermediate();
-    return PolylineGeometry._create(res._impl);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is PolylineGeometry &&
-    other.runtimeType == runtimeType &&
-    _CPolylineGeometry_cg_objectIdentifier(this._self) == _CPolylineGeometry_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CPolylineGeometry_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - PolylineGeometry <-> CPolylineGeometry
-
-final class _CPolylineGeometry extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CPolylineGeometryBasicFunctions on _CPolylineGeometry {
-  void _releaseIntermediate() {
-    _CPolylineGeometry_release(_impl);
-  }
-
-  _CPolylineGeometry _retain() {
-    return _CPolylineGeometry_retain(_impl);
-  }
-}
-
-extension _CPolylineGeometryToDart on _CPolylineGeometry {
-  PolylineGeometry _toDart() {
-    return PolylineGeometry._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCPolylineGeometry on PolylineGeometry {
-  _CPolylineGeometry _copyFromDartTo_CPolylineGeometry() {
-    return (_CPolylineGeometryMakeDefault().._impl=_self)._retain();
   }
 }
 // MARK: - ComplexGeometry
@@ -25169,42 +27833,6 @@ extension _DartTo_CRoadEventActionState on RoadEventActionState {
   }
 }
 	
-// MARK: - int? <-> _COptional_uint32_t
-
-final class _COptional_uint32_t extends ffi.Struct {
-  @ffi.Uint32()
-  external int value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_uint32_tBasicFunctions on _COptional_uint32_t {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_uint32_tToDart on _COptional_uint32_t {
-  int? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value;
-  }
-}
-
-extension _DartTo_COptional_uint32_t on int? {
-  _COptional_uint32_t _copyFromDartTo_COptional_uint32_t() {
-    final cOptional = _COptional_uint32_tMakeDefault();
-    if (this != null) {
-      cOptional.value = this!;
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - RoadEventActionInfo
 
 /** Информация о действии. */
@@ -38741,6 +41369,13 @@ class TrafficRoute implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  /** Информация о стоимости проезда по платным участкам маршрута. */
+  List<RouteTollPaymentInfo> get routeTollPaymentInfos {
+    _CArray_CRouteTollPaymentInfo res = _CTrafficRoute_routeTollPaymentInfos(_CTrafficRouteMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CTrafficRoute_releasePtr);
 
@@ -49495,6 +52130,117 @@ extension _CArray_CTrafficSpeedColorRouteLongEntryBasicFunctions on _CArray_CTra
   }
 }
 	
+// MARK: - List<RouteTollPaymentInfo> <-> _CArray_CRouteTollPaymentInfo
+
+final class _CArray_CRouteTollPaymentInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CRouteTollPaymentInfoToDart on _CArray_CRouteTollPaymentInfo {
+  List<RouteTollPaymentInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CRouteTollPaymentInfo on List<RouteTollPaymentInfo> {
+  _CArray_CRouteTollPaymentInfo _copyFromDartTo_CArray_CRouteTollPaymentInfo() {
+    final cArray = _CArray_CRouteTollPaymentInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CRouteTollPaymentInfo();
+        _CArray_CRouteTollPaymentInfoaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CRouteTollPaymentInfoBasicFunctions on _CArray_CRouteTollPaymentInfo {
+  void _releaseIntermediate() {
+    _CArray_CRouteTollPaymentInfo_release(this);
+  }
+
+  static final _listToFill = <RouteTollPaymentInfo>[];
+
+  static void _iterate(_CRouteTollPaymentInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<RouteTollPaymentInfo> _fillFromC() {
+    _forEach_CArray_CRouteTollPaymentInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CRouteTollPaymentInfo)>(_iterate));
+    final result = List<RouteTollPaymentInfo>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - RouteTollPaymentInfo
+
+/** Информация о стоимости проезда по платному участку маршрута. */
+class RouteTollPaymentInfo {
+  /** Трёхбуквенный код валюты, в которой указана стоимость проезда, согласно ISO 4217. */
+  final String currencyCode;
+  /** Стоимость проезда по платному участку маршрута. */
+  final double cost;
+
+  const RouteTollPaymentInfo({
+    required this.currencyCode,
+    this.cost = 0
+  });
+
+  RouteTollPaymentInfo copyWith({
+    String? currencyCode,
+    double? cost
+  }) {
+    return RouteTollPaymentInfo(
+      currencyCode: currencyCode ?? this.currencyCode,
+      cost: cost ?? this.cost
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteTollPaymentInfo &&
+    other.runtimeType == runtimeType &&
+    other.currencyCode == currencyCode &&
+    other.cost == cost;
+
+  @override
+  int get hashCode {
+    return Object.hash(currencyCode, cost);
+  }
+
+}
+final class _CRouteTollPaymentInfo extends ffi.Struct {
+  external _CString currencyCode;
+
+  @ffi.Float()
+  external double cost;
+
+}
+// MARK: - RouteTollPaymentInfo <-> _CRouteTollPaymentInfo
+
+extension _CRouteTollPaymentInfoToDart on _CRouteTollPaymentInfo {
+  RouteTollPaymentInfo _toDart() {
+    return RouteTollPaymentInfo(
+      currencyCode: this.currencyCode._toDart(),
+      cost: this.cost
+    );
+  }
+}
+
+extension _DartTo_CRouteTollPaymentInfo on RouteTollPaymentInfo {
+  _CRouteTollPaymentInfo _copyFromDartTo_CRouteTollPaymentInfo() {
+    final res = _CRouteTollPaymentInfoMakeDefault();
+    res.currencyCode = this.currencyCode._copyFromDartTo_CString();
+    res.cost = this.cost;
+    return res;
+  }
+}
+extension _CRouteTollPaymentInfoRelease on _CRouteTollPaymentInfo {
+  void _releaseIntermediate() {
+    currencyCode._releaseIntermediate();
+  }
+}
+
 // MARK: - State
 
 /** Состояние навигатора. */
@@ -67889,8 +70635,20 @@ late final _CWeekTimeIntervalMakeDefault = _CWeekTimeIntervalMakeDefaultPtr.asFu
 
 late final _CFunction_G_getSystemMemoryManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(_CContext)>>('CFunction_G_getSystemMemoryManager_With_CContext');
 late final _CFunction_G_getSystemMemoryManager_With_CContext = _CFunction_G_getSystemMemoryManager_With_CContextPtr.asFunction<_CSystemMemoryManager Function(_CContext)>();
-late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
-late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
+late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
+late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
+
+late final _CErrorCreateWithDescriptionPtr = _lookup<ffi.NativeFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>>('CError_createWithDescription');
+late final _CErrorCreateWithDescription = _CErrorCreateWithDescriptionPtr.asFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>();
+late final _CErrorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CError Function()>>('CErrorMakeDefault');
+late final _CErrorMakeDefault = _CErrorMakeDefaultPtr.asFunction<_CError Function()>();
+late final _CError_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CError)>>('CError_release');
+late final _CError_release = _CError_releasePtr.asFunction<void Function(_CError)>();
+late final _CErrorGetDescriptionPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>>('CError_getDescription');
+late final _CErrorGetDescription = _CErrorGetDescriptionPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>();
+
+late final _CResult_CContext_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CContext)>>('CResult_CContext_release');
+late final _CResult_CContext_release = _CResult_CContext_releasePtr.asFunction<void Function(_CResult_CContext)>();
 
 late final _CKeyFromAssetMakeDefaultPtr = _lookup<ffi.NativeFunction<_CKeyFromAsset Function()>>('CKeyFromAssetMakeDefault');
 late final _CKeyFromAssetMakeDefault = _CKeyFromAssetMakeDefaultPtr.asFunction<_CKeyFromAsset Function()>();
@@ -68426,6 +71184,10 @@ late final _CChargingStationMakeDefault = _CChargingStationMakeDefaultPtr.asFunc
 late final _CRubricIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRubricId Function()>>('CRubricIdMakeDefault');
 late final _CRubricIdMakeDefault = _CRubricIdMakeDefaultPtr.asFunction<_CRubricId Function()>();
 
+
+late final _CTradeLicenseMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTradeLicense Function()>>('CTradeLicenseMakeDefault');
+late final _CTradeLicenseMakeDefault = _CTradeLicenseMakeDefaultPtr.asFunction<_CTradeLicense Function()>();
+
 late final _CItemMarkerInfo_objectIdPtr = _lookup<ffi.NativeFunction<_COptional_CDgisObjectId Function(_CItemMarkerInfo)>>('CItemMarkerInfo_objectId');
 late final _CItemMarkerInfo_objectId = _CItemMarkerInfo_objectIdPtr.asFunction<_COptional_CDgisObjectId Function(_CItemMarkerInfo)>();
 late final _CItemMarkerInfo_geoPointPtr = _lookup<ffi.NativeFunction<_CGeoPointWithElevation Function(_CItemMarkerInfo)>>('CItemMarkerInfo_geoPoint');
@@ -68436,6 +71198,8 @@ late final _CItemMarkerInfo_titlePtr = _lookup<ffi.NativeFunction<_COptional_CSt
 late final _CItemMarkerInfo_title = _CItemMarkerInfo_titlePtr.asFunction<_COptional_CString Function(_CItemMarkerInfo)>();
 late final _CItemMarkerInfo_rubricIdsPtr = _lookup<ffi.NativeFunction<_CArray_CRubricId Function(_CItemMarkerInfo)>>('CItemMarkerInfo_rubricIds');
 late final _CItemMarkerInfo_rubricIds = _CItemMarkerInfo_rubricIdsPtr.asFunction<_CArray_CRubricId Function(_CItemMarkerInfo)>();
+late final _CItemMarkerInfo_tradeLicensePtr = _lookup<ffi.NativeFunction<_COptional_CTradeLicense Function(_CItemMarkerInfo)>>('CItemMarkerInfo_tradeLicense');
+late final _CItemMarkerInfo_tradeLicense = _CItemMarkerInfo_tradeLicensePtr.asFunction<_COptional_CTradeLicense Function(_CItemMarkerInfo)>();
 
 late final _CItemMarkerInfo_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CItemMarkerInfo_cg_objectIdentifier');
 late final _CItemMarkerInfo_cg_objectIdentifier = _CItemMarkerInfo_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -68475,6 +71239,12 @@ late final _forEach_CArray_CRubricId = _forEach_CArray_CRubricIdPtr.asFunction<
 >>)>();
 late final _CArray_CRubricId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRubricId)>>('CArray_CRubricId_release');
 late final _CArray_CRubricId_release = _CArray_CRubricId_releasePtr.asFunction<void Function(_CArray_CRubricId)>();
+
+late final _COptional_CTradeLicenseMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTradeLicense Function()>>('COptional_CTradeLicenseMakeDefault');
+late final _COptional_CTradeLicenseMakeDefault = _COptional_CTradeLicenseMakeDefaultPtr.asFunction<_COptional_CTradeLicense Function()>();
+
+late final _COptional_CTradeLicense_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CTradeLicense)>>('COptional_CTradeLicense_release');
+late final _COptional_CTradeLicense_release = _COptional_CTradeLicense_releasePtr.asFunction<void Function(_COptional_CTradeLicense)>();
 
 late final _CArray_CArray_CWeekTimeIntervalmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CArray_CWeekTimeInterval Function()>>('CArray_CArray_CWeekTimeInterval_makeEmpty');
 late final _CArray_CArray_CWeekTimeIntervalmakeEmpty = _CArray_CArray_CWeekTimeIntervalmakeEmptyPtr.asFunction<_CArray_CArray_CWeekTimeInterval Function()>();
@@ -68579,10 +71349,6 @@ late final _CSearchResultTypeMakeDefault = _CSearchResultTypeMakeDefaultPtr.asFu
 late final _CSortingTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSortingType Function()>>('CSortingTypeMakeDefault');
 late final _CSortingTypeMakeDefault = _CSortingTypeMakeDefaultPtr.asFunction<_CSortingType Function()>();
 
-late final _CTradeLicenseMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTradeLicense Function()>>('CTradeLicenseMakeDefault');
-late final _CTradeLicenseMakeDefault = _CTradeLicenseMakeDefaultPtr.asFunction<_CTradeLicense Function()>();
-
-
 late final _CUIMarkerInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CUIMarkerInfo Function()>>('CUIMarkerInfoMakeDefault');
 late final _CUIMarkerInfoMakeDefault = _CUIMarkerInfoMakeDefaultPtr.asFunction<_CUIMarkerInfo Function()>();
 
@@ -68590,6 +71356,325 @@ late final _CUIMarkerInfoMakeDefault = _CUIMarkerInfoMakeDefaultPtr.asFunction<_
 late final _CWorkStatusMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWorkStatus Function()>>('CWorkStatusMakeDefault');
 late final _CWorkStatusMakeDefault = _CWorkStatusMakeDefaultPtr.asFunction<_CWorkStatus Function()>();
 
+
+late final _CPublicTransportDirectoryPlatformDepartureInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportDirectoryPlatformDepartureInfo Function()>>('CPublicTransportDirectoryPlatformDepartureInfoMakeDefault');
+late final _CPublicTransportDirectoryPlatformDepartureInfoMakeDefault = _CPublicTransportDirectoryPlatformDepartureInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryPlatformDepartureInfo Function()>();
+
+
+late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>>('CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault');
+late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault = _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>();
+
+
+late final _CPublicTransportRouteDirectionIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteDirectionId Function()>>('CPublicTransportRouteDirectionIdMakeDefault');
+late final _CPublicTransportRouteDirectionIdMakeDefault = _CPublicTransportRouteDirectionIdMakeDefaultPtr.asFunction<_CPublicTransportRouteDirectionId Function()>();
+
+
+late final _CPublicTransportRouteDirectionTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteDirectionType Function()>>('CPublicTransportRouteDirectionTypeMakeDefault');
+late final _CPublicTransportRouteDirectionTypeMakeDefault = _CPublicTransportRouteDirectionTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteDirectionType Function()>();
+late final _CPolylineGeometry_pointsPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPoint Function(_CPolylineGeometry)>>('CPolylineGeometry_points');
+late final _CPolylineGeometry_points = _CPolylineGeometry_pointsPtr.asFunction<_CArray_CGeoPoint Function(_CPolylineGeometry)>();
+
+late final _CPolylineGeometry_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_cg_objectIdentifier');
+late final _CPolylineGeometry_cg_objectIdentifier = _CPolylineGeometry_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CPolylineGeometry_C_createWith_CArray_CGeoPointPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function(_CArray_CGeoPoint)>>('CPolylineGeometry_C_createWith_CArray_CGeoPoint');
+late final _CPolylineGeometry_C_createWith_CArray_CGeoPoint = _CPolylineGeometry_C_createWith_CArray_CGeoPointPtr.asFunction<_CPolylineGeometry Function(_CArray_CGeoPoint)>();
+
+late final _CPolylineGeometry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_release');
+late final _CPolylineGeometry_release = _CPolylineGeometry_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CPolylineGeometry_retainPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_retain');
+late final _CPolylineGeometry_retain = _CPolylineGeometry_retainPtr.asFunction<_CPolylineGeometry Function(ffi.Pointer<ffi.Void>)>();
+late final _CPolylineGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function()>>('CPolylineGeometryMakeDefault');
+late final _CPolylineGeometryMakeDefault = _CPolylineGeometryMakeDefaultPtr.asFunction<_CPolylineGeometry Function()>();
+
+
+late final _COptional_CGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPoint Function()>>('COptional_CGeoPointMakeDefault');
+late final _COptional_CGeoPointMakeDefault = _COptional_CGeoPointMakeDefaultPtr.asFunction<_COptional_CGeoPoint Function()>();
+
+late final _CPublicTransportRouteGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteGeometry Function()>>('CPublicTransportRouteGeometryMakeDefault');
+late final _CPublicTransportRouteGeometryMakeDefault = _CPublicTransportRouteGeometryMakeDefaultPtr.asFunction<_CPublicTransportRouteGeometry Function()>();
+
+
+late final _CPublicTransportRouteTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteType Function()>>('CPublicTransportRouteTypeMakeDefault');
+late final _CPublicTransportRouteTypeMakeDefault = _CPublicTransportRouteTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteType Function()>();
+
+late final _COptional_uint32_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint32_t Function()>>('COptional_uint32_tMakeDefault');
+late final _COptional_uint32_tMakeDefault = _COptional_uint32_tMakeDefaultPtr.asFunction<_COptional_uint32_t Function()>();
+
+late final _CPublicTransportPlatformTransitionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPlatformTransition Function()>>('CPublicTransportPlatformTransitionMakeDefault');
+late final _CPublicTransportPlatformTransitionMakeDefault = _CPublicTransportPlatformTransitionMakeDefaultPtr.asFunction<_CPublicTransportPlatformTransition Function()>();
+
+
+late final _CArray_CPublicTransportPlatformTransitionmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportPlatformTransition Function()>>('CArray_CPublicTransportPlatformTransition_makeEmpty');
+late final _CArray_CPublicTransportPlatformTransitionmakeEmpty = _CArray_CPublicTransportPlatformTransitionmakeEmptyPtr.asFunction<_CArray_CPublicTransportPlatformTransition Function()>();
+late final _CArray_CPublicTransportPlatformTransitionaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatformTransition, _CPublicTransportPlatformTransition)>>('CArray_CPublicTransportPlatformTransition_addElement');
+late final _CArray_CPublicTransportPlatformTransitionaddElement = _CArray_CPublicTransportPlatformTransitionaddElementPtr.asFunction<void Function(_CArray_CPublicTransportPlatformTransition, _CPublicTransportPlatformTransition)>();
+late final _forEach_CArray_CPublicTransportPlatformTransitionPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportPlatformTransition, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatformTransition)>>)
+>>('CArray_CPublicTransportPlatformTransition_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportPlatformTransition = _forEach_CArray_CPublicTransportPlatformTransitionPtr.asFunction<
+  void Function(_CArray_CPublicTransportPlatformTransition, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatformTransition)
+>>)>();
+late final _CArray_CPublicTransportPlatformTransition_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatformTransition)>>('CArray_CPublicTransportPlatformTransition_release');
+late final _CArray_CPublicTransportPlatformTransition_release = _CArray_CPublicTransportPlatformTransition_releasePtr.asFunction<void Function(_CArray_CPublicTransportPlatformTransition)>();
+
+late final _CPublicTransportPlatformMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPlatform Function()>>('CPublicTransportPlatformMakeDefault');
+late final _CPublicTransportPlatformMakeDefault = _CPublicTransportPlatformMakeDefaultPtr.asFunction<_CPublicTransportPlatform Function()>();
+
+
+late final _COptional_CPublicTransportRouteGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPublicTransportRouteGeometry Function()>>('COptional_CPublicTransportRouteGeometryMakeDefault');
+late final _COptional_CPublicTransportRouteGeometryMakeDefault = _COptional_CPublicTransportRouteGeometryMakeDefaultPtr.asFunction<_COptional_CPublicTransportRouteGeometry Function()>();
+
+late final _COptional_CPublicTransportRouteGeometry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportRouteGeometry)>>('COptional_CPublicTransportRouteGeometry_release');
+late final _COptional_CPublicTransportRouteGeometry_release = _COptional_CPublicTransportRouteGeometry_releasePtr.asFunction<void Function(_COptional_CPublicTransportRouteGeometry)>();
+
+late final _CArray_CPublicTransportPlatformmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportPlatform Function()>>('CArray_CPublicTransportPlatform_makeEmpty');
+late final _CArray_CPublicTransportPlatformmakeEmpty = _CArray_CPublicTransportPlatformmakeEmptyPtr.asFunction<_CArray_CPublicTransportPlatform Function()>();
+late final _CArray_CPublicTransportPlatformaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatform, _CPublicTransportPlatform)>>('CArray_CPublicTransportPlatform_addElement');
+late final _CArray_CPublicTransportPlatformaddElement = _CArray_CPublicTransportPlatformaddElementPtr.asFunction<void Function(_CArray_CPublicTransportPlatform, _CPublicTransportPlatform)>();
+late final _forEach_CArray_CPublicTransportPlatformPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportPlatform, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatform)>>)
+>>('CArray_CPublicTransportPlatform_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportPlatform = _forEach_CArray_CPublicTransportPlatformPtr.asFunction<
+  void Function(_CArray_CPublicTransportPlatform, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatform)
+>>)>();
+late final _CArray_CPublicTransportPlatform_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatform)>>('CArray_CPublicTransportPlatform_release');
+late final _CArray_CPublicTransportPlatform_release = _CArray_CPublicTransportPlatform_releasePtr.asFunction<void Function(_CArray_CPublicTransportPlatform)>();
+
+late final _CPublicTransportRouteDirectionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteDirection Function()>>('CPublicTransportRouteDirectionMakeDefault');
+late final _CPublicTransportRouteDirectionMakeDefault = _CPublicTransportRouteDirectionMakeDefaultPtr.asFunction<_CPublicTransportRouteDirection Function()>();
+
+
+late final _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>>('COptional_CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault');
+late final _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault = _COptional_CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr.asFunction<_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>();
+
+late final _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo)>>('COptional_CPublicTransportDirectoryRouteDirectionNamesInfo_release');
+late final _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo_release = _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo_releasePtr.asFunction<void Function(_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo)>();
+
+late final _CArray_CPublicTransportRouteDirectionmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportRouteDirection Function()>>('CArray_CPublicTransportRouteDirection_makeEmpty');
+late final _CArray_CPublicTransportRouteDirectionmakeEmpty = _CArray_CPublicTransportRouteDirectionmakeEmptyPtr.asFunction<_CArray_CPublicTransportRouteDirection Function()>();
+late final _CArray_CPublicTransportRouteDirectionaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteDirection, _CPublicTransportRouteDirection)>>('CArray_CPublicTransportRouteDirection_addElement');
+late final _CArray_CPublicTransportRouteDirectionaddElement = _CArray_CPublicTransportRouteDirectionaddElementPtr.asFunction<void Function(_CArray_CPublicTransportRouteDirection, _CPublicTransportRouteDirection)>();
+late final _forEach_CArray_CPublicTransportRouteDirectionPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportRouteDirection, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirection)>>)
+>>('CArray_CPublicTransportRouteDirection_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportRouteDirection = _forEach_CArray_CPublicTransportRouteDirectionPtr.asFunction<
+  void Function(_CArray_CPublicTransportRouteDirection, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirection)
+>>)>();
+late final _CArray_CPublicTransportRouteDirection_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteDirection)>>('CArray_CPublicTransportRouteDirection_release');
+late final _CArray_CPublicTransportRouteDirection_release = _CArray_CPublicTransportRouteDirection_releasePtr.asFunction<void Function(_CArray_CPublicTransportRouteDirection)>();
+
+late final _CPublicTransportDirectoryRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportDirectoryRouteInfo Function()>>('CPublicTransportDirectoryRouteInfoMakeDefault');
+late final _CPublicTransportDirectoryRouteInfoMakeDefault = _CPublicTransportDirectoryRouteInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryRouteInfo Function()>();
+
+
+late final _CPublicTransportIntervalWorkingHoursMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportIntervalWorkingHours Function()>>('CPublicTransportIntervalWorkingHoursMakeDefault');
+late final _CPublicTransportIntervalWorkingHoursMakeDefault = _CPublicTransportIntervalWorkingHoursMakeDefaultPtr.asFunction<_CPublicTransportIntervalWorkingHours Function()>();
+
+
+late final _COptional_CPublicTransportIntervalWorkingHoursMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPublicTransportIntervalWorkingHours Function()>>('COptional_CPublicTransportIntervalWorkingHoursMakeDefault');
+late final _COptional_CPublicTransportIntervalWorkingHoursMakeDefault = _COptional_CPublicTransportIntervalWorkingHoursMakeDefaultPtr.asFunction<_COptional_CPublicTransportIntervalWorkingHours Function()>();
+
+late final _CPublicTransportIntervalScheduleMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportIntervalSchedule Function()>>('CPublicTransportIntervalScheduleMakeDefault');
+late final _CPublicTransportIntervalScheduleMakeDefault = _CPublicTransportIntervalScheduleMakeDefaultPtr.asFunction<_CPublicTransportIntervalSchedule Function()>();
+
+
+late final _CArray_uint64_tmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_uint64_t Function()>>('CArray_uint64_t_makeEmpty');
+late final _CArray_uint64_tmakeEmpty = _CArray_uint64_tmakeEmptyPtr.asFunction<_CArray_uint64_t Function()>();
+late final _CArray_uint64_taddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_uint64_t, ffi.Uint64)>>('CArray_uint64_t_addElement');
+late final _CArray_uint64_taddElement = _CArray_uint64_taddElementPtr.asFunction<void Function(_CArray_uint64_t, int)>();
+late final _forEach_CArray_uint64_tPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_uint64_t, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Uint64)>>)
+>>('CArray_uint64_t_forEachWithFunctionPointer');
+late final _forEach_CArray_uint64_t = _forEach_CArray_uint64_tPtr.asFunction<
+  void Function(_CArray_uint64_t, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Uint64)
+>>)>();
+late final _CArray_uint64_t_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_uint64_t)>>('CArray_uint64_t_release');
+late final _CArray_uint64_t_release = _CArray_uint64_t_releasePtr.asFunction<void Function(_CArray_uint64_t)>();
+
+late final _CPublicTransportPreciseScheduleMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPreciseSchedule Function()>>('CPublicTransportPreciseScheduleMakeDefault');
+late final _CPublicTransportPreciseScheduleMakeDefault = _CPublicTransportPreciseScheduleMakeDefaultPtr.asFunction<_CPublicTransportPreciseSchedule Function()>();
+
+
+late final _CPublicTransportSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPublicTransportSchedule)>>('CPublicTransportSchedule_release');
+late final _CPublicTransportSchedule_release = _CPublicTransportSchedule_releasePtr.asFunction<void Function(_CPublicTransportSchedule)>();
+late final _CPublicTransportScheduleMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportSchedule Function()>>('CPublicTransportScheduleMakeDefault');
+late final _CPublicTransportScheduleMakeDefault = _CPublicTransportScheduleMakeDefaultPtr.asFunction<_CPublicTransportSchedule Function()>();
+
+late final _CPublicTransportPlatformScheduleMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPlatformSchedule Function()>>('CPublicTransportPlatformScheduleMakeDefault');
+late final _CPublicTransportPlatformScheduleMakeDefault = _CPublicTransportPlatformScheduleMakeDefaultPtr.asFunction<_CPublicTransportPlatformSchedule Function()>();
+
+
+late final _COptional_uint8_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint8_t Function()>>('COptional_uint8_tMakeDefault');
+late final _COptional_uint8_tMakeDefault = _COptional_uint8_tMakeDefaultPtr.asFunction<_COptional_uint8_t Function()>();
+
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportDirectoryPlatformDepartureInfo Function()>>('CArray_CPublicTransportDirectoryPlatformDepartureInfo_makeEmpty');
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfomakeEmpty = _CArray_CPublicTransportDirectoryPlatformDepartureInfomakeEmptyPtr.asFunction<_CArray_CPublicTransportDirectoryPlatformDepartureInfo Function()>();
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo, _CPublicTransportDirectoryPlatformDepartureInfo)>>('CArray_CPublicTransportDirectoryPlatformDepartureInfo_addElement');
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfoaddElement = _CArray_CPublicTransportDirectoryPlatformDepartureInfoaddElementPtr.asFunction<void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo, _CPublicTransportDirectoryPlatformDepartureInfo)>();
+late final _forEach_CArray_CPublicTransportDirectoryPlatformDepartureInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportDirectoryPlatformDepartureInfo)>>)
+>>('CArray_CPublicTransportDirectoryPlatformDepartureInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportDirectoryPlatformDepartureInfo = _forEach_CArray_CPublicTransportDirectoryPlatformDepartureInfoPtr.asFunction<
+  void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportDirectoryPlatformDepartureInfo)
+>>)>();
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo)>>('CArray_CPublicTransportDirectoryPlatformDepartureInfo_release');
+late final _CArray_CPublicTransportDirectoryPlatformDepartureInfo_release = _CArray_CPublicTransportDirectoryPlatformDepartureInfo_releasePtr.asFunction<void Function(_CArray_CPublicTransportDirectoryPlatformDepartureInfo)>();
+
+late final _CPublicTransportNearTripScheduleMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportNearTripSchedule Function()>>('CPublicTransportNearTripScheduleMakeDefault');
+late final _CPublicTransportNearTripScheduleMakeDefault = _CPublicTransportNearTripScheduleMakeDefaultPtr.asFunction<_CPublicTransportNearTripSchedule Function()>();
+
+
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule Function()>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_makeEmpty');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmpty = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr.asFunction<_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule Function()>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, _CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_addElement');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElement = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElementPtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, _CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>();
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>>)
+>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule = _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulePtr.asFunction<
+  void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)
+>>)>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_releasePtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>();
+
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule Function()>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_makeEmpty');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmpty = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmptyPtr.asFunction<_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule Function()>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, _CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_addElement');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElement = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElementPtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, _CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>();
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>>)
+>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule = _forEach_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulePtr.asFunction<
+  void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)
+>>)>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release');
+late final _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release = _CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_releasePtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>();
+
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule Function()>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_makeEmpty');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulemakeEmpty = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulemakeEmptyPtr.asFunction<_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule Function()>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule, _CPublicTransportRouteDirectionId, _CPublicTransportIntervalSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_addElement');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleaddElement = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalScheduleaddElementPtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule, _CPublicTransportRouteDirectionId, _CPublicTransportIntervalSchedule)>();
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportIntervalSchedule)>>)
+>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule = _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedulePtr.asFunction<
+  void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportIntervalSchedule)
+>>)>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_release');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_release = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule_releasePtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportIntervalSchedule)>();
+
+late final _CPublicTransportDirectoryRouteScheduleInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportDirectoryRouteScheduleInfo Function()>>('CPublicTransportDirectoryRouteScheduleInfoMakeDefault');
+late final _CPublicTransportDirectoryRouteScheduleInfoMakeDefault = _CPublicTransportDirectoryRouteScheduleInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryRouteScheduleInfo Function()>();
+
+
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule Function()>>('CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_makeEmpty');
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmpty = _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr.asFunction<_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule Function()>();
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, _CDgisObjectId, _CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_addElement');
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElement = _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformScheduleaddElementPtr.asFunction<void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, _CDgisObjectId, _CArray_CPublicTransportPlatformSchedule)>();
+late final _forEach_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CArray_CPublicTransportPlatformSchedule)>>)
+>>('CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule = _forEach_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedulePtr.asFunction<
+  void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CArray_CPublicTransportPlatformSchedule)
+>>)>();
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release');
+late final _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_release = _CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule_releasePtr.asFunction<void Function(_CDictionary_CDgisObjectId_CArray_CPublicTransportPlatformSchedule)>();
+
+late final _CArray_CPublicTransportPlatformSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportPlatformSchedule Function()>>('CArray_CPublicTransportPlatformSchedule_makeEmpty');
+late final _CArray_CPublicTransportPlatformSchedulemakeEmpty = _CArray_CPublicTransportPlatformSchedulemakeEmptyPtr.asFunction<_CArray_CPublicTransportPlatformSchedule Function()>();
+late final _CArray_CPublicTransportPlatformScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatformSchedule, _CPublicTransportPlatformSchedule)>>('CArray_CPublicTransportPlatformSchedule_addElement');
+late final _CArray_CPublicTransportPlatformScheduleaddElement = _CArray_CPublicTransportPlatformScheduleaddElementPtr.asFunction<void Function(_CArray_CPublicTransportPlatformSchedule, _CPublicTransportPlatformSchedule)>();
+late final _forEach_CArray_CPublicTransportPlatformSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatformSchedule)>>)
+>>('CArray_CPublicTransportPlatformSchedule_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportPlatformSchedule = _forEach_CArray_CPublicTransportPlatformSchedulePtr.asFunction<
+  void Function(_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportPlatformSchedule)
+>>)>();
+late final _CArray_CPublicTransportPlatformSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportPlatformSchedule)>>('CArray_CPublicTransportPlatformSchedule_release');
+late final _CArray_CPublicTransportPlatformSchedule_release = _CArray_CPublicTransportPlatformSchedule_releasePtr.asFunction<void Function(_CArray_CPublicTransportPlatformSchedule)>();
+
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule Function()>>('CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_makeEmpty');
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmpty = _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulemakeEmptyPtr.asFunction<_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule Function()>();
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, _CDgisObjectId, _CPublicTransportNearTripSchedule)>>('CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_addElement');
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElement = _CDictionary_CDgisObjectId_CPublicTransportNearTripScheduleaddElementPtr.asFunction<void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, _CDgisObjectId, _CPublicTransportNearTripSchedule)>();
+late final _forEach_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportNearTripSchedule)>>)
+>>('CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule = _forEach_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedulePtr.asFunction<
+  void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportNearTripSchedule)
+>>)>();
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>>('CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release');
+late final _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_release = _CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule_releasePtr.asFunction<void Function(_CDictionary_CDgisObjectId_CPublicTransportNearTripSchedule)>();
+
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo Function()>>('CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_makeEmpty');
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfomakeEmpty = _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfomakeEmptyPtr.asFunction<_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo Function()>();
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo, _CDgisObjectId, _CPublicTransportDirectoryRouteScheduleInfo)>>('CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_addElement');
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoaddElement = _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoaddElementPtr.asFunction<void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo, _CDgisObjectId, _CPublicTransportDirectoryRouteScheduleInfo)>();
+late final _forEach_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportDirectoryRouteScheduleInfo)>>)
+>>('CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo = _forEach_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfoPtr.asFunction<
+  void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CPublicTransportDirectoryRouteScheduleInfo)
+>>)>();
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo)>>('CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_release');
+late final _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_release = _CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo_releasePtr.asFunction<void Function(_CDictionary_CDgisObjectId_CPublicTransportDirectoryRouteScheduleInfo)>();
+
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule Function()>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_makeEmpty');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmpty = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr.asFunction<_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule Function()>();
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, _CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_addElement');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElement = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElementPtr.asFunction<void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, _CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>();
+late final _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>>)
+>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule = _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulePtr.asFunction<
+  void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)
+>>)>();
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_releasePtr.asFunction<void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>();
+
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule Function()>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_makeEmpty');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmpty = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmptyPtr.asFunction<_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule Function()>();
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, _CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_addElement');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElement = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElementPtr.asFunction<void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, _CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>();
+late final _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>>)
+>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule = _forEach_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulePtr.asFunction<
+  void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId, _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)
+>>)>();
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>>('CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release');
+late final _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release = _CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_releasePtr.asFunction<void Function(_CDictionary_CDgisObjectId_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>();
+
+late final _CPublicTransportDirectoryScheduleInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportDirectoryScheduleInfo Function()>>('CPublicTransportDirectoryScheduleInfoMakeDefault');
+late final _CPublicTransportDirectoryScheduleInfoMakeDefault = _CPublicTransportDirectoryScheduleInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryScheduleInfo Function()>();
+
+
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule Function()>>('CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_makeEmpty');
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmpty = _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulemakeEmptyPtr.asFunction<_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule Function()>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, _CPublicTransportRouteDirectionId, _CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_addElement');
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElement = _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformScheduleaddElementPtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, _CPublicTransportRouteDirectionId, _CArray_CPublicTransportPlatformSchedule)>();
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CArray_CPublicTransportPlatformSchedule)>>)
+>>('CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule = _forEach_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedulePtr.asFunction<
+  void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CArray_CPublicTransportPlatformSchedule)
+>>)>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release');
+late final _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_release = _CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule_releasePtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CArray_CPublicTransportPlatformSchedule)>();
+
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule Function()>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_makeEmpty');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmpty = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulemakeEmptyPtr.asFunction<_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule Function()>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, _CPublicTransportRouteDirectionId, _CPublicTransportNearTripSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_addElement');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElement = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripScheduleaddElementPtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, _CPublicTransportRouteDirectionId, _CPublicTransportNearTripSchedule)>();
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportNearTripSchedule)>>)
+>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule = _forEach_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedulePtr.asFunction<
+  void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteDirectionId, _CPublicTransportNearTripSchedule)
+>>)>();
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>>('CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release');
+late final _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_release = _CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule_releasePtr.asFunction<void Function(_CDictionary_CPublicTransportRouteDirectionId_CPublicTransportNearTripSchedule)>();
 
 late final _CAddressAdmDivMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAddressAdmDiv Function()>>('CAddressAdmDivMakeDefault');
 late final _CAddressAdmDivMakeDefault = _CAddressAdmDivMakeDefaultPtr.asFunction<_CAddressAdmDiv Function()>();
@@ -68691,12 +71776,18 @@ late final _CDirectoryObject_orgInfoPtr = _lookup<ffi.NativeFunction<_COptional_
 late final _CDirectoryObject_orgInfo = _CDirectoryObject_orgInfoPtr.asFunction<_COptional_COrgInfo Function(_CDirectoryObject)>();
 late final _CDirectoryObject_groupPtr = _lookup<ffi.NativeFunction<_CArray_CGroupItem Function(_CDirectoryObject)>>('CDirectoryObject_group');
 late final _CDirectoryObject_group = _CDirectoryObject_groupPtr.asFunction<_CArray_CGroupItem Function(_CDirectoryObject)>();
+late final _CDirectoryObject_routeInfosPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportDirectoryRouteInfo Function(_CDirectoryObject)>>('CDirectoryObject_routeInfos');
+late final _CDirectoryObject_routeInfos = _CDirectoryObject_routeInfosPtr.asFunction<_CArray_CPublicTransportDirectoryRouteInfo Function(_CDirectoryObject)>();
+late final _CDirectoryObject_platformIdsPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>>('CDirectoryObject_platformIds');
+late final _CDirectoryObject_platformIds = _CDirectoryObject_platformIdsPtr.asFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>();
 
 late final _CDirectoryObject_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDirectoryObject_cg_objectIdentifier');
 late final _CDirectoryObject_cg_objectIdentifier = _CDirectoryObject_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
 late final _CDirectoryObject_formattedAddress_CFormattingTypePtr = _lookup<ffi.NativeFunction<_COptional_CFormattedAddress Function(_CDirectoryObject, _CFormattingType)>>('CDirectoryObject_formattedAddress_CFormattingType');
 late final _CDirectoryObject_formattedAddress_CFormattingType = _CDirectoryObject_formattedAddress_CFormattingTypePtr.asFunction<_COptional_CFormattedAddress Function(_CDirectoryObject, _CFormattingType)>();
+late final _CDirectoryObject_publicTransportScheduleInfo_uint64_tPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function(_CDirectoryObject, ffi.Uint64)>>('CDirectoryObject_publicTransportScheduleInfo_uint64_t');
+late final _CDirectoryObject_publicTransportScheduleInfo_uint64_t = _CDirectoryObject_publicTransportScheduleInfo_uint64_tPtr.asFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function(_CDirectoryObject, int)>();
 
 late final _CDirectoryObject_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CDirectoryObject_release');
 late final _CDirectoryObject_release = _CDirectoryObject_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -68800,12 +71891,6 @@ late final _forEach_CArray_CEntranceInfo = _forEach_CArray_CEntranceInfoPtr.asFu
 late final _CArray_CEntranceInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CEntranceInfo)>>('CArray_CEntranceInfo_release');
 late final _CArray_CEntranceInfo_release = _CArray_CEntranceInfo_releasePtr.asFunction<void Function(_CArray_CEntranceInfo)>();
 
-late final _COptional_CTradeLicenseMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTradeLicense Function()>>('COptional_CTradeLicenseMakeDefault');
-late final _COptional_CTradeLicenseMakeDefault = _COptional_CTradeLicenseMakeDefaultPtr.asFunction<_COptional_CTradeLicense Function()>();
-
-late final _COptional_CTradeLicense_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CTradeLicense)>>('COptional_CTradeLicense_release');
-late final _COptional_CTradeLicense_release = _COptional_CTradeLicense_releasePtr.asFunction<void Function(_COptional_CTradeLicense)>();
-
 late final _COptional_CChargingStationMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CChargingStation Function()>>('COptional_CChargingStationMakeDefault');
 late final _COptional_CChargingStationMakeDefault = _COptional_CChargingStationMakeDefaultPtr.asFunction<_COptional_CChargingStation Function()>();
 
@@ -68830,6 +71915,70 @@ late final _forEach_CArray_CGroupItem = _forEach_CArray_CGroupItemPtr.asFunction
 >>)>();
 late final _CArray_CGroupItem_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CGroupItem)>>('CArray_CGroupItem_release');
 late final _CArray_CGroupItem_release = _CArray_CGroupItem_releasePtr.asFunction<void Function(_CArray_CGroupItem)>();
+
+late final _CArray_CPublicTransportDirectoryRouteInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportDirectoryRouteInfo Function()>>('CArray_CPublicTransportDirectoryRouteInfo_makeEmpty');
+late final _CArray_CPublicTransportDirectoryRouteInfomakeEmpty = _CArray_CPublicTransportDirectoryRouteInfomakeEmptyPtr.asFunction<_CArray_CPublicTransportDirectoryRouteInfo Function()>();
+late final _CArray_CPublicTransportDirectoryRouteInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportDirectoryRouteInfo, _CPublicTransportDirectoryRouteInfo)>>('CArray_CPublicTransportDirectoryRouteInfo_addElement');
+late final _CArray_CPublicTransportDirectoryRouteInfoaddElement = _CArray_CPublicTransportDirectoryRouteInfoaddElementPtr.asFunction<void Function(_CArray_CPublicTransportDirectoryRouteInfo, _CPublicTransportDirectoryRouteInfo)>();
+late final _forEach_CArray_CPublicTransportDirectoryRouteInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportDirectoryRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportDirectoryRouteInfo)>>)
+>>('CArray_CPublicTransportDirectoryRouteInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportDirectoryRouteInfo = _forEach_CArray_CPublicTransportDirectoryRouteInfoPtr.asFunction<
+  void Function(_CArray_CPublicTransportDirectoryRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportDirectoryRouteInfo)
+>>)>();
+late final _CArray_CPublicTransportDirectoryRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportDirectoryRouteInfo)>>('CArray_CPublicTransportDirectoryRouteInfo_release');
+late final _CArray_CPublicTransportDirectoryRouteInfo_release = _CArray_CPublicTransportDirectoryRouteInfo_releasePtr.asFunction<void Function(_CArray_CPublicTransportDirectoryRouteInfo)>();
+
+late final _CArray_CDgisObjectIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function()>>('CArray_CDgisObjectId_makeEmpty');
+late final _CArray_CDgisObjectIdmakeEmpty = _CArray_CDgisObjectIdmakeEmptyPtr.asFunction<_CArray_CDgisObjectId Function()>();
+late final _CArray_CDgisObjectIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDgisObjectId, _CDgisObjectId)>>('CArray_CDgisObjectId_addElement');
+late final _CArray_CDgisObjectIdaddElement = _CArray_CDgisObjectIdaddElementPtr.asFunction<void Function(_CArray_CDgisObjectId, _CDgisObjectId)>();
+late final _forEach_CArray_CDgisObjectIdPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CDgisObjectId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId)>>)
+>>('CArray_CDgisObjectId_forEachWithFunctionPointer');
+late final _forEach_CArray_CDgisObjectId = _forEach_CArray_CDgisObjectIdPtr.asFunction<
+  void Function(_CArray_CDgisObjectId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId)
+>>)>();
+late final _CArray_CDgisObjectId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDgisObjectId)>>('CArray_CDgisObjectId_release');
+late final _CArray_CDgisObjectId_release = _CArray_CDgisObjectId_releasePtr.asFunction<void Function(_CArray_CDgisObjectId)>();
+
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function()>>('CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefault');
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefault = _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr.asFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function()>();
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_COptional_CPublicTransportDirectoryScheduleInfo)>>('CFuture_COptional_CPublicTransportDirectoryScheduleInfo_release');
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_release = _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_releasePtr.asFunction<void Function(_CFuture_COptional_CPublicTransportDirectoryScheduleInfo)>();
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_retainPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function(_CFuture_COptional_CPublicTransportDirectoryScheduleInfo)>>('CFuture_COptional_CPublicTransportDirectoryScheduleInfo_retain');
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_retain = _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_retainPtr.asFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function(_CFuture_COptional_CPublicTransportDirectoryScheduleInfo)>();
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_COptional_CPublicTransportDirectoryScheduleInfo,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_COptional_CPublicTransportDirectoryScheduleInfo_receive');
+late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoReceive = _CFuture_COptional_CPublicTransportDirectoryScheduleInfoReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_COptional_CPublicTransportDirectoryScheduleInfo,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPublicTransportDirectoryScheduleInfo Function()>>('COptional_CPublicTransportDirectoryScheduleInfoMakeDefault');
+late final _COptional_CPublicTransportDirectoryScheduleInfoMakeDefault = _COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr.asFunction<_COptional_CPublicTransportDirectoryScheduleInfo Function()>();
+
+late final _COptional_CPublicTransportDirectoryScheduleInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo)>>('COptional_CPublicTransportDirectoryScheduleInfo_release');
+late final _COptional_CPublicTransportDirectoryScheduleInfo_release = _COptional_CPublicTransportDirectoryScheduleInfo_releasePtr.asFunction<void Function(_COptional_CPublicTransportDirectoryScheduleInfo)>();
+
+late final _CCancellableMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCancellable Function()>>('CCancellableMakeDefault');
+late final _CCancellableMakeDefault = _CCancellableMakeDefaultPtr.asFunction<_CCancellable Function()>();
+late final _CCancellable_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCancellable)>>('CCancellable_release');
+late final _CCancellable_release = _CCancellable_releasePtr.asFunction<void Function(_CCancellable)>();
+late final _CCancellable_retainPtr = _lookup<ffi.NativeFunction<_CCancellable Function(_CCancellable)>>('CCancellable_retain');
+late final _CCancellable_retain = _CCancellable_retainPtr.asFunction<_CCancellable Function(_CCancellable)>();
+late final _CCancellableCancelPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCancellable)>>('CCancellable_cancel');
+late final _CCancellableCancel = _CCancellableCancelPtr.asFunction<void Function(_CCancellable)>();
 late final _CPage_itemsPtr = _lookup<ffi.NativeFunction<_CArray_CDirectoryObject Function(_CPage)>>('CPage_items');
 late final _CPage_items = _CPage_itemsPtr.asFunction<_CArray_CDirectoryObject Function(_CPage)>();
 
@@ -68890,24 +72039,6 @@ late final _COptional_CPageMakeDefault = _COptional_CPageMakeDefaultPtr.asFuncti
 
 late final _COptional_CPage_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPage)>>('COptional_CPage_release');
 late final _COptional_CPage_release = _COptional_CPage_releasePtr.asFunction<void Function(_COptional_CPage)>();
-
-late final _CCancellableMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCancellable Function()>>('CCancellableMakeDefault');
-late final _CCancellableMakeDefault = _CCancellableMakeDefaultPtr.asFunction<_CCancellable Function()>();
-late final _CCancellable_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCancellable)>>('CCancellable_release');
-late final _CCancellable_release = _CCancellable_releasePtr.asFunction<void Function(_CCancellable)>();
-late final _CCancellable_retainPtr = _lookup<ffi.NativeFunction<_CCancellable Function(_CCancellable)>>('CCancellable_retain');
-late final _CCancellable_retain = _CCancellable_retainPtr.asFunction<_CCancellable Function(_CCancellable)>();
-late final _CCancellableCancelPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCancellable)>>('CCancellable_cancel');
-late final _CCancellableCancel = _CCancellableCancelPtr.asFunction<void Function(_CCancellable)>();
-
-late final _CErrorCreateWithDescriptionPtr = _lookup<ffi.NativeFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>>('CError_createWithDescription');
-late final _CErrorCreateWithDescription = _CErrorCreateWithDescriptionPtr.asFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>();
-late final _CErrorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CError Function()>>('CErrorMakeDefault');
-late final _CErrorMakeDefault = _CErrorMakeDefaultPtr.asFunction<_CError Function()>();
-late final _CError_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CError)>>('CError_release');
-late final _CError_release = _CError_releasePtr.asFunction<void Function(_CError)>();
-late final _CErrorGetDescriptionPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>>('CError_getDescription');
-late final _CErrorGetDescription = _CErrorGetDescriptionPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>();
 
 late final _CWidgetTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWidgetType Function()>>('CWidgetTypeMakeDefault');
 late final _CWidgetTypeMakeDefault = _CWidgetTypeMakeDefaultPtr.asFunction<_CWidgetType Function()>();
@@ -69145,6 +72276,8 @@ late final _CSearchResult_mainWidgetsPtr = _lookup<ffi.NativeFunction<_CArray_CW
 late final _CSearchResult_mainWidgets = _CSearchResult_mainWidgetsPtr.asFunction<_CArray_CWidget Function(_CSearchResult)>();
 late final _CSearchResult_autoUseFirstResultPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CSearchResult)>>('CSearchResult_autoUseFirstResult');
 late final _CSearchResult_autoUseFirstResult = _CSearchResult_autoUseFirstResultPtr.asFunction<bool Function(_CSearchResult)>();
+late final _CSearchResult_nearbyRequestedPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CSearchResult)>>('CSearchResult_nearbyRequested');
+late final _CSearchResult_nearbyRequested = _CSearchResult_nearbyRequestedPtr.asFunction<bool Function(_CSearchResult)>();
 
 late final _CSearchResult_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSearchResult_cg_objectIdentifier');
 late final _CSearchResult_cg_objectIdentifier = _CSearchResult_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -69283,19 +72416,6 @@ late final _forEach_CArray_CUIMarkerInfo = _forEach_CArray_CUIMarkerInfoPtr.asFu
 >>)>();
 late final _CArray_CUIMarkerInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CUIMarkerInfo)>>('CArray_CUIMarkerInfo_release');
 late final _CArray_CUIMarkerInfo_release = _CArray_CUIMarkerInfo_releasePtr.asFunction<void Function(_CArray_CUIMarkerInfo)>();
-
-late final _CArray_CDgisObjectIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function()>>('CArray_CDgisObjectId_makeEmpty');
-late final _CArray_CDgisObjectIdmakeEmpty = _CArray_CDgisObjectIdmakeEmptyPtr.asFunction<_CArray_CDgisObjectId Function()>();
-late final _CArray_CDgisObjectIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDgisObjectId, _CDgisObjectId)>>('CArray_CDgisObjectId_addElement');
-late final _CArray_CDgisObjectIdaddElement = _CArray_CDgisObjectIdaddElementPtr.asFunction<void Function(_CArray_CDgisObjectId, _CDgisObjectId)>();
-late final _forEach_CArray_CDgisObjectIdPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CDgisObjectId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId)>>)
->>('CArray_CDgisObjectId_forEachWithFunctionPointer');
-late final _forEach_CArray_CDgisObjectId = _forEach_CArray_CDgisObjectIdPtr.asFunction<
-  void Function(_CArray_CDgisObjectId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDgisObjectId)
->>)>();
-late final _CArray_CDgisObjectId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDgisObjectId)>>('CArray_CDgisObjectId_release');
-late final _CArray_CDgisObjectId_release = _CArray_CDgisObjectId_releasePtr.asFunction<void Function(_CArray_CDgisObjectId)>();
 
 late final _CArray_CWidgetmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CWidget Function()>>('CArray_CWidget_makeEmpty');
 late final _CArray_CWidgetmakeEmpty = _CArray_CWidgetmakeEmptyPtr.asFunction<_CArray_CWidget Function()>();
@@ -69628,6 +72748,8 @@ late final _CSearchQueryBuilder_setRadius_CMeterPtr = _lookup<ffi.NativeFunction
 late final _CSearchQueryBuilder_setRadius_CMeter = _CSearchQueryBuilder_setRadius_CMeterPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CMeter)>();
 late final _CSearchQueryBuilder_setLocale_COptional_CLocalePtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CLocale)>>('CSearchQueryBuilder_setLocale_COptional_CLocale');
 late final _CSearchQueryBuilder_setLocale_COptional_CLocale = _CSearchQueryBuilder_setLocale_COptional_CLocalePtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CLocale)>();
+late final _CSearchQueryBuilder_setSearchNearby_boolPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, ffi.Bool)>>('CSearchQueryBuilder_setSearchNearby_bool');
+late final _CSearchQueryBuilder_setSearchNearby_bool = _CSearchQueryBuilder_setSearchNearby_boolPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, bool)>();
 late final _CSearchQueryBuilder_buildPtr = _lookup<ffi.NativeFunction<_CSearchQuery Function(_CSearchQueryBuilder)>>('CSearchQueryBuilder_build');
 late final _CSearchQueryBuilder_build = _CSearchQueryBuilder_buildPtr.asFunction<_CSearchQuery Function(_CSearchQueryBuilder)>();
 
@@ -69667,6 +72789,8 @@ late final _CSuggestQueryBuilder_setLimit_int32_tPtr = _lookup<ffi.NativeFunctio
 late final _CSuggestQueryBuilder_setLimit_int32_t = _CSuggestQueryBuilder_setLimit_int32_tPtr.asFunction<_CSuggestQueryBuilder Function(_CSuggestQueryBuilder, int)>();
 late final _CSuggestQueryBuilder_setLocale_COptional_CLocalePtr = _lookup<ffi.NativeFunction<_CSuggestQueryBuilder Function(_CSuggestQueryBuilder, _COptional_CLocale)>>('CSuggestQueryBuilder_setLocale_COptional_CLocale');
 late final _CSuggestQueryBuilder_setLocale_COptional_CLocale = _CSuggestQueryBuilder_setLocale_COptional_CLocalePtr.asFunction<_CSuggestQueryBuilder Function(_CSuggestQueryBuilder, _COptional_CLocale)>();
+late final _CSuggestQueryBuilder_setSearchNearby_boolPtr = _lookup<ffi.NativeFunction<_CSuggestQueryBuilder Function(_CSuggestQueryBuilder, ffi.Bool)>>('CSuggestQueryBuilder_setSearchNearby_bool');
+late final _CSuggestQueryBuilder_setSearchNearby_bool = _CSuggestQueryBuilder_setSearchNearby_boolPtr.asFunction<_CSuggestQueryBuilder Function(_CSuggestQueryBuilder, bool)>();
 late final _CSuggestQueryBuilder_buildPtr = _lookup<ffi.NativeFunction<_CSuggestQuery Function(_CSuggestQueryBuilder)>>('CSuggestQueryBuilder_build');
 late final _CSuggestQueryBuilder_build = _CSuggestQueryBuilder_buildPtr.asFunction<_CSuggestQuery Function(_CSuggestQueryBuilder)>();
 
@@ -69859,6 +72983,8 @@ late final _CPackedSearchQuery_radiusPtr = _lookup<ffi.NativeFunction<_COptional
 late final _CPackedSearchQuery_radius = _CPackedSearchQuery_radiusPtr.asFunction<_COptional_CMeter Function(_CPackedSearchQuery)>();
 late final _CPackedSearchQuery_localePtr = _lookup<ffi.NativeFunction<_COptional_CLocale Function(_CPackedSearchQuery)>>('CPackedSearchQuery_locale');
 late final _CPackedSearchQuery_locale = _CPackedSearchQuery_localePtr.asFunction<_COptional_CLocale Function(_CPackedSearchQuery)>();
+late final _CPackedSearchQuery_searchNearbyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CPackedSearchQuery)>>('CPackedSearchQuery_searchNearby');
+late final _CPackedSearchQuery_searchNearby = _CPackedSearchQuery_searchNearbyPtr.asFunction<bool Function(_CPackedSearchQuery)>();
 
 late final _CPackedSearchQuery_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CPackedSearchQuery_cg_objectIdentifier');
 late final _CPackedSearchQuery_cg_objectIdentifier = _CPackedSearchQuery_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -69894,9 +73020,6 @@ late final _CData_release = _CData_releasePtr.asFunction<void Function(_CData)>(
 
 late final _COptional_COrgIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_COrgId Function()>>('COptional_COrgIdMakeDefault');
 late final _COptional_COrgIdMakeDefault = _COptional_COrgIdMakeDefaultPtr.asFunction<_COptional_COrgId Function()>();
-
-late final _COptional_CGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPoint Function()>>('COptional_CGeoPointMakeDefault');
-late final _COptional_CGeoPointMakeDefault = _COptional_CGeoPointMakeDefaultPtr.asFunction<_COptional_CGeoPoint Function()>();
 
 late final _COptional_CMeterMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CMeter Function()>>('COptional_CMeterMakeDefault');
 late final _COptional_CMeterMakeDefault = _COptional_CMeterMakeDefaultPtr.asFunction<_COptional_CMeter Function()>();
@@ -69938,22 +73061,6 @@ late final _CPolygonGeometry_retainPtr = _lookup<ffi.NativeFunction<_CPolygonGeo
 late final _CPolygonGeometry_retain = _CPolygonGeometry_retainPtr.asFunction<_CPolygonGeometry Function(ffi.Pointer<ffi.Void>)>();
 late final _CPolygonGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPolygonGeometry Function()>>('CPolygonGeometryMakeDefault');
 late final _CPolygonGeometryMakeDefault = _CPolygonGeometryMakeDefaultPtr.asFunction<_CPolygonGeometry Function()>();
-
-late final _CPolylineGeometry_pointsPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPoint Function(_CPolylineGeometry)>>('CPolylineGeometry_points');
-late final _CPolylineGeometry_points = _CPolylineGeometry_pointsPtr.asFunction<_CArray_CGeoPoint Function(_CPolylineGeometry)>();
-
-late final _CPolylineGeometry_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_cg_objectIdentifier');
-late final _CPolylineGeometry_cg_objectIdentifier = _CPolylineGeometry_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CPolylineGeometry_C_createWith_CArray_CGeoPointPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function(_CArray_CGeoPoint)>>('CPolylineGeometry_C_createWith_CArray_CGeoPoint');
-late final _CPolylineGeometry_C_createWith_CArray_CGeoPoint = _CPolylineGeometry_C_createWith_CArray_CGeoPointPtr.asFunction<_CPolylineGeometry Function(_CArray_CGeoPoint)>();
-
-late final _CPolylineGeometry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_release');
-late final _CPolylineGeometry_release = _CPolylineGeometry_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CPolylineGeometry_retainPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function(ffi.Pointer<ffi.Void>)>>('CPolylineGeometry_retain');
-late final _CPolylineGeometry_retain = _CPolylineGeometry_retainPtr.asFunction<_CPolylineGeometry Function(ffi.Pointer<ffi.Void>)>();
-late final _CPolylineGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPolylineGeometry Function()>>('CPolylineGeometryMakeDefault');
-late final _CPolylineGeometryMakeDefault = _CPolylineGeometryMakeDefaultPtr.asFunction<_CPolylineGeometry Function()>();
 
 late final _CComplexGeometry_elementsPtr = _lookup<ffi.NativeFunction<_CArray_CGeometry Function(_CComplexGeometry)>>('CComplexGeometry_elements');
 late final _CComplexGeometry_elements = _CComplexGeometry_elementsPtr.asFunction<_CArray_CGeometry Function(_CComplexGeometry)>();
@@ -71253,9 +74360,6 @@ late final _CStatefulChannel_CRoadEventActionInfoConnect = _CStatefulChannel_CRo
 
 late final _CRoadEventActionStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventActionState Function()>>('CRoadEventActionStateMakeDefault');
 late final _CRoadEventActionStateMakeDefault = _CRoadEventActionStateMakeDefaultPtr.asFunction<_CRoadEventActionState Function()>();
-
-late final _COptional_uint32_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint32_t Function()>>('COptional_uint32_tMakeDefault');
-late final _COptional_uint32_tMakeDefault = _COptional_uint32_tMakeDefaultPtr.asFunction<_COptional_uint32_t Function()>();
 
 late final _CRoadEventActionInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventActionInfo Function()>>('CRoadEventActionInfoMakeDefault');
 late final _CRoadEventActionInfoMakeDefault = _CRoadEventActionInfoMakeDefaultPtr.asFunction<_CRoadEventActionInfo Function()>();
@@ -73464,6 +76568,8 @@ late final _CTrafficRoute_routePtr = _lookup<ffi.NativeFunction<_CRoute Function
 late final _CTrafficRoute_route = _CTrafficRoute_routePtr.asFunction<_CRoute Function(_CTrafficRoute)>();
 late final _CTrafficRoute_trafficPtr = _lookup<ffi.NativeFunction<_CTraffic Function(_CTrafficRoute)>>('CTrafficRoute_traffic');
 late final _CTrafficRoute_traffic = _CTrafficRoute_trafficPtr.asFunction<_CTraffic Function(_CTrafficRoute)>();
+late final _CTrafficRoute_routeTollPaymentInfosPtr = _lookup<ffi.NativeFunction<_CArray_CRouteTollPaymentInfo Function(_CTrafficRoute)>>('CTrafficRoute_routeTollPaymentInfos');
+late final _CTrafficRoute_routeTollPaymentInfos = _CTrafficRoute_routeTollPaymentInfosPtr.asFunction<_CArray_CRouteTollPaymentInfo Function(_CTrafficRoute)>();
 
 late final _CTrafficRoute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficRoute_cg_objectIdentifier');
 late final _CTrafficRoute_cg_objectIdentifier = _CTrafficRoute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -74935,6 +78041,23 @@ late final _forEach_CArray_CTrafficSpeedColorRouteLongEntry = _forEach_CArray_CT
 >>)>();
 late final _CArray_CTrafficSpeedColorRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficSpeedColorRouteLongEntry)>>('CArray_CTrafficSpeedColorRouteLongEntry_release');
 late final _CArray_CTrafficSpeedColorRouteLongEntry_release = _CArray_CTrafficSpeedColorRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CTrafficSpeedColorRouteLongEntry)>();
+
+late final _CArray_CRouteTollPaymentInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CRouteTollPaymentInfo Function()>>('CArray_CRouteTollPaymentInfo_makeEmpty');
+late final _CArray_CRouteTollPaymentInfomakeEmpty = _CArray_CRouteTollPaymentInfomakeEmptyPtr.asFunction<_CArray_CRouteTollPaymentInfo Function()>();
+late final _CArray_CRouteTollPaymentInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteTollPaymentInfo, _CRouteTollPaymentInfo)>>('CArray_CRouteTollPaymentInfo_addElement');
+late final _CArray_CRouteTollPaymentInfoaddElement = _CArray_CRouteTollPaymentInfoaddElementPtr.asFunction<void Function(_CArray_CRouteTollPaymentInfo, _CRouteTollPaymentInfo)>();
+late final _forEach_CArray_CRouteTollPaymentInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CRouteTollPaymentInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRouteTollPaymentInfo)>>)
+>>('CArray_CRouteTollPaymentInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_CRouteTollPaymentInfo = _forEach_CArray_CRouteTollPaymentInfoPtr.asFunction<
+  void Function(_CArray_CRouteTollPaymentInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRouteTollPaymentInfo)
+>>)>();
+late final _CArray_CRouteTollPaymentInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteTollPaymentInfo)>>('CArray_CRouteTollPaymentInfo_release');
+late final _CArray_CRouteTollPaymentInfo_release = _CArray_CRouteTollPaymentInfo_releasePtr.asFunction<void Function(_CArray_CRouteTollPaymentInfo)>();
+
+late final _CRouteTollPaymentInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentInfo Function()>>('CRouteTollPaymentInfoMakeDefault');
+late final _CRouteTollPaymentInfoMakeDefault = _CRouteTollPaymentInfoMakeDefaultPtr.asFunction<_CRouteTollPaymentInfo Function()>();
+
 
 late final _CStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CState Function()>>('CStateMakeDefault');
 late final _CStateMakeDefault = _CStateMakeDefaultPtr.asFunction<_CState Function()>();

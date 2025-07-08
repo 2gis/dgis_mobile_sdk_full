@@ -344,6 +344,10 @@ class _TextureController {
     });
   }
 
+  Future<int?> getScreenFps() async {
+    return _channel.invokeMethod('getScreenFps');
+  }
+
   void dispose(int textureId) {
     _channel.invokeMethod('dispose', {'textureId': textureId});
   }
@@ -439,8 +443,9 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     mapWidgetController = widget._controller ?? MapWidgetController();
     mapWidgetController
       .._appearance = widget.mapOptions.appearance
-      .._maxFps = widget.mapOptions.maxFps ?? const sdk.Fps(60)
-      .._powerSavingMaxFps = widget.mapOptions.powerSavingMaxFps;
+      .._maxFps = mapWidgetController.maxFps ?? widget.mapOptions.maxFps
+      .._powerSavingMaxFps = mapWidgetController.powerSavingMaxFps ??
+          widget.mapOptions.powerSavingMaxFps;
     WidgetsBinding.instance.addObserver(this);
     _appState = WidgetsBinding.instance.lifecycleState;
     _mapTheme = ValueNotifier(mapWidgetController._appearance.mapTheme);
@@ -558,10 +563,13 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     final provider = sdk.MapSurfaceProvider.create(map);
     mapWidgetController._provider = provider;
     final id = await _controller.initialize(provider.id);
+    final screenFps = await _controller.getScreenFps();
 
     final renderer = sdk.MapRenderer.create(map);
     mapWidgetController
       .._renderer = renderer
+      ..maxFps = sdk.Fps(mapWidgetController.maxFps?.value ?? screenFps ?? 60)
+      ..powerSavingMaxFps = mapWidgetController.powerSavingMaxFps
       .._updateRendererFps();
 
     _updateMapVisibility();
