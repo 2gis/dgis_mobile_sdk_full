@@ -138,6 +138,7 @@ class _FpsState extends State<FpsPage> {
                         : const Color(0xffcccccc),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.3),
                         spreadRadius: 2,
                         blurRadius: 2,

@@ -62,7 +62,7 @@ class _CopyrightState {
   final sdk.ProductType productType;
 
   const _CopyrightState({
-    this.hideCopyright = false,
+    this.hideCopyright = true,
     this.productType = sdk.ProductType.dgis,
   });
 

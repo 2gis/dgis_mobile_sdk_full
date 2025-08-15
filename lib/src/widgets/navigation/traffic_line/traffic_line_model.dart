@@ -1,5 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import '../../../generated/dart_bindings.dart' as sdk;
+import 'traffic_line_point_event.dart';
+import 'traffic_line_point_event_type.dart';
 
 @immutable
 class TrafficLineModel {
@@ -10,6 +13,25 @@ class TrafficLineModel {
   final List<sdk.GeoPointRouteEntry> intermediatePoints;
   final List<sdk.TrafficSpeedColorRouteLongEntry> speedColors;
   final List<sdk.RoadEventRouteEntry> roadEvents;
+
+  List<TrafficLinePointEvent> get allEvents => [
+        ...roadEvents.map(
+          (event) => TrafficLinePointEvent(
+            point: event.point,
+            id: event.value.id,
+            type: event.value.eventType == sdk.RoadEventType.roadWorks
+                ? TrafficLinePointEventType.roadWorks
+                : TrafficLinePointEventType.accident,
+          ),
+        ),
+        ...intermediatePoints.mapIndexed(
+          (index, point) => TrafficLinePointEvent(
+            point: point.point,
+            id: index,
+            type: TrafficLinePointEventType.intermediatePoint,
+          ),
+        ),
+      ];
 
   const TrafficLineModel({
     required this.routeLength,
@@ -26,6 +48,7 @@ class TrafficLineModel {
     List<sdk.GeoPointRouteEntry>? intermediatePoints,
     List<sdk.TrafficSpeedColorRouteLongEntry>? speedColors,
     List<sdk.RoadEventRouteEntry>? roadEvents,
+    List<TrafficLinePointEvent>? allEvents,
   }) {
     return TrafficLineModel(
       routeLength: routeLength ?? this.routeLength,

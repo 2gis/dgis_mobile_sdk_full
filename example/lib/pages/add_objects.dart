@@ -43,21 +43,26 @@ class _SamplePageState extends State<AddObjectsPage> {
   String _circleRadius = '100';
   String _circleUserData = '';
   String _circleZIndex = '1';
+  // ignore: deprecated_member_use
   int _circleSelectedColor = Colors.black.value;
   double _circleStrokeWidth = 0;
+  // ignore: deprecated_member_use
   int _circleSelectedStrokeColor = Colors.black.value;
 
   String _polylinePointCount = '2';
   String _polylineUserData = '';
   String _polylineZIndex = '1';
   double _polylineWidth = 5;
+  // ignore: deprecated_member_use
   int _polylineSelectedColor = Colors.black.value;
 
   String _polygonPointCount = '3';
   String _polygonUserData = '';
   String _polygonZIndex = '1';
   double _polygonStrokeWidth = 5;
+  // ignore: deprecated_member_use
   int _polygonSelectedColor = Colors.black.value;
+  // ignore: deprecated_member_use
   int _polygonSelectedStrokeColor = Colors.black.value;
 
   String _markerUserData = '';
@@ -492,7 +497,9 @@ class _SamplePageState extends State<AddObjectsPage> {
           textPlacement: sdk.TextPlacement.topCenter,
           strokeWidth: sdk.LogicalPixel(strokeWidth),
           textOffset: sdk.LogicalPixel(textOffset),
+          // ignore: deprecated_member_use
           strokeColor: sdk.Color(Colors.black.value),
+          // ignore: deprecated_member_use
           color: sdk.Color(Colors.white.value),
         ),
       ),

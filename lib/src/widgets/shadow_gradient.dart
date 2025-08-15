@@ -39,6 +39,7 @@ class ShadowGradient extends StatelessWidget {
 
     for (var i = 0; i < stops; i++) {
       final currentOpacity = startOpacity + (opacityStep * i);
+      // ignore: deprecated_member_use
       gradientColors.add(color.withOpacity(currentOpacity));
       gradientStops.add(i / (stops - 1));
     }

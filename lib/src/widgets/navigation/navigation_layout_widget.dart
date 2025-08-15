@@ -200,10 +200,10 @@ class _NavigationLayoutWidgetState
           IntrinsicWidth(
             child: Column(
               children: [
-                if (widget._parkingWidgetBuilder != null)
-                  widget._parkingWidgetBuilder!.call(
+                if (widget._trafficWidgetBuilder != null)
+                  widget._trafficWidgetBuilder!.call(
                     const RoundedCorners.top(),
-                    parkingController,
+                    trafficController,
                   ),
                 if (widget._parkingWidgetBuilder != null &&
                     widget._trafficWidgetBuilder != null)
@@ -212,10 +212,10 @@ class _NavigationLayoutWidgetState
                     thickness: 1,
                     color: CupertinoColors.separator,
                   ),
-                if (widget._trafficWidgetBuilder != null)
-                  widget._trafficWidgetBuilder!.call(
+                if (widget._parkingWidgetBuilder != null)
+                  widget._parkingWidgetBuilder!.call(
                     const RoundedCorners.bottom(),
-                    trafficController,
+                    parkingController,
                   ),
               ],
             ),
@@ -246,6 +246,7 @@ class _NavigationLayoutWidgetState
             children: [
               SafeArea(
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget._maneuverWidgetBuilder != null)
                       Expanded(

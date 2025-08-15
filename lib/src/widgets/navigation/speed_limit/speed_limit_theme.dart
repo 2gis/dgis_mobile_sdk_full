@@ -42,16 +42,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       fontSize: 24,
     ),
     exceededSurfaceColor: DgisColorScheme.speedometerRed,
-    exceededShadows: [
-      BoxShadow(
-        color: DgisColorScheme.speedometerRed,
-        blurRadius: 1,
-      ),
-      BoxShadow(
-        color: DgisColorScheme.speedometerRed,
-        blurRadius: 4,
-      ),
-    ],
+    exceededShadows: [],
   );
 
   /// Widget color scheme for default dark mode.
@@ -72,16 +63,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       fontWeight: FontWeight.w600,
       fontSize: 24,
     ),
-    exceededShadows: [
-      BoxShadow(
-        color: DgisColorScheme.speedometerRed,
-        blurRadius: 1,
-      ),
-      BoxShadow(
-        color: DgisColorScheme.speedometerRed,
-        blurRadius: 4,
-      ),
-    ],
+    exceededShadows: [],
   );
 
   @override

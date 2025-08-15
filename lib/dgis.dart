@@ -94,6 +94,8 @@ export 'src/widgets/navigation/traffic/traffic_widget_theme.dart';
 export 'src/widgets/navigation/traffic_line/traffic_line_color_scheme.dart';
 export 'src/widgets/navigation/traffic_line/traffic_line_controller.dart';
 export 'src/widgets/navigation/traffic_line/traffic_line_model.dart';
+export 'src/widgets/navigation/traffic_line/traffic_line_point_event.dart';
+export 'src/widgets/navigation/traffic_line/traffic_line_point_event_type.dart';
 export 'src/widgets/navigation/traffic_line/traffic_line_segments_colors.dart';
 export 'src/widgets/navigation/traffic_line/traffic_line_widget.dart';
 export 'src/widgets/navigation/zoom/zoom_controller.dart';

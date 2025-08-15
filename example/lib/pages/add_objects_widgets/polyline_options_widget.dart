@@ -132,6 +132,7 @@ class PolylineOptionsDialogState extends State<PolylineOptionsDialog> {
                 children: <Widget>[
                   RadioListTile<int>(
                     title: const Text('Black'),
+                    // ignore: deprecated_member_use
                     value: Colors.black.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -139,6 +140,7 @@ class PolylineOptionsDialogState extends State<PolylineOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Red'),
+                    // ignore: deprecated_member_use
                     value: Colors.red.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -146,6 +148,7 @@ class PolylineOptionsDialogState extends State<PolylineOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Blue'),
+                    // ignore: deprecated_member_use
                     value: Colors.blue.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>

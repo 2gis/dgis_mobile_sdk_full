@@ -112,6 +112,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                 children: <Widget>[
                   RadioListTile<int>(
                     title: const Text('Black'),
+                    // ignore: deprecated_member_use
                     value: Colors.black.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -119,6 +120,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Red'),
+                    // ignore: deprecated_member_use
                     value: Colors.red.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -126,6 +128,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Blue'),
+                    // ignore: deprecated_member_use
                     value: Colors.blue.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -139,6 +142,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                 children: <Widget>[
                   RadioListTile<int>(
                     title: const Text('Black'),
+                    // ignore: deprecated_member_use
                     value: Colors.black.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>
@@ -146,6 +150,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Red'),
+                    // ignore: deprecated_member_use
                     value: Colors.red.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>
@@ -153,6 +158,7 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Blue'),
+                    // ignore: deprecated_member_use
                     value: Colors.blue.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>

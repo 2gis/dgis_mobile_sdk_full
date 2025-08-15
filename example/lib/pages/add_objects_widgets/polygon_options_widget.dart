@@ -113,6 +113,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                 children: <Widget>[
                   RadioListTile<int>(
                     title: const Text('Black'),
+                    // ignore: deprecated_member_use
                     value: Colors.black.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -120,6 +121,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Red'),
+                    // ignore: deprecated_member_use
                     value: Colors.red.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -127,6 +129,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Blue'),
+                    // ignore: deprecated_member_use
                     value: Colors.blue.value,
                     groupValue: selectedColor,
                     onChanged: (value) =>
@@ -140,6 +143,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                 children: <Widget>[
                   RadioListTile<int>(
                     title: const Text('Black'),
+                    // ignore: deprecated_member_use
                     value: Colors.black.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>
@@ -147,6 +151,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Red'),
+                    // ignore: deprecated_member_use
                     value: Colors.red.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>
@@ -154,6 +159,7 @@ class PolygonOptionsDialogState extends State<PolygonOptionsDialog> {
                   ),
                   RadioListTile<int>(
                     title: const Text('Blue'),
+                    // ignore: deprecated_member_use
                     value: Colors.blue.value,
                     groupValue: selectedStrokeColor,
                     onChanged: (value) =>

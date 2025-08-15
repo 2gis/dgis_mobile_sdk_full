@@ -11,9 +11,11 @@ import '../../map/themed_map_controlling_widget_state.dart';
 import './traffic_line_color_scheme.dart';
 import './traffic_line_segments_colors.dart';
 import 'traffic_line_controller.dart';
+import 'traffic_line_point_event.dart';
+import 'traffic_line_point_event_type.dart';
 
 // Used for measure collision between tUGC icons and location indicator
-const double _locationIndicatorMargin = 15;
+const double _locationIndicatorMargin = 16;
 
 class TrafficLineWidget
     extends ThemedMapControllingWidget<TrafficLineColorScheme> {
@@ -64,27 +66,41 @@ class _TrafficLineWidgetState extends ThemedMapControllingWidgetState<
                 alignment: Alignment.bottomCenter,
               ),
               Positioned(
+                bottom: 8,
+                left: 4,
+                child: Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: colorScheme.passedColor,
+                  ),
+                ),
+              ),
+              Positioned(
                 top: 4,
-                bottom: 4,
+                bottom: 20,
                 left: 4,
                 right: 28,
                 child: _TrafficLineSegments(
                   colorScheme: colorScheme.trafficLineSegmentsColors,
                   speedColors: state.speedColors,
                   routeLength: state.routeLength,
-                  height: widget.height,
+                  height: widget.height - 20,
+                  routeProgress: state.routeProgress,
+                  minSegmentSize: 2 * MediaQuery.devicePixelRatioOf(context),
+                  passedColor: colorScheme.passedColor,
                 ),
               ),
               _RoadEventsWidget(
-                events: state.roadEvents,
+                events: state.allEvents,
                 routeLength: state.routeLength,
                 routeProgress: state.routeProgress,
-                height: widget.height,
+                height: widget.height - 20,
               ),
               Positioned(
                 left: -4,
-                bottom: widget.height * state.routeProgress -
-                    _locationIndicatorMargin,
+                bottom: widget.height * state.routeProgress,
                 child: _buildLocationIndicator(state.routeProgress),
               ),
             ],
@@ -137,14 +153,20 @@ class _TrafficLineWidgetState extends ThemedMapControllingWidgetState<
 class _TrafficLineSegments extends StatelessWidget {
   final List<sdk.TrafficSpeedColorRouteLongEntry> speedColors;
   final double routeLength;
+  final double routeProgress;
   final double height;
   final TrafficLineSegmentsColors colorScheme;
+  final double minSegmentSize;
+  final Color passedColor;
 
   const _TrafficLineSegments({
     required this.speedColors,
     required this.routeLength,
+    required this.routeProgress,
     required this.height,
     required this.colorScheme,
+    required this.minSegmentSize,
+    required this.passedColor,
   });
 
   @override
@@ -163,7 +185,10 @@ class _TrafficLineSegments extends StatelessWidget {
       painter: _TrafficLinePainter(
         speedColors: speedColors,
         routeLength: routeLength,
+        routeProgress: routeProgress,
         colorScheme: colorScheme,
+        minSegmentSize: minSegmentSize,
+        passedColor: passedColor,
       ),
     );
   }
@@ -172,14 +197,18 @@ class _TrafficLineSegments extends StatelessWidget {
 class _TrafficLinePainter extends CustomPainter {
   final List<sdk.TrafficSpeedColorRouteLongEntry> speedColors;
   final double routeLength;
+  final double routeProgress;
   final TrafficLineSegmentsColors colorScheme;
-  static const double minSegmentSize = 2;
-  static const double gradientTransitionHeight = 8;
+  final double minSegmentSize;
+  final Color passedColor;
 
   _TrafficLinePainter({
     required this.speedColors,
     required this.routeLength,
+    required this.routeProgress,
     required this.colorScheme,
+    required this.minSegmentSize,
+    required this.passedColor,
   });
 
   Color _getColorForType(sdk.TrafficSpeedColor type) {
@@ -194,6 +223,7 @@ class _TrafficLinePainter extends CustomPainter {
         return colorScheme.red;
       case sdk.TrafficSpeedColor.deepRed:
         return colorScheme.deepRed;
+      // ignore: unreachable_switch_default
       default:
         return colorScheme.undefined;
     }
@@ -201,6 +231,8 @@ class _TrafficLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (routeLength == 0 || speedColors.isEmpty) return;
+
     final paint = Paint()..style = PaintingStyle.fill;
 
     final rect = RRect.fromRectAndRadius(
@@ -218,67 +250,47 @@ class _TrafficLinePainter extends CustomPainter {
 
     for (var i = 0; i < sortedSegments.length; i++) {
       final current = sortedSegments[i];
-      final next = i < sortedSegments.length - 1 ? sortedSegments[i + 1] : null;
 
       final startPoint = current.point.distance.millimeters.toDouble();
       final endPoint = startPoint + current.length.millimeters.toDouble();
 
-      final startY =
-          (startPoint / routeLength * size.height).clamp(0.0, size.height - 1);
-      var endY =
-          (endPoint / routeLength * size.height).clamp(0.0, size.height - 1);
+      var startY = size.height -
+          ((startPoint / routeLength * size.height)
+              .clamp(0.0, size.height - 1));
+      final endY = size.height -
+          ((endPoint / routeLength * size.height).clamp(0.0, size.height - 1));
 
-      if (endY - startY < minSegmentSize) {
-        endY = startY + minSegmentSize;
+      if (startY - endY < minSegmentSize) {
+        startY = endY + minSegmentSize;
       }
 
-      final currentColor = _getColorForType(current.value);
+      paint
+        ..shader = null
+        ..color = _getColorForType(current.value);
 
-      if (next != null) {
-        final nextColor = _getColorForType(next.value);
-        final transitionStart = endY - gradientTransitionHeight;
-
-        paint
-          ..shader = null
-          ..color = currentColor;
-        canvas.drawRect(
-          Rect.fromLTRB(0, startY, size.width, transitionStart),
-          paint,
-        );
-
-        paint.shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [currentColor, nextColor],
-        ).createShader(
-          Rect.fromLTRB(0, transitionStart, size.width, endY),
-        );
-        canvas.drawRect(
-          Rect.fromLTRB(0, transitionStart, size.width, endY),
-          paint,
-        );
-      } else {
-        paint
-          ..shader = null
-          ..color = currentColor;
-        canvas.drawRect(
-          Rect.fromLTRB(0, startY, size.width, endY),
-          paint,
-        );
-      }
+      canvas.drawRect(
+        Rect.fromLTRB(0, endY, size.width, startY),
+        paint,
+      );
     }
 
-    final borderPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = CupertinoColors.systemGrey3
-      ..strokeWidth = 1;
-    canvas.drawRRect(rect, borderPaint);
+    final progressY = size.height * (1 - routeProgress);
+    paint
+      ..color = passedColor
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(
+      Rect.fromLTRB(0, size.height, size.width, progressY),
+      paint,
+    );
   }
 
   @override
   bool shouldRepaint(_TrafficLinePainter oldDelegate) {
     return oldDelegate.speedColors != speedColors ||
-        oldDelegate.routeLength != routeLength;
+        oldDelegate.routeLength != routeLength ||
+        oldDelegate.routeProgress != routeProgress ||
+        oldDelegate.passedColor != passedColor;
   }
 }
 
@@ -306,6 +318,14 @@ enum _RoadEventIcon {
   defailtSmallIcon(
     path:
         'packages/$pluginName/assets/icons/navigation/dgis_traffic_line_small_icon.svg',
+  ),
+  intermediatePointLargeIcon(
+    path:
+        'packages/$pluginName/assets/icons/navigation/dgis_traffic_line_int_point_large_icon.svg',
+  ),
+  intermediatePointSmallIcon(
+    path:
+        'packages/$pluginName/assets/icons/navigation/dgis_traffic_line_int_point_small_icon.svg',
   );
 
   const _RoadEventIcon({required this.path});
@@ -314,7 +334,7 @@ enum _RoadEventIcon {
 }
 
 class _RoadEventsWidget extends StatefulWidget {
-  final List<sdk.RoadEventRouteEntry> events;
+  final List<TrafficLinePointEvent> events;
   final double routeLength;
   final double routeProgress;
   final double height;
@@ -390,7 +410,7 @@ class _RoadEventsWidgetState extends State<_RoadEventsWidget> {
 }
 
 class _RoadEventsPainter extends CustomPainter {
-  final List<sdk.RoadEventRouteEntry> events;
+  final List<TrafficLinePointEvent> events;
   final double routeLength;
   final double routeProgress;
   final Map<int, DateTime> eventFirstAppearance;
@@ -413,17 +433,22 @@ class _RoadEventsPainter extends CustomPainter {
     required this.svgCache,
   });
 
-  String _getEventIcon(sdk.RoadEventType type, bool isBigIcon) {
+  String _getEventIcon(TrafficLinePointEventType type, bool isBigIcon) {
     switch (type) {
-      case sdk.RoadEventType.accident:
+      case TrafficLinePointEventType.accident:
         return isBigIcon
             ? _RoadEventIcon.accidentLargeIcon.path
             : _RoadEventIcon.accidentSmallIcon.path;
 
-      case sdk.RoadEventType.roadWorks:
+      case TrafficLinePointEventType.roadWorks:
         return isBigIcon
             ? _RoadEventIcon.roadWorksLargeIcon.path
             : _RoadEventIcon.roadWorksSmallIcon.path;
+      case TrafficLinePointEventType.intermediatePoint:
+        return isBigIcon
+            ? _RoadEventIcon.intermediatePointLargeIcon.path
+            : _RoadEventIcon.intermediatePointSmallIcon.path;
+      // ignore: unreachable_switch_default
       default:
         return isBigIcon
             ? _RoadEventIcon.defaultLargeIcon.path
@@ -433,7 +458,9 @@ class _RoadEventsPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (events.isEmpty || routeLength == 0) return;
+    if (events.isEmpty || routeLength == 0) {
+      return;
+    }
 
     final locationIndicatorY = size.height * (1 - routeProgress);
 
@@ -455,11 +482,11 @@ class _RoadEventsPainter extends CustomPainter {
     for (final event in visibleEvents) {
       final eventY =
           size.height * (1 - event.point.distance.millimeters / routeLength);
-      final isBigIcon = _shouldShowBigIcon(event.value.id);
+      final isBigIcon = _shouldShowBigIcon(event.id);
       final iconSize = isBigIcon ? bigIconSize : smallIconSize;
 
       if (lastY - eventY >= iconSize) {
-        final iconPath = _getEventIcon(event.value.eventType, isBigIcon);
+        final iconPath = _getEventIcon(event.type, isBigIcon);
         final pictureInfo = svgCache[iconPath];
 
         if (pictureInfo != null) {

@@ -37,4 +37,6 @@ class DgisColorScheme {
   static const Color textColorOnRed = Color(0xFFFFFFFF);
   static const Color brightBlue = Color(0xff3588FD);
   static const Color textColorOnBlue = Color(0xFFFFFFFF);
+  static const Color blackNinePercent = Color(0xFFE9E9E9);
+  static const Color whiteSevenPercent = Color(0xFF3b3b3b);
 }

@@ -124,7 +124,7 @@ class _MeasureSize extends SingleChildRenderObjectWidget {
   const _MeasureSize({
     required this.onChange,
     required Widget super.child,
-    // ignore: unused_element
+    // ignore: unused_element, unused_element_parameter
     super.key,
   });
 

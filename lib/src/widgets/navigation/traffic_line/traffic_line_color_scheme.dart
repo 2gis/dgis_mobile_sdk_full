@@ -9,12 +9,14 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
   final Color surfaceColor;
   final Color locationIconColor;
   final Color locationIconBackgroundColor;
+  final Color passedColor;
   final List<BoxShadow> locationIconBoxShadows;
   final TrafficLineSegmentsColors trafficLineSegmentsColors;
   const TrafficLineColorScheme({
     required this.surfaceColor,
     required this.locationIconColor,
     required this.locationIconBackgroundColor,
+    required this.passedColor,
     required this.locationIconBoxShadows,
     required this.trafficLineSegmentsColors,
   });
@@ -23,7 +25,8 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
   static const defaultLight = TrafficLineColorScheme(
     surfaceColor: DgisColorScheme.surfaceLight,
     locationIconColor: DgisColorScheme.surfaceLight,
-    locationIconBackgroundColor: DgisColorScheme.surfaceDark,
+    locationIconBackgroundColor: DgisColorScheme.darkGrey,
+    passedColor: DgisColorScheme.blackNinePercent,
     locationIconBoxShadows: WidgetShadows.naviWidgetBoxShadowsLight,
     trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultColors,
   );
@@ -33,6 +36,7 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
     surfaceColor: DgisColorScheme.surfaceDark,
     locationIconColor: DgisColorScheme.surfaceDark,
     locationIconBackgroundColor: DgisColorScheme.surfaceLight,
+    passedColor: DgisColorScheme.whiteSevenPercent,
     locationIconBoxShadows: WidgetShadows.naviWidgetBoxShadowsDark,
     trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultColors,
   );
@@ -41,6 +45,7 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
     Color? surfaceColor,
     Color? locationIconColor,
     Color? locationIconBackgroundColor,
+    Color? passedColor,
     List<BoxShadow>? locationIconBoxShadows,
     TrafficLineSegmentsColors? trafficLineSegmentsColors,
   }) {
@@ -53,6 +58,7 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
           locationIconBoxShadows ?? this.locationIconBoxShadows,
       trafficLineSegmentsColors:
           trafficLineSegmentsColors ?? this.trafficLineSegmentsColors,
+      passedColor: passedColor ?? this.passedColor,
     );
   }
 }

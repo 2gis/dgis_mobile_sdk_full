@@ -206,6 +206,7 @@ class FPSGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 200,
+      // ignore: deprecated_member_use
       color: Colors.black.withOpacity(0.5),
       padding: const EdgeInsets.all(8),
       child: Column(

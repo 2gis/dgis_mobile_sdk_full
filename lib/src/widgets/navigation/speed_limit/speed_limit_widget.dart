@@ -211,22 +211,22 @@ class _PulsatingAnimationWidgetState extends State<_PulsatingAnimationWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1200),
     );
 
     _animation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1, end: 1.05),
+        tween: Tween<double>(begin: 1, end: 1.1),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.05, end: 1),
+        tween: Tween<double>(begin: 1.1, end: 1),
         weight: 50,
       ),
     ]).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.easeOut,
       ),
     );
 

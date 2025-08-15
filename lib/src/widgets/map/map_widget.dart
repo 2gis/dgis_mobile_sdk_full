@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
@@ -13,7 +14,6 @@ import '../../platform/map/map_appearance.dart';
 import '../../platform/map/map_options.dart';
 import '../../platform/map/map_theme.dart';
 import '../../platform/map/touch_events_observer.dart';
-import '../common/measure_size.dart';
 import 'copyright_widget.dart';
 
 typedef OnMapReadyCallback = void Function(sdk.Map map);
@@ -353,6 +353,123 @@ class _TextureController {
   }
 }
 
+class _MapRenderBox extends RenderBox {
+  int? textureId;
+  double deviceDensity;
+  _TextureController textureController;
+  MapWidgetController mapWidgetController;
+
+  ClipRectLayer? _clipRectLayer;
+  Size _currentTextureSize = Size.zero;
+
+  _MapRenderBox(
+    this.textureId,
+    this.deviceDensity,
+    this.textureController,
+    this.mapWidgetController,
+  );
+
+  void _updateMapSize(Size newSize) {
+    if (newSize.width == 0.0 || newSize.height == 0.0) {
+      return;
+    }
+
+    markNeedsPaint();
+
+    final width = (newSize.width * deviceDensity).toInt();
+    final height = (newSize.height * deviceDensity).toInt();
+    textureController.update(textureId!, width, height);
+    final screenSize = sdk.ScreenSize(width: width, height: height);
+    mapWidgetController._provider?.resizeSurface(screenSize);
+    mapWidgetController._map?.camera.size = screenSize;
+
+    mapWidgetController._renderer?.waitForRendering().then((_) {
+      _currentTextureSize = newSize;
+      markNeedsPaint();
+    });
+  }
+
+  @override
+  bool get sizedByParent => true;
+
+  @override
+  bool get alwaysNeedsCompositing => true;
+
+  @override
+  bool get isRepaintBoundary => true;
+
+  @override
+  void performResize() {
+    size = constraints.biggest;
+    _updateMapSize(size);
+  }
+
+  @override
+  bool hitTestSelf(Offset position) {
+    return true;
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (textureId == null) {
+      return;
+    }
+    if (size.width < _currentTextureSize.width || size.height < _currentTextureSize.height) {
+      _clipRectLayer = context.pushClipRect(
+        true,
+        offset,
+        offset & size,
+        _paintTexture,
+        oldLayer: _clipRectLayer,
+      );
+      return;
+    }
+    _clipRectLayer = null;
+    _paintTexture(context, offset);
+  }
+
+  void _paintTexture(PaintingContext context, Offset offset) {
+    final dx = offset.dx + (size.width - _currentTextureSize.width) / 2;
+    final dy = offset.dy + (size.height - _currentTextureSize.height) / 2;
+    final centeredOffset = Offset(dx, dy);
+
+    context.addLayer(
+      TextureLayer(
+        rect: centeredOffset & _currentTextureSize,
+        textureId: textureId!,
+      ),
+    );
+  }
+}
+
+class _MapTextureView extends LeafRenderObjectWidget {
+  const _MapTextureView({
+    required this.textureId,
+    required this.deviceDensity,
+    required this.textureController,
+    required this.mapWidgetController,
+  });
+
+  final int? textureId;
+  final double deviceDensity;
+  final _TextureController textureController;
+  final MapWidgetController mapWidgetController;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _MapRenderBox(textureId, deviceDensity, textureController, mapWidgetController);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    renderObject as _MapRenderBox
+      ..textureId = textureId
+      ..deviceDensity = deviceDensity
+      ..textureController = textureController
+      ..mapWidgetController = mapWidgetController;
+  }
+}
+
 class _TouchPoint {
   final int _id;
   sdk.ScreenPoint _position;
@@ -489,22 +606,24 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     return Stack(
       children: [
         Center(
-          child: MeasureSize(
-            onChange: _updateMapSize,
-            child: Listener(
-              onPointerDown: (event) {
-                _mapGestureController?.onPointerDownCallback(event);
-              },
-              onPointerMove: (event) {
-                _mapGestureController?.onPointerMoveCallback(event);
-              },
-              onPointerUp: (event) {
-                _mapGestureController?.onPointerUpCallback(event);
-              },
-              onPointerCancel: (event) {
-                _mapGestureController?.onPointerCancelCallback(event);
-              },
-              child: Texture(textureId: _textureId!),
+          child: Listener(
+            onPointerDown: (event) {
+              _mapGestureController?.onPointerDownCallback(event);
+            },
+            onPointerMove: (event) {
+              _mapGestureController?.onPointerMoveCallback(event);
+            },
+            onPointerUp: (event) {
+              _mapGestureController?.onPointerUpCallback(event);
+            },
+            onPointerCancel: (event) {
+              _mapGestureController?.onPointerCancelCallback(event);
+            },
+            child: _MapTextureView(
+              textureId: _textureId,
+              deviceDensity: _deviceDensity,
+              textureController: _controller,
+              mapWidgetController: mapWidgetController,
             ),
           ),
         ),
@@ -600,18 +719,6 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     isMapInitialized = true;
   }
 
-  void _updateMapSize(Size newSize) {
-    if (newSize.width == 0.0 || newSize.height == 0.0) {
-      return;
-    }
-    final width = (newSize.width * _deviceDensity).toInt();
-    final height = (newSize.height * _deviceDensity).toInt();
-    _controller.update(_textureId!, width, height);
-    final screenSize = sdk.ScreenSize(width: width, height: height);
-    mapWidgetController._provider?.resizeSurface(screenSize);
-    mapWidgetController._map?.camera.size = screenSize;
-  }
-
   void _updateMapVisibility() {
     if (_appState == null) {
       return;
@@ -674,6 +781,7 @@ extension _MapBuilderApplyMapOptions on sdk.MapBuilder {
     }
 
     builder
+      // ignore: deprecated_member_use
       ..setBackgroundColor(sdk.Color(options.defaultBackgroundColor.value))
       ..setAttribute(
         'theme',
@@ -692,7 +800,7 @@ class _MapProvider extends InheritedWidget {
     required this.map,
     required this.mapTheme,
     required super.child,
-    // ignore: unused_element
+    // ignore: unused_element, unused_element_parameter
     super.key,
   });
 

@@ -14,6 +14,7 @@ class FPSGraphPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final gridPaint = Paint()
+      // ignore: deprecated_member_use
       ..color = Colors.white.withOpacity(0.2)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
@@ -30,6 +31,7 @@ class FPSGraphPainter extends CustomPainter {
       TextPainter(
         text: TextSpan(
           text: yValue.toStringAsFixed(0),
+          // ignore: deprecated_member_use
           style: TextStyle(color: Colors.white.withOpacity(0.5)),
         ),
         textDirection: TextDirection.ltr,

@@ -5969,6 +5969,10 @@ class EntranceInfo {
   final List<ApartmentRange> apartmentRanges;
   /** Геометрии для отображения входа на карте. */
   final EntranceGeometry? geometry;
+  /**
+   Номер входа на станцию.
+   Будет содержать информацию для объекта с типом ObjectType.StationEntrance.
+  */
   final String? entranceNumber;
 
   const EntranceInfo({
@@ -8763,6 +8767,71 @@ extension _CPublicTransportDirectoryRouteDirectionNamesInfoRelease on _CPublicTr
   }
 }
 
+// MARK: - PublicTransportRouteType
+
+/** Тип маршрута общественного транспорта. */
+enum PublicTransportRouteType {
+  /** Автобус. */
+  bus(0),
+  /** Троллейбус. */
+  trolleybus(1),
+  /** Трамвай. */
+  tram(2),
+  /** Маршрутное такси. */
+  shuttleBus(3),
+  /** Метро. */
+  metro(4),
+  /** Электропоезд. */
+  suburbanTrain(5),
+  /** Фуникулёр. */
+  funicularRailway(6),
+  /** Монорельс. */
+  monorail(7),
+  /** Водный транспорт. */
+  riverTransport(8),
+  /** Канатная дорога. */
+  cableCar(9),
+  /** Скоростной трамвай. */
+  lightRail(10),
+  /** Метротрамвай. */
+  premetro(11),
+  /** Лёгкое метро. */
+  lightMetro(12),
+  /** Аэроэкспресс. */
+  aeroexpress(13),
+  ;
+
+  const PublicTransportRouteType(this.rawValue);
+  final int rawValue;
+
+  static PublicTransportRouteType getByValue(int value) {
+    return PublicTransportRouteType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CPublicTransportRouteType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CPublicTransportRouteTypeBasicFunctions on _CPublicTransportRouteType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CPublicTransportRouteTypeToDart on _CPublicTransportRouteType {
+  PublicTransportRouteType _toDart() {
+    return PublicTransportRouteType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CPublicTransportRouteType on PublicTransportRouteType {
+  _CPublicTransportRouteType _copyFromDartTo_CPublicTransportRouteType() {
+    return _CPublicTransportRouteTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
 // MARK: - PublicTransportRouteDirectionId
 
 /** Идентификатор направления маршрута общественного транспорта. */
@@ -9038,71 +9107,6 @@ extension _CPublicTransportRouteGeometryRelease on _CPublicTransportRouteGeometr
   }
 }
 
-// MARK: - PublicTransportRouteType
-
-/** Тип маршрута общественного транспорта. */
-enum PublicTransportRouteType {
-  /** Автобус. */
-  bus(0),
-  /** Троллейбус. */
-  trolleybus(1),
-  /** Трамвай. */
-  tram(2),
-  /** Маршрутное такси. */
-  shuttleBus(3),
-  /** Метро. */
-  metro(4),
-  /** Электропоезд. */
-  suburbanTrain(5),
-  /** Фуникулёр. */
-  funicularRailway(6),
-  /** Монорельс. */
-  monorail(7),
-  /** Водный транспорт. */
-  riverTransport(8),
-  /** Канатная дорога. */
-  cableCar(9),
-  /** Скоростной трамвай. */
-  lightRail(10),
-  /** Метротрамвай. */
-  premetro(11),
-  /** Лёгкое метро. */
-  lightMetro(12),
-  /** Аэроэкспресс. */
-  aeroexpress(13),
-  ;
-
-  const PublicTransportRouteType(this.rawValue);
-  final int rawValue;
-
-  static PublicTransportRouteType getByValue(int value) {
-    return PublicTransportRouteType.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CPublicTransportRouteType extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CPublicTransportRouteTypeBasicFunctions on _CPublicTransportRouteType {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CPublicTransportRouteTypeToDart on _CPublicTransportRouteType {
-  PublicTransportRouteType _toDart() {
-    return PublicTransportRouteType.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CPublicTransportRouteType on PublicTransportRouteType {
-  _CPublicTransportRouteType _copyFromDartTo_CPublicTransportRouteType() {
-    return _CPublicTransportRouteTypeMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - int? <-> _COptional_uint32_t
 
 final class _COptional_uint32_t extends ffi.Struct {
@@ -9659,6 +9663,8 @@ class PublicTransportDirectoryRouteInfo {
   final DgisObjectId id;
   /** Название маршрута. */
   final String name;
+  /** Тип маршрута. */
+  final PublicTransportRouteType routeType;
   /** Цветовое кодирование маршрута. */
   final int? color;
   /** Информация о наименованиях начальной и конечной остановках маршрута. */
@@ -9674,6 +9680,7 @@ class PublicTransportDirectoryRouteInfo {
   const PublicTransportDirectoryRouteInfo({
     required this.id,
     required this.name,
+    required this.routeType,
     required this.color,
     required this.fromToStationNames,
     required this.directions
@@ -9682,6 +9689,7 @@ class PublicTransportDirectoryRouteInfo {
   PublicTransportDirectoryRouteInfo copyWith({
     DgisObjectId? id,
     String? name,
+    PublicTransportRouteType? routeType,
     Optional<int?>? color,
     Optional<PublicTransportDirectoryRouteDirectionNamesInfo?>? fromToStationNames,
     List<PublicTransportRouteDirection>? directions
@@ -9689,6 +9697,7 @@ class PublicTransportDirectoryRouteInfo {
     return PublicTransportDirectoryRouteInfo(
       id: id ?? this.id,
       name: name ?? this.name,
+      routeType: routeType ?? this.routeType,
       color: color != null ? color.value : this.color,
       fromToStationNames: fromToStationNames != null ? fromToStationNames.value : this.fromToStationNames,
       directions: directions ?? this.directions
@@ -9700,13 +9709,14 @@ class PublicTransportDirectoryRouteInfo {
     other.runtimeType == runtimeType &&
     other.id == id &&
     other.name == name &&
+    other.routeType == routeType &&
     other.color == color &&
     other.fromToStationNames == fromToStationNames &&
     other.directions == directions;
 
   @override
   int get hashCode {
-    return Object.hash(id, name, color, fromToStationNames, directions);
+    return Object.hash(id, name, routeType, color, fromToStationNames, directions);
   }
 
 }
@@ -9714,6 +9724,8 @@ final class _CPublicTransportDirectoryRouteInfo extends ffi.Struct {
   external _CDgisObjectId id;
 
   external _CString name;
+
+  external _CPublicTransportRouteType routeType;
 
   external _COptional_uint32_t color;
 
@@ -9729,6 +9741,7 @@ extension _CPublicTransportDirectoryRouteInfoToDart on _CPublicTransportDirector
     return PublicTransportDirectoryRouteInfo(
       id: this.id._toDart(),
       name: this.name._toDart(),
+      routeType: this.routeType._toDart(),
       color: this.color._toDart(),
       fromToStationNames: this.fromToStationNames._toDart(),
       directions: this.directions._toDart()
@@ -9741,6 +9754,7 @@ extension _DartTo_CPublicTransportDirectoryRouteInfo on PublicTransportDirectory
     final res = _CPublicTransportDirectoryRouteInfoMakeDefault();
     res.id = this.id._copyFromDartTo_CDgisObjectId();
     res.name = this.name._copyFromDartTo_CString();
+    res.routeType = this.routeType._copyFromDartTo_CPublicTransportRouteType();
     res.color = this.color._copyFromDartTo_COptional_uint32_t();
     res.fromToStationNames = this.fromToStationNames._copyFromDartTo_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo();
     res.directions = this.directions._copyFromDartTo_CArray_CPublicTransportRouteDirection();
@@ -57189,13 +57203,19 @@ class RouteEditor implements ffi.Finalizable {
   /**
    Функция создания редактора маршрута.
   
+   - Parameter context: Контекст.
+   - Parameter trafficRouter: Поисковик маршрута для использования внутри редактора маршрута.
+   Если не задан, по умолчанию используется гибридный поисковик.
    - Throws: Exception, если невозможно получить зависимости из контекста
   */
   factory RouteEditor(
-    Context context
-  ) {
+    Context context,
+    [TrafficRouter? trafficRouter = null
+    ]) {
     var _a0 = context._copyFromDartTo_CContext();
-    _CRouteEditor res = _CRouteEditor_C_createWith_CContext(_a0);
+    var _a1 = trafficRouter._copyFromDartTo_COptional_CTrafficRouter();
+    _CRouteEditor res = _CRouteEditor_C_createWith_CContext_COptional_CTrafficRouter(_a0, _a1);
+    _a1._releaseIntermediate();
     _a0._releaseIntermediate();
     return RouteEditor._create(res._impl);
   }
@@ -57724,6 +57744,1611 @@ extension _DartTo_COptional_CRouteIndex on RouteIndex? {
     return cOptional;
   }
 }
+// MARK: - RouterType
+
+/** Тип поисковика маршрута. */
+enum RouterType {
+  /** Онлайн поисковик маршрута. */
+  online(0),
+  /** Оффлайн поисковик маршрута. */
+  offline(1),
+  /** Гибридный онлайн/оффлайн поисковик маршрута. */
+  hybrid(2),
+  ;
+
+  const RouterType(this.rawValue);
+  final int rawValue;
+
+  static RouterType getByValue(int value) {
+    return RouterType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CRouterType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CRouterTypeBasicFunctions on _CRouterType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CRouterTypeToDart on _CRouterType {
+  RouterType _toDart() {
+    return RouterType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CRouterType on RouterType {
+  _CRouterType _copyFromDartTo_CRouterType() {
+    return _CRouterTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - TrafficRouter
+
+/** Интерфейс для поиска маршрута с учетом пробочных данных. */
+class TrafficRouter implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /**
+   Возвращает список всех поддерживаемых пропусков, разрешающих движение грузового транспорта в пределах пропускных
+   зон.
+  
+   - Returns: Future с пропусками для грузового транспорта, либо исключением Exception в случае ошибки.
+  */
+  CancelableOperation<List<TruckPassZonePass>> get truckPassZonePasses {
+    _CFuture_CArray_CTruckPassZonePass res = _CTrafficRouter_truckPassZonePasses(_CTrafficRouterMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTrafficRouter_releasePtr);
+
+  TrafficRouter._raw(this._self);
+  factory TrafficRouter._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TrafficRouter._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  /**
+   - Throws: Exception, если отсутствует системный контекст или если из него
+   невозможно получить ITrafficRouterPtr
+  */
+  factory TrafficRouter(
+    Context context,
+    [RouterType routerType = RouterType.hybrid
+    ]) {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = routerType._copyFromDartTo_CRouterType();
+    _CTrafficRouter res = _CTrafficRouter_C_createWith_CContext_CRouterType(_a0, _a1);
+    _a0._releaseIntermediate();
+    return TrafficRouter._create(res._impl);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TrafficRouter &&
+    other.runtimeType == runtimeType &&
+    _CTrafficRouter_cg_objectIdentifier(this._self) == _CTrafficRouter_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTrafficRouter_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: TrafficRouter: Methods
+
+  /**
+   Ищет маршрут по заданным параметрам.
+  
+   - Parameter startPoint: Начальная точка маршрута.
+   - Parameter finishPoint: Конечная точка маршрута.
+   - Parameter routeSearchOptions: Параметры поиска маршрута.
+   - Parameter intermediatePoints: Промежуточные точки для проезда в том же порядке,
+   в котором точки заданы в векторе.
+   - Returns: Future с набором найденных маршрутов, либо с исключением Exception в случае ошибки.
+   - Note: Пустой набор маршрутов является валидным результатом - это означает, что маршрут,
+   соответствующий указанным критериям поиска, не может быть найден.
+   - Note: При поиске маршрутов для грузового транспорта возможен возврат маршрутов,
+   проходящих через пропускные зоны, для которых не были предоставлены пропуска,
+   в случае, если не удалось проложить маршрут только через пропускные зоны, для
+   которых пропуска были предоставлены. Для проверки того, достаточен ли список
+   пропусков для проезда по маршруту, следует использовать функцию route_matches_truck_pass_zone_passes.
+  */
+  CancelableOperation<List<TrafficRoute>> findRoute(
+    RouteSearchPoint startPoint,
+    RouteSearchPoint finishPoint,
+    RouteSearchOptions routeSearchOptions,
+    [List<RouteSearchPoint> intermediatePoints = const []
+    ])  {
+    var _a1 = startPoint._copyFromDartTo_CRouteSearchPoint();
+    var _a2 = finishPoint._copyFromDartTo_CRouteSearchPoint();
+    var _a3 = routeSearchOptions._copyFromDartTo_CRouteSearchOptions();
+    var _a4 = intermediatePoints._copyFromDartTo_CArray_CRouteSearchPoint();
+    _CFuture_CArray_CTrafficRoute res = _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2, _a3, _a4);
+    _a4._releaseIntermediate();
+    _a3._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Ищет маршрут по ранее сериализованным параметрам.
+  
+   - Parameter request: Сериализованные параметры запроса.
+   - Parameter serverEndpoint: Тип искомого маршрута, выступает частью урла, по которому отсылается запрос: bicycle, carrouting, pedestrian, truck.
+   - Returns: Future с набором найденных маршрутов, либо с исключением Exception в случае ошибки.
+   - Note: Не подходит для поиска маршрутов общественного транспорта.
+   - Note: При невозможности найти маршруты для грузового транспорта не пытается найти маршруты на легковом автомобиле без учёта грузовых данных.
+  */
+  CancelableOperation<List<TrafficRoute>> requestRoute(
+    ByteData request,
+    String serverEndpoint
+  )  {
+    var _a1 = request._copyFromDartTo_CData();
+    var _a2 = serverEndpoint._copyFromDartTo_CString();
+    _CFuture_CArray_CTrafficRoute res = _CTrafficRouter_requestRoute_CData_CString(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2);
+    _a2._releaseIntermediate();
+    _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Ищет базовую информацию о маршрутах для соответствующего набора поисковых точек.
+  
+   - Parameter searchPoints: Набор точек для поиска базовой информации о маршруте.
+   - Parameter routeSearchOptions: Параметры поиска маршрута.
+   - Returns: Future с базовой информацией о наборе маршрутов, соответствующему набору точек поиска, либо исключением Exception в случае ошибки.
+   - Note: Если базовая информация для каких-либо из пар точек не будет найдена, элемент с соответствующим индексом
+   в возвращённом результате будет иметь значение null.
+  */
+  CancelableOperation<List<BriefRouteInfo?>> findBriefRouteInfos(
+    List<BriefRouteInfoSearchPoints> searchPoints,
+    RouteSearchOptions routeSearchOptions
+  )  {
+    var _a1 = searchPoints._copyFromDartTo_CArray_CBriefRouteInfoSearchPoints();
+    var _a2 = routeSearchOptions._copyFromDartTo_CRouteSearchOptions();
+    _CFuture_CArray_COptional_CBriefRouteInfo res = _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2);
+    _a2._releaseIntermediate();
+    _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - TrafficRouter <-> CTrafficRouter
+
+final class _CTrafficRouter extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTrafficRouterBasicFunctions on _CTrafficRouter {
+  void _releaseIntermediate() {
+    _CTrafficRouter_release(_impl);
+  }
+
+  _CTrafficRouter _retain() {
+    return _CTrafficRouter_retain(_impl);
+  }
+}
+
+extension _CTrafficRouterToDart on _CTrafficRouter {
+  TrafficRouter _toDart() {
+    return TrafficRouter._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTrafficRouter on TrafficRouter {
+  _CTrafficRouter _copyFromDartTo_CTrafficRouter() {
+    return (_CTrafficRouterMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - TrafficRouter? <-> _COptional_CTrafficRouter
+
+final class _COptional_CTrafficRouter extends ffi.Struct {
+  
+  external _CTrafficRouter value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTrafficRouterBasicFunctions on _COptional_CTrafficRouter {
+  void _releaseIntermediate() {
+    _COptional_CTrafficRouter_release(this);
+  }
+}
+
+extension _COptional_CTrafficRouterToDart on _COptional_CTrafficRouter {
+  TrafficRouter? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTrafficRouter on TrafficRouter? {
+  _COptional_CTrafficRouter _copyFromDartTo_COptional_CTrafficRouter() {
+    final cOptional = _COptional_CTrafficRouterMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTrafficRouter();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - CancelableOperation<List<TrafficRoute>> <-> _CFuture_CArray_CTrafficRoute
+
+final class _CFuture_CArray_CTrafficRoute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_CArray_CTrafficRoute_Cancellable {
+  final Completer<List<TrafficRoute>> completer;
+  final _CFuture_CArray_CTrafficRoute _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_CArray_CTrafficRoute_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_CArray_CTrafficRouteBasicFunctions on _CFuture_CArray_CTrafficRoute {
+  void _releaseIntermediate() {
+    _CFuture_CArray_CTrafficRoute_release(this);
+  }
+
+  _CFuture_CArray_CTrafficRoute _retain() {
+    return _CFuture_CArray_CTrafficRoute_retain(this);
+  }
+}
+
+extension _CFuture_CArray_CTrafficRouteToDart on _CFuture_CArray_CTrafficRoute {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_CArray_CTrafficRoute_Cancellable>{};
+
+  static void valueFunction(_CArray_CTrafficRoute cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<List<TrafficRoute>> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<List<TrafficRoute>>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_CArray_CTrafficRouteReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_CArray_CTrafficRoute_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_CArray_CTrafficRoute on CancelableOperation<List<TrafficRoute>> {
+  _CFuture_CArray_CTrafficRoute _copyFromDartTo_CFuture_CArray_CTrafficRoute() {
+    return _CFuture_CArray_CTrafficRouteMakeDefault();
+  }
+}
+	
+// MARK: - CancelableOperation<List<TruckPassZonePass>> <-> _CFuture_CArray_CTruckPassZonePass
+
+final class _CFuture_CArray_CTruckPassZonePass extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_CArray_CTruckPassZonePass_Cancellable {
+  final Completer<List<TruckPassZonePass>> completer;
+  final _CFuture_CArray_CTruckPassZonePass _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_CArray_CTruckPassZonePass_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_CArray_CTruckPassZonePassBasicFunctions on _CFuture_CArray_CTruckPassZonePass {
+  void _releaseIntermediate() {
+    _CFuture_CArray_CTruckPassZonePass_release(this);
+  }
+
+  _CFuture_CArray_CTruckPassZonePass _retain() {
+    return _CFuture_CArray_CTruckPassZonePass_retain(this);
+  }
+}
+
+extension _CFuture_CArray_CTruckPassZonePassToDart on _CFuture_CArray_CTruckPassZonePass {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_CArray_CTruckPassZonePass_Cancellable>{};
+
+  static void valueFunction(_CArray_CTruckPassZonePass cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<List<TruckPassZonePass>> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<List<TruckPassZonePass>>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_CArray_CTruckPassZonePassReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_CArray_CTruckPassZonePass_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_CArray_CTruckPassZonePass on CancelableOperation<List<TruckPassZonePass>> {
+  _CFuture_CArray_CTruckPassZonePass _copyFromDartTo_CFuture_CArray_CTruckPassZonePass() {
+    return _CFuture_CArray_CTruckPassZonePassMakeDefault();
+  }
+}
+	
+// MARK: - List<TruckPassZonePass> <-> _CArray_CTruckPassZonePass
+
+final class _CArray_CTruckPassZonePass extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CTruckPassZonePassToDart on _CArray_CTruckPassZonePass {
+  List<TruckPassZonePass> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CTruckPassZonePass on List<TruckPassZonePass> {
+  _CArray_CTruckPassZonePass _copyFromDartTo_CArray_CTruckPassZonePass() {
+    final cArray = _CArray_CTruckPassZonePassmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CTruckPassZonePass();
+        _CArray_CTruckPassZonePassaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CTruckPassZonePassBasicFunctions on _CArray_CTruckPassZonePass {
+  void _releaseIntermediate() {
+    _CArray_CTruckPassZonePass_release(this);
+  }
+
+  static final _listToFill = <TruckPassZonePass>[];
+
+  static void _iterate(_CTruckPassZonePass item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<TruckPassZonePass> _fillFromC() {
+    _forEach_CArray_CTruckPassZonePass(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTruckPassZonePass)>(_iterate));
+    final result = List<TruckPassZonePass>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - Set<TruckPassZoneId> <-> _CSet_CTruckPassZoneId
+
+final class _CSet_CTruckPassZoneId extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CSet_CTruckPassZoneIdToDart on _CSet_CTruckPassZoneId {
+  Set<TruckPassZoneId> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CSet_CTruckPassZoneId on Set<TruckPassZoneId> {
+  _CSet_CTruckPassZoneId _copyFromDartTo_CSet_CTruckPassZoneId() {
+    final cSet = _CSet_CTruckPassZoneIdmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CTruckPassZoneId();
+        _CSet_CTruckPassZoneIdaddElement(cSet, cItem);
+        
+    });
+    return cSet;
+  }
+}
+
+extension _CSet_CTruckPassZoneIdBasicFunctions on _CSet_CTruckPassZoneId {
+  void _releaseIntermediate() {
+    _CSet_CTruckPassZoneId_release(this);
+  }
+
+ static final _setToFill = <TruckPassZoneId>{};
+
+  static void _iterate(_CTruckPassZoneId item) {
+    _setToFill.add(item._toDart());
+  }
+
+  Set<TruckPassZoneId> _fillFromC() {
+    _forEach_CSet_CTruckPassZoneId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTruckPassZoneId)>(_iterate));
+    final result = Set<TruckPassZoneId>.from(_setToFill);
+    _setToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - TruckPassZonePass
+
+/** Пропуск, разрешающий движение грузового транспорта в пропускных зонах. */
+class TruckPassZonePass {
+  /** Идентификатор пропуска. */
+  final TruckPassZonePassId id;
+  /** Название пропуска. */
+  final String name;
+  /** Идентификаторы пропускных зон, по которым разрешает движение данный пропуск */
+  final Set<TruckPassZoneId> passZoneIds;
+
+  const TruckPassZonePass({
+    required this.id,
+    required this.name,
+    required this.passZoneIds
+  });
+
+  TruckPassZonePass copyWith({
+    TruckPassZonePassId? id,
+    String? name,
+    Set<TruckPassZoneId>? passZoneIds
+  }) {
+    return TruckPassZonePass(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      passZoneIds: passZoneIds ?? this.passZoneIds
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TruckPassZonePass &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.name == name &&
+    other.passZoneIds == passZoneIds;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, name, passZoneIds);
+  }
+
+}
+final class _CTruckPassZonePass extends ffi.Struct {
+  external _CTruckPassZonePassId id;
+
+  external _CString name;
+
+  external _CSet_CTruckPassZoneId passZoneIds;
+
+}
+// MARK: - TruckPassZonePass <-> _CTruckPassZonePass
+
+extension _CTruckPassZonePassToDart on _CTruckPassZonePass {
+  TruckPassZonePass _toDart() {
+    return TruckPassZonePass(
+      id: this.id._toDart(),
+      name: this.name._toDart(),
+      passZoneIds: this.passZoneIds._toDart()
+    );
+  }
+}
+
+extension _DartTo_CTruckPassZonePass on TruckPassZonePass {
+  _CTruckPassZonePass _copyFromDartTo_CTruckPassZonePass() {
+    final res = _CTruckPassZonePassMakeDefault();
+    res.id = this.id._copyFromDartTo_CTruckPassZonePassId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.passZoneIds = this.passZoneIds._copyFromDartTo_CSet_CTruckPassZoneId();
+    return res;
+  }
+}
+extension _CTruckPassZonePassRelease on _CTruckPassZonePass {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    passZoneIds._releaseIntermediate();
+  }
+}
+
+// MARK: - CancelableOperation<List<BriefRouteInfo?>> <-> _CFuture_CArray_COptional_CBriefRouteInfo
+
+final class _CFuture_CArray_COptional_CBriefRouteInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable {
+  final Completer<List<BriefRouteInfo?>> completer;
+  final _CFuture_CArray_COptional_CBriefRouteInfo _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_CArray_COptional_CBriefRouteInfoBasicFunctions on _CFuture_CArray_COptional_CBriefRouteInfo {
+  void _releaseIntermediate() {
+    _CFuture_CArray_COptional_CBriefRouteInfo_release(this);
+  }
+
+  _CFuture_CArray_COptional_CBriefRouteInfo _retain() {
+    return _CFuture_CArray_COptional_CBriefRouteInfo_retain(this);
+  }
+}
+
+extension _CFuture_CArray_COptional_CBriefRouteInfoToDart on _CFuture_CArray_COptional_CBriefRouteInfo {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable>{};
+
+  static void valueFunction(_CArray_COptional_CBriefRouteInfo cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<List<BriefRouteInfo?>> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<List<BriefRouteInfo?>>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_CArray_COptional_CBriefRouteInfoReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_CArray_COptional_CBriefRouteInfo on CancelableOperation<List<BriefRouteInfo?>> {
+  _CFuture_CArray_COptional_CBriefRouteInfo _copyFromDartTo_CFuture_CArray_COptional_CBriefRouteInfo() {
+    return _CFuture_CArray_COptional_CBriefRouteInfoMakeDefault();
+  }
+}
+	
+// MARK: - List<BriefRouteInfo?> <-> _CArray_COptional_CBriefRouteInfo
+
+final class _CArray_COptional_CBriefRouteInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_COptional_CBriefRouteInfoToDart on _CArray_COptional_CBriefRouteInfo {
+  List<BriefRouteInfo?> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_COptional_CBriefRouteInfo on List<BriefRouteInfo?> {
+  _CArray_COptional_CBriefRouteInfo _copyFromDartTo_CArray_COptional_CBriefRouteInfo() {
+    final cArray = _CArray_COptional_CBriefRouteInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_COptional_CBriefRouteInfo();
+        _CArray_COptional_CBriefRouteInfoaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_COptional_CBriefRouteInfoBasicFunctions on _CArray_COptional_CBriefRouteInfo {
+  void _releaseIntermediate() {
+    _CArray_COptional_CBriefRouteInfo_release(this);
+  }
+
+  static final _listToFill = <BriefRouteInfo?>[];
+
+  static void _iterate(_COptional_CBriefRouteInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<BriefRouteInfo?> _fillFromC() {
+    _forEach_CArray_COptional_CBriefRouteInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>(_iterate));
+    final result = List<BriefRouteInfo?>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - BicycleBriefRouteInfo
+
+/** Базовая информация о велосипедном маршруте. */
+class BicycleBriefRouteInfo {
+  /** Длина маршрута. */
+  final RouteDistance length;
+  /** Ориентир. */
+  final String landmark;
+
+  const BicycleBriefRouteInfo({
+    required this.length,
+    required this.landmark
+  });
+
+  BicycleBriefRouteInfo copyWith({
+    RouteDistance? length,
+    String? landmark
+  }) {
+    return BicycleBriefRouteInfo(
+      length: length ?? this.length,
+      landmark: landmark ?? this.landmark
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BicycleBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.length == length &&
+    other.landmark == landmark;
+
+  @override
+  int get hashCode {
+    return Object.hash(length, landmark);
+  }
+
+}
+final class _CBicycleBriefRouteInfo extends ffi.Struct {
+  external _CRouteDistance length;
+
+  external _CString landmark;
+
+}
+// MARK: - BicycleBriefRouteInfo <-> _CBicycleBriefRouteInfo
+
+extension _CBicycleBriefRouteInfoToDart on _CBicycleBriefRouteInfo {
+  BicycleBriefRouteInfo _toDart() {
+    return BicycleBriefRouteInfo(
+      length: this.length._toDart(),
+      landmark: this.landmark._toDart()
+    );
+  }
+}
+
+extension _DartTo_CBicycleBriefRouteInfo on BicycleBriefRouteInfo {
+  _CBicycleBriefRouteInfo _copyFromDartTo_CBicycleBriefRouteInfo() {
+    final res = _CBicycleBriefRouteInfoMakeDefault();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.landmark = this.landmark._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CBicycleBriefRouteInfoRelease on _CBicycleBriefRouteInfo {
+  void _releaseIntermediate() {
+    landmark._releaseIntermediate();
+  }
+}
+
+// MARK: - CarBriefRouteInfoTrafficSpeed
+
+/** Скорость движения. */
+enum CarBriefRouteInfoTrafficSpeed {
+  /** Скорость неизвестна. */
+  unknown(0),
+  /** Низкая скорость движения. */
+  slow(1),
+  /** Нормальная скорость движения. */
+  normal(2),
+  /** Высокая скорость движения. */
+  fast(3),
+  ;
+
+  const CarBriefRouteInfoTrafficSpeed(this.rawValue);
+  final int rawValue;
+
+  static CarBriefRouteInfoTrafficSpeed getByValue(int value) {
+    return CarBriefRouteInfoTrafficSpeed.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CCarBriefRouteInfoTrafficSpeed extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CCarBriefRouteInfoTrafficSpeedBasicFunctions on _CCarBriefRouteInfoTrafficSpeed {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CCarBriefRouteInfoTrafficSpeedToDart on _CCarBriefRouteInfoTrafficSpeed {
+  CarBriefRouteInfoTrafficSpeed _toDart() {
+    return CarBriefRouteInfoTrafficSpeed.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CCarBriefRouteInfoTrafficSpeed on CarBriefRouteInfoTrafficSpeed {
+  _CCarBriefRouteInfoTrafficSpeed _copyFromDartTo_CCarBriefRouteInfoTrafficSpeed() {
+    return _CCarBriefRouteInfoTrafficSpeedMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - CarBriefRouteInfo
+
+/** Базовая информация об автомобильном маршруте. */
+class CarBriefRouteInfo {
+  /** Длина маршрута. */
+  final RouteDistance length;
+  /** Ориентир. */
+  final String landmark;
+  /** Скорость движения. */
+  final CarBriefRouteInfoTrafficSpeed trafficSpeed;
+
+  const CarBriefRouteInfo({
+    required this.length,
+    required this.landmark,
+    required this.trafficSpeed
+  });
+
+  CarBriefRouteInfo copyWith({
+    RouteDistance? length,
+    String? landmark,
+    CarBriefRouteInfoTrafficSpeed? trafficSpeed
+  }) {
+    return CarBriefRouteInfo(
+      length: length ?? this.length,
+      landmark: landmark ?? this.landmark,
+      trafficSpeed: trafficSpeed ?? this.trafficSpeed
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CarBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.length == length &&
+    other.landmark == landmark &&
+    other.trafficSpeed == trafficSpeed;
+
+  @override
+  int get hashCode {
+    return Object.hash(length, landmark, trafficSpeed);
+  }
+
+}
+final class _CCarBriefRouteInfo extends ffi.Struct {
+  external _CRouteDistance length;
+
+  external _CString landmark;
+
+  external _CCarBriefRouteInfoTrafficSpeed trafficSpeed;
+
+}
+// MARK: - CarBriefRouteInfo <-> _CCarBriefRouteInfo
+
+extension _CCarBriefRouteInfoToDart on _CCarBriefRouteInfo {
+  CarBriefRouteInfo _toDart() {
+    return CarBriefRouteInfo(
+      length: this.length._toDart(),
+      landmark: this.landmark._toDart(),
+      trafficSpeed: this.trafficSpeed._toDart()
+    );
+  }
+}
+
+extension _DartTo_CCarBriefRouteInfo on CarBriefRouteInfo {
+  _CCarBriefRouteInfo _copyFromDartTo_CCarBriefRouteInfo() {
+    final res = _CCarBriefRouteInfoMakeDefault();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.landmark = this.landmark._copyFromDartTo_CString();
+    res.trafficSpeed = this.trafficSpeed._copyFromDartTo_CCarBriefRouteInfoTrafficSpeed();
+    return res;
+  }
+}
+extension _CCarBriefRouteInfoRelease on _CCarBriefRouteInfo {
+  void _releaseIntermediate() {
+    landmark._releaseIntermediate();
+  }
+}
+
+// MARK: - PedestrianBriefRouteInfo
+
+/** Базовая информация о пешеходном маршруте. */
+class PedestrianBriefRouteInfo {
+  /** Длина маршрута. */
+  final RouteDistance length;
+  /** Ориентир. */
+  final String landmark;
+
+  const PedestrianBriefRouteInfo({
+    required this.length,
+    required this.landmark
+  });
+
+  PedestrianBriefRouteInfo copyWith({
+    RouteDistance? length,
+    String? landmark
+  }) {
+    return PedestrianBriefRouteInfo(
+      length: length ?? this.length,
+      landmark: landmark ?? this.landmark
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PedestrianBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.length == length &&
+    other.landmark == landmark;
+
+  @override
+  int get hashCode {
+    return Object.hash(length, landmark);
+  }
+
+}
+final class _CPedestrianBriefRouteInfo extends ffi.Struct {
+  external _CRouteDistance length;
+
+  external _CString landmark;
+
+}
+// MARK: - PedestrianBriefRouteInfo <-> _CPedestrianBriefRouteInfo
+
+extension _CPedestrianBriefRouteInfoToDart on _CPedestrianBriefRouteInfo {
+  PedestrianBriefRouteInfo _toDart() {
+    return PedestrianBriefRouteInfo(
+      length: this.length._toDart(),
+      landmark: this.landmark._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPedestrianBriefRouteInfo on PedestrianBriefRouteInfo {
+  _CPedestrianBriefRouteInfo _copyFromDartTo_CPedestrianBriefRouteInfo() {
+    final res = _CPedestrianBriefRouteInfoMakeDefault();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.landmark = this.landmark._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CPedestrianBriefRouteInfoRelease on _CPedestrianBriefRouteInfo {
+  void _releaseIntermediate() {
+    landmark._releaseIntermediate();
+  }
+}
+
+// MARK: - List<PublicBriefRouteTransportInfo> <-> _CArray_CPublicBriefRouteTransportInfo
+
+final class _CArray_CPublicBriefRouteTransportInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicBriefRouteTransportInfoToDart on _CArray_CPublicBriefRouteTransportInfo {
+  List<PublicBriefRouteTransportInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicBriefRouteTransportInfo on List<PublicBriefRouteTransportInfo> {
+  _CArray_CPublicBriefRouteTransportInfo _copyFromDartTo_CArray_CPublicBriefRouteTransportInfo() {
+    final cArray = _CArray_CPublicBriefRouteTransportInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicBriefRouteTransportInfo();
+        _CArray_CPublicBriefRouteTransportInfoaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicBriefRouteTransportInfoBasicFunctions on _CArray_CPublicBriefRouteTransportInfo {
+  void _releaseIntermediate() {
+    _CArray_CPublicBriefRouteTransportInfo_release(this);
+  }
+
+  static final _listToFill = <PublicBriefRouteTransportInfo>[];
+
+  static void _iterate(_CPublicBriefRouteTransportInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicBriefRouteTransportInfo> _fillFromC() {
+    _forEach_CArray_CPublicBriefRouteTransportInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)>(_iterate));
+    final result = List<PublicBriefRouteTransportInfo>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - PublicBriefRouteInfo
+
+/** Базовая информация о маршруте на общественном транспорте. */
+class PublicBriefRouteInfo {
+  /** Описание способов проезда на общественном транспорте. */
+  final List<PublicBriefRouteTransportInfo> publicTransportInfos;
+
+  const PublicBriefRouteInfo(this.publicTransportInfos);
+
+  PublicBriefRouteInfo copyWith({
+    List<PublicBriefRouteTransportInfo>? publicTransportInfos
+  }) {
+    return PublicBriefRouteInfo(
+      publicTransportInfos ?? this.publicTransportInfos
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.publicTransportInfos == publicTransportInfos;
+
+  @override
+  int get hashCode {
+    return publicTransportInfos.hashCode;
+  }
+
+}
+final class _CPublicBriefRouteInfo extends ffi.Struct {
+  external _CArray_CPublicBriefRouteTransportInfo publicTransportInfos;
+
+}
+// MARK: - PublicBriefRouteInfo <-> _CPublicBriefRouteInfo
+
+extension _CPublicBriefRouteInfoToDart on _CPublicBriefRouteInfo {
+  PublicBriefRouteInfo _toDart() {
+    return PublicBriefRouteInfo(
+      this.publicTransportInfos._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicBriefRouteInfo on PublicBriefRouteInfo {
+  _CPublicBriefRouteInfo _copyFromDartTo_CPublicBriefRouteInfo() {
+    final res = _CPublicBriefRouteInfoMakeDefault();
+    res.publicTransportInfos = this.publicTransportInfos._copyFromDartTo_CArray_CPublicBriefRouteTransportInfo();
+    return res;
+  }
+}
+extension _CPublicBriefRouteInfoRelease on _CPublicBriefRouteInfo {
+  void _releaseIntermediate() {
+    publicTransportInfos._releaseIntermediate();
+  }
+}
+
+// MARK: - ScooterBriefRouteInfo
+
+/** Базовая информация о маршруте на самокате. */
+class ScooterBriefRouteInfo {
+  /** Длина маршрута. */
+  final RouteDistance length;
+  /** Ориентир. */
+  final String landmark;
+
+  const ScooterBriefRouteInfo({
+    required this.length,
+    required this.landmark
+  });
+
+  ScooterBriefRouteInfo copyWith({
+    RouteDistance? length,
+    String? landmark
+  }) {
+    return ScooterBriefRouteInfo(
+      length: length ?? this.length,
+      landmark: landmark ?? this.landmark
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScooterBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.length == length &&
+    other.landmark == landmark;
+
+  @override
+  int get hashCode {
+    return Object.hash(length, landmark);
+  }
+
+}
+final class _CScooterBriefRouteInfo extends ffi.Struct {
+  external _CRouteDistance length;
+
+  external _CString landmark;
+
+}
+// MARK: - ScooterBriefRouteInfo <-> _CScooterBriefRouteInfo
+
+extension _CScooterBriefRouteInfoToDart on _CScooterBriefRouteInfo {
+  ScooterBriefRouteInfo _toDart() {
+    return ScooterBriefRouteInfo(
+      length: this.length._toDart(),
+      landmark: this.landmark._toDart()
+    );
+  }
+}
+
+extension _DartTo_CScooterBriefRouteInfo on ScooterBriefRouteInfo {
+  _CScooterBriefRouteInfo _copyFromDartTo_CScooterBriefRouteInfo() {
+    final res = _CScooterBriefRouteInfoMakeDefault();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.landmark = this.landmark._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CScooterBriefRouteInfoRelease on _CScooterBriefRouteInfo {
+  void _releaseIntermediate() {
+    landmark._releaseIntermediate();
+  }
+}
+
+// MARK: - BriefExtraRouteInfo
+
+/** Дополнительная информация о маршруте для конкретного типа транспорта. */
+final class BriefExtraRouteInfo {
+  final Object? _value;
+  final int _index;
+
+  BriefExtraRouteInfo._raw(this._value, this._index);
+
+  BriefExtraRouteInfo.bicycle(BicycleBriefRouteInfo value) : this._raw(value, 0);
+  BriefExtraRouteInfo.car(CarBriefRouteInfo value) : this._raw(value, 1);
+  BriefExtraRouteInfo.pedestrian(PedestrianBriefRouteInfo value) : this._raw(value, 2);
+  BriefExtraRouteInfo.publicTransport(PublicBriefRouteInfo value) : this._raw(value, 3);
+  BriefExtraRouteInfo.scooter(ScooterBriefRouteInfo value) : this._raw(value, 4);
+
+  bool get isBicycle => this._index == 0;
+  BicycleBriefRouteInfo? get asBicycle => this.isBicycle ? this._value as BicycleBriefRouteInfo : null;
+
+  bool get isCar => this._index == 1;
+  CarBriefRouteInfo? get asCar => this.isCar ? this._value as CarBriefRouteInfo : null;
+
+  bool get isPedestrian => this._index == 2;
+  PedestrianBriefRouteInfo? get asPedestrian => this.isPedestrian ? this._value as PedestrianBriefRouteInfo : null;
+
+  bool get isPublicTransport => this._index == 3;
+  PublicBriefRouteInfo? get asPublicTransport => this.isPublicTransport ? this._value as PublicBriefRouteInfo : null;
+
+  bool get isScooter => this._index == 4;
+  ScooterBriefRouteInfo? get asScooter => this.isScooter ? this._value as ScooterBriefRouteInfo : null;
+
+  T match<T>({
+    required T Function(BicycleBriefRouteInfo value) bicycle,
+    required T Function(CarBriefRouteInfo value) car,
+    required T Function(PedestrianBriefRouteInfo value) pedestrian,
+    required T Function(PublicBriefRouteInfo value) publicTransport,
+    required T Function(ScooterBriefRouteInfo value) scooter,
+  }) {
+    return switch (this._index) {
+      0 => bicycle(this._value as BicycleBriefRouteInfo),
+      1 => car(this._value as CarBriefRouteInfo),
+      2 => pedestrian(this._value as PedestrianBriefRouteInfo),
+      3 => publicTransport(this._value as PublicBriefRouteInfo),
+      4 => scooter(this._value as ScooterBriefRouteInfo),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "BriefExtraRouteInfo(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BriefExtraRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _CBriefExtraRouteInfoImpl extends ffi.Union {
+  external _CBicycleBriefRouteInfo _bicycle;
+  external _CCarBriefRouteInfo _car;
+  external _CPedestrianBriefRouteInfo _pedestrian;
+  external _CPublicBriefRouteInfo _publicTransport;
+  external _CScooterBriefRouteInfo _scooter;
+}
+
+final class _CBriefExtraRouteInfo extends ffi.Struct {
+  external _CBriefExtraRouteInfoImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CBriefExtraRouteInfoBasicFunctions on _CBriefExtraRouteInfo {
+  void _releaseIntermediate() {
+    _CBriefExtraRouteInfo_release(this);
+  }
+}
+	
+// MARK: - BriefExtraRouteInfo <-> CBriefExtraRouteInfo
+
+extension _CBriefExtraRouteInfoToDart on _CBriefExtraRouteInfo {
+  BriefExtraRouteInfo _toDart() {
+    return switch (this._index) {
+      0 => BriefExtraRouteInfo.bicycle(this._impl._bicycle._toDart()),
+      1 => BriefExtraRouteInfo.car(this._impl._car._toDart()),
+      2 => BriefExtraRouteInfo.pedestrian(this._impl._pedestrian._toDart()),
+      3 => BriefExtraRouteInfo.publicTransport(this._impl._publicTransport._toDart()),
+      4 => BriefExtraRouteInfo.scooter(this._impl._scooter._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_CBriefExtraRouteInfo on BriefExtraRouteInfo {
+  _CBriefExtraRouteInfo _copyFromDartTo_CBriefExtraRouteInfo() {
+    var res = _CBriefExtraRouteInfoMakeDefault();
+    this.match<void>(
+      bicycle: (BicycleBriefRouteInfo value) {
+        res._impl._bicycle = value._copyFromDartTo_CBicycleBriefRouteInfo();
+        res._index = 0;
+      },
+      car: (CarBriefRouteInfo value) {
+        res._impl._car = value._copyFromDartTo_CCarBriefRouteInfo();
+        res._index = 1;
+      },
+      pedestrian: (PedestrianBriefRouteInfo value) {
+        res._impl._pedestrian = value._copyFromDartTo_CPedestrianBriefRouteInfo();
+        res._index = 2;
+      },
+      publicTransport: (PublicBriefRouteInfo value) {
+        res._impl._publicTransport = value._copyFromDartTo_CPublicBriefRouteInfo();
+        res._index = 3;
+      },
+      scooter: (ScooterBriefRouteInfo value) {
+        res._impl._scooter = value._copyFromDartTo_CScooterBriefRouteInfo();
+        res._index = 4;
+      },
+    );
+    return res;
+  }
+}
+
+// MARK: - BriefRouteInfo
+
+/** Базовая информация о маршруте. */
+class BriefRouteInfo {
+  /** Время движения по маршруту. */
+  final Duration duration;
+  /** Дополнительная информация о маршруте для конкретного типа транспорта. */
+  final BriefExtraRouteInfo extraInfo;
+
+  const BriefRouteInfo({
+    required this.duration,
+    required this.extraInfo
+  });
+
+  BriefRouteInfo copyWith({
+    Duration? duration,
+    BriefExtraRouteInfo? extraInfo
+  }) {
+    return BriefRouteInfo(
+      duration: duration ?? this.duration,
+      extraInfo: extraInfo ?? this.extraInfo
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.duration == duration &&
+    other.extraInfo == extraInfo;
+
+  @override
+  int get hashCode {
+    return Object.hash(duration, extraInfo);
+  }
+
+}
+final class _CBriefRouteInfo extends ffi.Struct {
+  external _CTimeInterval duration;
+
+  external _CBriefExtraRouteInfo extraInfo;
+
+}
+// MARK: - BriefRouteInfo <-> _CBriefRouteInfo
+
+extension _CBriefRouteInfoToDart on _CBriefRouteInfo {
+  BriefRouteInfo _toDart() {
+    return BriefRouteInfo(
+      duration: this.duration._toDart(),
+      extraInfo: this.extraInfo._toDart()
+    );
+  }
+}
+
+extension _DartTo_CBriefRouteInfo on BriefRouteInfo {
+  _CBriefRouteInfo _copyFromDartTo_CBriefRouteInfo() {
+    final res = _CBriefRouteInfoMakeDefault();
+    res.duration = this.duration._copyFromDartTo_CTimeInterval();
+    res.extraInfo = this.extraInfo._copyFromDartTo_CBriefExtraRouteInfo();
+    return res;
+  }
+}
+extension _CBriefRouteInfoRelease on _CBriefRouteInfo {
+  void _releaseIntermediate() {
+    extraInfo._releaseIntermediate();
+  }
+}
+
+// MARK: - BriefRouteInfo? <-> _COptional_CBriefRouteInfo
+
+final class _COptional_CBriefRouteInfo extends ffi.Struct {
+  
+  external _CBriefRouteInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CBriefRouteInfoBasicFunctions on _COptional_CBriefRouteInfo {
+  void _releaseIntermediate() {
+    _COptional_CBriefRouteInfo_release(this);
+  }
+}
+
+extension _COptional_CBriefRouteInfoToDart on _COptional_CBriefRouteInfo {
+  BriefRouteInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CBriefRouteInfo on BriefRouteInfo? {
+  _COptional_CBriefRouteInfo _copyFromDartTo_COptional_CBriefRouteInfo() {
+    final cOptional = _COptional_CBriefRouteInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CBriefRouteInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - PublicBriefRouteTransportInfo
+
+/** Описание общественного транспортного средства. */
+class PublicBriefRouteTransportInfo {
+  /** Тип общественного транспортного средства. */
+  final PublicTransportType type;
+  /** Названия маршрутов общественного транспорта, на которых происходит проезд. */
+  final List<String> names;
+  /**
+   Argb представление цвета, ассоциированного с данным видом общественного транспорта,
+   например, цвет линии метро. При отсутствии информации о цвете в поле будет значение null.
+  */
+  final int? color;
+  /** Идентификатор иконки для остановок маршрута. Пустая строка, если информация недоступна. Техническое поле. */
+  final String routeLogo;
+
+  const PublicBriefRouteTransportInfo({
+    this.type = PublicTransportType.bus,
+    required this.names,
+    required this.color,
+    required this.routeLogo
+  });
+
+  PublicBriefRouteTransportInfo copyWith({
+    PublicTransportType? type,
+    List<String>? names,
+    Optional<int?>? color,
+    String? routeLogo
+  }) {
+    return PublicBriefRouteTransportInfo(
+      type: type ?? this.type,
+      names: names ?? this.names,
+      color: color != null ? color.value : this.color,
+      routeLogo: routeLogo ?? this.routeLogo
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicBriefRouteTransportInfo &&
+    other.runtimeType == runtimeType &&
+    other.type == type &&
+    other.names == names &&
+    other.color == color &&
+    other.routeLogo == routeLogo;
+
+  @override
+  int get hashCode {
+    return Object.hash(type, names, color, routeLogo);
+  }
+
+}
+final class _CPublicBriefRouteTransportInfo extends ffi.Struct {
+  external _CPublicTransportType type;
+
+  external _CArray_CString names;
+
+  external _COptional_uint32_t color;
+
+  external _CString routeLogo;
+
+}
+// MARK: - PublicBriefRouteTransportInfo <-> _CPublicBriefRouteTransportInfo
+
+extension _CPublicBriefRouteTransportInfoToDart on _CPublicBriefRouteTransportInfo {
+  PublicBriefRouteTransportInfo _toDart() {
+    return PublicBriefRouteTransportInfo(
+      type: this.type._toDart(),
+      names: this.names._toDart(),
+      color: this.color._toDart(),
+      routeLogo: this.routeLogo._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicBriefRouteTransportInfo on PublicBriefRouteTransportInfo {
+  _CPublicBriefRouteTransportInfo _copyFromDartTo_CPublicBriefRouteTransportInfo() {
+    final res = _CPublicBriefRouteTransportInfoMakeDefault();
+    res.type = this.type._copyFromDartTo_CPublicTransportType();
+    res.names = this.names._copyFromDartTo_CArray_CString();
+    res.color = this.color._copyFromDartTo_COptional_uint32_t();
+    res.routeLogo = this.routeLogo._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CPublicBriefRouteTransportInfoRelease on _CPublicBriefRouteTransportInfo {
+  void _releaseIntermediate() {
+    names._releaseIntermediate();
+    routeLogo._releaseIntermediate();
+  }
+}
+
+// MARK: - List<BriefRouteInfoSearchPoints> <-> _CArray_CBriefRouteInfoSearchPoints
+
+final class _CArray_CBriefRouteInfoSearchPoints extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CBriefRouteInfoSearchPointsToDart on _CArray_CBriefRouteInfoSearchPoints {
+  List<BriefRouteInfoSearchPoints> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CBriefRouteInfoSearchPoints on List<BriefRouteInfoSearchPoints> {
+  _CArray_CBriefRouteInfoSearchPoints _copyFromDartTo_CArray_CBriefRouteInfoSearchPoints() {
+    final cArray = _CArray_CBriefRouteInfoSearchPointsmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CBriefRouteInfoSearchPoints();
+        _CArray_CBriefRouteInfoSearchPointsaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CBriefRouteInfoSearchPointsBasicFunctions on _CArray_CBriefRouteInfoSearchPoints {
+  void _releaseIntermediate() {
+    _CArray_CBriefRouteInfoSearchPoints_release(this);
+  }
+
+  static final _listToFill = <BriefRouteInfoSearchPoints>[];
+
+  static void _iterate(_CBriefRouteInfoSearchPoints item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<BriefRouteInfoSearchPoints> _fillFromC() {
+    _forEach_CArray_CBriefRouteInfoSearchPoints(this, ffi.Pointer.fromFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)>(_iterate));
+    final result = List<BriefRouteInfoSearchPoints>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - BriefRouteInfoSearchPoints
+
+/** Точки для запроса поиска базовой информации о маршруте. */
+class BriefRouteInfoSearchPoints {
+  /** Начальная точка маршрута. */
+  final RouteSearchPoint startPoint;
+  /** Конечная точка маршрута. */
+  final RouteSearchPoint finishPoint;
+
+  const BriefRouteInfoSearchPoints({
+    required this.startPoint,
+    required this.finishPoint
+  });
+
+  BriefRouteInfoSearchPoints copyWith({
+    RouteSearchPoint? startPoint,
+    RouteSearchPoint? finishPoint
+  }) {
+    return BriefRouteInfoSearchPoints(
+      startPoint: startPoint ?? this.startPoint,
+      finishPoint: finishPoint ?? this.finishPoint
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BriefRouteInfoSearchPoints &&
+    other.runtimeType == runtimeType &&
+    other.startPoint == startPoint &&
+    other.finishPoint == finishPoint;
+
+  @override
+  int get hashCode {
+    return Object.hash(startPoint, finishPoint);
+  }
+
+}
+final class _CBriefRouteInfoSearchPoints extends ffi.Struct {
+  external _CRouteSearchPoint startPoint;
+
+  external _CRouteSearchPoint finishPoint;
+
+}
+// MARK: - BriefRouteInfoSearchPoints <-> _CBriefRouteInfoSearchPoints
+
+extension _CBriefRouteInfoSearchPointsToDart on _CBriefRouteInfoSearchPoints {
+  BriefRouteInfoSearchPoints _toDart() {
+    return BriefRouteInfoSearchPoints(
+      startPoint: this.startPoint._toDart(),
+      finishPoint: this.finishPoint._toDart()
+    );
+  }
+}
+
+extension _DartTo_CBriefRouteInfoSearchPoints on BriefRouteInfoSearchPoints {
+  _CBriefRouteInfoSearchPoints _copyFromDartTo_CBriefRouteInfoSearchPoints() {
+    final res = _CBriefRouteInfoSearchPointsMakeDefault();
+    res.startPoint = this.startPoint._copyFromDartTo_CRouteSearchPoint();
+    res.finishPoint = this.finishPoint._copyFromDartTo_CRouteSearchPoint();
+    return res;
+  }
+}
+extension _CBriefRouteInfoSearchPointsRelease on _CBriefRouteInfoSearchPoints {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - RouteVisualizationType
 
 /** Тип визуализации маршрута. */
@@ -62696,49 +64321,6 @@ extension _DartToCFreeRoamSettings on FreeRoamSettings {
     return (_CFreeRoamSettingsMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - RouterType
-
-/** Тип поисковика маршрута. */
-enum RouterType {
-  /** Онлайн поисковик маршрута. */
-  online(0),
-  /** Оффлайн поисковик маршрута. */
-  offline(1),
-  /** Гибридный онлайн/оффлайн поисковик маршрута. */
-  hybrid(2),
-  ;
-
-  const RouterType(this.rawValue);
-  final int rawValue;
-
-  static RouterType getByValue(int value) {
-    return RouterType.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CRouterType extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CRouterTypeBasicFunctions on _CRouterType {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CRouterTypeToDart on _CRouterType {
-  RouterType _toDart() {
-    return RouterType.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CRouterType on RouterType {
-  _CRouterType _copyFromDartTo_CRouterType() {
-    return _CRouterTypeMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - AlternativeRoutesProviderSettings
 
 /** Настройки поиска альтернативных маршрутов и маршрута лучше. */
@@ -63303,15 +64885,21 @@ class NavigationManager implements ffi.Finalizable {
   /**
    Точка входа в API навигатора, используемая в SDK по умолчанию.
   
+   - Parameter platformContext: Контекст.
+   - Parameter trafficRouter: Поисковик маршрута для использования внутри навигатора.
+   Если не задан, по умолчанию используется гибридный поисковик.
    - Returns: Объект менеджера навигатора.
    - Throws: Exception В случае ошибки в параметрах.
    - Throws: Exception В случае, если объект создать не удалось.
   */
   factory NavigationManager(
-    Context platformContext
-  ) {
+    Context platformContext,
+    [TrafficRouter? trafficRouter = null
+    ]) {
     var _a0 = platformContext._copyFromDartTo_CContext();
-    _CResult_CNavigationManager res = _CNavigationManager_C_createWith_CContext(_a0);
+    var _a1 = trafficRouter._copyFromDartTo_COptional_CTrafficRouter();
+    _CResult_CNavigationManager res = _CNavigationManager_C_createWith_CContext_COptional_CTrafficRouter(_a0, _a1);
+    _a1._releaseIntermediate();
     _a0._releaseIntermediate();
     return NavigationManager._create(res._toCDart()._impl);
   }
@@ -66818,1530 +68406,6 @@ extension _CArray_CObstacleInfoRouteLongEntryBasicFunctions on _CArray_CObstacle
   }
 }
 	
-// MARK: - BicycleBriefRouteInfo
-
-/** Базовая информация о велосипедном маршруте. */
-class BicycleBriefRouteInfo {
-  /** Длина маршрута. */
-  final RouteDistance length;
-  /** Ориентир. */
-  final String landmark;
-
-  const BicycleBriefRouteInfo({
-    required this.length,
-    required this.landmark
-  });
-
-  BicycleBriefRouteInfo copyWith({
-    RouteDistance? length,
-    String? landmark
-  }) {
-    return BicycleBriefRouteInfo(
-      length: length ?? this.length,
-      landmark: landmark ?? this.landmark
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is BicycleBriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.length == length &&
-    other.landmark == landmark;
-
-  @override
-  int get hashCode {
-    return Object.hash(length, landmark);
-  }
-
-}
-final class _CBicycleBriefRouteInfo extends ffi.Struct {
-  external _CRouteDistance length;
-
-  external _CString landmark;
-
-}
-// MARK: - BicycleBriefRouteInfo <-> _CBicycleBriefRouteInfo
-
-extension _CBicycleBriefRouteInfoToDart on _CBicycleBriefRouteInfo {
-  BicycleBriefRouteInfo _toDart() {
-    return BicycleBriefRouteInfo(
-      length: this.length._toDart(),
-      landmark: this.landmark._toDart()
-    );
-  }
-}
-
-extension _DartTo_CBicycleBriefRouteInfo on BicycleBriefRouteInfo {
-  _CBicycleBriefRouteInfo _copyFromDartTo_CBicycleBriefRouteInfo() {
-    final res = _CBicycleBriefRouteInfoMakeDefault();
-    res.length = this.length._copyFromDartTo_CRouteDistance();
-    res.landmark = this.landmark._copyFromDartTo_CString();
-    return res;
-  }
-}
-extension _CBicycleBriefRouteInfoRelease on _CBicycleBriefRouteInfo {
-  void _releaseIntermediate() {
-    landmark._releaseIntermediate();
-  }
-}
-
-// MARK: - CarBriefRouteInfoTrafficSpeed
-
-/** Скорость движения. */
-enum CarBriefRouteInfoTrafficSpeed {
-  /** Скорость неизвестна. */
-  unknown(0),
-  /** Низкая скорость движения. */
-  slow(1),
-  /** Нормальная скорость движения. */
-  normal(2),
-  /** Высокая скорость движения. */
-  fast(3),
-  ;
-
-  const CarBriefRouteInfoTrafficSpeed(this.rawValue);
-  final int rawValue;
-
-  static CarBriefRouteInfoTrafficSpeed getByValue(int value) {
-    return CarBriefRouteInfoTrafficSpeed.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CCarBriefRouteInfoTrafficSpeed extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CCarBriefRouteInfoTrafficSpeedBasicFunctions on _CCarBriefRouteInfoTrafficSpeed {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CCarBriefRouteInfoTrafficSpeedToDart on _CCarBriefRouteInfoTrafficSpeed {
-  CarBriefRouteInfoTrafficSpeed _toDart() {
-    return CarBriefRouteInfoTrafficSpeed.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CCarBriefRouteInfoTrafficSpeed on CarBriefRouteInfoTrafficSpeed {
-  _CCarBriefRouteInfoTrafficSpeed _copyFromDartTo_CCarBriefRouteInfoTrafficSpeed() {
-    return _CCarBriefRouteInfoTrafficSpeedMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - CarBriefRouteInfo
-
-/** Базовая информация об автомобильном маршруте. */
-class CarBriefRouteInfo {
-  /** Длина маршрута. */
-  final RouteDistance length;
-  /** Ориентир. */
-  final String landmark;
-  /** Скорость движения. */
-  final CarBriefRouteInfoTrafficSpeed trafficSpeed;
-
-  const CarBriefRouteInfo({
-    required this.length,
-    required this.landmark,
-    required this.trafficSpeed
-  });
-
-  CarBriefRouteInfo copyWith({
-    RouteDistance? length,
-    String? landmark,
-    CarBriefRouteInfoTrafficSpeed? trafficSpeed
-  }) {
-    return CarBriefRouteInfo(
-      length: length ?? this.length,
-      landmark: landmark ?? this.landmark,
-      trafficSpeed: trafficSpeed ?? this.trafficSpeed
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is CarBriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.length == length &&
-    other.landmark == landmark &&
-    other.trafficSpeed == trafficSpeed;
-
-  @override
-  int get hashCode {
-    return Object.hash(length, landmark, trafficSpeed);
-  }
-
-}
-final class _CCarBriefRouteInfo extends ffi.Struct {
-  external _CRouteDistance length;
-
-  external _CString landmark;
-
-  external _CCarBriefRouteInfoTrafficSpeed trafficSpeed;
-
-}
-// MARK: - CarBriefRouteInfo <-> _CCarBriefRouteInfo
-
-extension _CCarBriefRouteInfoToDart on _CCarBriefRouteInfo {
-  CarBriefRouteInfo _toDart() {
-    return CarBriefRouteInfo(
-      length: this.length._toDart(),
-      landmark: this.landmark._toDart(),
-      trafficSpeed: this.trafficSpeed._toDart()
-    );
-  }
-}
-
-extension _DartTo_CCarBriefRouteInfo on CarBriefRouteInfo {
-  _CCarBriefRouteInfo _copyFromDartTo_CCarBriefRouteInfo() {
-    final res = _CCarBriefRouteInfoMakeDefault();
-    res.length = this.length._copyFromDartTo_CRouteDistance();
-    res.landmark = this.landmark._copyFromDartTo_CString();
-    res.trafficSpeed = this.trafficSpeed._copyFromDartTo_CCarBriefRouteInfoTrafficSpeed();
-    return res;
-  }
-}
-extension _CCarBriefRouteInfoRelease on _CCarBriefRouteInfo {
-  void _releaseIntermediate() {
-    landmark._releaseIntermediate();
-  }
-}
-
-// MARK: - PedestrianBriefRouteInfo
-
-/** Базовая информация о пешеходном маршруте. */
-class PedestrianBriefRouteInfo {
-  /** Длина маршрута. */
-  final RouteDistance length;
-  /** Ориентир. */
-  final String landmark;
-
-  const PedestrianBriefRouteInfo({
-    required this.length,
-    required this.landmark
-  });
-
-  PedestrianBriefRouteInfo copyWith({
-    RouteDistance? length,
-    String? landmark
-  }) {
-    return PedestrianBriefRouteInfo(
-      length: length ?? this.length,
-      landmark: landmark ?? this.landmark
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is PedestrianBriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.length == length &&
-    other.landmark == landmark;
-
-  @override
-  int get hashCode {
-    return Object.hash(length, landmark);
-  }
-
-}
-final class _CPedestrianBriefRouteInfo extends ffi.Struct {
-  external _CRouteDistance length;
-
-  external _CString landmark;
-
-}
-// MARK: - PedestrianBriefRouteInfo <-> _CPedestrianBriefRouteInfo
-
-extension _CPedestrianBriefRouteInfoToDart on _CPedestrianBriefRouteInfo {
-  PedestrianBriefRouteInfo _toDart() {
-    return PedestrianBriefRouteInfo(
-      length: this.length._toDart(),
-      landmark: this.landmark._toDart()
-    );
-  }
-}
-
-extension _DartTo_CPedestrianBriefRouteInfo on PedestrianBriefRouteInfo {
-  _CPedestrianBriefRouteInfo _copyFromDartTo_CPedestrianBriefRouteInfo() {
-    final res = _CPedestrianBriefRouteInfoMakeDefault();
-    res.length = this.length._copyFromDartTo_CRouteDistance();
-    res.landmark = this.landmark._copyFromDartTo_CString();
-    return res;
-  }
-}
-extension _CPedestrianBriefRouteInfoRelease on _CPedestrianBriefRouteInfo {
-  void _releaseIntermediate() {
-    landmark._releaseIntermediate();
-  }
-}
-
-// MARK: - PublicBriefRouteTransportInfo
-
-/** Описание общественного транспортного средства. */
-class PublicBriefRouteTransportInfo {
-  /** Тип общественного транспортного средства. */
-  final PublicTransportType type;
-  /** Названия маршрутов общественного транспорта, на которых происходит проезд. */
-  final List<String> names;
-  /**
-   Argb представление цвета, ассоциированного с данным видом общественного транспорта,
-   например, цвет линии метро. При отсутствии информации о цвете в поле будет значение null.
-  */
-  final int? color;
-  /** Идентификатор иконки для остановок маршрута. Пустая строка, если информация недоступна. Техническое поле. */
-  final String routeLogo;
-
-  const PublicBriefRouteTransportInfo({
-    this.type = PublicTransportType.bus,
-    required this.names,
-    required this.color,
-    required this.routeLogo
-  });
-
-  PublicBriefRouteTransportInfo copyWith({
-    PublicTransportType? type,
-    List<String>? names,
-    Optional<int?>? color,
-    String? routeLogo
-  }) {
-    return PublicBriefRouteTransportInfo(
-      type: type ?? this.type,
-      names: names ?? this.names,
-      color: color != null ? color.value : this.color,
-      routeLogo: routeLogo ?? this.routeLogo
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is PublicBriefRouteTransportInfo &&
-    other.runtimeType == runtimeType &&
-    other.type == type &&
-    other.names == names &&
-    other.color == color &&
-    other.routeLogo == routeLogo;
-
-  @override
-  int get hashCode {
-    return Object.hash(type, names, color, routeLogo);
-  }
-
-}
-final class _CPublicBriefRouteTransportInfo extends ffi.Struct {
-  external _CPublicTransportType type;
-
-  external _CArray_CString names;
-
-  external _COptional_uint32_t color;
-
-  external _CString routeLogo;
-
-}
-// MARK: - PublicBriefRouteTransportInfo <-> _CPublicBriefRouteTransportInfo
-
-extension _CPublicBriefRouteTransportInfoToDart on _CPublicBriefRouteTransportInfo {
-  PublicBriefRouteTransportInfo _toDart() {
-    return PublicBriefRouteTransportInfo(
-      type: this.type._toDart(),
-      names: this.names._toDart(),
-      color: this.color._toDart(),
-      routeLogo: this.routeLogo._toDart()
-    );
-  }
-}
-
-extension _DartTo_CPublicBriefRouteTransportInfo on PublicBriefRouteTransportInfo {
-  _CPublicBriefRouteTransportInfo _copyFromDartTo_CPublicBriefRouteTransportInfo() {
-    final res = _CPublicBriefRouteTransportInfoMakeDefault();
-    res.type = this.type._copyFromDartTo_CPublicTransportType();
-    res.names = this.names._copyFromDartTo_CArray_CString();
-    res.color = this.color._copyFromDartTo_COptional_uint32_t();
-    res.routeLogo = this.routeLogo._copyFromDartTo_CString();
-    return res;
-  }
-}
-extension _CPublicBriefRouteTransportInfoRelease on _CPublicBriefRouteTransportInfo {
-  void _releaseIntermediate() {
-    names._releaseIntermediate();
-    routeLogo._releaseIntermediate();
-  }
-}
-
-// MARK: - List<PublicBriefRouteTransportInfo> <-> _CArray_CPublicBriefRouteTransportInfo
-
-final class _CArray_CPublicBriefRouteTransportInfo extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CPublicBriefRouteTransportInfoToDart on _CArray_CPublicBriefRouteTransportInfo {
-  List<PublicBriefRouteTransportInfo> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CPublicBriefRouteTransportInfo on List<PublicBriefRouteTransportInfo> {
-  _CArray_CPublicBriefRouteTransportInfo _copyFromDartTo_CArray_CPublicBriefRouteTransportInfo() {
-    final cArray = _CArray_CPublicBriefRouteTransportInfomakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CPublicBriefRouteTransportInfo();
-        _CArray_CPublicBriefRouteTransportInfoaddElement(cArray, cItem);
-        cItem._releaseIntermediate();
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CPublicBriefRouteTransportInfoBasicFunctions on _CArray_CPublicBriefRouteTransportInfo {
-  void _releaseIntermediate() {
-    _CArray_CPublicBriefRouteTransportInfo_release(this);
-  }
-
-  static final _listToFill = <PublicBriefRouteTransportInfo>[];
-
-  static void _iterate(_CPublicBriefRouteTransportInfo item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<PublicBriefRouteTransportInfo> _fillFromC() {
-    _forEach_CArray_CPublicBriefRouteTransportInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)>(_iterate));
-    final result = List<PublicBriefRouteTransportInfo>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - PublicBriefRouteInfo
-
-/** Базовая информация о маршруте на общественном транспорте. */
-class PublicBriefRouteInfo {
-  /** Описание способов проезда на общественном транспорте. */
-  final List<PublicBriefRouteTransportInfo> publicTransportInfos;
-
-  const PublicBriefRouteInfo(this.publicTransportInfos);
-
-  PublicBriefRouteInfo copyWith({
-    List<PublicBriefRouteTransportInfo>? publicTransportInfos
-  }) {
-    return PublicBriefRouteInfo(
-      publicTransportInfos ?? this.publicTransportInfos
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is PublicBriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.publicTransportInfos == publicTransportInfos;
-
-  @override
-  int get hashCode {
-    return publicTransportInfos.hashCode;
-  }
-
-}
-final class _CPublicBriefRouteInfo extends ffi.Struct {
-  external _CArray_CPublicBriefRouteTransportInfo publicTransportInfos;
-
-}
-// MARK: - PublicBriefRouteInfo <-> _CPublicBriefRouteInfo
-
-extension _CPublicBriefRouteInfoToDart on _CPublicBriefRouteInfo {
-  PublicBriefRouteInfo _toDart() {
-    return PublicBriefRouteInfo(
-      this.publicTransportInfos._toDart()
-    );
-  }
-}
-
-extension _DartTo_CPublicBriefRouteInfo on PublicBriefRouteInfo {
-  _CPublicBriefRouteInfo _copyFromDartTo_CPublicBriefRouteInfo() {
-    final res = _CPublicBriefRouteInfoMakeDefault();
-    res.publicTransportInfos = this.publicTransportInfos._copyFromDartTo_CArray_CPublicBriefRouteTransportInfo();
-    return res;
-  }
-}
-extension _CPublicBriefRouteInfoRelease on _CPublicBriefRouteInfo {
-  void _releaseIntermediate() {
-    publicTransportInfos._releaseIntermediate();
-  }
-}
-
-// MARK: - ScooterBriefRouteInfo
-
-/** Базовая информация о маршруте на самокате. */
-class ScooterBriefRouteInfo {
-  /** Длина маршрута. */
-  final RouteDistance length;
-  /** Ориентир. */
-  final String landmark;
-
-  const ScooterBriefRouteInfo({
-    required this.length,
-    required this.landmark
-  });
-
-  ScooterBriefRouteInfo copyWith({
-    RouteDistance? length,
-    String? landmark
-  }) {
-    return ScooterBriefRouteInfo(
-      length: length ?? this.length,
-      landmark: landmark ?? this.landmark
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScooterBriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.length == length &&
-    other.landmark == landmark;
-
-  @override
-  int get hashCode {
-    return Object.hash(length, landmark);
-  }
-
-}
-final class _CScooterBriefRouteInfo extends ffi.Struct {
-  external _CRouteDistance length;
-
-  external _CString landmark;
-
-}
-// MARK: - ScooterBriefRouteInfo <-> _CScooterBriefRouteInfo
-
-extension _CScooterBriefRouteInfoToDart on _CScooterBriefRouteInfo {
-  ScooterBriefRouteInfo _toDart() {
-    return ScooterBriefRouteInfo(
-      length: this.length._toDart(),
-      landmark: this.landmark._toDart()
-    );
-  }
-}
-
-extension _DartTo_CScooterBriefRouteInfo on ScooterBriefRouteInfo {
-  _CScooterBriefRouteInfo _copyFromDartTo_CScooterBriefRouteInfo() {
-    final res = _CScooterBriefRouteInfoMakeDefault();
-    res.length = this.length._copyFromDartTo_CRouteDistance();
-    res.landmark = this.landmark._copyFromDartTo_CString();
-    return res;
-  }
-}
-extension _CScooterBriefRouteInfoRelease on _CScooterBriefRouteInfo {
-  void _releaseIntermediate() {
-    landmark._releaseIntermediate();
-  }
-}
-
-// MARK: - BriefExtraRouteInfo
-
-/** Дополнительная информация о маршруте для конкретного типа транспорта. */
-final class BriefExtraRouteInfo {
-  final Object? _value;
-  final int _index;
-
-  BriefExtraRouteInfo._raw(this._value, this._index);
-
-  BriefExtraRouteInfo.bicycle(BicycleBriefRouteInfo value) : this._raw(value, 0);
-  BriefExtraRouteInfo.car(CarBriefRouteInfo value) : this._raw(value, 1);
-  BriefExtraRouteInfo.pedestrian(PedestrianBriefRouteInfo value) : this._raw(value, 2);
-  BriefExtraRouteInfo.publicTransport(PublicBriefRouteInfo value) : this._raw(value, 3);
-  BriefExtraRouteInfo.scooter(ScooterBriefRouteInfo value) : this._raw(value, 4);
-
-  bool get isBicycle => this._index == 0;
-  BicycleBriefRouteInfo? get asBicycle => this.isBicycle ? this._value as BicycleBriefRouteInfo : null;
-
-  bool get isCar => this._index == 1;
-  CarBriefRouteInfo? get asCar => this.isCar ? this._value as CarBriefRouteInfo : null;
-
-  bool get isPedestrian => this._index == 2;
-  PedestrianBriefRouteInfo? get asPedestrian => this.isPedestrian ? this._value as PedestrianBriefRouteInfo : null;
-
-  bool get isPublicTransport => this._index == 3;
-  PublicBriefRouteInfo? get asPublicTransport => this.isPublicTransport ? this._value as PublicBriefRouteInfo : null;
-
-  bool get isScooter => this._index == 4;
-  ScooterBriefRouteInfo? get asScooter => this.isScooter ? this._value as ScooterBriefRouteInfo : null;
-
-  T match<T>({
-    required T Function(BicycleBriefRouteInfo value) bicycle,
-    required T Function(CarBriefRouteInfo value) car,
-    required T Function(PedestrianBriefRouteInfo value) pedestrian,
-    required T Function(PublicBriefRouteInfo value) publicTransport,
-    required T Function(ScooterBriefRouteInfo value) scooter,
-  }) {
-    return switch (this._index) {
-      0 => bicycle(this._value as BicycleBriefRouteInfo),
-      1 => car(this._value as CarBriefRouteInfo),
-      2 => pedestrian(this._value as PedestrianBriefRouteInfo),
-      3 => publicTransport(this._value as PublicBriefRouteInfo),
-      4 => scooter(this._value as ScooterBriefRouteInfo),
-      _ => throw NativeException("Unrecognized case index ${this._index}")
-    };
-  }
-
-  @override
-  String toString() => "BriefExtraRouteInfo(${this._value})";
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is BriefExtraRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other._value == this._value && other._index == this._index;
-
-  @override
-  int get hashCode => Object.hash(this._index, this._value);
-}
-
-final class _CBriefExtraRouteInfoImpl extends ffi.Union {
-  external _CBicycleBriefRouteInfo _bicycle;
-  external _CCarBriefRouteInfo _car;
-  external _CPedestrianBriefRouteInfo _pedestrian;
-  external _CPublicBriefRouteInfo _publicTransport;
-  external _CScooterBriefRouteInfo _scooter;
-}
-
-final class _CBriefExtraRouteInfo extends ffi.Struct {
-  external _CBriefExtraRouteInfoImpl _impl;
-  @ffi.Uint8()
-  external int _index;
-}
-
-extension _CBriefExtraRouteInfoBasicFunctions on _CBriefExtraRouteInfo {
-  void _releaseIntermediate() {
-    _CBriefExtraRouteInfo_release(this);
-  }
-}
-	
-// MARK: - BriefExtraRouteInfo <-> CBriefExtraRouteInfo
-
-extension _CBriefExtraRouteInfoToDart on _CBriefExtraRouteInfo {
-  BriefExtraRouteInfo _toDart() {
-    return switch (this._index) {
-      0 => BriefExtraRouteInfo.bicycle(this._impl._bicycle._toDart()),
-      1 => BriefExtraRouteInfo.car(this._impl._car._toDart()),
-      2 => BriefExtraRouteInfo.pedestrian(this._impl._pedestrian._toDart()),
-      3 => BriefExtraRouteInfo.publicTransport(this._impl._publicTransport._toDart()),
-      4 => BriefExtraRouteInfo.scooter(this._impl._scooter._toDart()),
-      _ => throw NativeException("Unrecognized case index ${this._index}")
-    };
-  }
-}
-
-extension _DartTo_CBriefExtraRouteInfo on BriefExtraRouteInfo {
-  _CBriefExtraRouteInfo _copyFromDartTo_CBriefExtraRouteInfo() {
-    var res = _CBriefExtraRouteInfoMakeDefault();
-    this.match<void>(
-      bicycle: (BicycleBriefRouteInfo value) {
-        res._impl._bicycle = value._copyFromDartTo_CBicycleBriefRouteInfo();
-        res._index = 0;
-      },
-      car: (CarBriefRouteInfo value) {
-        res._impl._car = value._copyFromDartTo_CCarBriefRouteInfo();
-        res._index = 1;
-      },
-      pedestrian: (PedestrianBriefRouteInfo value) {
-        res._impl._pedestrian = value._copyFromDartTo_CPedestrianBriefRouteInfo();
-        res._index = 2;
-      },
-      publicTransport: (PublicBriefRouteInfo value) {
-        res._impl._publicTransport = value._copyFromDartTo_CPublicBriefRouteInfo();
-        res._index = 3;
-      },
-      scooter: (ScooterBriefRouteInfo value) {
-        res._impl._scooter = value._copyFromDartTo_CScooterBriefRouteInfo();
-        res._index = 4;
-      },
-    );
-    return res;
-  }
-}
-
-// MARK: - BriefRouteInfo
-
-/** Базовая информация о маршруте. */
-class BriefRouteInfo {
-  /** Время движения по маршруту. */
-  final Duration duration;
-  /** Дополнительная информация о маршруте для конкретного типа транспорта. */
-  final BriefExtraRouteInfo extraInfo;
-
-  const BriefRouteInfo({
-    required this.duration,
-    required this.extraInfo
-  });
-
-  BriefRouteInfo copyWith({
-    Duration? duration,
-    BriefExtraRouteInfo? extraInfo
-  }) {
-    return BriefRouteInfo(
-      duration: duration ?? this.duration,
-      extraInfo: extraInfo ?? this.extraInfo
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is BriefRouteInfo &&
-    other.runtimeType == runtimeType &&
-    other.duration == duration &&
-    other.extraInfo == extraInfo;
-
-  @override
-  int get hashCode {
-    return Object.hash(duration, extraInfo);
-  }
-
-}
-final class _CBriefRouteInfo extends ffi.Struct {
-  external _CTimeInterval duration;
-
-  external _CBriefExtraRouteInfo extraInfo;
-
-}
-// MARK: - BriefRouteInfo <-> _CBriefRouteInfo
-
-extension _CBriefRouteInfoToDart on _CBriefRouteInfo {
-  BriefRouteInfo _toDart() {
-    return BriefRouteInfo(
-      duration: this.duration._toDart(),
-      extraInfo: this.extraInfo._toDart()
-    );
-  }
-}
-
-extension _DartTo_CBriefRouteInfo on BriefRouteInfo {
-  _CBriefRouteInfo _copyFromDartTo_CBriefRouteInfo() {
-    final res = _CBriefRouteInfoMakeDefault();
-    res.duration = this.duration._copyFromDartTo_CTimeInterval();
-    res.extraInfo = this.extraInfo._copyFromDartTo_CBriefExtraRouteInfo();
-    return res;
-  }
-}
-extension _CBriefRouteInfoRelease on _CBriefRouteInfo {
-  void _releaseIntermediate() {
-    extraInfo._releaseIntermediate();
-  }
-}
-
-// MARK: - BriefRouteInfoSearchPoints
-
-/** Точки для запроса поиска базовой информации о маршруте. */
-class BriefRouteInfoSearchPoints {
-  /** Начальная точка маршрута. */
-  final RouteSearchPoint startPoint;
-  /** Конечная точка маршрута. */
-  final RouteSearchPoint finishPoint;
-
-  const BriefRouteInfoSearchPoints({
-    required this.startPoint,
-    required this.finishPoint
-  });
-
-  BriefRouteInfoSearchPoints copyWith({
-    RouteSearchPoint? startPoint,
-    RouteSearchPoint? finishPoint
-  }) {
-    return BriefRouteInfoSearchPoints(
-      startPoint: startPoint ?? this.startPoint,
-      finishPoint: finishPoint ?? this.finishPoint
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is BriefRouteInfoSearchPoints &&
-    other.runtimeType == runtimeType &&
-    other.startPoint == startPoint &&
-    other.finishPoint == finishPoint;
-
-  @override
-  int get hashCode {
-    return Object.hash(startPoint, finishPoint);
-  }
-
-}
-final class _CBriefRouteInfoSearchPoints extends ffi.Struct {
-  external _CRouteSearchPoint startPoint;
-
-  external _CRouteSearchPoint finishPoint;
-
-}
-// MARK: - BriefRouteInfoSearchPoints <-> _CBriefRouteInfoSearchPoints
-
-extension _CBriefRouteInfoSearchPointsToDart on _CBriefRouteInfoSearchPoints {
-  BriefRouteInfoSearchPoints _toDart() {
-    return BriefRouteInfoSearchPoints(
-      startPoint: this.startPoint._toDart(),
-      finishPoint: this.finishPoint._toDart()
-    );
-  }
-}
-
-extension _DartTo_CBriefRouteInfoSearchPoints on BriefRouteInfoSearchPoints {
-  _CBriefRouteInfoSearchPoints _copyFromDartTo_CBriefRouteInfoSearchPoints() {
-    final res = _CBriefRouteInfoSearchPointsMakeDefault();
-    res.startPoint = this.startPoint._copyFromDartTo_CRouteSearchPoint();
-    res.finishPoint = this.finishPoint._copyFromDartTo_CRouteSearchPoint();
-    return res;
-  }
-}
-extension _CBriefRouteInfoSearchPointsRelease on _CBriefRouteInfoSearchPoints {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - Set<TruckPassZoneId> <-> _CSet_CTruckPassZoneId
-
-final class _CSet_CTruckPassZoneId extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CSet_CTruckPassZoneIdToDart on _CSet_CTruckPassZoneId {
-  Set<TruckPassZoneId> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CSet_CTruckPassZoneId on Set<TruckPassZoneId> {
-  _CSet_CTruckPassZoneId _copyFromDartTo_CSet_CTruckPassZoneId() {
-    final cSet = _CSet_CTruckPassZoneIdmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CTruckPassZoneId();
-        _CSet_CTruckPassZoneIdaddElement(cSet, cItem);
-        
-    });
-    return cSet;
-  }
-}
-
-extension _CSet_CTruckPassZoneIdBasicFunctions on _CSet_CTruckPassZoneId {
-  void _releaseIntermediate() {
-    _CSet_CTruckPassZoneId_release(this);
-  }
-
- static final _setToFill = <TruckPassZoneId>{};
-
-  static void _iterate(_CTruckPassZoneId item) {
-    _setToFill.add(item._toDart());
-  }
-
-  Set<TruckPassZoneId> _fillFromC() {
-    _forEach_CSet_CTruckPassZoneId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTruckPassZoneId)>(_iterate));
-    final result = Set<TruckPassZoneId>.from(_setToFill);
-    _setToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - TruckPassZonePass
-
-/** Пропуск, разрешающий движение грузового транспорта в пропускных зонах. */
-class TruckPassZonePass {
-  /** Идентификатор пропуска. */
-  final TruckPassZonePassId id;
-  /** Название пропуска. */
-  final String name;
-  /** Идентификаторы пропускных зон, по которым разрешает движение данный пропуск */
-  final Set<TruckPassZoneId> passZoneIds;
-
-  const TruckPassZonePass({
-    required this.id,
-    required this.name,
-    required this.passZoneIds
-  });
-
-  TruckPassZonePass copyWith({
-    TruckPassZonePassId? id,
-    String? name,
-    Set<TruckPassZoneId>? passZoneIds
-  }) {
-    return TruckPassZonePass(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      passZoneIds: passZoneIds ?? this.passZoneIds
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TruckPassZonePass &&
-    other.runtimeType == runtimeType &&
-    other.id == id &&
-    other.name == name &&
-    other.passZoneIds == passZoneIds;
-
-  @override
-  int get hashCode {
-    return Object.hash(id, name, passZoneIds);
-  }
-
-}
-final class _CTruckPassZonePass extends ffi.Struct {
-  external _CTruckPassZonePassId id;
-
-  external _CString name;
-
-  external _CSet_CTruckPassZoneId passZoneIds;
-
-}
-// MARK: - TruckPassZonePass <-> _CTruckPassZonePass
-
-extension _CTruckPassZonePassToDart on _CTruckPassZonePass {
-  TruckPassZonePass _toDart() {
-    return TruckPassZonePass(
-      id: this.id._toDart(),
-      name: this.name._toDart(),
-      passZoneIds: this.passZoneIds._toDart()
-    );
-  }
-}
-
-extension _DartTo_CTruckPassZonePass on TruckPassZonePass {
-  _CTruckPassZonePass _copyFromDartTo_CTruckPassZonePass() {
-    final res = _CTruckPassZonePassMakeDefault();
-    res.id = this.id._copyFromDartTo_CTruckPassZonePassId();
-    res.name = this.name._copyFromDartTo_CString();
-    res.passZoneIds = this.passZoneIds._copyFromDartTo_CSet_CTruckPassZoneId();
-    return res;
-  }
-}
-extension _CTruckPassZonePassRelease on _CTruckPassZonePass {
-  void _releaseIntermediate() {
-    name._releaseIntermediate();
-    passZoneIds._releaseIntermediate();
-  }
-}
-
-// MARK: - TrafficRouter
-
-/** Интерфейс для поиска маршрута с учетом пробочных данных. */
-class TrafficRouter implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /**
-   Возвращает список всех поддерживаемых пропусков, разрешающих движение грузового транспорта в пределах пропускных
-   зон.
-  
-   - Returns: Future с пропусками для грузового транспорта, либо исключением Exception в случае ошибки.
-  */
-  CancelableOperation<List<TruckPassZonePass>> get truckPassZonePasses {
-    _CFuture_CArray_CTruckPassZonePass res = _CTrafficRouter_truckPassZonePasses(_CTrafficRouterMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CTrafficRouter_releasePtr);
-
-  TrafficRouter._raw(this._self);
-  factory TrafficRouter._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = TrafficRouter._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  /**
-   - Throws: Exception, если отсутствует системный контекст или если из него
-   невозможно получить ITrafficRouterPtr
-  */
-  factory TrafficRouter(
-    Context context
-  ) {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CTrafficRouter res = _CTrafficRouter_C_createWith_CContext(_a0);
-    _a0._releaseIntermediate();
-    return TrafficRouter._create(res._impl);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TrafficRouter &&
-    other.runtimeType == runtimeType &&
-    _CTrafficRouter_cg_objectIdentifier(this._self) == _CTrafficRouter_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CTrafficRouter_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: TrafficRouter: Methods
-
-  /**
-   Ищет маршрут по заданным параметрам.
-  
-   - Parameter startPoint: Начальная точка маршрута.
-   - Parameter finishPoint: Конечная точка маршрута.
-   - Parameter routeSearchOptions: Параметры поиска маршрута.
-   - Parameter intermediatePoints: Промежуточные точки для проезда в том же порядке,
-   в котором точки заданы в векторе.
-   - Returns: Future с набором найденных маршрутов, либо с исключением Exception в случае ошибки.
-   - Note: Пустой набор маршрутов является валидным результатом - это означает, что маршрут,
-   соответствующий указанным критериям поиска, не может быть найден.
-   - Note: При поиске маршрутов для грузового транспорта возможен возврат маршрутов,
-   проходящих через пропускные зоны, для которых не были предоставлены пропуска,
-   в случае, если не удалось проложить маршрут только через пропускные зоны, для
-   которых пропуска были предоставлены. Для проверки того, достаточен ли список
-   пропусков для проезда по маршруту, следует использовать функцию route_matches_truck_pass_zone_passes.
-  */
-  CancelableOperation<List<TrafficRoute>> findRoute(
-    RouteSearchPoint startPoint,
-    RouteSearchPoint finishPoint,
-    RouteSearchOptions routeSearchOptions,
-    [List<RouteSearchPoint> intermediatePoints = const []
-    ])  {
-    var _a1 = startPoint._copyFromDartTo_CRouteSearchPoint();
-    var _a2 = finishPoint._copyFromDartTo_CRouteSearchPoint();
-    var _a3 = routeSearchOptions._copyFromDartTo_CRouteSearchOptions();
-    var _a4 = intermediatePoints._copyFromDartTo_CArray_CRouteSearchPoint();
-    _CFuture_CArray_CTrafficRoute res = _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2, _a3, _a4);
-    _a4._releaseIntermediate();
-    _a3._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  /**
-   Ищет маршрут по ранее сериализованным параметрам.
-  
-   - Parameter request: Сериализованные параметры запроса.
-   - Parameter serverEndpoint: Тип искомого маршрута, выступает частью урла, по которому отсылается запрос: bicycle, carrouting, pedestrian, truck.
-   - Returns: Future с набором найденных маршрутов, либо с исключением Exception в случае ошибки.
-   - Note: Не подходит для поиска маршрутов общественного транспорта.
-   - Note: При невозможности найти маршруты для грузового транспорта не пытается найти маршруты на легковом автомобиле без учёта грузовых данных.
-  */
-  CancelableOperation<List<TrafficRoute>> requestRoute(
-    ByteData request,
-    String serverEndpoint
-  )  {
-    var _a1 = request._copyFromDartTo_CData();
-    var _a2 = serverEndpoint._copyFromDartTo_CString();
-    _CFuture_CArray_CTrafficRoute res = _CTrafficRouter_requestRoute_CData_CString(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2);
-    _a2._releaseIntermediate();
-    _a1._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  /**
-   Ищет базовую информацию о маршрутах для соответствующего набора поисковых точек.
-  
-   - Parameter searchPoints: Набор точек для поиска базовой информации о маршруте.
-   - Parameter routeSearchOptions: Параметры поиска маршрута.
-   - Returns: Future с базовой информацией о наборе маршрутов, соответствующему набору точек поиска, либо исключением Exception в случае ошибки.
-   - Note: Если базовая информация для каких-либо из пар точек не будет найдена, элемент с соответствующим индексом
-   в возвращённом результате будет иметь значение null.
-  */
-  CancelableOperation<List<BriefRouteInfo?>> findBriefRouteInfos(
-    List<BriefRouteInfoSearchPoints> searchPoints,
-    RouteSearchOptions routeSearchOptions
-  )  {
-    var _a1 = searchPoints._copyFromDartTo_CArray_CBriefRouteInfoSearchPoints();
-    var _a2 = routeSearchOptions._copyFromDartTo_CRouteSearchOptions();
-    _CFuture_CArray_COptional_CBriefRouteInfo res = _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions(_CTrafficRouterMakeDefault().._impl=_self, _a1, _a2);
-    _a2._releaseIntermediate();
-    _a1._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-// MARK: - TrafficRouter <-> CTrafficRouter
-
-final class _CTrafficRouter extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CTrafficRouterBasicFunctions on _CTrafficRouter {
-  void _releaseIntermediate() {
-    _CTrafficRouter_release(_impl);
-  }
-
-  _CTrafficRouter _retain() {
-    return _CTrafficRouter_retain(_impl);
-  }
-}
-
-extension _CTrafficRouterToDart on _CTrafficRouter {
-  TrafficRouter _toDart() {
-    return TrafficRouter._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCTrafficRouter on TrafficRouter {
-  _CTrafficRouter _copyFromDartTo_CTrafficRouter() {
-    return (_CTrafficRouterMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - CancelableOperation<List<TrafficRoute>> <-> _CFuture_CArray_CTrafficRoute
-
-final class _CFuture_CArray_CTrafficRoute extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-class _CFuture_CArray_CTrafficRoute_Cancellable {
-  final Completer<List<TrafficRoute>> completer;
-  final _CFuture_CArray_CTrafficRoute _futureInstance;
-  final _CCancellable _cancellable;
-  final ffi.NativeCallable<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)> valueFunctionCallable;
-  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
-
-  _CFuture_CArray_CTrafficRoute_Cancellable(
-    this.completer,
-    this._futureInstance,
-    this._cancellable,
-    this.valueFunctionCallable,
-    this.failureCallable
-  );
-
-  void cancel() {
-    this._cancellable._cancel();
-    this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
-  }
-}
-
-extension _CFuture_CArray_CTrafficRouteBasicFunctions on _CFuture_CArray_CTrafficRoute {
-  void _releaseIntermediate() {
-    _CFuture_CArray_CTrafficRoute_release(this);
-  }
-
-  _CFuture_CArray_CTrafficRoute _retain() {
-    return _CFuture_CArray_CTrafficRoute_retain(this);
-  }
-}
-
-extension _CFuture_CArray_CTrafficRouteToDart on _CFuture_CArray_CTrafficRoute {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, _CFuture_CArray_CTrafficRoute_Cancellable>{};
-
-  static void valueFunction(_CArray_CTrafficRoute cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.complete(cValue._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cValue._releaseIntermediate();
-  }
-
-  static void failure(_CError cError, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.completeError(cError._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cError._releaseIntermediate();
-  }
-
-  CancelableOperation<List<TrafficRoute>> _toDart() {
-    final futureInstance = this._retain();
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final completer = new Completer<List<TrafficRoute>>();
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>.listener(valueFunction);
-    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
-    final cCancel = _CFuture_CArray_CTrafficRouteReceive(
-      futureInstance,
-      instanceId,
-      valueFunctionCallable.nativeFunction,
-      failureCallable.nativeFunction
-    );
-    final cancellable = cCancel._retain();
-    instanceMap[instanceId] = _CFuture_CArray_CTrafficRoute_Cancellable(
-      completer,
-      futureInstance,
-      cancellable,
-      valueFunctionCallable,
-      failureCallable
-    );
-    cCancel._releaseIntermediate();
-    return CancelableOperation.fromFuture(
-      completer.future,
-      onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-  }
-}
-
-extension _DartTo_CFuture_CArray_CTrafficRoute on CancelableOperation<List<TrafficRoute>> {
-  _CFuture_CArray_CTrafficRoute _copyFromDartTo_CFuture_CArray_CTrafficRoute() {
-    return _CFuture_CArray_CTrafficRouteMakeDefault();
-  }
-}
-	
-// MARK: - CancelableOperation<List<TruckPassZonePass>> <-> _CFuture_CArray_CTruckPassZonePass
-
-final class _CFuture_CArray_CTruckPassZonePass extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-class _CFuture_CArray_CTruckPassZonePass_Cancellable {
-  final Completer<List<TruckPassZonePass>> completer;
-  final _CFuture_CArray_CTruckPassZonePass _futureInstance;
-  final _CCancellable _cancellable;
-  final ffi.NativeCallable<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)> valueFunctionCallable;
-  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
-
-  _CFuture_CArray_CTruckPassZonePass_Cancellable(
-    this.completer,
-    this._futureInstance,
-    this._cancellable,
-    this.valueFunctionCallable,
-    this.failureCallable
-  );
-
-  void cancel() {
-    this._cancellable._cancel();
-    this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
-  }
-}
-
-extension _CFuture_CArray_CTruckPassZonePassBasicFunctions on _CFuture_CArray_CTruckPassZonePass {
-  void _releaseIntermediate() {
-    _CFuture_CArray_CTruckPassZonePass_release(this);
-  }
-
-  _CFuture_CArray_CTruckPassZonePass _retain() {
-    return _CFuture_CArray_CTruckPassZonePass_retain(this);
-  }
-}
-
-extension _CFuture_CArray_CTruckPassZonePassToDart on _CFuture_CArray_CTruckPassZonePass {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, _CFuture_CArray_CTruckPassZonePass_Cancellable>{};
-
-  static void valueFunction(_CArray_CTruckPassZonePass cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.complete(cValue._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cValue._releaseIntermediate();
-  }
-
-  static void failure(_CError cError, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.completeError(cError._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cError._releaseIntermediate();
-  }
-
-  CancelableOperation<List<TruckPassZonePass>> _toDart() {
-    final futureInstance = this._retain();
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final completer = new Completer<List<TruckPassZonePass>>();
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>.listener(valueFunction);
-    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
-    final cCancel = _CFuture_CArray_CTruckPassZonePassReceive(
-      futureInstance,
-      instanceId,
-      valueFunctionCallable.nativeFunction,
-      failureCallable.nativeFunction
-    );
-    final cancellable = cCancel._retain();
-    instanceMap[instanceId] = _CFuture_CArray_CTruckPassZonePass_Cancellable(
-      completer,
-      futureInstance,
-      cancellable,
-      valueFunctionCallable,
-      failureCallable
-    );
-    cCancel._releaseIntermediate();
-    return CancelableOperation.fromFuture(
-      completer.future,
-      onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-  }
-}
-
-extension _DartTo_CFuture_CArray_CTruckPassZonePass on CancelableOperation<List<TruckPassZonePass>> {
-  _CFuture_CArray_CTruckPassZonePass _copyFromDartTo_CFuture_CArray_CTruckPassZonePass() {
-    return _CFuture_CArray_CTruckPassZonePassMakeDefault();
-  }
-}
-	
-// MARK: - List<TruckPassZonePass> <-> _CArray_CTruckPassZonePass
-
-final class _CArray_CTruckPassZonePass extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CTruckPassZonePassToDart on _CArray_CTruckPassZonePass {
-  List<TruckPassZonePass> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CTruckPassZonePass on List<TruckPassZonePass> {
-  _CArray_CTruckPassZonePass _copyFromDartTo_CArray_CTruckPassZonePass() {
-    final cArray = _CArray_CTruckPassZonePassmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CTruckPassZonePass();
-        _CArray_CTruckPassZonePassaddElement(cArray, cItem);
-        cItem._releaseIntermediate();
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CTruckPassZonePassBasicFunctions on _CArray_CTruckPassZonePass {
-  void _releaseIntermediate() {
-    _CArray_CTruckPassZonePass_release(this);
-  }
-
-  static final _listToFill = <TruckPassZonePass>[];
-
-  static void _iterate(_CTruckPassZonePass item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<TruckPassZonePass> _fillFromC() {
-    _forEach_CArray_CTruckPassZonePass(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTruckPassZonePass)>(_iterate));
-    final result = List<TruckPassZonePass>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - CancelableOperation<List<BriefRouteInfo?>> <-> _CFuture_CArray_COptional_CBriefRouteInfo
-
-final class _CFuture_CArray_COptional_CBriefRouteInfo extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-class _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable {
-  final Completer<List<BriefRouteInfo?>> completer;
-  final _CFuture_CArray_COptional_CBriefRouteInfo _futureInstance;
-  final _CCancellable _cancellable;
-  final ffi.NativeCallable<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)> valueFunctionCallable;
-  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
-
-  _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable(
-    this.completer,
-    this._futureInstance,
-    this._cancellable,
-    this.valueFunctionCallable,
-    this.failureCallable
-  );
-
-  void cancel() {
-    this._cancellable._cancel();
-    this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
-  }
-}
-
-extension _CFuture_CArray_COptional_CBriefRouteInfoBasicFunctions on _CFuture_CArray_COptional_CBriefRouteInfo {
-  void _releaseIntermediate() {
-    _CFuture_CArray_COptional_CBriefRouteInfo_release(this);
-  }
-
-  _CFuture_CArray_COptional_CBriefRouteInfo _retain() {
-    return _CFuture_CArray_COptional_CBriefRouteInfo_retain(this);
-  }
-}
-
-extension _CFuture_CArray_COptional_CBriefRouteInfoToDart on _CFuture_CArray_COptional_CBriefRouteInfo {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable>{};
-
-  static void valueFunction(_CArray_COptional_CBriefRouteInfo cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.complete(cValue._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cValue._releaseIntermediate();
-  }
-
-  static void failure(_CError cError, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.completeError(cError._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cError._releaseIntermediate();
-  }
-
-  CancelableOperation<List<BriefRouteInfo?>> _toDart() {
-    final futureInstance = this._retain();
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final completer = new Completer<List<BriefRouteInfo?>>();
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>.listener(valueFunction);
-    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
-    final cCancel = _CFuture_CArray_COptional_CBriefRouteInfoReceive(
-      futureInstance,
-      instanceId,
-      valueFunctionCallable.nativeFunction,
-      failureCallable.nativeFunction
-    );
-    final cancellable = cCancel._retain();
-    instanceMap[instanceId] = _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable(
-      completer,
-      futureInstance,
-      cancellable,
-      valueFunctionCallable,
-      failureCallable
-    );
-    cCancel._releaseIntermediate();
-    return CancelableOperation.fromFuture(
-      completer.future,
-      onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-  }
-}
-
-extension _DartTo_CFuture_CArray_COptional_CBriefRouteInfo on CancelableOperation<List<BriefRouteInfo?>> {
-  _CFuture_CArray_COptional_CBriefRouteInfo _copyFromDartTo_CFuture_CArray_COptional_CBriefRouteInfo() {
-    return _CFuture_CArray_COptional_CBriefRouteInfoMakeDefault();
-  }
-}
-	
-// MARK: - List<BriefRouteInfo?> <-> _CArray_COptional_CBriefRouteInfo
-
-final class _CArray_COptional_CBriefRouteInfo extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_COptional_CBriefRouteInfoToDart on _CArray_COptional_CBriefRouteInfo {
-  List<BriefRouteInfo?> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_COptional_CBriefRouteInfo on List<BriefRouteInfo?> {
-  _CArray_COptional_CBriefRouteInfo _copyFromDartTo_CArray_COptional_CBriefRouteInfo() {
-    final cArray = _CArray_COptional_CBriefRouteInfomakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_COptional_CBriefRouteInfo();
-        _CArray_COptional_CBriefRouteInfoaddElement(cArray, cItem);
-        cItem._releaseIntermediate();
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_COptional_CBriefRouteInfoBasicFunctions on _CArray_COptional_CBriefRouteInfo {
-  void _releaseIntermediate() {
-    _CArray_COptional_CBriefRouteInfo_release(this);
-  }
-
-  static final _listToFill = <BriefRouteInfo?>[];
-
-  static void _iterate(_COptional_CBriefRouteInfo item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<BriefRouteInfo?> _fillFromC() {
-    _forEach_CArray_COptional_CBriefRouteInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>(_iterate));
-    final result = List<BriefRouteInfo?>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - BriefRouteInfo? <-> _COptional_CBriefRouteInfo
-
-final class _COptional_CBriefRouteInfo extends ffi.Struct {
-  
-  external _CBriefRouteInfo value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CBriefRouteInfoBasicFunctions on _COptional_CBriefRouteInfo {
-  void _releaseIntermediate() {
-    _COptional_CBriefRouteInfo_release(this);
-  }
-}
-
-extension _COptional_CBriefRouteInfoToDart on _COptional_CBriefRouteInfo {
-  BriefRouteInfo? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CBriefRouteInfo on BriefRouteInfo? {
-  _COptional_CBriefRouteInfo _copyFromDartTo_COptional_CBriefRouteInfo() {
-    final cOptional = _COptional_CBriefRouteInfoMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CBriefRouteInfo();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - List<BriefRouteInfoSearchPoints> <-> _CArray_CBriefRouteInfoSearchPoints
-
-final class _CArray_CBriefRouteInfoSearchPoints extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CBriefRouteInfoSearchPointsToDart on _CArray_CBriefRouteInfoSearchPoints {
-  List<BriefRouteInfoSearchPoints> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CBriefRouteInfoSearchPoints on List<BriefRouteInfoSearchPoints> {
-  _CArray_CBriefRouteInfoSearchPoints _copyFromDartTo_CArray_CBriefRouteInfoSearchPoints() {
-    final cArray = _CArray_CBriefRouteInfoSearchPointsmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CBriefRouteInfoSearchPoints();
-        _CArray_CBriefRouteInfoSearchPointsaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CBriefRouteInfoSearchPointsBasicFunctions on _CArray_CBriefRouteInfoSearchPoints {
-  void _releaseIntermediate() {
-    _CArray_CBriefRouteInfoSearchPoints_release(this);
-  }
-
-  static final _listToFill = <BriefRouteInfoSearchPoints>[];
-
-  static void _iterate(_CBriefRouteInfoSearchPoints item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<BriefRouteInfoSearchPoints> _fillFromC() {
-    _forEach_CArray_CBriefRouteInfoSearchPoints(this, ffi.Pointer.fromFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)>(_iterate));
-    final result = List<BriefRouteInfoSearchPoints>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
 // MARK: - TerritoriesAlongRouteProvider
 
 /** Интерфейс для поиска маршрута с учетом пробочных данных. */
@@ -71365,6 +71429,9 @@ late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr = _lo
 late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault = _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>();
 
 
+late final _CPublicTransportRouteTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteType Function()>>('CPublicTransportRouteTypeMakeDefault');
+late final _CPublicTransportRouteTypeMakeDefault = _CPublicTransportRouteTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteType Function()>();
+
 late final _CPublicTransportRouteDirectionIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteDirectionId Function()>>('CPublicTransportRouteDirectionIdMakeDefault');
 late final _CPublicTransportRouteDirectionIdMakeDefault = _CPublicTransportRouteDirectionIdMakeDefaultPtr.asFunction<_CPublicTransportRouteDirectionId Function()>();
 
@@ -71394,9 +71461,6 @@ late final _COptional_CGeoPointMakeDefault = _COptional_CGeoPointMakeDefaultPtr.
 late final _CPublicTransportRouteGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteGeometry Function()>>('CPublicTransportRouteGeometryMakeDefault');
 late final _CPublicTransportRouteGeometryMakeDefault = _CPublicTransportRouteGeometryMakeDefaultPtr.asFunction<_CPublicTransportRouteGeometry Function()>();
 
-
-late final _CPublicTransportRouteTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteType Function()>>('CPublicTransportRouteTypeMakeDefault');
-late final _CPublicTransportRouteTypeMakeDefault = _CPublicTransportRouteTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteType Function()>();
 
 late final _COptional_uint32_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint32_t Function()>>('COptional_uint32_tMakeDefault');
 late final _COptional_uint32_tMakeDefault = _COptional_uint32_tMakeDefaultPtr.asFunction<_COptional_uint32_t Function()>();
@@ -78832,8 +78896,8 @@ late final _CRouteEditor_setRouteParams_CRouteEditorRouteParamsPtr = _lookup<ffi
 late final _CRouteEditor_setRouteParams_CRouteEditorRouteParams = _CRouteEditor_setRouteParams_CRouteEditorRouteParamsPtr.asFunction<void Function(_CRouteEditor, _CRouteEditorRouteParams)>();
 late final _CRouteEditor_setActiveRouteIndex_CRouteIndexPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRouteEditor, _CRouteIndex)>>('CRouteEditor_setActiveRouteIndex_CRouteIndex');
 late final _CRouteEditor_setActiveRouteIndex_CRouteIndex = _CRouteEditor_setActiveRouteIndex_CRouteIndexPtr.asFunction<void Function(_CRouteEditor, _CRouteIndex)>();
-late final _CRouteEditor_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CRouteEditor Function(_CContext)>>('CRouteEditor_C_createWith_CContext');
-late final _CRouteEditor_C_createWith_CContext = _CRouteEditor_C_createWith_CContextPtr.asFunction<_CRouteEditor Function(_CContext)>();
+late final _CRouteEditor_C_createWith_CContext_COptional_CTrafficRouterPtr = _lookup<ffi.NativeFunction<_CRouteEditor Function(_CContext, _COptional_CTrafficRouter)>>('CRouteEditor_C_createWith_CContext_COptional_CTrafficRouter');
+late final _CRouteEditor_C_createWith_CContext_COptional_CTrafficRouter = _CRouteEditor_C_createWith_CContext_COptional_CTrafficRouterPtr.asFunction<_CRouteEditor Function(_CContext, _COptional_CTrafficRouter)>();
 
 late final _CRouteEditor_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRouteEditor_release');
 late final _CRouteEditor_release = _CRouteEditor_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -78925,6 +78989,221 @@ late final _CStatefulChannel_COptional_CRouteIndexConnect = _CStatefulChannel_CO
 
 late final _COptional_CRouteIndexMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRouteIndex Function()>>('COptional_CRouteIndexMakeDefault');
 late final _COptional_CRouteIndexMakeDefault = _COptional_CRouteIndexMakeDefaultPtr.asFunction<_COptional_CRouteIndex Function()>();
+
+late final _CRouterTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouterType Function()>>('CRouterTypeMakeDefault');
+late final _CRouterTypeMakeDefault = _CRouterTypeMakeDefaultPtr.asFunction<_CRouterType Function()>();
+late final _CTrafficRouter_truckPassZonePassesPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function(_CTrafficRouter)>>('CTrafficRouter_truckPassZonePasses');
+late final _CTrafficRouter_truckPassZonePasses = _CTrafficRouter_truckPassZonePassesPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function(_CTrafficRouter)>();
+
+late final _CTrafficRouter_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_cg_objectIdentifier');
+late final _CTrafficRouter_cg_objectIdentifier = _CTrafficRouter_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPointPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CRouteSearchPoint, _CRouteSearchPoint, _CRouteSearchOptions, _CArray_CRouteSearchPoint)>>('CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint');
+late final _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint = _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPointPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CRouteSearchPoint, _CRouteSearchPoint, _CRouteSearchOptions, _CArray_CRouteSearchPoint)>();
+late final _CTrafficRouter_requestRoute_CData_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CData, _CString)>>('CTrafficRouter_requestRoute_CData_CString');
+late final _CTrafficRouter_requestRoute_CData_CString = _CTrafficRouter_requestRoute_CData_CStringPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CData, _CString)>();
+late final _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptionsPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CTrafficRouter, _CArray_CBriefRouteInfoSearchPoints, _CRouteSearchOptions)>>('CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions');
+late final _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions = _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptionsPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CTrafficRouter, _CArray_CBriefRouteInfoSearchPoints, _CRouteSearchOptions)>();
+late final _CTrafficRouter_C_createWith_CContext_CRouterTypePtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function(_CContext, _CRouterType)>>('CTrafficRouter_C_createWith_CContext_CRouterType');
+late final _CTrafficRouter_C_createWith_CContext_CRouterType = _CTrafficRouter_C_createWith_CContext_CRouterTypePtr.asFunction<_CTrafficRouter Function(_CContext, _CRouterType)>();
+
+late final _CTrafficRouter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_release');
+late final _CTrafficRouter_release = _CTrafficRouter_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficRouter_retainPtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_retain');
+late final _CTrafficRouter_retain = _CTrafficRouter_retainPtr.asFunction<_CTrafficRouter Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficRouterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function()>>('CTrafficRouterMakeDefault');
+late final _CTrafficRouterMakeDefault = _CTrafficRouterMakeDefaultPtr.asFunction<_CTrafficRouter Function()>();
+
+
+late final _COptional_CTrafficRouterMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTrafficRouter Function()>>('COptional_CTrafficRouterMakeDefault');
+late final _COptional_CTrafficRouterMakeDefault = _COptional_CTrafficRouterMakeDefaultPtr.asFunction<_COptional_CTrafficRouter Function()>();
+
+late final _COptional_CTrafficRouter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CTrafficRouter)>>('COptional_CTrafficRouter_release');
+late final _COptional_CTrafficRouter_release = _COptional_CTrafficRouter_releasePtr.asFunction<void Function(_COptional_CTrafficRouter)>();
+
+late final _CFuture_CArray_CTrafficRouteMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function()>>('CFuture_CArray_CTrafficRouteMakeDefault');
+late final _CFuture_CArray_CTrafficRouteMakeDefault = _CFuture_CArray_CTrafficRouteMakeDefaultPtr.asFunction<_CFuture_CArray_CTrafficRoute Function()>();
+late final _CFuture_CArray_CTrafficRoute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_CTrafficRoute)>>('CFuture_CArray_CTrafficRoute_release');
+late final _CFuture_CArray_CTrafficRoute_release = _CFuture_CArray_CTrafficRoute_releasePtr.asFunction<void Function(_CFuture_CArray_CTrafficRoute)>();
+late final _CFuture_CArray_CTrafficRoute_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CFuture_CArray_CTrafficRoute)>>('CFuture_CArray_CTrafficRoute_retain');
+late final _CFuture_CArray_CTrafficRoute_retain = _CFuture_CArray_CTrafficRoute_retainPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CFuture_CArray_CTrafficRoute)>();
+late final _CFuture_CArray_CTrafficRouteReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_CArray_CTrafficRoute,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_CArray_CTrafficRoute_receive');
+late final _CFuture_CArray_CTrafficRouteReceive = _CFuture_CArray_CTrafficRouteReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_CArray_CTrafficRoute,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CFuture_CArray_CTruckPassZonePassMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function()>>('CFuture_CArray_CTruckPassZonePassMakeDefault');
+late final _CFuture_CArray_CTruckPassZonePassMakeDefault = _CFuture_CArray_CTruckPassZonePassMakeDefaultPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function()>();
+late final _CFuture_CArray_CTruckPassZonePass_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_CTruckPassZonePass)>>('CFuture_CArray_CTruckPassZonePass_release');
+late final _CFuture_CArray_CTruckPassZonePass_release = _CFuture_CArray_CTruckPassZonePass_releasePtr.asFunction<void Function(_CFuture_CArray_CTruckPassZonePass)>();
+late final _CFuture_CArray_CTruckPassZonePass_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function(_CFuture_CArray_CTruckPassZonePass)>>('CFuture_CArray_CTruckPassZonePass_retain');
+late final _CFuture_CArray_CTruckPassZonePass_retain = _CFuture_CArray_CTruckPassZonePass_retainPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function(_CFuture_CArray_CTruckPassZonePass)>();
+late final _CFuture_CArray_CTruckPassZonePassReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_CArray_CTruckPassZonePass,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_CArray_CTruckPassZonePass_receive');
+late final _CFuture_CArray_CTruckPassZonePassReceive = _CFuture_CArray_CTruckPassZonePassReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_CArray_CTruckPassZonePass,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CArray_CTruckPassZonePassmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CTruckPassZonePass Function()>>('CArray_CTruckPassZonePass_makeEmpty');
+late final _CArray_CTruckPassZonePassmakeEmpty = _CArray_CTruckPassZonePassmakeEmptyPtr.asFunction<_CArray_CTruckPassZonePass Function()>();
+late final _CArray_CTruckPassZonePassaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, _CTruckPassZonePass)>>('CArray_CTruckPassZonePass_addElement');
+late final _CArray_CTruckPassZonePassaddElement = _CArray_CTruckPassZonePassaddElementPtr.asFunction<void Function(_CArray_CTruckPassZonePass, _CTruckPassZonePass)>();
+late final _forEach_CArray_CTruckPassZonePassPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZonePass)>>)
+>>('CArray_CTruckPassZonePass_forEachWithFunctionPointer');
+late final _forEach_CArray_CTruckPassZonePass = _forEach_CArray_CTruckPassZonePassPtr.asFunction<
+  void Function(_CArray_CTruckPassZonePass, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZonePass)
+>>)>();
+late final _CArray_CTruckPassZonePass_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass)>>('CArray_CTruckPassZonePass_release');
+late final _CArray_CTruckPassZonePass_release = _CArray_CTruckPassZonePass_releasePtr.asFunction<void Function(_CArray_CTruckPassZonePass)>();
+
+late final _CSet_CTruckPassZoneIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CSet_CTruckPassZoneId Function()>>('CSet_CTruckPassZoneId_makeEmpty');
+late final _CSet_CTruckPassZoneIdmakeEmpty = _CSet_CTruckPassZoneIdmakeEmptyPtr.asFunction<_CSet_CTruckPassZoneId Function()>();
+late final _CSet_CTruckPassZoneIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSet_CTruckPassZoneId, _CTruckPassZoneId)>>('CSet_CTruckPassZoneId_addElement');
+late final _CSet_CTruckPassZoneIdaddElement = _CSet_CTruckPassZoneIdaddElementPtr.asFunction<void Function(_CSet_CTruckPassZoneId, _CTruckPassZoneId)>();
+late final _forEach_CSet_CTruckPassZoneIdPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CSet_CTruckPassZoneId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZoneId)>>)
+>>('CSet_CTruckPassZoneId_forEachWithFunctionPointer');
+late final _forEach_CSet_CTruckPassZoneId = _forEach_CSet_CTruckPassZoneIdPtr.asFunction<
+  void Function(_CSet_CTruckPassZoneId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZoneId)
+>>)>();
+late final _CSet_CTruckPassZoneId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSet_CTruckPassZoneId)>>('CSet_CTruckPassZoneId_release');
+late final _CSet_CTruckPassZoneId_release = _CSet_CTruckPassZoneId_releasePtr.asFunction<void Function(_CSet_CTruckPassZoneId)>();
+
+late final _CTruckPassZonePassMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTruckPassZonePass Function()>>('CTruckPassZonePassMakeDefault');
+late final _CTruckPassZonePassMakeDefault = _CTruckPassZonePassMakeDefaultPtr.asFunction<_CTruckPassZonePass Function()>();
+
+
+late final _CFuture_CArray_COptional_CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function()>>('CFuture_CArray_COptional_CBriefRouteInfoMakeDefault');
+late final _CFuture_CArray_COptional_CBriefRouteInfoMakeDefault = _CFuture_CArray_COptional_CBriefRouteInfoMakeDefaultPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function()>();
+late final _CFuture_CArray_COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_COptional_CBriefRouteInfo)>>('CFuture_CArray_COptional_CBriefRouteInfo_release');
+late final _CFuture_CArray_COptional_CBriefRouteInfo_release = _CFuture_CArray_COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_CFuture_CArray_COptional_CBriefRouteInfo)>();
+late final _CFuture_CArray_COptional_CBriefRouteInfo_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CFuture_CArray_COptional_CBriefRouteInfo)>>('CFuture_CArray_COptional_CBriefRouteInfo_retain');
+late final _CFuture_CArray_COptional_CBriefRouteInfo_retain = _CFuture_CArray_COptional_CBriefRouteInfo_retainPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CFuture_CArray_COptional_CBriefRouteInfo)>();
+late final _CFuture_CArray_COptional_CBriefRouteInfoReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_CArray_COptional_CBriefRouteInfo,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_CArray_COptional_CBriefRouteInfo_receive');
+late final _CFuture_CArray_COptional_CBriefRouteInfoReceive = _CFuture_CArray_COptional_CBriefRouteInfoReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_CArray_COptional_CBriefRouteInfo,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CArray_COptional_CBriefRouteInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptional_CBriefRouteInfo Function()>>('CArray_COptional_CBriefRouteInfo_makeEmpty');
+late final _CArray_COptional_CBriefRouteInfomakeEmpty = _CArray_COptional_CBriefRouteInfomakeEmptyPtr.asFunction<_CArray_COptional_CBriefRouteInfo Function()>();
+late final _CArray_COptional_CBriefRouteInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, _COptional_CBriefRouteInfo)>>('CArray_COptional_CBriefRouteInfo_addElement');
+late final _CArray_COptional_CBriefRouteInfoaddElement = _CArray_COptional_CBriefRouteInfoaddElementPtr.asFunction<void Function(_CArray_COptional_CBriefRouteInfo, _COptional_CBriefRouteInfo)>();
+late final _forEach_CArray_COptional_CBriefRouteInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>>)
+>>('CArray_COptional_CBriefRouteInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_COptional_CBriefRouteInfo = _forEach_CArray_COptional_CBriefRouteInfoPtr.asFunction<
+  void Function(_CArray_COptional_CBriefRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)
+>>)>();
+late final _CArray_COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo)>>('CArray_COptional_CBriefRouteInfo_release');
+late final _CArray_COptional_CBriefRouteInfo_release = _CArray_COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_CArray_COptional_CBriefRouteInfo)>();
+
+late final _CBicycleBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBicycleBriefRouteInfo Function()>>('CBicycleBriefRouteInfoMakeDefault');
+late final _CBicycleBriefRouteInfoMakeDefault = _CBicycleBriefRouteInfoMakeDefaultPtr.asFunction<_CBicycleBriefRouteInfo Function()>();
+
+
+late final _CCarBriefRouteInfoTrafficSpeedMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarBriefRouteInfoTrafficSpeed Function()>>('CCarBriefRouteInfoTrafficSpeedMakeDefault');
+late final _CCarBriefRouteInfoTrafficSpeedMakeDefault = _CCarBriefRouteInfoTrafficSpeedMakeDefaultPtr.asFunction<_CCarBriefRouteInfoTrafficSpeed Function()>();
+
+late final _CCarBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarBriefRouteInfo Function()>>('CCarBriefRouteInfoMakeDefault');
+late final _CCarBriefRouteInfoMakeDefault = _CCarBriefRouteInfoMakeDefaultPtr.asFunction<_CCarBriefRouteInfo Function()>();
+
+
+late final _CPedestrianBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPedestrianBriefRouteInfo Function()>>('CPedestrianBriefRouteInfoMakeDefault');
+late final _CPedestrianBriefRouteInfoMakeDefault = _CPedestrianBriefRouteInfoMakeDefaultPtr.asFunction<_CPedestrianBriefRouteInfo Function()>();
+
+
+late final _CArray_CPublicBriefRouteTransportInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicBriefRouteTransportInfo Function()>>('CArray_CPublicBriefRouteTransportInfo_makeEmpty');
+late final _CArray_CPublicBriefRouteTransportInfomakeEmpty = _CArray_CPublicBriefRouteTransportInfomakeEmptyPtr.asFunction<_CArray_CPublicBriefRouteTransportInfo Function()>();
+late final _CArray_CPublicBriefRouteTransportInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo, _CPublicBriefRouteTransportInfo)>>('CArray_CPublicBriefRouteTransportInfo_addElement');
+late final _CArray_CPublicBriefRouteTransportInfoaddElement = _CArray_CPublicBriefRouteTransportInfoaddElementPtr.asFunction<void Function(_CArray_CPublicBriefRouteTransportInfo, _CPublicBriefRouteTransportInfo)>();
+late final _forEach_CArray_CPublicBriefRouteTransportInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)>>)
+>>('CArray_CPublicBriefRouteTransportInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicBriefRouteTransportInfo = _forEach_CArray_CPublicBriefRouteTransportInfoPtr.asFunction<
+  void Function(_CArray_CPublicBriefRouteTransportInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)
+>>)>();
+late final _CArray_CPublicBriefRouteTransportInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo)>>('CArray_CPublicBriefRouteTransportInfo_release');
+late final _CArray_CPublicBriefRouteTransportInfo_release = _CArray_CPublicBriefRouteTransportInfo_releasePtr.asFunction<void Function(_CArray_CPublicBriefRouteTransportInfo)>();
+
+late final _CPublicBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicBriefRouteInfo Function()>>('CPublicBriefRouteInfoMakeDefault');
+late final _CPublicBriefRouteInfoMakeDefault = _CPublicBriefRouteInfoMakeDefaultPtr.asFunction<_CPublicBriefRouteInfo Function()>();
+
+
+late final _CScooterBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScooterBriefRouteInfo Function()>>('CScooterBriefRouteInfoMakeDefault');
+late final _CScooterBriefRouteInfoMakeDefault = _CScooterBriefRouteInfoMakeDefaultPtr.asFunction<_CScooterBriefRouteInfo Function()>();
+
+
+late final _CBriefExtraRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBriefExtraRouteInfo)>>('CBriefExtraRouteInfo_release');
+late final _CBriefExtraRouteInfo_release = _CBriefExtraRouteInfo_releasePtr.asFunction<void Function(_CBriefExtraRouteInfo)>();
+late final _CBriefExtraRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefExtraRouteInfo Function()>>('CBriefExtraRouteInfoMakeDefault');
+late final _CBriefExtraRouteInfoMakeDefault = _CBriefExtraRouteInfoMakeDefaultPtr.asFunction<_CBriefExtraRouteInfo Function()>();
+
+late final _CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefRouteInfo Function()>>('CBriefRouteInfoMakeDefault');
+late final _CBriefRouteInfoMakeDefault = _CBriefRouteInfoMakeDefaultPtr.asFunction<_CBriefRouteInfo Function()>();
+
+
+late final _COptional_CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBriefRouteInfo Function()>>('COptional_CBriefRouteInfoMakeDefault');
+late final _COptional_CBriefRouteInfoMakeDefault = _COptional_CBriefRouteInfoMakeDefaultPtr.asFunction<_COptional_CBriefRouteInfo Function()>();
+
+late final _COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>>('COptional_CBriefRouteInfo_release');
+late final _COptional_CBriefRouteInfo_release = _COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_COptional_CBriefRouteInfo)>();
+
+late final _CPublicBriefRouteTransportInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicBriefRouteTransportInfo Function()>>('CPublicBriefRouteTransportInfoMakeDefault');
+late final _CPublicBriefRouteTransportInfoMakeDefault = _CPublicBriefRouteTransportInfoMakeDefaultPtr.asFunction<_CPublicBriefRouteTransportInfo Function()>();
+
+
+late final _CArray_CBriefRouteInfoSearchPointsmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CBriefRouteInfoSearchPoints Function()>>('CArray_CBriefRouteInfoSearchPoints_makeEmpty');
+late final _CArray_CBriefRouteInfoSearchPointsmakeEmpty = _CArray_CBriefRouteInfoSearchPointsmakeEmptyPtr.asFunction<_CArray_CBriefRouteInfoSearchPoints Function()>();
+late final _CArray_CBriefRouteInfoSearchPointsaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints, _CBriefRouteInfoSearchPoints)>>('CArray_CBriefRouteInfoSearchPoints_addElement');
+late final _CArray_CBriefRouteInfoSearchPointsaddElement = _CArray_CBriefRouteInfoSearchPointsaddElementPtr.asFunction<void Function(_CArray_CBriefRouteInfoSearchPoints, _CBriefRouteInfoSearchPoints)>();
+late final _forEach_CArray_CBriefRouteInfoSearchPointsPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)>>)
+>>('CArray_CBriefRouteInfoSearchPoints_forEachWithFunctionPointer');
+late final _forEach_CArray_CBriefRouteInfoSearchPoints = _forEach_CArray_CBriefRouteInfoSearchPointsPtr.asFunction<
+  void Function(_CArray_CBriefRouteInfoSearchPoints, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)
+>>)>();
+late final _CArray_CBriefRouteInfoSearchPoints_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints)>>('CArray_CBriefRouteInfoSearchPoints_release');
+late final _CArray_CBriefRouteInfoSearchPoints_release = _CArray_CBriefRouteInfoSearchPoints_releasePtr.asFunction<void Function(_CArray_CBriefRouteInfoSearchPoints)>();
+
+late final _CBriefRouteInfoSearchPointsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefRouteInfoSearchPoints Function()>>('CBriefRouteInfoSearchPointsMakeDefault');
+late final _CBriefRouteInfoSearchPointsMakeDefault = _CBriefRouteInfoSearchPointsMakeDefaultPtr.asFunction<_CBriefRouteInfoSearchPoints Function()>();
+
 
 late final _CRouteVisualizationTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteVisualizationType Function()>>('CRouteVisualizationTypeMakeDefault');
 late final _CRouteVisualizationTypeMakeDefault = _CRouteVisualizationTypeMakeDefaultPtr.asFunction<_CRouteVisualizationType Function()>();
@@ -79803,9 +80082,6 @@ late final _CFreeRoamSettings_retain = _CFreeRoamSettings_retainPtr.asFunction<_
 late final _CFreeRoamSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFreeRoamSettings Function()>>('CFreeRoamSettingsMakeDefault');
 late final _CFreeRoamSettingsMakeDefault = _CFreeRoamSettingsMakeDefaultPtr.asFunction<_CFreeRoamSettings Function()>();
 
-
-late final _CRouterTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouterType Function()>>('CRouterTypeMakeDefault');
-late final _CRouterTypeMakeDefault = _CRouterTypeMakeDefaultPtr.asFunction<_CRouterType Function()>();
 late final _CAlternativeRoutesProviderSettings_alternativeRoutesEnabledPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CAlternativeRoutesProviderSettings)>>('CAlternativeRoutesProviderSettings_alternativeRoutesEnabled');
 late final _CAlternativeRoutesProviderSettings_alternativeRoutesEnabled = _CAlternativeRoutesProviderSettings_alternativeRoutesEnabledPtr.asFunction<bool Function(_CAlternativeRoutesProviderSettings)>();
 late final _CAlternativeRoutesProviderSettings_setAlternativeRoutesEnabled_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CAlternativeRoutesProviderSettings, ffi.Bool)>>('CAlternativeRoutesProviderSettings_setAlternativeRoutesEnabled_bool');
@@ -79954,8 +80230,8 @@ late final _CNavigationManager_startSimulation_CRouteBuildOptions_CTrafficRouteP
 late final _CNavigationManager_startSimulation_CRouteBuildOptions_CTrafficRoute = _CNavigationManager_startSimulation_CRouteBuildOptions_CTrafficRoutePtr.asFunction<_CResult_CEmpty Function(_CNavigationManager, _CRouteBuildOptions, _CTrafficRoute)>();
 late final _CNavigationManager_stopPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CNavigationManager)>>('CNavigationManager_stop');
 late final _CNavigationManager_stop = _CNavigationManager_stopPtr.asFunction<void Function(_CNavigationManager)>();
-late final _CNavigationManager_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CResult_CNavigationManager Function(_CContext)>>('CNavigationManager_C_createWith_CContext');
-late final _CNavigationManager_C_createWith_CContext = _CNavigationManager_C_createWith_CContextPtr.asFunction<_CResult_CNavigationManager Function(_CContext)>();
+late final _CNavigationManager_C_createWith_CContext_COptional_CTrafficRouterPtr = _lookup<ffi.NativeFunction<_CResult_CNavigationManager Function(_CContext, _COptional_CTrafficRouter)>>('CNavigationManager_C_createWith_CContext_COptional_CTrafficRouter');
+late final _CNavigationManager_C_createWith_CContext_COptional_CTrafficRouter = _CNavigationManager_C_createWith_CContext_COptional_CTrafficRouterPtr.asFunction<_CResult_CNavigationManager Function(_CContext, _COptional_CTrafficRouter)>();
 
 late final _CNavigationManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CNavigationManager_release');
 late final _CNavigationManager_release = _CNavigationManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -80497,212 +80773,6 @@ late final _forEach_CArray_CObstacleInfoRouteLongEntry = _forEach_CArray_CObstac
 >>)>();
 late final _CArray_CObstacleInfoRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CObstacleInfoRouteLongEntry)>>('CArray_CObstacleInfoRouteLongEntry_release');
 late final _CArray_CObstacleInfoRouteLongEntry_release = _CArray_CObstacleInfoRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CObstacleInfoRouteLongEntry)>();
-
-late final _CBicycleBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBicycleBriefRouteInfo Function()>>('CBicycleBriefRouteInfoMakeDefault');
-late final _CBicycleBriefRouteInfoMakeDefault = _CBicycleBriefRouteInfoMakeDefaultPtr.asFunction<_CBicycleBriefRouteInfo Function()>();
-
-
-late final _CCarBriefRouteInfoTrafficSpeedMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarBriefRouteInfoTrafficSpeed Function()>>('CCarBriefRouteInfoTrafficSpeedMakeDefault');
-late final _CCarBriefRouteInfoTrafficSpeedMakeDefault = _CCarBriefRouteInfoTrafficSpeedMakeDefaultPtr.asFunction<_CCarBriefRouteInfoTrafficSpeed Function()>();
-
-late final _CCarBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarBriefRouteInfo Function()>>('CCarBriefRouteInfoMakeDefault');
-late final _CCarBriefRouteInfoMakeDefault = _CCarBriefRouteInfoMakeDefaultPtr.asFunction<_CCarBriefRouteInfo Function()>();
-
-
-late final _CPedestrianBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPedestrianBriefRouteInfo Function()>>('CPedestrianBriefRouteInfoMakeDefault');
-late final _CPedestrianBriefRouteInfoMakeDefault = _CPedestrianBriefRouteInfoMakeDefaultPtr.asFunction<_CPedestrianBriefRouteInfo Function()>();
-
-
-late final _CPublicBriefRouteTransportInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicBriefRouteTransportInfo Function()>>('CPublicBriefRouteTransportInfoMakeDefault');
-late final _CPublicBriefRouteTransportInfoMakeDefault = _CPublicBriefRouteTransportInfoMakeDefaultPtr.asFunction<_CPublicBriefRouteTransportInfo Function()>();
-
-
-late final _CArray_CPublicBriefRouteTransportInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicBriefRouteTransportInfo Function()>>('CArray_CPublicBriefRouteTransportInfo_makeEmpty');
-late final _CArray_CPublicBriefRouteTransportInfomakeEmpty = _CArray_CPublicBriefRouteTransportInfomakeEmptyPtr.asFunction<_CArray_CPublicBriefRouteTransportInfo Function()>();
-late final _CArray_CPublicBriefRouteTransportInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo, _CPublicBriefRouteTransportInfo)>>('CArray_CPublicBriefRouteTransportInfo_addElement');
-late final _CArray_CPublicBriefRouteTransportInfoaddElement = _CArray_CPublicBriefRouteTransportInfoaddElementPtr.asFunction<void Function(_CArray_CPublicBriefRouteTransportInfo, _CPublicBriefRouteTransportInfo)>();
-late final _forEach_CArray_CPublicBriefRouteTransportInfoPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)>>)
->>('CArray_CPublicBriefRouteTransportInfo_forEachWithFunctionPointer');
-late final _forEach_CArray_CPublicBriefRouteTransportInfo = _forEach_CArray_CPublicBriefRouteTransportInfoPtr.asFunction<
-  void Function(_CArray_CPublicBriefRouteTransportInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicBriefRouteTransportInfo)
->>)>();
-late final _CArray_CPublicBriefRouteTransportInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicBriefRouteTransportInfo)>>('CArray_CPublicBriefRouteTransportInfo_release');
-late final _CArray_CPublicBriefRouteTransportInfo_release = _CArray_CPublicBriefRouteTransportInfo_releasePtr.asFunction<void Function(_CArray_CPublicBriefRouteTransportInfo)>();
-
-late final _CPublicBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicBriefRouteInfo Function()>>('CPublicBriefRouteInfoMakeDefault');
-late final _CPublicBriefRouteInfoMakeDefault = _CPublicBriefRouteInfoMakeDefaultPtr.asFunction<_CPublicBriefRouteInfo Function()>();
-
-
-late final _CScooterBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScooterBriefRouteInfo Function()>>('CScooterBriefRouteInfoMakeDefault');
-late final _CScooterBriefRouteInfoMakeDefault = _CScooterBriefRouteInfoMakeDefaultPtr.asFunction<_CScooterBriefRouteInfo Function()>();
-
-
-late final _CBriefExtraRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBriefExtraRouteInfo)>>('CBriefExtraRouteInfo_release');
-late final _CBriefExtraRouteInfo_release = _CBriefExtraRouteInfo_releasePtr.asFunction<void Function(_CBriefExtraRouteInfo)>();
-late final _CBriefExtraRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefExtraRouteInfo Function()>>('CBriefExtraRouteInfoMakeDefault');
-late final _CBriefExtraRouteInfoMakeDefault = _CBriefExtraRouteInfoMakeDefaultPtr.asFunction<_CBriefExtraRouteInfo Function()>();
-
-late final _CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefRouteInfo Function()>>('CBriefRouteInfoMakeDefault');
-late final _CBriefRouteInfoMakeDefault = _CBriefRouteInfoMakeDefaultPtr.asFunction<_CBriefRouteInfo Function()>();
-
-
-late final _CBriefRouteInfoSearchPointsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBriefRouteInfoSearchPoints Function()>>('CBriefRouteInfoSearchPointsMakeDefault');
-late final _CBriefRouteInfoSearchPointsMakeDefault = _CBriefRouteInfoSearchPointsMakeDefaultPtr.asFunction<_CBriefRouteInfoSearchPoints Function()>();
-
-
-late final _CSet_CTruckPassZoneIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CSet_CTruckPassZoneId Function()>>('CSet_CTruckPassZoneId_makeEmpty');
-late final _CSet_CTruckPassZoneIdmakeEmpty = _CSet_CTruckPassZoneIdmakeEmptyPtr.asFunction<_CSet_CTruckPassZoneId Function()>();
-late final _CSet_CTruckPassZoneIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSet_CTruckPassZoneId, _CTruckPassZoneId)>>('CSet_CTruckPassZoneId_addElement');
-late final _CSet_CTruckPassZoneIdaddElement = _CSet_CTruckPassZoneIdaddElementPtr.asFunction<void Function(_CSet_CTruckPassZoneId, _CTruckPassZoneId)>();
-late final _forEach_CSet_CTruckPassZoneIdPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CSet_CTruckPassZoneId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZoneId)>>)
->>('CSet_CTruckPassZoneId_forEachWithFunctionPointer');
-late final _forEach_CSet_CTruckPassZoneId = _forEach_CSet_CTruckPassZoneIdPtr.asFunction<
-  void Function(_CSet_CTruckPassZoneId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZoneId)
->>)>();
-late final _CSet_CTruckPassZoneId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSet_CTruckPassZoneId)>>('CSet_CTruckPassZoneId_release');
-late final _CSet_CTruckPassZoneId_release = _CSet_CTruckPassZoneId_releasePtr.asFunction<void Function(_CSet_CTruckPassZoneId)>();
-
-late final _CTruckPassZonePassMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTruckPassZonePass Function()>>('CTruckPassZonePassMakeDefault');
-late final _CTruckPassZonePassMakeDefault = _CTruckPassZonePassMakeDefaultPtr.asFunction<_CTruckPassZonePass Function()>();
-
-late final _CTrafficRouter_truckPassZonePassesPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function(_CTrafficRouter)>>('CTrafficRouter_truckPassZonePasses');
-late final _CTrafficRouter_truckPassZonePasses = _CTrafficRouter_truckPassZonePassesPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function(_CTrafficRouter)>();
-
-late final _CTrafficRouter_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_cg_objectIdentifier');
-late final _CTrafficRouter_cg_objectIdentifier = _CTrafficRouter_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPointPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CRouteSearchPoint, _CRouteSearchPoint, _CRouteSearchOptions, _CArray_CRouteSearchPoint)>>('CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint');
-late final _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPoint = _CTrafficRouter_findRoute_CRouteSearchPoint_CRouteSearchPoint_CRouteSearchOptions_CArray_CRouteSearchPointPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CRouteSearchPoint, _CRouteSearchPoint, _CRouteSearchOptions, _CArray_CRouteSearchPoint)>();
-late final _CTrafficRouter_requestRoute_CData_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CData, _CString)>>('CTrafficRouter_requestRoute_CData_CString');
-late final _CTrafficRouter_requestRoute_CData_CString = _CTrafficRouter_requestRoute_CData_CStringPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CTrafficRouter, _CData, _CString)>();
-late final _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptionsPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CTrafficRouter, _CArray_CBriefRouteInfoSearchPoints, _CRouteSearchOptions)>>('CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions');
-late final _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptions = _CTrafficRouter_findBriefRouteInfos_CArray_CBriefRouteInfoSearchPoints_CRouteSearchOptionsPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CTrafficRouter, _CArray_CBriefRouteInfoSearchPoints, _CRouteSearchOptions)>();
-late final _CTrafficRouter_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function(_CContext)>>('CTrafficRouter_C_createWith_CContext');
-late final _CTrafficRouter_C_createWith_CContext = _CTrafficRouter_C_createWith_CContextPtr.asFunction<_CTrafficRouter Function(_CContext)>();
-
-late final _CTrafficRouter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_release');
-late final _CTrafficRouter_release = _CTrafficRouter_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CTrafficRouter_retainPtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function(ffi.Pointer<ffi.Void>)>>('CTrafficRouter_retain');
-late final _CTrafficRouter_retain = _CTrafficRouter_retainPtr.asFunction<_CTrafficRouter Function(ffi.Pointer<ffi.Void>)>();
-late final _CTrafficRouterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficRouter Function()>>('CTrafficRouterMakeDefault');
-late final _CTrafficRouterMakeDefault = _CTrafficRouterMakeDefaultPtr.asFunction<_CTrafficRouter Function()>();
-
-
-late final _CFuture_CArray_CTrafficRouteMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function()>>('CFuture_CArray_CTrafficRouteMakeDefault');
-late final _CFuture_CArray_CTrafficRouteMakeDefault = _CFuture_CArray_CTrafficRouteMakeDefaultPtr.asFunction<_CFuture_CArray_CTrafficRoute Function()>();
-late final _CFuture_CArray_CTrafficRoute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_CTrafficRoute)>>('CFuture_CArray_CTrafficRoute_release');
-late final _CFuture_CArray_CTrafficRoute_release = _CFuture_CArray_CTrafficRoute_releasePtr.asFunction<void Function(_CFuture_CArray_CTrafficRoute)>();
-late final _CFuture_CArray_CTrafficRoute_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTrafficRoute Function(_CFuture_CArray_CTrafficRoute)>>('CFuture_CArray_CTrafficRoute_retain');
-late final _CFuture_CArray_CTrafficRoute_retain = _CFuture_CArray_CTrafficRoute_retainPtr.asFunction<_CFuture_CArray_CTrafficRoute Function(_CFuture_CArray_CTrafficRoute)>();
-late final _CFuture_CArray_CTrafficRouteReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_CArray_CTrafficRoute,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_CArray_CTrafficRoute_receive');
-late final _CFuture_CArray_CTrafficRouteReceive = _CFuture_CArray_CTrafficRouteReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_CArray_CTrafficRoute,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
-
-late final _CFuture_CArray_CTruckPassZonePassMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function()>>('CFuture_CArray_CTruckPassZonePassMakeDefault');
-late final _CFuture_CArray_CTruckPassZonePassMakeDefault = _CFuture_CArray_CTruckPassZonePassMakeDefaultPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function()>();
-late final _CFuture_CArray_CTruckPassZonePass_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_CTruckPassZonePass)>>('CFuture_CArray_CTruckPassZonePass_release');
-late final _CFuture_CArray_CTruckPassZonePass_release = _CFuture_CArray_CTruckPassZonePass_releasePtr.asFunction<void Function(_CFuture_CArray_CTruckPassZonePass)>();
-late final _CFuture_CArray_CTruckPassZonePass_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTruckPassZonePass Function(_CFuture_CArray_CTruckPassZonePass)>>('CFuture_CArray_CTruckPassZonePass_retain');
-late final _CFuture_CArray_CTruckPassZonePass_retain = _CFuture_CArray_CTruckPassZonePass_retainPtr.asFunction<_CFuture_CArray_CTruckPassZonePass Function(_CFuture_CArray_CTruckPassZonePass)>();
-late final _CFuture_CArray_CTruckPassZonePassReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_CArray_CTruckPassZonePass,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_CArray_CTruckPassZonePass_receive');
-late final _CFuture_CArray_CTruckPassZonePassReceive = _CFuture_CArray_CTruckPassZonePassReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_CArray_CTruckPassZonePass,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
-
-late final _CArray_CTruckPassZonePassmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CTruckPassZonePass Function()>>('CArray_CTruckPassZonePass_makeEmpty');
-late final _CArray_CTruckPassZonePassmakeEmpty = _CArray_CTruckPassZonePassmakeEmptyPtr.asFunction<_CArray_CTruckPassZonePass Function()>();
-late final _CArray_CTruckPassZonePassaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass, _CTruckPassZonePass)>>('CArray_CTruckPassZonePass_addElement');
-late final _CArray_CTruckPassZonePassaddElement = _CArray_CTruckPassZonePassaddElementPtr.asFunction<void Function(_CArray_CTruckPassZonePass, _CTruckPassZonePass)>();
-late final _forEach_CArray_CTruckPassZonePassPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZonePass)>>)
->>('CArray_CTruckPassZonePass_forEachWithFunctionPointer');
-late final _forEach_CArray_CTruckPassZonePass = _forEach_CArray_CTruckPassZonePassPtr.asFunction<
-  void Function(_CArray_CTruckPassZonePass, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTruckPassZonePass)
->>)>();
-late final _CArray_CTruckPassZonePass_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZonePass)>>('CArray_CTruckPassZonePass_release');
-late final _CArray_CTruckPassZonePass_release = _CArray_CTruckPassZonePass_releasePtr.asFunction<void Function(_CArray_CTruckPassZonePass)>();
-
-late final _CFuture_CArray_COptional_CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function()>>('CFuture_CArray_COptional_CBriefRouteInfoMakeDefault');
-late final _CFuture_CArray_COptional_CBriefRouteInfoMakeDefault = _CFuture_CArray_COptional_CBriefRouteInfoMakeDefaultPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function()>();
-late final _CFuture_CArray_COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CArray_COptional_CBriefRouteInfo)>>('CFuture_CArray_COptional_CBriefRouteInfo_release');
-late final _CFuture_CArray_COptional_CBriefRouteInfo_release = _CFuture_CArray_COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_CFuture_CArray_COptional_CBriefRouteInfo)>();
-late final _CFuture_CArray_COptional_CBriefRouteInfo_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CFuture_CArray_COptional_CBriefRouteInfo)>>('CFuture_CArray_COptional_CBriefRouteInfo_retain');
-late final _CFuture_CArray_COptional_CBriefRouteInfo_retain = _CFuture_CArray_COptional_CBriefRouteInfo_retainPtr.asFunction<_CFuture_CArray_COptional_CBriefRouteInfo Function(_CFuture_CArray_COptional_CBriefRouteInfo)>();
-late final _CFuture_CArray_COptional_CBriefRouteInfoReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_CArray_COptional_CBriefRouteInfo,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_CArray_COptional_CBriefRouteInfo_receive');
-late final _CFuture_CArray_COptional_CBriefRouteInfoReceive = _CFuture_CArray_COptional_CBriefRouteInfoReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_CArray_COptional_CBriefRouteInfo,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
-
-late final _CArray_COptional_CBriefRouteInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptional_CBriefRouteInfo Function()>>('CArray_COptional_CBriefRouteInfo_makeEmpty');
-late final _CArray_COptional_CBriefRouteInfomakeEmpty = _CArray_COptional_CBriefRouteInfomakeEmptyPtr.asFunction<_CArray_COptional_CBriefRouteInfo Function()>();
-late final _CArray_COptional_CBriefRouteInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, _COptional_CBriefRouteInfo)>>('CArray_COptional_CBriefRouteInfo_addElement');
-late final _CArray_COptional_CBriefRouteInfoaddElement = _CArray_COptional_CBriefRouteInfoaddElementPtr.asFunction<void Function(_CArray_COptional_CBriefRouteInfo, _COptional_CBriefRouteInfo)>();
-late final _forEach_CArray_COptional_CBriefRouteInfoPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>>)
->>('CArray_COptional_CBriefRouteInfo_forEachWithFunctionPointer');
-late final _forEach_CArray_COptional_CBriefRouteInfo = _forEach_CArray_COptional_CBriefRouteInfoPtr.asFunction<
-  void Function(_CArray_COptional_CBriefRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)
->>)>();
-late final _CArray_COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptional_CBriefRouteInfo)>>('CArray_COptional_CBriefRouteInfo_release');
-late final _CArray_COptional_CBriefRouteInfo_release = _CArray_COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_CArray_COptional_CBriefRouteInfo)>();
-
-late final _COptional_CBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBriefRouteInfo Function()>>('COptional_CBriefRouteInfoMakeDefault');
-late final _COptional_CBriefRouteInfoMakeDefault = _COptional_CBriefRouteInfoMakeDefaultPtr.asFunction<_COptional_CBriefRouteInfo Function()>();
-
-late final _COptional_CBriefRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CBriefRouteInfo)>>('COptional_CBriefRouteInfo_release');
-late final _COptional_CBriefRouteInfo_release = _COptional_CBriefRouteInfo_releasePtr.asFunction<void Function(_COptional_CBriefRouteInfo)>();
-
-late final _CArray_CBriefRouteInfoSearchPointsmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CBriefRouteInfoSearchPoints Function()>>('CArray_CBriefRouteInfoSearchPoints_makeEmpty');
-late final _CArray_CBriefRouteInfoSearchPointsmakeEmpty = _CArray_CBriefRouteInfoSearchPointsmakeEmptyPtr.asFunction<_CArray_CBriefRouteInfoSearchPoints Function()>();
-late final _CArray_CBriefRouteInfoSearchPointsaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints, _CBriefRouteInfoSearchPoints)>>('CArray_CBriefRouteInfoSearchPoints_addElement');
-late final _CArray_CBriefRouteInfoSearchPointsaddElement = _CArray_CBriefRouteInfoSearchPointsaddElementPtr.asFunction<void Function(_CArray_CBriefRouteInfoSearchPoints, _CBriefRouteInfoSearchPoints)>();
-late final _forEach_CArray_CBriefRouteInfoSearchPointsPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)>>)
->>('CArray_CBriefRouteInfoSearchPoints_forEachWithFunctionPointer');
-late final _forEach_CArray_CBriefRouteInfoSearchPoints = _forEach_CArray_CBriefRouteInfoSearchPointsPtr.asFunction<
-  void Function(_CArray_CBriefRouteInfoSearchPoints, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CBriefRouteInfoSearchPoints)
->>)>();
-late final _CArray_CBriefRouteInfoSearchPoints_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CBriefRouteInfoSearchPoints)>>('CArray_CBriefRouteInfoSearchPoints_release');
-late final _CArray_CBriefRouteInfoSearchPoints_release = _CArray_CBriefRouteInfoSearchPoints_releasePtr.asFunction<void Function(_CArray_CBriefRouteInfoSearchPoints)>();
 
 late final _CTerritoriesAlongRouteProvider_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTerritoriesAlongRouteProvider_cg_objectIdentifier');
 late final _CTerritoriesAlongRouteProvider_cg_objectIdentifier = _CTerritoriesAlongRouteProvider_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();

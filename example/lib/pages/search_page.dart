@@ -16,7 +16,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final sdkContext = sdk.DGis.initialize();
+  final sdkContext = AppContainer().initializeSdk();
 
   final formKey = GlobalKey<FormState>();
   late sdk.SearchManager searchManager;
@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     locationService = sdk.LocationService(sdkContext);
-    searchManager = sdk.SearchManager.createSmartManager(sdkContext);
+    searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
     initialize();
   }
 
@@ -34,9 +34,14 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Search Page')),
-      body: sdk.DgisSearchWidget(
-        searchManager: searchManager,
-        onObjectSelected: _showObjectCard,
+      body: Stack(
+        children: [
+          sdk.MapWidget(sdkContext: sdkContext, mapOptions: sdk.MapOptions()),
+          sdk.DgisSearchWidget(
+            searchManager: searchManager,
+            onObjectSelected: _showObjectCard,
+          ),
+        ],
       ),
     );
   }

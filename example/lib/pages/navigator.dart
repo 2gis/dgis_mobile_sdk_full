@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
@@ -153,7 +154,11 @@ class _NavigatorPageState extends State<NavigatorPage> {
         mapOptions: sdk.MapOptions(),
         controller: mapWidgetController,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.only(
+            right: 8,
+            left: 8,
+            bottom: Platform.isIOS ? 0 : 8,
+          ),
           child: sdk.NavigationLayoutWidget(
             navigationManager: navigationManager,
             dashboardWidgetBuilder: (controller, onHeaderChangeSize) =>
