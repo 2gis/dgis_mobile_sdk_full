@@ -336,8 +336,8 @@ class _TextureController {
     return _channel.invokeMethod('setSurface', {'mapSurfaceId': mapSurfaceId});
   }
 
-  void update(int textureId, int width, int height) {
-    _channel.invokeMethod('updateSurface', {
+  Future<void> update(int textureId, int width, int height) async {
+    await _channel.invokeMethod('updateSurface', {
       'textureId': textureId,
       'width': width,
       'height': height,
@@ -369,7 +369,7 @@ class _MapRenderBox extends RenderBox {
     this.mapWidgetController,
   );
 
-  void _updateMapSize(Size newSize) {
+  Future<void> _updateMapSize(Size newSize) async {
     if (newSize.width == 0.0 || newSize.height == 0.0) {
       return;
     }
@@ -378,7 +378,7 @@ class _MapRenderBox extends RenderBox {
 
     final width = (newSize.width * deviceDensity).toInt();
     final height = (newSize.height * deviceDensity).toInt();
-    textureController.update(textureId!, width, height);
+    await textureController.update(textureId!, width, height);
     final screenSize = sdk.ScreenSize(width: width, height: height);
     mapWidgetController._provider?.resizeSurface(screenSize);
     mapWidgetController._map?.camera.size = screenSize;
@@ -414,7 +414,8 @@ class _MapRenderBox extends RenderBox {
     if (textureId == null) {
       return;
     }
-    if (size.width < _currentTextureSize.width || size.height < _currentTextureSize.height) {
+    if (size.width < _currentTextureSize.width ||
+        size.height < _currentTextureSize.height) {
       _clipRectLayer = context.pushClipRect(
         true,
         offset,
@@ -457,7 +458,12 @@ class _MapTextureView extends LeafRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _MapRenderBox(textureId, deviceDensity, textureController, mapWidgetController);
+    return _MapRenderBox(
+      textureId,
+      deviceDensity,
+      textureController,
+      mapWidgetController,
+    );
   }
 
   @override
@@ -548,7 +554,7 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
   int? _textureId;
   AppLifecycleState? _appState;
   _MapGestureController? _mapGestureController;
-  StreamSubscription<sdk.DevicePpi>? _devicePpiSubscription;
+  StreamSubscription<sdk.CameraChange>? _cameraChangeSubscription;
   double _deviceDensity = 1;
   double _devicePpi = 1;
   late final ValueNotifier<MapTheme> _mapTheme;
@@ -591,7 +597,7 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     }
     mapWidgetController._removeMapThemeChangedCallback(_onMapThemeChanged);
     WidgetsBinding.instance.removeObserver(this);
-    _devicePpiSubscription?.cancel();
+    _cameraChangeSubscription?.cancel();
     super.dispose();
   }
 
@@ -699,9 +705,11 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
       mapGestureRecognizer,
       _deviceDensity,
     );
-    _devicePpiSubscription = map.camera.devicePpiChannel.listen((devicePpi) {
-      _mapGestureController?._mapGestureRecognizer
-          .onDevicePpiChanged(devicePpi);
+    _cameraChangeSubscription = map.camera.changed.listen((changes) {
+      if (changes.changeReasons.contains(sdk.CameraChangeReason.devicePPI)) {
+        _mapGestureController?._mapGestureRecognizer
+            .onDevicePpiChanged(map.camera.devicePpi);
+      }
     });
 
     mapWidgetController._updateTouchEventObserver();
@@ -770,7 +778,9 @@ extension _MapBuilderApplyMapOptions on sdk.MapBuilder {
     if (options.sources != null) {
       options.sources!.forEach(builder.addSource);
     } else {
-      builder.addSource(sdk.DgisSource.createDgisSource(sdkContext));
+      builder
+        ..addSource(sdk.DgisSource.createDgisSource(sdkContext))
+        ..addSource(sdk.DgisSource.createImmersiveDgisSource(sdkContext));
     }
 
     if (options.style != null) {

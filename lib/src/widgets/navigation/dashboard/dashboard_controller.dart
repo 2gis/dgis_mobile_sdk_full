@@ -68,6 +68,9 @@ class DashboardController {
   late final StreamSubscription<sdk.RoutePoint?> _routePositionSubscription;
   late final ValueNotifier<DashboardModel> _model;
 
+  // Callback to control overlay from widget
+  Function()? _closeOverlayCallback;
+
   DashboardController({
     required this.navigationManager,
     required this.map,
@@ -88,9 +91,18 @@ class DashboardController {
   /// Whether navigation voice instructions are enabled.
   bool get soundsEnabled => _model.value.soundsEnabled;
 
+  /// Whether the dashboard is in route view mode (collapsed state).
+  bool get isRouteViewMode => _model.value.isRouteViewMode;
+
   /// The estimated time of arrival based on current [duration].
   DateTime get estimatedArrivalTime =>
       DateTime.now().add(Duration(seconds: duration));
+
+  /// Sets the callback to close overlay from widget.
+  /// This allows the controller to manage overlay state when switching modes.
+  void setOverlayCallback(Function()? callback) {
+    _closeOverlayCallback = callback;
+  }
 
   void _init() {
     _routePositionSubscription = navigationManager.uiModel.routePositionChannel
@@ -147,8 +159,9 @@ class DashboardController {
   /// Toggles the sound state for navigation instructions.
   /// Updates the [soundsEnabled] state and [state] accordingly.
   void toggleSounds() {
-    final categories =
-        navigationManager.soundNotificationSettings.enabledSoundCategories;
+    final categories = navigationManager
+        .soundNotificationSettings.enabledSoundCategories
+        .toMutableEnumSet();
 
     if (soundsEnabled) {
       categories.remove(sdk.SoundCategory.instructions);
@@ -157,16 +170,19 @@ class DashboardController {
     }
 
     navigationManager.soundNotificationSettings.enabledSoundCategories =
-        categories;
+        categories.toEnumSet();
 
     _model.value = _model.value.copyWith(
       soundsEnabled: _isSoundEnabled(),
     );
   }
 
-  /// Shows the remaining route on the map.
+  /// Shows the remaining route on the map and switches to route view mode.
   /// Calculates and moves the camera to fit the remaining route geometry.
+  /// Also collapses the dashboard to show only the accept button.
   Future<void> showRoute() async {
+    // Close overlay if it's showing
+    _closeOverlayCallback?.call();
     final fullRouteGeometry = navigationManager.uiModel.route.route.geometry;
     final currentRoutePoint = navigationManager.uiModel.routePosition;
 
@@ -205,6 +221,29 @@ class DashboardController {
     );
 
     await map.camera.moveToCameraPosition(cameraPosition).value;
+
+    // Switch to route view mode
+    _model.value = _model.value.copyWith(isRouteViewMode: true);
+  }
+
+  /// Returns from route view mode to normal navigation view.
+  /// Restores the camera to follow the current position and exits route view mode.
+  Future<void> returnToNavigation() async {
+    // Close overlay if it's showing
+    _closeOverlayCallback?.call();
+    // Return to full navigation camera behavior (follow position with bearing and tilt)
+    map.camera.setBehaviour(
+      const sdk.CameraBehaviour(
+        position: sdk.FollowPosition(
+          bearing: sdk.FollowBearing.on_,
+          styleZoom: sdk.FollowStyleZoom.on_,
+        ),
+        tilt: sdk.FollowTilt.on_,
+      ),
+    );
+
+    // Exit route view mode
+    _model.value = _model.value.copyWith(isRouteViewMode: false);
   }
 
   /// Stops the current navigation session.

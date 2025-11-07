@@ -147,6 +147,7 @@ class _MiniMapPageState extends State<MiniMapPage> {
       child: Container(
         width: 150,
         height: 150,
+        // ignore: deprecated_member_use
         color: Colors.blue.withOpacity(0.3),
         child: Center(
           child: sdk.MapWidget(
@@ -164,6 +165,7 @@ class _MiniMapPageState extends State<MiniMapPage> {
       child: Container(
         width: 150,
         height: 150,
+        // ignore: deprecated_member_use
         color: Colors.blue.withOpacity(0.3),
         child: Center(
           child: sdk.MapWidget(

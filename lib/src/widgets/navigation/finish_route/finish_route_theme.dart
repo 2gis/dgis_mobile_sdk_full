@@ -38,7 +38,7 @@ class FinishRouteWidgetTheme extends MapWidgetColorScheme {
 
   static const FinishRouteWidgetTheme defaultLight = FinishRouteWidgetTheme(
     borderRadius: 16,
-    inactiveButtonSurfaceColor: DgisColorScheme.veryDarkGrey,
+    inactiveButtonSurfaceColor: DgisColorScheme.veryDimmedGray,
     activeButtonSurfaceColor: DgisColorScheme.positiveGreen,
     inactiveButtonsTextStyle: TextStyle(
       fontSize: 14,
@@ -90,7 +90,7 @@ class FinishRouteWidgetTheme extends MapWidgetColorScheme {
       color: DgisColorScheme.surfaceLight,
     ),
     surfaceColor: DgisColorScheme.surfaceDarkGrey,
-    surfaceColorSecondary: DgisColorScheme.veryDarkGrey,
+    surfaceColorSecondary: DgisColorScheme.textDarkGrey,
     arrivalPhraseTextStyle: TextStyle(
       fontSize: 19,
       height: 1.24,

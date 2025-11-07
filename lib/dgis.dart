@@ -18,12 +18,11 @@ export 'src/generated/dart_bindings.dart'
         ProductType,
         calculateBearing,
         calculateDistance,
-        createImage,
-        createModelData,
         downloadData,
         makeSystemContext,
         move,
         toLocaleManager;
+export 'src/generated/enum_set.dart';
 export 'src/generated/native_exception.dart';
 export 'src/platform/coordinates/geo_point.dart';
 export 'src/platform/coordinates/geo_point_with_elevation.dart';

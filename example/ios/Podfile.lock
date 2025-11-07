@@ -1,8 +1,8 @@
 PODS:
-  - dgis_mobile_sdk_full (12.8.0):
-    - "DGisFlutterFullSDK (~> 12.8.0+1)"
+  - dgis_mobile_sdk_full (13.0.0):
+    - "DGisFlutterFullSDK (~> 13.0.0+4)"
     - Flutter
-  - "DGisFlutterFullSDK (12.8.0+1)"
+  - "DGisFlutterFullSDK (13.0.0+4)"
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
@@ -35,13 +35,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  dgis_mobile_sdk_full: 20d3d89e56a349677fcd1f4fcdb288da69e84872
-  DGisFlutterFullSDK: 1812b0d45e6a827ed4dea0b1edf6147a0c3c4bc5
+  dgis_mobile_sdk_full: 661b49fecd161a1f82be91a230aac4a2b0403f68
+  DGisFlutterFullSDK: 19abbd914af82863d7ef90d0fdd482bff00671d6
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: ade96bceabe3919b69c16573938e4268fe3a6c9d
+PODFILE CHECKSUM: 605c32f2fdd50c4f52b7b468d638bf62f371d321
 
 COCOAPODS: 1.16.2

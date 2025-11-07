@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class NavigationLayoutWidget extends StatefulWidget {
   final SpeedLimitWidget Function(SpeedLimitController)?
       _speedLimitWidgetBuilder;
   final ManeuverWidget Function(ManeuverController)? _maneuverWidgetBuilder;
-  final TrafficLineWidget Function(TrafficLineController)?
+  final TrafficLineWidget Function(TrafficLineController, DashboardController)?
       _trafficLineWidgetBuilder;
   final FinishRouteWidget Function(FinishRouteController)?
       _finishRouteWidgetBuilder;
@@ -68,7 +69,8 @@ class NavigationLayoutWidget extends StatefulWidget {
     )? dashboardWidgetBuilder,
     SpeedLimitWidget Function(SpeedLimitController)? speedLimitWidgetBuilder,
     ManeuverWidget Function(ManeuverController)? maneuverWidgetBuilder,
-    TrafficLineWidget Function(TrafficLineController)? trafficLineWidgetBuilder,
+    TrafficLineWidget Function(TrafficLineController, DashboardController)?
+        trafficLineWidgetBuilder,
     FinishRouteWidget Function(FinishRouteController)? finishRouteWidgetBuilder,
     NavigationTrafficWidget Function(
       RoundedCorners,
@@ -279,7 +281,7 @@ class _NavigationLayoutWidgetState
                         ValueListenableBuilder(
                           valueListenable: dashboardSize,
                           child: widget._trafficLineWidgetBuilder!
-                              .call(trafficLineController),
+                              .call(trafficLineController, dashboardController),
                           builder: (context, size, child) {
                             return Positioned(
                               left: 0,
@@ -539,6 +541,7 @@ class _NavigationLayoutWidgetState
                                 ignoring: isVisible,
                                 child: widget._trafficLineWidgetBuilder!.call(
                                   trafficLineController,
+                                  dashboardController,
                                 ),
                               ),
                             ),
@@ -557,10 +560,18 @@ class _NavigationLayoutWidgetState
 
   Widget _buildFinishedNavigationState(BuildContext context) {
     if (widget._finishRouteWidgetBuilder != null) {
-      var offset = Offset.zero;
+      const minLeftPadding = 38.0;
+      const widthCoefficient = .54;
+
+      final systemPadding = MediaQuery.paddingOf(context);
+      final size = MediaQuery.sizeOf(context);
+
+      var leftInset = .0;
+      var rightInset = .0;
 
       if (MediaQuery.orientationOf(context) == Orientation.landscape) {
-        offset = dashboardSize.value ?? Offset.zero;
+        leftInset = max(systemPadding.left, minLeftPadding);
+        rightInset = size.width * widthCoefficient;
       }
       return OverlayPortal(
         controller: overlayController,
@@ -574,8 +585,8 @@ class _NavigationLayoutWidgetState
               return Stack(
                 children: [
                   Positioned(
-                    left: offset.dx,
-                    width: offset.distance,
+                    left: leftInset,
+                    right: rightInset,
                     top: 0,
                     bottom: 0,
                     child: widget._finishRouteWidgetBuilder!

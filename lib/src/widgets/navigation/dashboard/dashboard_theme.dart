@@ -16,6 +16,7 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
   final Color buttonSurfaceColor;
   final Color buttonNegativeSurfaceColor;
   final Color buttonPositiveSurfaceColor;
+  final Color acceptButtonColor;
   final double buttonBorderRadius;
   final double buttonSize;
   final Color iconColor;
@@ -25,6 +26,8 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
   final TextStyle menuButtonTextStyle;
   final TextStyle menuButtonSubTextStyle;
   final TextStyle finishButtonTextStyle;
+  final TextStyle routeOverviewHeaderTextStyle;
+  final TextStyle routeOverviewContentTextStyle;
 
   const DashboardWidgetTheme({
     required this.expandedShadowColor,
@@ -36,6 +39,7 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     required this.buttonSurfaceColor,
     required this.buttonNegativeSurfaceColor,
     required this.buttonPositiveSurfaceColor,
+    required this.acceptButtonColor,
     required this.buttonBorderRadius,
     required this.buttonSize,
     required this.iconColor,
@@ -44,6 +48,8 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     required this.menuButtonSubTextStyle,
     required this.finishButtonTextStyle,
     required this.soundIconColor,
+    required this.routeOverviewHeaderTextStyle,
+    required this.routeOverviewContentTextStyle,
   });
 
   /// Widget color scheme for default light mode.
@@ -64,9 +70,10 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
       fontSize: 13,
       height: 1.23,
     ),
-    buttonSurfaceColor: DgisColorScheme.veryDarkGrey,
+    buttonSurfaceColor: DgisColorScheme.veryDimmedGray,
     buttonNegativeSurfaceColor: DgisColorScheme.negativeRed,
     buttonPositiveSurfaceColor: DgisColorScheme.positiveGreen,
+    acceptButtonColor: DgisColorScheme.brightBlue,
     buttonBorderRadius: 8,
     buttonSize: 36,
     iconColor: DgisColorScheme.darkGrey,
@@ -87,6 +94,18 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     finishButtonTextStyle: TextStyle(
       color: DgisColorScheme.textColorOnRed,
       fontWeight: FontWeight.w600,
+      fontSize: 16,
+      height: 1.25,
+    ),
+    routeOverviewHeaderTextStyle: TextStyle(
+      color: DgisColorScheme.textColorOnRed,
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      height: 1.25,
+    ),
+    routeOverviewContentTextStyle: TextStyle(
+      color: DgisColorScheme.textColorOnRed,
+      fontWeight: FontWeight.normal,
       fontSize: 16,
       height: 1.25,
     ),
@@ -113,6 +132,7 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     buttonSurfaceColor: DgisColorScheme.blackSixPercent,
     buttonNegativeSurfaceColor: DgisColorScheme.negativeRed,
     buttonPositiveSurfaceColor: DgisColorScheme.positiveGreen,
+    acceptButtonColor: DgisColorScheme.brightBlue,
     buttonBorderRadius: 8,
     buttonSize: 36,
     iconColor: DgisColorScheme.lightGrey,
@@ -136,6 +156,18 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
       fontSize: 16,
       height: 1.25,
     ),
+    routeOverviewHeaderTextStyle: TextStyle(
+      color: DgisColorScheme.textColorOnRed,
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      height: 1.25,
+    ),
+    routeOverviewContentTextStyle: TextStyle(
+      color: DgisColorScheme.textColorOnRed,
+      fontWeight: FontWeight.normal,
+      fontSize: 16,
+      height: 1.25,
+    ),
   );
 
   @override
@@ -149,6 +181,7 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     Color? buttonSurfaceColor,
     Color? buttonNegativeSurfaceColor,
     Color? buttonPositiveSurfaceColor,
+    Color? acceptButtonColor,
     double? buttonBorderRadius,
     double? buttonSize,
     Color? iconColor,
@@ -157,6 +190,8 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     TextStyle? menuButtonTextStyle,
     TextStyle? menuButtonSubTextStyle,
     TextStyle? finishButtonTextStyle,
+    TextStyle? routeOverviewHeaderTextStyle,
+    TextStyle? routeOverviewContentTextStyle,
   }) {
     return DashboardWidgetTheme(
       expandedShadowColor: expandedShadowColor ?? this.expandedShadowColor,
@@ -170,6 +205,7 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
           buttonNegativeSurfaceColor ?? this.buttonNegativeSurfaceColor,
       buttonPositiveSurfaceColor:
           buttonPositiveSurfaceColor ?? this.buttonPositiveSurfaceColor,
+      acceptButtonColor: acceptButtonColor ?? this.acceptButtonColor,
       buttonBorderRadius: buttonBorderRadius ?? this.buttonBorderRadius,
       buttonSize: buttonSize ?? this.buttonSize,
       iconColor: iconColor ?? this.iconColor,
@@ -180,6 +216,10 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
       finishButtonTextStyle:
           finishButtonTextStyle ?? this.finishButtonTextStyle,
       soundIconColor: soundIconColor ?? this.soundIconColor,
+      routeOverviewHeaderTextStyle:
+          routeOverviewHeaderTextStyle ?? this.routeOverviewHeaderTextStyle,
+      routeOverviewContentTextStyle:
+          routeOverviewContentTextStyle ?? this.routeOverviewContentTextStyle,
     );
   }
 }

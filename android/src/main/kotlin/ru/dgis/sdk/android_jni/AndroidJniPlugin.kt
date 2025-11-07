@@ -57,11 +57,13 @@ class AndroidJniPlugin : FlutterPlugin, MethodCallHandler {
                 val height = arguments["height"]?.toInt() ?: return
                 val surfaceTexture = renders.get(textureId)
                 surfaceTexture?.setDefaultBufferSize(width, height)
+                result.success(null)
             }
             "dispose" -> {
                 val arguments = call.arguments as? Map<String, Number> ?: return
                 val textureId = arguments["textureId"]?.toLong() ?: return
                 renders.delete(textureId)
+                result.success(null)
             }
             "getScreenFps" -> {
                 result.success(getScreenFps())

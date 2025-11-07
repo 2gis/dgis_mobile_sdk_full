@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                = 'dgis_mobile_sdk_full'
-  s.version             = '12.8.0'
+  s.version             = '13.0.0'
   s.summary             = 'A new Flutter FFI plugin project.'
   s.description         = <<-DESC
 A new Flutter FFI plugin project.
@@ -14,10 +14,10 @@ A new Flutter FFI plugin project.
   s.public_header_files = 'Classes/**/*.h'
 
   s.dependency 'Flutter'
-  s.dependency 'DGisFlutterFullSDK', '~> 12.8.0+1'
+  s.dependency 'DGisFlutterFullSDK', '~> 13.0.0+4'
 
   s.frameworks          = 'CoreVideo', 'Foundation', 'Metal', 'UIKit'
-  s.platform = :ios, '13.0'
+  s.platform = :ios, '16.0'
   s.requires_arc        = true
   s.compiler_flags      = '-fobjc-arc'
   # Flutter.framework does not contain a i386 slice.

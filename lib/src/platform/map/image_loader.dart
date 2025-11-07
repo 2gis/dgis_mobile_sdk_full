@@ -76,7 +76,7 @@ class ImageLoader {
     int width = 0,
   ]) {
     final loader = _DataImageLoader(data, format, height, width);
-    return sdk.createImage(_sdkContext, loader);
+    return sdk.Image(_sdkContext, loader);
   }
 }
 

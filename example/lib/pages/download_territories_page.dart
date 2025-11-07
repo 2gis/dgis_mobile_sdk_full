@@ -45,8 +45,8 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
 
   Future<void> initialize() async {
     final context = AppContainer().initializeSdk();
-    sdk.getPackageManager(context).checkForUpdates();
-    territoryManager = sdk.getTerritoryManager(context);
+    sdk.PackageManager.instance(context).checkForUpdates();
+    territoryManager = sdk.TerritoryManager.instance(context);
 
     mapWidgetController.getMapAsync((map) {
       sdkMap = map;
@@ -71,15 +71,15 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
   void _updateGeometrySubscription() {
     geometrySubscription?.cancel();
     if (sdkMap == null) return;
-    if (filterMode == 1) {
-      geometrySubscription = sdkMap!.camera.positionChannel.listen((position) {
+    geometrySubscription = sdkMap!.camera.changed.listen((changes) {
+      if (filterMode == 1 &&
+          changes.changeReasons.contains(sdk.CameraChangeReason.position)) {
         _updateGeometryFilter();
-      });
-    } else if (filterMode == 2) {
-      geometrySubscription = sdkMap!.camera.visibleRectChannel.listen((rect) {
+      } else if (filterMode == 2 &&
+          changes.changeReasons.contains(sdk.CameraChangeReason.visibleRect)) {
         _updateGeometryFilter();
-      });
-    }
+      }
+    });
   }
 
   Future<void> _updateGeometryFilter() async {

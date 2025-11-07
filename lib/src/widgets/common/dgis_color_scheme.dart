@@ -8,7 +8,6 @@ class DgisColorScheme {
   static const Color dimmedSurfaceLight = Color(0xffeeeeee);
   static const Color surfaceDark = Color(0xff121212);
   static const Color blackSixPercent = Color(0x0FFFFFFF);
-  static const Color veryDarkGrey = Color(0x0F141414);
   static const Color dimmedGrey = Color(0xff4d4d4d);
   static const Color darkGrey = Color(0xFF3C3C3C);
   static const Color lightGrey = Color(0xFFB8B8B8);
@@ -39,4 +38,6 @@ class DgisColorScheme {
   static const Color textColorOnBlue = Color(0xFFFFFFFF);
   static const Color blackNinePercent = Color(0xFFE9E9E9);
   static const Color whiteSevenPercent = Color(0xFF3b3b3b);
+  static const Color veryDimmedGray = Color(0xFFF1F1F1);
+  static const Color veryDarkGrey = Color(0xFF212121);
 }

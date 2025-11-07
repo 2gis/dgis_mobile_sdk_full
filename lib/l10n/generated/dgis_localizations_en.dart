@@ -163,7 +163,8 @@ class DgisLocalizationsEn extends DgisLocalizations {
   String get dgis_public_transport_type_suburban_train => 'Suburban train';
 
   @override
-  String get dgis_public_transport_type_funicular_railway => 'Funicular railway';
+  String get dgis_public_transport_type_funicular_railway =>
+      'Funicular railway';
 
   @override
   String get dgis_public_transport_type_monorail => 'Monorail';
@@ -233,7 +234,8 @@ class DgisLocalizationsEn extends DgisLocalizations {
   String get dgis_navi_route_found_same_time => 'Found a route.\nSame time';
 
   @override
-  String get dgis_navi_better_route_found_without_time => 'There is a better route';
+  String get dgis_navi_better_route_found_without_time =>
+      'There is a better route';
 
   @override
   String get dgis_navi_better_route_cancel => 'Cancel';

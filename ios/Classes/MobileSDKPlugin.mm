@@ -92,6 +92,7 @@ NSInteger const kDefaultSize = 100;
 		}
 		else if ([call.method isEqualToString:@"updateSurface"])
 		{
+			result(nil);
 			return;
 		}
 		else if ([call.method isEqualToString:@"getScreenFps"])

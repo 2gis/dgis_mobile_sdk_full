@@ -8,6 +8,7 @@ import '../../../generated/dart_bindings.dart' as sdk;
 import '../../../util/plugin_name.dart';
 import '../../map/themed_map_controlling_widget.dart';
 import '../../map/themed_map_controlling_widget_state.dart';
+import '../dashboard/dashboard_controller.dart';
 import './traffic_line_color_scheme.dart';
 import './traffic_line_segments_colors.dart';
 import 'traffic_line_controller.dart';
@@ -21,9 +22,11 @@ class TrafficLineWidget
     extends ThemedMapControllingWidget<TrafficLineColorScheme> {
   final double height;
   final TrafficLineController controller;
+  final DashboardController? dashboardController;
 
   const TrafficLineWidget({
     required this.controller,
+    this.dashboardController,
     this.height = 160,
     TrafficLineColorScheme? light,
     TrafficLineColorScheme? dark,
@@ -34,9 +37,13 @@ class TrafficLineWidget
         );
 
   // ignore: prefer_constructors_over_static_methods
-  static TrafficLineWidget defaultBuilder(TrafficLineController controller) =>
+  static TrafficLineWidget defaultBuilder(
+    TrafficLineController controller, [
+    DashboardController? dashboardController,
+  ]) =>
       TrafficLineWidget(
         controller: controller,
+        dashboardController: dashboardController,
       );
 
   @override
@@ -48,64 +55,67 @@ class _TrafficLineWidgetState extends ThemedMapControllingWidgetState<
     TrafficLineWidget, TrafficLineColorScheme> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 40,
-      height: widget.height,
-      child: ValueListenableBuilder(
-        valueListenable: widget.controller.state,
-        builder: (context, state, _) {
-          return Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 16,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: colorScheme.surfaceColor,
-                ),
-                alignment: Alignment.bottomCenter,
-              ),
-              Positioned(
-                bottom: 8,
-                left: 4,
-                child: Container(
-                  height: 8,
-                  width: 8,
+    return GestureDetector(
+      onTap: widget.dashboardController?.showRoute,
+      child: SizedBox(
+        width: 40,
+        height: widget.height,
+        child: ValueListenableBuilder(
+          valueListenable: widget.controller.state,
+          builder: (context, state, _) {
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 16,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: colorScheme.passedColor,
+                    color: colorScheme.surfaceColor,
+                  ),
+                  alignment: Alignment.bottomCenter,
+                ),
+                Positioned(
+                  bottom: 8,
+                  left: 4,
+                  child: Container(
+                    height: 8,
+                    width: 8,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: colorScheme.passedColor,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 4,
-                bottom: 20,
-                left: 4,
-                right: 28,
-                child: _TrafficLineSegments(
-                  colorScheme: colorScheme.trafficLineSegmentsColors,
-                  speedColors: state.speedColors,
-                  routeLength: state.routeLength,
-                  height: widget.height - 20,
-                  routeProgress: state.routeProgress,
-                  minSegmentSize: 2 * MediaQuery.devicePixelRatioOf(context),
-                  passedColor: colorScheme.passedColor,
+                Positioned(
+                  top: 4,
+                  bottom: 20,
+                  left: 4,
+                  right: 28,
+                  child: _TrafficLineSegments(
+                    colorScheme: colorScheme.trafficLineSegmentsColors,
+                    speedColors: state.speedColors,
+                    routeLength: state.routeLength,
+                    height: widget.height - 20,
+                    routeProgress: state.routeProgress,
+                    minSegmentSize: 2 * MediaQuery.devicePixelRatioOf(context),
+                    passedColor: colorScheme.passedColor,
+                  ),
                 ),
-              ),
-              _RoadEventsWidget(
-                events: state.allEvents,
-                routeLength: state.routeLength,
-                routeProgress: state.routeProgress,
-                height: widget.height - 20,
-              ),
-              Positioned(
-                left: -4,
-                bottom: widget.height * state.routeProgress,
-                child: _buildLocationIndicator(state.routeProgress),
-              ),
-            ],
-          );
-        },
+                _RoadEventsWidget(
+                  events: state.allEvents,
+                  routeLength: state.routeLength,
+                  routeProgress: state.routeProgress,
+                  height: widget.height - 20,
+                ),
+                Positioned(
+                  left: -4,
+                  bottom: widget.height * state.routeProgress,
+                  child: _buildLocationIndicator(state.routeProgress),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -223,6 +233,10 @@ class _TrafficLinePainter extends CustomPainter {
         return colorScheme.red;
       case sdk.TrafficSpeedColor.deepRed:
         return colorScheme.deepRed;
+      case sdk.TrafficSpeedColor.deepGreen:
+        return colorScheme.deepGreen;
+      case sdk.TrafficSpeedColor.orange:
+        return colorScheme.orange;
       // ignore: unreachable_switch_default
       default:
         return colorScheme.undefined;

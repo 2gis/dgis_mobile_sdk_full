@@ -76,6 +76,60 @@ extension _CBuildingIdRelease on _CBuildingId {
   }
 }
 
+// MARK: - Color
+
+/** Цвет */
+class Color {
+  final int argb;
+
+  const Color([this.argb = 4278190080]);
+
+  Color copyWith({
+    int? argb
+  }) {
+    return Color(
+      argb ?? this.argb
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Color &&
+    other.runtimeType == runtimeType &&
+    other.argb == argb;
+
+  @override
+  int get hashCode {
+    return argb.hashCode;
+  }
+
+}
+final class _CColor extends ffi.Struct {
+  @ffi.Uint32()
+  external int argb;
+
+}
+// MARK: - Color <-> _CColor
+
+extension _CColorToDart on _CColor {
+  Color _toDart() {
+    return Color(
+      this.argb
+    );
+  }
+}
+
+extension _DartTo_CColor on Color {
+  _CColor _copyFromDartTo_CColor() {
+    final res = _CColorMakeDefault();
+    res.argb = this.argb;
+    return res;
+  }
+}
+extension _CColorRelease on _CColor {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - DayTime
 
 /** Момент времени внутри дня. */
@@ -219,6 +273,85 @@ extension _CDgisObjectIdRelease on _CDgisObjectId {
   }
 }
 
+// MARK: - SystemMemoryManager
+
+/** Интерфейс управления использованием системной памяти. */
+class SystemMemoryManager implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CSystemMemoryManager_releasePtr);
+
+  SystemMemoryManager._raw(this._self);
+  factory SystemMemoryManager._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = SystemMemoryManager._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is SystemMemoryManager &&
+    other.runtimeType == runtimeType &&
+    _CSystemMemoryManager_cg_objectIdentifier(this._self) == _CSystemMemoryManager_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CSystemMemoryManager_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CSystemMemoryManager: Static Methods
+
+  /** Получение объекта для управления использованием системной памяти. */
+  static SystemMemoryManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CSystemMemoryManager res = _CSystemMemoryManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  // MARK: SystemMemoryManager: Methods
+
+  /** Уменьшение использования памяти путём очистки всевозможных кешей и буферов. */
+  void reduceMemoryUsage()  {
+    void res = _CSystemMemoryManager_reduceMemoryUsage(_CSystemMemoryManagerMakeDefault().._impl=_self);
+    return res;
+  }
+
+}
+
+// MARK: - SystemMemoryManager <-> CSystemMemoryManager
+
+final class _CSystemMemoryManager extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CSystemMemoryManagerBasicFunctions on _CSystemMemoryManager {
+  void _releaseIntermediate() {
+    _CSystemMemoryManager_release(_impl);
+  }
+
+  _CSystemMemoryManager _retain() {
+    return _CSystemMemoryManager_retain(_impl);
+  }
+}
+
+extension _CSystemMemoryManagerToDart on _CSystemMemoryManager {
+  SystemMemoryManager _toDart() {
+    return SystemMemoryManager._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCSystemMemoryManager on SystemMemoryManager {
+  _CSystemMemoryManager _copyFromDartTo_CSystemMemoryManager() {
+    return (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - Context
 
 /** Контекст - окружение, необходимое для работы SDK. */
@@ -276,71 +409,6 @@ extension _DartToCContext on Context {
     return (_CContextMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - SystemMemoryManager
-
-/** Интерфейс управления использованием системной памяти. */
-class SystemMemoryManager implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  static final _finalizer = ffi.NativeFinalizer(_CSystemMemoryManager_releasePtr);
-
-  SystemMemoryManager._raw(this._self);
-  factory SystemMemoryManager._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = SystemMemoryManager._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is SystemMemoryManager &&
-    other.runtimeType == runtimeType &&
-    _CSystemMemoryManager_cg_objectIdentifier(this._self) == _CSystemMemoryManager_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CSystemMemoryManager_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: SystemMemoryManager: Methods
-
-  /** Уменьшение использования памяти путём очистки всевозможных кешей и буферов. */
-  void reduceMemoryUsage()  {
-    void res = _CSystemMemoryManager_reduceMemoryUsage(_CSystemMemoryManagerMakeDefault().._impl=_self);
-    return res;
-  }
-
-}
-
-// MARK: - SystemMemoryManager <-> CSystemMemoryManager
-
-final class _CSystemMemoryManager extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CSystemMemoryManagerBasicFunctions on _CSystemMemoryManager {
-  void _releaseIntermediate() {
-    _CSystemMemoryManager_release(_impl);
-  }
-
-  _CSystemMemoryManager _retain() {
-    return _CSystemMemoryManager_retain(_impl);
-  }
-}
-
-extension _CSystemMemoryManagerToDart on _CSystemMemoryManager {
-  SystemMemoryManager _toDart() {
-    return SystemMemoryManager._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCSystemMemoryManager on SystemMemoryManager {
-  _CSystemMemoryManager _copyFromDartTo_CSystemMemoryManager() {
-    return (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
-  }
-}
 // MARK: - LevelId
 
 /** Идентификатор этажного плана. */
@@ -395,6 +463,42 @@ extension _CLevelIdRelease on _CLevelId {
   }
 }
 
+// MARK: - LevelId? <-> _COptional_CLevelId
+
+final class _COptional_CLevelId extends ffi.Struct {
+  
+  external _CLevelId value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CLevelIdBasicFunctions on _COptional_CLevelId {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CLevelIdToDart on _COptional_CLevelId {
+  LevelId? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CLevelId on LevelId? {
+  _COptional_CLevelId _copyFromDartTo_COptional_CLevelId() {
+    final cOptional = _COptional_CLevelIdMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CLevelId();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - String <-> _CString
 
 final class _CString extends ffi.Struct {
@@ -440,27 +544,75 @@ extension _DartTo_CString on String {
 }
 
 
+// MARK: - List<LevelId> <-> _CArray_CLevelId
+
+final class _CArray_CLevelId extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CLevelIdToDart on _CArray_CLevelId {
+  List<LevelId> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CLevelId on List<LevelId> {
+  _CArray_CLevelId _copyFromDartTo_CArray_CLevelId() {
+    final cArray = _CArray_CLevelIdmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CLevelId();
+        _CArray_CLevelIdaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CLevelIdBasicFunctions on _CArray_CLevelId {
+  void _releaseIntermediate() {
+    _CArray_CLevelId_release(this);
+  }
+
+  static final _listToFill = <LevelId>[];
+
+  static void _iterate(_CLevelId item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<LevelId> _fillFromC() {
+    _forEach_CArray_CLevelId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CLevelId)>(_iterate));
+    final result = List<LevelId>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - LevelInfo
 
 /** Информация об этаже здания. */
 class LevelInfo {
   /** Идентификатор этажного плана. */
-  final LevelId id;
+  final LevelId? id;
   /** Название этажа. */
   final String name;
+  /** Идентификаторы связанных этажных планов. */
+  final List<LevelId> linkedLevelIds;
 
   const LevelInfo({
     required this.id,
-    required this.name
+    required this.name,
+    required this.linkedLevelIds
   });
 
   LevelInfo copyWith({
-    LevelId? id,
-    String? name
+    Optional<LevelId?>? id,
+    String? name,
+    List<LevelId>? linkedLevelIds
   }) {
     return LevelInfo(
-      id: id ?? this.id,
-      name: name ?? this.name
+      id: id != null ? id.value : this.id,
+      name: name ?? this.name,
+      linkedLevelIds: linkedLevelIds ?? this.linkedLevelIds
     );
   }
   @override
@@ -468,18 +620,21 @@ class LevelInfo {
     identical(this, other) || other is LevelInfo &&
     other.runtimeType == runtimeType &&
     other.id == id &&
-    other.name == name;
+    other.name == name &&
+    other.linkedLevelIds == linkedLevelIds;
 
   @override
   int get hashCode {
-    return Object.hash(id, name);
+    return Object.hash(id, name, linkedLevelIds);
   }
 
 }
 final class _CLevelInfo extends ffi.Struct {
-  external _CLevelId id;
+  external _COptional_CLevelId id;
 
   external _CString name;
+
+  external _CArray_CLevelId linkedLevelIds;
 
 }
 // MARK: - LevelInfo <-> _CLevelInfo
@@ -488,7 +643,8 @@ extension _CLevelInfoToDart on _CLevelInfo {
   LevelInfo _toDart() {
     return LevelInfo(
       id: this.id._toDart(),
-      name: this.name._toDart()
+      name: this.name._toDart(),
+      linkedLevelIds: this.linkedLevelIds._toDart()
     );
   }
 }
@@ -496,14 +652,16 @@ extension _CLevelInfoToDart on _CLevelInfo {
 extension _DartTo_CLevelInfo on LevelInfo {
   _CLevelInfo _copyFromDartTo_CLevelInfo() {
     final res = _CLevelInfoMakeDefault();
-    res.id = this.id._copyFromDartTo_CLevelId();
+    res.id = this.id._copyFromDartTo_COptional_CLevelId();
     res.name = this.name._copyFromDartTo_CString();
+    res.linkedLevelIds = this.linkedLevelIds._copyFromDartTo_CArray_CLevelId();
     return res;
   }
 }
 extension _CLevelInfoRelease on _CLevelInfo {
   void _releaseIntermediate() {
     name._releaseIntermediate();
+    linkedLevelIds._releaseIntermediate();
   }
 }
 
@@ -602,6 +760,206 @@ extension _DartTo_CPersonalDataCollectionConsent on PersonalDataCollectionConsen
   }
 }
 	
+// MARK: - ScreenDistance
+
+/**
+ Расстояние между объектами на экране в миллиметрах.
+
+ - Note: не может быть отрицательным
+*/
+class ScreenDistance {
+  final double value;
+
+  const ScreenDistance([this.value = 0]);
+
+  ScreenDistance copyWith({
+    double? value
+  }) {
+    return ScreenDistance(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenDistance &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CScreenDistance extends ffi.Struct {
+  @ffi.Float()
+  external double value;
+
+}
+// MARK: - ScreenDistance <-> _CScreenDistance
+
+extension _CScreenDistanceToDart on _CScreenDistance {
+  ScreenDistance _toDart() {
+    return ScreenDistance(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CScreenDistance on ScreenDistance {
+  _CScreenDistance _copyFromDartTo_CScreenDistance() {
+    final res = _CScreenDistanceMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CScreenDistanceRelease on _CScreenDistance {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScreenPoint
+
+/**
+ Точка в экранных координатах.
+
+ Направления осей: x - вправо, y - вниз.
+ (0.0, 0.0) - левый верхний угол левого верхнего пикселя.
+ Целая часть координаты - номер пикселя, дробная - относительное местоположение в пикселе.
+*/
+class ScreenPoint {
+  final double x;
+  final double y;
+
+  const ScreenPoint({
+    this.x = 0,
+    this.y = 0
+  });
+
+  ScreenPoint copyWith({
+    double? x,
+    double? y
+  }) {
+    return ScreenPoint(
+      x: x ?? this.x,
+      y: y ?? this.y
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenPoint &&
+    other.runtimeType == runtimeType &&
+    other.x == x &&
+    other.y == y;
+
+  @override
+  int get hashCode {
+    return Object.hash(x, y);
+  }
+
+}
+final class _CScreenPoint extends ffi.Struct {
+  @ffi.Float()
+  external double x;
+
+  @ffi.Float()
+  external double y;
+
+}
+// MARK: - ScreenPoint <-> _CScreenPoint
+
+extension _CScreenPointToDart on _CScreenPoint {
+  ScreenPoint _toDart() {
+    return ScreenPoint(
+      x: this.x,
+      y: this.y
+    );
+  }
+}
+
+extension _DartTo_CScreenPoint on ScreenPoint {
+  _CScreenPoint _copyFromDartTo_CScreenPoint() {
+    final res = _CScreenPointMakeDefault();
+    res.x = this.x;
+    res.y = this.y;
+    return res;
+  }
+}
+extension _CScreenPointRelease on _CScreenPoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScreenShift
+
+/**
+ Смещение карты по горизонтали и вертикали в координатном пространстве экрана.
+
+ Положительное направление смещения: dx - вправо, dy - вниз.
+*/
+class ScreenShift {
+  final double dx;
+  final double dy;
+
+  const ScreenShift({
+    this.dx = 0,
+    this.dy = 0
+  });
+
+  ScreenShift copyWith({
+    double? dx,
+    double? dy
+  }) {
+    return ScreenShift(
+      dx: dx ?? this.dx,
+      dy: dy ?? this.dy
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenShift &&
+    other.runtimeType == runtimeType &&
+    other.dx == dx &&
+    other.dy == dy;
+
+  @override
+  int get hashCode {
+    return Object.hash(dx, dy);
+  }
+
+}
+final class _CScreenShift extends ffi.Struct {
+  @ffi.Float()
+  external double dx;
+
+  @ffi.Float()
+  external double dy;
+
+}
+// MARK: - ScreenShift <-> _CScreenShift
+
+extension _CScreenShiftToDart on _CScreenShift {
+  ScreenShift _toDart() {
+    return ScreenShift(
+      dx: this.dx,
+      dy: this.dy
+    );
+  }
+}
+
+extension _DartTo_CScreenShift on ScreenShift {
+  _CScreenShift _copyFromDartTo_CScreenShift() {
+    final res = _CScreenShiftMakeDefault();
+    res.dx = this.dx;
+    res.dy = this.dy;
+    return res;
+  }
+}
+extension _CScreenShiftRelease on _CScreenShift {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - ScreenSize
 
 /** Размер в пикселях. */
@@ -844,20 +1202,118 @@ extension _CWeekTimeIntervalRelease on _CWeekTimeInterval {
   }
 }
 
-// MARK: - getSystemMemoryManager
+// MARK: - File
 
-/** Получение объекта для управления использованием системной памяти. */
-SystemMemoryManager getSystemMemoryManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CSystemMemoryManager res = _CFunction_G_getSystemMemoryManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
+/**
+ Идентификатор файла.
+
+ Может являться не только файлом на файловой системе, но и произвольным источником данных.
+*/
+class File implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CFile_releasePtr);
+
+  File._raw(this._self);
+  factory File._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = File._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  /**
+   Файл в файловой системе.
+  
+   - Parameter path: Путь к файлу.
+  */
+  factory File(
+    String path
+  ) {
+    var _a0 = path._copyFromDartTo_CString();
+    _CFile res = _CFile_C_createWith_CString(_a0);
+    _a0._releaseIntermediate();
+    return File._create(res._impl);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is File &&
+    other.runtimeType == runtimeType &&
+    _CFile_cg_objectIdentifier(this._self) == _CFile_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CFile_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CFile: Static Methods
+
+  /**
+   Файл с содержимым из заданной строки.
+  
+   - Parameter contents: Содержимое файла.
+  */
+  static File fromString(
+    String contents
+  )  {
+    var _a0 = contents._copyFromDartTo_CString();
+    _CFile res = _CFile_S_fromString_CString(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Файл из asset-ов.
+  
+   - Parameter path: Путь относительно корневой директории asset-ов.
+  */
+  static File fromAsset(
+    Context context,
+    String path
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = path._copyFromDartTo_CString();
+    _CFile res = _CFile_S_fromAsset_CContext_CString(_a0, _a1);
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
 }
 
+// MARK: - File <-> CFile
+
+final class _CFile extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CFileBasicFunctions on _CFile {
+  void _releaseIntermediate() {
+    _CFile_release(_impl);
+  }
+
+  _CFile _retain() {
+    return _CFile_retain(_impl);
+  }
+}
+
+extension _CFileToDart on _CFile {
+  File _toDart() {
+    return File._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCFile on File {
+  _CFile _copyFromDartTo_CFile() {
+    return (_CFileMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - makeSystemContext
 
 /**
@@ -4054,118 +4510,6 @@ extension _DartTo_COptional_CHeadingAvailableNotifier on HeadingAvailableNotifie
     return cOptional;
   }
 }
-// MARK: - File
-
-/**
- Идентификатор файла.
-
- Может являться не только файлом на файловой системе, но и произвольным источником данных.
-*/
-class File implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  static final _finalizer = ffi.NativeFinalizer(_CFile_releasePtr);
-
-  File._raw(this._self);
-  factory File._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = File._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  /**
-   Файл в файловой системе.
-  
-   - Parameter path: Путь к файлу.
-  */
-  factory File(
-    String path
-  ) {
-    var _a0 = path._copyFromDartTo_CString();
-    _CFile res = _CFile_C_createWith_CString(_a0);
-    _a0._releaseIntermediate();
-    return File._create(res._impl);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is File &&
-    other.runtimeType == runtimeType &&
-    _CFile_cg_objectIdentifier(this._self) == _CFile_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CFile_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: CFile: Static Methods
-
-  /**
-   Файл с содержимым из заданной строки.
-  
-   - Parameter contents: Содержимое файла.
-  */
-  static File fromString(
-    String contents
-  )  {
-    var _a0 = contents._copyFromDartTo_CString();
-    _CFile res = _CFile_S_fromString_CString(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  /**
-   Файл из asset-ов.
-  
-   - Parameter path: Путь относительно корневой директории asset-ов.
-  */
-  static File fromAsset(
-    Context context,
-    String path
-  )  {
-    var _a0 = context._copyFromDartTo_CContext();
-    var _a1 = path._copyFromDartTo_CString();
-    _CFile res = _CFile_S_fromAsset_CContext_CString(_a0, _a1);
-    _a1._releaseIntermediate();
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-// MARK: - File <-> CFile
-
-final class _CFile extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CFileBasicFunctions on _CFile {
-  void _releaseIntermediate() {
-    _CFile_release(_impl);
-  }
-
-  _CFile _retain() {
-    return _CFile_retain(_impl);
-  }
-}
-
-extension _CFileToDart on _CFile {
-  File _toDart() {
-    return File._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCFile on File {
-  _CFile _copyFromDartTo_CFile() {
-    return (_CFileMakeDefault().._impl=_self)._retain();
-  }
-}
 // MARK: - GeoRect
 
 /**
@@ -4548,6 +4892,61 @@ extension _CAttributeRelease on _CAttribute {
   }
 }
 
+// MARK: - BranchesInfo
+
+/** Информация о связанных организациях. */
+class BranchesInfo {
+  /** Количество связанных объектов. */
+  final int count;
+
+  const BranchesInfo([this.count = 0]);
+
+  BranchesInfo copyWith({
+    int? count
+  }) {
+    return BranchesInfo(
+      count ?? this.count
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BranchesInfo &&
+    other.runtimeType == runtimeType &&
+    other.count == count;
+
+  @override
+  int get hashCode {
+    return count.hashCode;
+  }
+
+}
+final class _CBranchesInfo extends ffi.Struct {
+  @ffi.Uint16()
+  external int count;
+
+}
+// MARK: - BranchesInfo <-> _CBranchesInfo
+
+extension _CBranchesInfoToDart on _CBranchesInfo {
+  BranchesInfo _toDart() {
+    return BranchesInfo(
+      this.count
+    );
+  }
+}
+
+extension _DartTo_CBranchesInfo on BranchesInfo {
+  _CBranchesInfo _copyFromDartTo_CBranchesInfo() {
+    final res = _CBranchesInfoMakeDefault();
+    res.count = this.count;
+    return res;
+  }
+}
+extension _CBranchesInfoRelease on _CBranchesInfo {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - PurposeCode
 
 /** Код назначения здания. */
@@ -4712,6 +5111,123 @@ extension _CBuildingLevelsRelease on _CBuildingLevels {
   }
 }
 
+// MARK: - int? <-> _COptional_uint16_t
+
+final class _COptional_uint16_t extends ffi.Struct {
+  @ffi.Uint16()
+  external int value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_uint16_tBasicFunctions on _COptional_uint16_t {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_uint16_tToDart on _COptional_uint16_t {
+  int? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value;
+  }
+}
+
+extension _DartTo_COptional_uint16_t on int? {
+  _COptional_uint16_t _copyFromDartTo_COptional_uint16_t() {
+    final cOptional = _COptional_uint16_tMakeDefault();
+    if (this != null) {
+      cOptional.value = this!;
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - FloorsInfo
+
+/**
+ Информация об этажности объекта.
+
+ - Note: Для получения данной информации запросите дополнительную настройку ключа.
+*/
+class FloorsInfo {
+  /** Количество надземный этажей (для домов переменной этажности — максимальное количество надземных этажей). */
+  final int groundCount;
+  /** Минимальное количество надземных этажей (для домов переменной этажности). */
+  final int? groundMinCount;
+  /** Количество подземных этажей */
+  final int? undergroundCount;
+
+  const FloorsInfo({
+    this.groundCount = 0,
+    required this.groundMinCount,
+    required this.undergroundCount
+  });
+
+  FloorsInfo copyWith({
+    int? groundCount,
+    Optional<int?>? groundMinCount,
+    Optional<int?>? undergroundCount
+  }) {
+    return FloorsInfo(
+      groundCount: groundCount ?? this.groundCount,
+      groundMinCount: groundMinCount != null ? groundMinCount.value : this.groundMinCount,
+      undergroundCount: undergroundCount != null ? undergroundCount.value : this.undergroundCount
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is FloorsInfo &&
+    other.runtimeType == runtimeType &&
+    other.groundCount == groundCount &&
+    other.groundMinCount == groundMinCount &&
+    other.undergroundCount == undergroundCount;
+
+  @override
+  int get hashCode {
+    return Object.hash(groundCount, groundMinCount, undergroundCount);
+  }
+
+}
+final class _CFloorsInfo extends ffi.Struct {
+  @ffi.Uint16()
+  external int groundCount;
+
+  external _COptional_uint16_t groundMinCount;
+
+  external _COptional_uint16_t undergroundCount;
+
+}
+// MARK: - FloorsInfo <-> _CFloorsInfo
+
+extension _CFloorsInfoToDart on _CFloorsInfo {
+  FloorsInfo _toDart() {
+    return FloorsInfo(
+      groundCount: this.groundCount,
+      groundMinCount: this.groundMinCount._toDart(),
+      undergroundCount: this.undergroundCount._toDart()
+    );
+  }
+}
+
+extension _DartTo_CFloorsInfo on FloorsInfo {
+  _CFloorsInfo _copyFromDartTo_CFloorsInfo() {
+    final res = _CFloorsInfoMakeDefault();
+    res.groundCount = this.groundCount;
+    res.groundMinCount = this.groundMinCount._copyFromDartTo_COptional_uint16_t();
+    res.undergroundCount = this.undergroundCount._copyFromDartTo_COptional_uint16_t();
+    return res;
+  }
+}
+extension _CFloorsInfoRelease on _CFloorsInfo {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - PurposeCode? <-> _COptional_CPurposeCode
 
 final class _COptional_CPurposeCode extends ffi.Struct {
@@ -4784,23 +5300,23 @@ extension _DartTo_COptional_CBuildingLevels on BuildingLevels? {
     return cOptional;
   }
 }
-// MARK: - BuildingId? <-> _COptional_CBuildingId
+// MARK: - FloorsInfo? <-> _COptional_CFloorsInfo
 
-final class _COptional_CBuildingId extends ffi.Struct {
+final class _COptional_CFloorsInfo extends ffi.Struct {
   
-  external _CBuildingId value;
+  external _CFloorsInfo value;
   @ffi.Bool()
   external bool hasValue;
 }
 
-extension _COptional_CBuildingIdBasicFunctions on _COptional_CBuildingId {
+extension _COptional_CFloorsInfoBasicFunctions on _COptional_CFloorsInfo {
   void _releaseIntermediate() {
     
   }
 }
 
-extension _COptional_CBuildingIdToDart on _COptional_CBuildingId {
-  BuildingId? _toDart() {
+extension _COptional_CFloorsInfoToDart on _COptional_CFloorsInfo {
+  FloorsInfo? _toDart() {
     if (!this.hasValue) {
       return null;
     }
@@ -4808,11 +5324,11 @@ extension _COptional_CBuildingIdToDart on _COptional_CBuildingId {
   }
 }
 
-extension _DartTo_COptional_CBuildingId on BuildingId? {
-  _COptional_CBuildingId _copyFromDartTo_COptional_CBuildingId() {
-    final cOptional = _COptional_CBuildingIdMakeDefault();
+extension _DartTo_COptional_CFloorsInfo on FloorsInfo? {
+  _COptional_CFloorsInfo _copyFromDartTo_COptional_CFloorsInfo() {
+    final cOptional = _COptional_CFloorsInfoMakeDefault();
     if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CBuildingId();
+      cOptional.value = this!._copyFromDartTo_CFloorsInfo();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -4832,14 +5348,21 @@ class BuildingInfo {
   final PurposeCode? purposeCode;
   /** Информация об этажных планах здания. */
   final BuildingLevels? buildingLevels;
+  /**
+   Информация о количестве этажей в здании.
+  
+   - Note: Для получения данной информации запросите дополнительную настройку ключа.
+  */
+  final FloorsInfo? floorsInfo;
   /** Уникальный идентификатор здания. */
-  final BuildingId? buildingId;
+  final BuildingId buildingId;
 
   const BuildingInfo({
-    this.buildingName = null,
-    this.purposeName = null,
-    this.purposeCode = null,
-    this.buildingLevels = null,
+    required this.buildingName,
+    required this.purposeName,
+    required this.purposeCode,
+    required this.buildingLevels,
+    required this.floorsInfo,
     required this.buildingId
   });
 
@@ -4848,14 +5371,16 @@ class BuildingInfo {
     Optional<String?>? purposeName,
     Optional<PurposeCode?>? purposeCode,
     Optional<BuildingLevels?>? buildingLevels,
-    Optional<BuildingId?>? buildingId
+    Optional<FloorsInfo?>? floorsInfo,
+    BuildingId? buildingId
   }) {
     return BuildingInfo(
       buildingName: buildingName != null ? buildingName.value : this.buildingName,
       purposeName: purposeName != null ? purposeName.value : this.purposeName,
       purposeCode: purposeCode != null ? purposeCode.value : this.purposeCode,
       buildingLevels: buildingLevels != null ? buildingLevels.value : this.buildingLevels,
-      buildingId: buildingId != null ? buildingId.value : this.buildingId
+      floorsInfo: floorsInfo != null ? floorsInfo.value : this.floorsInfo,
+      buildingId: buildingId ?? this.buildingId
     );
   }
   @override
@@ -4866,11 +5391,12 @@ class BuildingInfo {
     other.purposeName == purposeName &&
     other.purposeCode == purposeCode &&
     other.buildingLevels == buildingLevels &&
+    other.floorsInfo == floorsInfo &&
     other.buildingId == buildingId;
 
   @override
   int get hashCode {
-    return Object.hash(buildingName, purposeName, purposeCode, buildingLevels, buildingId);
+    return Object.hash(buildingName, purposeName, purposeCode, buildingLevels, floorsInfo, buildingId);
   }
 
 }
@@ -4883,7 +5409,9 @@ final class _CBuildingInfo extends ffi.Struct {
 
   external _COptional_CBuildingLevels buildingLevels;
 
-  external _COptional_CBuildingId buildingId;
+  external _COptional_CFloorsInfo floorsInfo;
+
+  external _CBuildingId buildingId;
 
 }
 // MARK: - BuildingInfo <-> _CBuildingInfo
@@ -4895,6 +5423,7 @@ extension _CBuildingInfoToDart on _CBuildingInfo {
       purposeName: this.purposeName._toDart(),
       purposeCode: this.purposeCode._toDart(),
       buildingLevels: this.buildingLevels._toDart(),
+      floorsInfo: this.floorsInfo._toDart(),
       buildingId: this.buildingId._toDart()
     );
   }
@@ -4907,7 +5436,8 @@ extension _DartTo_CBuildingInfo on BuildingInfo {
     res.purposeName = this.purposeName._copyFromDartTo_COptional_CString();
     res.purposeCode = this.purposeCode._copyFromDartTo_COptional_CPurposeCode();
     res.buildingLevels = this.buildingLevels._copyFromDartTo_COptional_CBuildingLevels();
-    res.buildingId = this.buildingId._copyFromDartTo_COptional_CBuildingId();
+    res.floorsInfo = this.floorsInfo._copyFromDartTo_COptional_CFloorsInfo();
+    res.buildingId = this.buildingId._copyFromDartTo_CBuildingId();
     return res;
   }
 }
@@ -8133,42 +8663,6 @@ extension _DartTo_COptional_CParkingPavingType on ParkingPavingType? {
     return cOptional;
   }
 }
-// MARK: - int? <-> _COptional_uint16_t
-
-final class _COptional_uint16_t extends ffi.Struct {
-  @ffi.Uint16()
-  external int value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_uint16_tBasicFunctions on _COptional_uint16_t {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_uint16_tToDart on _COptional_uint16_t {
-  int? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value;
-  }
-}
-
-extension _DartTo_COptional_uint16_t on int? {
-  _COptional_uint16_t _copyFromDartTo_COptional_uint16_t() {
-    final cOptional = _COptional_uint16_tMakeDefault();
-    if (this != null) {
-      cOptional.value = this!;
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - ParkingCapacity? <-> _COptional_CParkingCapacity
 
 final class _COptional_CParkingCapacity extends ffi.Struct {
@@ -8454,6 +8948,59 @@ extension _DartTo_CSearchResultType on SearchResultType {
   }
 }
 	
+// MARK: - SearchSettings
+
+class SearchSettings {
+  final bool saveInHistory;
+
+  const SearchSettings([this.saveInHistory = false]);
+
+  SearchSettings copyWith({
+    bool? saveInHistory
+  }) {
+    return SearchSettings(
+      saveInHistory ?? this.saveInHistory
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is SearchSettings &&
+    other.runtimeType == runtimeType &&
+    other.saveInHistory == saveInHistory;
+
+  @override
+  int get hashCode {
+    return saveInHistory.hashCode;
+  }
+
+}
+final class _CSearchSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool saveInHistory;
+
+}
+// MARK: - SearchSettings <-> _CSearchSettings
+
+extension _CSearchSettingsToDart on _CSearchSettings {
+  SearchSettings _toDart() {
+    return SearchSettings(
+      this.saveInHistory
+    );
+  }
+}
+
+extension _DartTo_CSearchSettings on SearchSettings {
+  _CSearchSettings _copyFromDartTo_CSearchSettings() {
+    final res = _CSearchSettingsMakeDefault();
+    res.saveInHistory = this.saveInHistory;
+    return res;
+  }
+}
+extension _CSearchSettingsRelease on _CSearchSettings {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - SortingType
 
 /** Тип сортировки. */
@@ -9107,35 +9654,35 @@ extension _CPublicTransportRouteGeometryRelease on _CPublicTransportRouteGeometr
   }
 }
 
-// MARK: - int? <-> _COptional_uint32_t
+// MARK: - Color? <-> _COptional_CColor
 
-final class _COptional_uint32_t extends ffi.Struct {
-  @ffi.Uint32()
-  external int value;
+final class _COptional_CColor extends ffi.Struct {
+  
+  external _CColor value;
   @ffi.Bool()
   external bool hasValue;
 }
 
-extension _COptional_uint32_tBasicFunctions on _COptional_uint32_t {
+extension _COptional_CColorBasicFunctions on _COptional_CColor {
   void _releaseIntermediate() {
     
   }
 }
 
-extension _COptional_uint32_tToDart on _COptional_uint32_t {
-  int? _toDart() {
+extension _COptional_CColorToDart on _COptional_CColor {
+  Color? _toDart() {
     if (!this.hasValue) {
       return null;
     }
-    return this.value;
+    return this.value._toDart();
   }
 }
 
-extension _DartTo_COptional_uint32_t on int? {
-  _COptional_uint32_t _copyFromDartTo_COptional_uint32_t() {
-    final cOptional = _COptional_uint32_tMakeDefault();
+extension _DartTo_COptional_CColor on Color? {
+  _COptional_CColor _copyFromDartTo_COptional_CColor() {
+    final cOptional = _COptional_CColorMakeDefault();
     if (this != null) {
-      cOptional.value = this!;
+      cOptional.value = this!._copyFromDartTo_CColor();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -9154,7 +9701,7 @@ class PublicTransportPlatformTransition {
   /** Тип маршрута. */
   final PublicTransportRouteType routeType;
   /** Цветовое кодирование маршрута. */
-  final int? color;
+  final Color? color;
   /** Идентификатор остановки. */
   final DgisObjectId stationId;
   /** Название остановки или станции. */
@@ -9173,7 +9720,7 @@ class PublicTransportPlatformTransition {
     DgisObjectId? routeId,
     String? routeName,
     PublicTransportRouteType? routeType,
-    Optional<int?>? color,
+    Optional<Color?>? color,
     DgisObjectId? stationId,
     String? stationName
   }) {
@@ -9210,7 +9757,7 @@ final class _CPublicTransportPlatformTransition extends ffi.Struct {
 
   external _CPublicTransportRouteType routeType;
 
-  external _COptional_uint32_t color;
+  external _COptional_CColor color;
 
   external _CDgisObjectId stationId;
 
@@ -9238,7 +9785,7 @@ extension _DartTo_CPublicTransportPlatformTransition on PublicTransportPlatformT
     res.routeId = this.routeId._copyFromDartTo_CDgisObjectId();
     res.routeName = this.routeName._copyFromDartTo_CString();
     res.routeType = this.routeType._copyFromDartTo_CPublicTransportRouteType();
-    res.color = this.color._copyFromDartTo_COptional_uint32_t();
+    res.color = this.color._copyFromDartTo_COptional_CColor();
     res.stationId = this.stationId._copyFromDartTo_CDgisObjectId();
     res.stationName = this.stationName._copyFromDartTo_CString();
     return res;
@@ -9666,7 +10213,7 @@ class PublicTransportDirectoryRouteInfo {
   /** Тип маршрута. */
   final PublicTransportRouteType routeType;
   /** Цветовое кодирование маршрута. */
-  final int? color;
+  final Color? color;
   /** Информация о наименованиях начальной и конечной остановках маршрута. */
   final PublicTransportDirectoryRouteDirectionNamesInfo? fromToStationNames;
   /**
@@ -9690,7 +10237,7 @@ class PublicTransportDirectoryRouteInfo {
     DgisObjectId? id,
     String? name,
     PublicTransportRouteType? routeType,
-    Optional<int?>? color,
+    Optional<Color?>? color,
     Optional<PublicTransportDirectoryRouteDirectionNamesInfo?>? fromToStationNames,
     List<PublicTransportRouteDirection>? directions
   }) {
@@ -9727,7 +10274,7 @@ final class _CPublicTransportDirectoryRouteInfo extends ffi.Struct {
 
   external _CPublicTransportRouteType routeType;
 
-  external _COptional_uint32_t color;
+  external _COptional_CColor color;
 
   external _COptional_CPublicTransportDirectoryRouteDirectionNamesInfo fromToStationNames;
 
@@ -9755,7 +10302,7 @@ extension _DartTo_CPublicTransportDirectoryRouteInfo on PublicTransportDirectory
     res.id = this.id._copyFromDartTo_CDgisObjectId();
     res.name = this.name._copyFromDartTo_CString();
     res.routeType = this.routeType._copyFromDartTo_CPublicTransportRouteType();
-    res.color = this.color._copyFromDartTo_COptional_uint32_t();
+    res.color = this.color._copyFromDartTo_COptional_CColor();
     res.fromToStationNames = this.fromToStationNames._copyFromDartTo_COptional_CPublicTransportDirectoryRouteDirectionNamesInfo();
     res.directions = this.directions._copyFromDartTo_CArray_CPublicTransportRouteDirection();
     return res;
@@ -11526,6 +12073,42 @@ extension _CArray_CAddressComponentBasicFunctions on _CArray_CAddressComponent {
   }
 }
 	
+// MARK: - BuildingId? <-> _COptional_CBuildingId
+
+final class _COptional_CBuildingId extends ffi.Struct {
+  
+  external _CBuildingId value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CBuildingIdBasicFunctions on _COptional_CBuildingId {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CBuildingIdToDart on _COptional_CBuildingId {
+  BuildingId? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CBuildingId on BuildingId? {
+  _COptional_CBuildingId _copyFromDartTo_COptional_CBuildingId() {
+    final cOptional = _COptional_CBuildingIdMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CBuildingId();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - Address
 
 /** Адрес в виде набора отдельных компонентов. */
@@ -11799,17 +12382,6 @@ class DirectoryObject implements ffi.Finalizable {
     return res._toDart();
   }
   /**
-   Информация об этажных планах здания.
-  
-   - Note: Для получения данной информации запросите дополнительную настройку ключа.
-  */
-  BuildingLevels? get buildingLevels {
-    _COptional_CBuildingLevels res = _CDirectoryObject_buildingLevels(_CDirectoryObjectMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /**
    Информация о входах.
   
    - Note: Для получения данной информации запросите дополнительную настройку ключа.
@@ -11832,11 +12404,16 @@ class DirectoryObject implements ffi.Finalizable {
     return t;
   }
   /** Информация о здании. */
-  BuildingInfo get buildingInfo {
-    _CBuildingInfo res = _CDirectoryObject_buildingInfo(_CDirectoryObjectMakeDefault().._impl=_self);
+  BuildingInfo? get buildingInfo {
+    _COptional_CBuildingInfo res = _CDirectoryObject_buildingInfo(_CDirectoryObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
+  }
+  /** Информация о связанных организациях. */
+  BranchesInfo? get branchesInfo {
+    _COptional_CBranchesInfo res = _CDirectoryObject_branchesInfo(_CDirectoryObjectMakeDefault().._impl=_self);
+    return res._toDart();
   }
   /** Атрибуты для электрозаправки. */
   ChargingStation? get chargingStation {
@@ -12394,42 +12971,6 @@ extension _DartTo_COptional_CWorkStatus on WorkStatus? {
     return cOptional;
   }
 }
-// MARK: - LevelId? <-> _COptional_CLevelId
-
-final class _COptional_CLevelId extends ffi.Struct {
-  
-  external _CLevelId value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CLevelIdBasicFunctions on _COptional_CLevelId {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CLevelIdToDart on _COptional_CLevelId {
-  LevelId? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CLevelId on LevelId? {
-  _COptional_CLevelId _copyFromDartTo_COptional_CLevelId() {
-    final cOptional = _COptional_CLevelIdMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CLevelId();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - List<EntranceInfo> <-> _CArray_CEntranceInfo
 
 final class _CArray_CEntranceInfo extends ffi.Struct {
@@ -12473,6 +13014,78 @@ extension _CArray_CEntranceInfoBasicFunctions on _CArray_CEntranceInfo {
   }
 }
 	
+// MARK: - BuildingInfo? <-> _COptional_CBuildingInfo
+
+final class _COptional_CBuildingInfo extends ffi.Struct {
+  
+  external _CBuildingInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CBuildingInfoBasicFunctions on _COptional_CBuildingInfo {
+  void _releaseIntermediate() {
+    _COptional_CBuildingInfo_release(this);
+  }
+}
+
+extension _COptional_CBuildingInfoToDart on _COptional_CBuildingInfo {
+  BuildingInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CBuildingInfo on BuildingInfo? {
+  _COptional_CBuildingInfo _copyFromDartTo_COptional_CBuildingInfo() {
+    final cOptional = _COptional_CBuildingInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CBuildingInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - BranchesInfo? <-> _COptional_CBranchesInfo
+
+final class _COptional_CBranchesInfo extends ffi.Struct {
+  
+  external _CBranchesInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CBranchesInfoBasicFunctions on _COptional_CBranchesInfo {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CBranchesInfoToDart on _COptional_CBranchesInfo {
+  BranchesInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CBranchesInfo on BranchesInfo? {
+  _COptional_CBranchesInfo _copyFromDartTo_COptional_CBranchesInfo() {
+    final cOptional = _COptional_CBranchesInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CBranchesInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - ChargingStation? <-> _COptional_CChargingStation
 
 final class _COptional_CChargingStation extends ffi.Struct {
@@ -13243,13 +13856,13 @@ extension _CWidgetToDart on _CWidget {
         final res = Widget._create(_retain()._impl);
         return res;
       case 1:
-        final res = Checkbox._create(_retain()._impl);
+        final res = (_CCheckboxMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = CheckableItemsGroup._create(_retain()._impl);
+        final res = (_CCheckableItemsGroupMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = RangeWidget._create(_retain()._impl);
+        final res = (_CRangeWidgetMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -13530,10 +14143,10 @@ extension _CCheckableItemToDart on _CCheckableItem {
         final res = CheckableItem._create(_retain()._impl);
         return res;
       case 1:
-        final res = SimpleCheckableItem._create(_retain()._impl);
+        final res = (_CSimpleCheckableItemMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = GroupCheckableItem._create(_retain()._impl);
+        final res = (_CGroupCheckableItemMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -14707,16 +15320,16 @@ extension _CGeometryToDart on _CGeometry {
         final res = Geometry._create(_retain()._impl);
         return res;
       case 1:
-        final res = PolylineGeometry._create(_retain()._impl);
+        final res = (_CPolylineGeometryMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = PointGeometry._create(_retain()._impl);
+        final res = (_CPointGeometryMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = PolygonGeometry._create(_retain()._impl);
+        final res = (_CPolygonGeometryMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = ComplexGeometry._create(_retain()._impl);
+        final res = (_CComplexGeometryMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -15374,6 +15987,13 @@ class IncompleteTextHandler implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  /** Сформированный запрос для поиска по query_text. */
+  SearchQuery get searchQuery {
+    _CSearchQuery res = _CIncompleteTextHandler_searchQuery(_CIncompleteTextHandlerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CIncompleteTextHandler_releasePtr);
 
@@ -15426,114 +16046,6 @@ extension _DartToCIncompleteTextHandler on IncompleteTextHandler {
     return (_CIncompleteTextHandlerMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - SuggestObjectHandler? <-> _COptional_CSuggestObjectHandler
-
-final class _COptional_CSuggestObjectHandler extends ffi.Struct {
-  
-  external _CSuggestObjectHandler value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CSuggestObjectHandlerBasicFunctions on _COptional_CSuggestObjectHandler {
-  void _releaseIntermediate() {
-    _COptional_CSuggestObjectHandler_release(this);
-  }
-}
-
-extension _COptional_CSuggestObjectHandlerToDart on _COptional_CSuggestObjectHandler {
-  SuggestObjectHandler? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CSuggestObjectHandler on SuggestObjectHandler? {
-  _COptional_CSuggestObjectHandler _copyFromDartTo_COptional_CSuggestObjectHandler() {
-    final cOptional = _COptional_CSuggestObjectHandlerMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CSuggestObjectHandler();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - PerformSearchHandler? <-> _COptional_CPerformSearchHandler
-
-final class _COptional_CPerformSearchHandler extends ffi.Struct {
-  
-  external _CPerformSearchHandler value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CPerformSearchHandlerBasicFunctions on _COptional_CPerformSearchHandler {
-  void _releaseIntermediate() {
-    _COptional_CPerformSearchHandler_release(this);
-  }
-}
-
-extension _COptional_CPerformSearchHandlerToDart on _COptional_CPerformSearchHandler {
-  PerformSearchHandler? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CPerformSearchHandler on PerformSearchHandler? {
-  _COptional_CPerformSearchHandler _copyFromDartTo_COptional_CPerformSearchHandler() {
-    final cOptional = _COptional_CPerformSearchHandlerMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CPerformSearchHandler();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - IncompleteTextHandler? <-> _COptional_CIncompleteTextHandler
-
-final class _COptional_CIncompleteTextHandler extends ffi.Struct {
-  
-  external _CIncompleteTextHandler value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CIncompleteTextHandlerBasicFunctions on _COptional_CIncompleteTextHandler {
-  void _releaseIntermediate() {
-    _COptional_CIncompleteTextHandler_release(this);
-  }
-}
-
-extension _COptional_CIncompleteTextHandlerToDart on _COptional_CIncompleteTextHandler {
-  IncompleteTextHandler? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CIncompleteTextHandler on IncompleteTextHandler? {
-  _COptional_CIncompleteTextHandler _copyFromDartTo_COptional_CIncompleteTextHandler() {
-    final cOptional = _COptional_CIncompleteTextHandlerMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CIncompleteTextHandler();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - SuggestHandler
 
 /** Обработчик выбора подсказки. */
@@ -15543,28 +16055,28 @@ final class SuggestHandler {
 
   SuggestHandler._raw(this._value, this._index);
 
-  SuggestHandler.objectHandler(SuggestObjectHandler? value) : this._raw(value, 0);
-  SuggestHandler.performSearchHandler(PerformSearchHandler? value) : this._raw(value, 1);
-  SuggestHandler.incompleteTextHandler(IncompleteTextHandler? value) : this._raw(value, 2);
+  SuggestHandler.objectHandler(SuggestObjectHandler value) : this._raw(value, 0);
+  SuggestHandler.performSearchHandler(PerformSearchHandler value) : this._raw(value, 1);
+  SuggestHandler.incompleteTextHandler(IncompleteTextHandler value) : this._raw(value, 2);
 
   bool get isObjectHandler => this._index == 0;
-  SuggestObjectHandler? get asObjectHandler => this.isObjectHandler ? this._value as SuggestObjectHandler? : null;
+  SuggestObjectHandler? get asObjectHandler => this.isObjectHandler ? this._value as SuggestObjectHandler : null;
 
   bool get isPerformSearchHandler => this._index == 1;
-  PerformSearchHandler? get asPerformSearchHandler => this.isPerformSearchHandler ? this._value as PerformSearchHandler? : null;
+  PerformSearchHandler? get asPerformSearchHandler => this.isPerformSearchHandler ? this._value as PerformSearchHandler : null;
 
   bool get isIncompleteTextHandler => this._index == 2;
-  IncompleteTextHandler? get asIncompleteTextHandler => this.isIncompleteTextHandler ? this._value as IncompleteTextHandler? : null;
+  IncompleteTextHandler? get asIncompleteTextHandler => this.isIncompleteTextHandler ? this._value as IncompleteTextHandler : null;
 
   T match<T>({
-    required T Function(SuggestObjectHandler? value) objectHandler,
-    required T Function(PerformSearchHandler? value) performSearchHandler,
-    required T Function(IncompleteTextHandler? value) incompleteTextHandler,
+    required T Function(SuggestObjectHandler value) objectHandler,
+    required T Function(PerformSearchHandler value) performSearchHandler,
+    required T Function(IncompleteTextHandler value) incompleteTextHandler,
   }) {
     return switch (this._index) {
-      0 => objectHandler(this._value as SuggestObjectHandler?),
-      1 => performSearchHandler(this._value as PerformSearchHandler?),
-      2 => incompleteTextHandler(this._value as IncompleteTextHandler?),
+      0 => objectHandler(this._value as SuggestObjectHandler),
+      1 => performSearchHandler(this._value as PerformSearchHandler),
+      2 => incompleteTextHandler(this._value as IncompleteTextHandler),
       _ => throw NativeException("Unrecognized case index ${this._index}")
     };
   }
@@ -15583,9 +16095,9 @@ final class SuggestHandler {
 }
 
 final class _CSuggestHandlerImpl extends ffi.Union {
-  external _COptional_CSuggestObjectHandler _objectHandler;
-  external _COptional_CPerformSearchHandler _performSearchHandler;
-  external _COptional_CIncompleteTextHandler _incompleteTextHandler;
+  external _CSuggestObjectHandler _objectHandler;
+  external _CPerformSearchHandler _performSearchHandler;
+  external _CIncompleteTextHandler _incompleteTextHandler;
 }
 
 final class _CSuggestHandler extends ffi.Struct {
@@ -15617,16 +16129,16 @@ extension _DartTo_CSuggestHandler on SuggestHandler {
   _CSuggestHandler _copyFromDartTo_CSuggestHandler() {
     var res = _CSuggestHandlerMakeDefault();
     this.match<void>(
-      objectHandler: (SuggestObjectHandler? value) {
-        res._impl._objectHandler = value._copyFromDartTo_COptional_CSuggestObjectHandler();
+      objectHandler: (SuggestObjectHandler value) {
+        res._impl._objectHandler = value._copyFromDartTo_CSuggestObjectHandler();
         res._index = 0;
       },
-      performSearchHandler: (PerformSearchHandler? value) {
-        res._impl._performSearchHandler = value._copyFromDartTo_COptional_CPerformSearchHandler();
+      performSearchHandler: (PerformSearchHandler value) {
+        res._impl._performSearchHandler = value._copyFromDartTo_CPerformSearchHandler();
         res._index = 1;
       },
-      incompleteTextHandler: (IncompleteTextHandler? value) {
-        res._impl._incompleteTextHandler = value._copyFromDartTo_COptional_CIncompleteTextHandler();
+      incompleteTextHandler: (IncompleteTextHandler value) {
+        res._impl._incompleteTextHandler = value._copyFromDartTo_CIncompleteTextHandler();
         res._index = 2;
       },
     );
@@ -16320,6 +16832,25 @@ class SearchManager implements ffi.Finalizable {
   )  {
     var _a1 = query._copyFromDartTo_CSearchQuery();
     _CFuture_CSearchResult res = _CSearchManager_search_CSearchQuery(_CSearchManagerMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Получить объекты справочника, соответствующие данному саджесту.
+  
+   - Returns: future, резолвящаяся в ненулевой указатель на результат поиска
+   или exceptional future, если произошла ошибка при получении результатов поиска
+  */
+  CancelableOperation<SearchResult> searchBySuggest(
+    Suggest suggest,
+    SearchSettings searchSettings
+  )  {
+    var _a1 = suggest._copyFromDartTo_CSuggest();
+    var _a2 = searchSettings._copyFromDartTo_CSearchSettings();
+    _CFuture_CSearchResult res = _CSearchManager_searchBySuggest_CSuggest_CSearchSettings(_CSearchManagerMakeDefault().._impl=_self, _a1, _a2);
     _a1._releaseIntermediate();
     final t = res._toDart();
     res._releaseIntermediate();
@@ -17151,10 +17682,10 @@ class SearchQueryBuilder implements ffi.Finalizable {
    Конфликтует с методом set_spatial_restriction.
   */
   SearchQueryBuilder setGeoPoint(
-    GeoPoint geoPoint
+    GeoPoint? geoPoint
   )  {
-    var _a1 = geoPoint._copyFromDartTo_CGeoPoint();
-    _CSearchQueryBuilder res = _CSearchQueryBuilder_setGeoPoint_CGeoPoint(_CSearchQueryBuilderMakeDefault().._impl=_self, _a1);
+    var _a1 = geoPoint._copyFromDartTo_COptional_CGeoPoint();
+    _CSearchQueryBuilder res = _CSearchQueryBuilder_setGeoPoint_COptional_CGeoPoint(_CSearchQueryBuilderMakeDefault().._impl=_self, _a1);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -17167,10 +17698,10 @@ class SearchQueryBuilder implements ffi.Finalizable {
    Для остальных запросов ограничение от 0 до 50000.
   */
   SearchQueryBuilder setRadius(
-    Meter radius
+    Meter? radius
   )  {
-    var _a1 = radius._copyFromDartTo_CMeter();
-    _CSearchQueryBuilder res = _CSearchQueryBuilder_setRadius_CMeter(_CSearchQueryBuilderMakeDefault().._impl=_self, _a1);
+    var _a1 = radius._copyFromDartTo_COptional_CMeter();
+    _CSearchQueryBuilder res = _CSearchQueryBuilder_setRadius_COptional_CMeter(_CSearchQueryBuilderMakeDefault().._impl=_self, _a1);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -17304,6 +17835,42 @@ extension _DartTo_COptional_CGeoRect on GeoRect? {
     final cOptional = _COptional_CGeoRectMakeDefault();
     if (this != null) {
       cOptional.value = this!._copyFromDartTo_CGeoRect();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - Meter? <-> _COptional_CMeter
+
+final class _COptional_CMeter extends ffi.Struct {
+  
+  external _CMeter value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CMeterBasicFunctions on _COptional_CMeter {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CMeterToDart on _COptional_CMeter {
+  Meter? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CMeter on Meter? {
+  _COptional_CMeter _copyFromDartTo_COptional_CMeter() {
+    final cOptional = _COptional_CMeterMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CMeter();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -17787,6 +18354,200 @@ extension _DartTo_CSearchHistoryItem on SearchHistoryItem {
   }
 }
 
+// MARK: - _SearchHistoryKeyStrategyCpp
+
+/**
+ Интерфейс, предоставляющий реализовать стратегию создания ключа для элемента истории поиска.
+ Ключ используется для определения уникальности элемента истории поиска.
+*/
+class _SearchHistoryKeyStrategyCpp extends SearchHistoryKeyStrategy implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CSearchHistoryKeyStrategyCpp_releasePtr);
+
+  _SearchHistoryKeyStrategyCpp._raw(this._self);
+  factory _SearchHistoryKeyStrategyCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _SearchHistoryKeyStrategyCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _SearchHistoryKeyStrategyCpp &&
+    other.runtimeType == runtimeType &&
+    _CSearchHistoryKeyStrategyCpp_cg_objectIdentifier(this._self) == _CSearchHistoryKeyStrategyCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CSearchHistoryKeyStrategyCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _SearchHistoryKeyStrategyCpp: Methods
+
+  /** Возвращает ключ для элемента истории поиска. */
+  String create(
+    SearchHistoryItem item
+  )  {
+    var _a1 = item._copyFromDartTo_CSearchHistoryItem();
+    _CString res = _CSearchHistoryKeyStrategyCpp_create_CSearchHistoryItem(_CSearchHistoryKeyStrategyCppMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - _SearchHistoryKeyStrategyCpp <-> CSearchHistoryKeyStrategyCpp
+
+final class _CSearchHistoryKeyStrategyCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CSearchHistoryKeyStrategyCppBasicFunctions on _CSearchHistoryKeyStrategyCpp {
+  void _releaseIntermediate() {
+    _CSearchHistoryKeyStrategyCpp_release(_impl);
+  }
+
+  _CSearchHistoryKeyStrategyCpp _retain() {
+    return _CSearchHistoryKeyStrategyCpp_retain(_impl);
+  }
+}
+
+extension _CSearchHistoryKeyStrategyCppToDart on _CSearchHistoryKeyStrategyCpp {
+  _SearchHistoryKeyStrategyCpp _toDart() {
+    return _SearchHistoryKeyStrategyCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCSearchHistoryKeyStrategyCpp on _SearchHistoryKeyStrategyCpp {
+  _CSearchHistoryKeyStrategyCpp _copyFromDartTo_CSearchHistoryKeyStrategyCpp() {
+    return (_CSearchHistoryKeyStrategyCppMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - SearchHistoryKeyStrategy
+
+/**
+ Интерфейс, предоставляющий реализовать стратегию создания ключа для элемента истории поиска.
+ Ключ используется для определения уникальности элемента истории поиска.
+*/
+abstract class SearchHistoryKeyStrategy {
+  String create(
+    SearchHistoryItem item
+  );
+}
+
+class _SearchHistoryKeyStrategy {
+  final SearchHistoryKeyStrategy object;
+  int refCounter = 1;
+
+  _SearchHistoryKeyStrategy(this.object);
+}
+
+final class _CSearchHistoryKeyStrategy extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _value;
+  external ffi.Pointer<ffi.Void> _cppValue;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CString)>>, _CSearchHistoryItem)>> _create_CSearchHistoryItem;
+}
+
+extension _CSearchHistoryKeyStrategyBasicFunctions on _CSearchHistoryKeyStrategy {
+  void _releaseIntermediate() {
+    _CSearchHistoryKeyStrategy_release(this);
+  }
+}
+
+int _CSearchHistoryKeyStrategyInstanceCounter = 1;
+final _CSearchHistoryKeyStrategyInstanceMap = <int, _SearchHistoryKeyStrategy>{};
+
+extension _CSearchHistoryKeyStrategyToDart on _CSearchHistoryKeyStrategy {
+  SearchHistoryKeyStrategy _toDart() {
+    late SearchHistoryKeyStrategy? result;
+    final platformValue = this._value.cast<ffi.Int64>();
+    if (platformValue.address != 0) {
+      result = _CSearchHistoryKeyStrategyInstanceMap[platformValue.address]?.object;
+    } else if (this._cppValue.address != 0) {
+      final cppValue = _CSearchHistoryKeyStrategyCppMakeDefault().._impl = this._cppValue;
+      result = cppValue._toDart();
+    }
+    if (result == null) {
+      throw Exception("Invalid intermediate object of type _CSearchHistoryKeyStrategy");
+    }
+    return result;
+  }
+}
+
+extension _DartTo_CSearchHistoryKeyStrategy on SearchHistoryKeyStrategy {
+  static void retainFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    _CSearchHistoryKeyStrategyInstanceMap[platformValue.address]?.refCounter += 1;
+  }
+
+  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    final platformObject = _CSearchHistoryKeyStrategyInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      return;
+    }
+    platformObject.refCounter -= 1;
+    if (platformObject.refCounter > 0) {
+      return;
+    }
+    _CSearchHistoryKeyStrategyInstanceMap.remove(platformValue.address);
+  }
+
+  _CSearchHistoryKeyStrategy _copyFromDartTo_CSearchHistoryKeyStrategy() {
+    var res = _CSearchHistoryKeyStrategyMakeDefault();
+    if (this is _SearchHistoryKeyStrategyCpp) {
+      final cppValue = this as _SearchHistoryKeyStrategyCpp;
+      res._cppValue = cppValue._copyFromDartTo_CSearchHistoryKeyStrategyCpp()._impl;
+      return res;
+    }
+    final instanceId = _CSearchHistoryKeyStrategyInstanceCounter;
+    _CSearchHistoryKeyStrategyInstanceCounter += 1;
+    _CSearchHistoryKeyStrategyInstanceMap[instanceId] = _SearchHistoryKeyStrategy(this);
+    res._value = ffi.Pointer.fromAddress(instanceId);
+    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
+    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
+    res._retain = retainFunctionCallable.nativeFunction;
+    //res._release = releaseFunctionCallable.nativeFunction;
+
+    final create_CSearchHistoryItemFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CString)>>, _CSearchHistoryItem)>.listener(create_CSearchHistoryItemFunction);
+    res._create_CSearchHistoryItem = create_CSearchHistoryItemFunctionCallable.nativeFunction;
+    return res;
+  }
+
+  static void create_CSearchHistoryItemFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CString)>> resultValueCallback, _CSearchHistoryItem item) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CSearchHistoryKeyStrategy");
+    }
+    final platformObject = _CSearchHistoryKeyStrategyInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CSearchHistoryKeyStrategy");
+    }
+
+    final itemDart = item._toDart();
+    final res = platformObject.object.create(itemDart);
+    item._releaseIntermediate();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>, _CString)>();
+    callbackFunction(context, res._copyFromDartTo_CString());
+  }
+
+
+}
+
 // MARK: - SearchHistoryResult
 
 /** Результат работы истории поиска при запросе истории. */
@@ -17934,27 +18695,23 @@ extension _DartTo_CSearchHistoryFilter on SearchHistoryFilter {
   }
 }
 	
-// MARK: - SearchHistoryFilterEnumSet
+// MARK: - EnumSet<SearchHistoryFilter>
 
 class SearchHistoryFilterEnumSet extends EnumSet<SearchHistoryFilter> {
-  SearchHistoryFilterEnumSet() : super();
+  const SearchHistoryFilterEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory SearchHistoryFilterEnumSet.fromRawValue(int rawValue) {
-    SearchHistoryFilterEnumSet enumSet = SearchHistoryFilterEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return SearchHistoryFilterEnumSet(rawValue);
   }
 
   factory SearchHistoryFilterEnumSet.of(Iterable<SearchHistoryFilter> elements) {
-    SearchHistoryFilterEnumSet enumSet = SearchHistoryFilterEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return SearchHistoryFilterEnumSet(rawValue);
   }
 
   factory SearchHistoryFilterEnumSet.all() {
-    SearchHistoryFilterEnumSet enumSet = SearchHistoryFilterEnumSet();
-    enumSet.addAll(SearchHistoryFilter.values);
-    return enumSet;
+    final rawValue = SearchHistoryFilter.values.fold(0, (acc, type) => acc | type.rawValue);
+    return SearchHistoryFilterEnumSet(rawValue);
   }
 
   @override
@@ -17964,32 +18721,6 @@ class SearchHistoryFilterEnumSet extends EnumSet<SearchHistoryFilter> {
   @override
   bool containsAllFromEnumSet(EnumSet<SearchHistoryFilter> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(SearchHistoryFilter value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<SearchHistoryFilter> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(SearchHistoryFilter value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<SearchHistoryFilter> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<SearchHistoryFilter> intersection(EnumSet<SearchHistoryFilter> other) =>
@@ -18002,6 +18733,10 @@ class SearchHistoryFilterEnumSet extends EnumSet<SearchHistoryFilter> {
   @override
   EnumSet<SearchHistoryFilter> difference(EnumSet<SearchHistoryFilter> other) =>
       SearchHistoryFilterEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<SearchHistoryFilter> toMutableEnumSet() =>
+      MutableSearchHistoryFilterEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<SearchHistoryFilter> toSet() {
@@ -18027,6 +18762,102 @@ class SearchHistoryFilterEnumSet extends EnumSet<SearchHistoryFilter> {
   }
 }
 
+class MutableSearchHistoryFilterEnumSet extends MutableEnumSet<SearchHistoryFilter> {
+  MutableSearchHistoryFilterEnumSet() : super();
+
+  factory MutableSearchHistoryFilterEnumSet.fromRawValue(int rawValue) {
+    MutableSearchHistoryFilterEnumSet enumSet = MutableSearchHistoryFilterEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableSearchHistoryFilterEnumSet.of(Iterable<SearchHistoryFilter> elements) {
+    MutableSearchHistoryFilterEnumSet enumSet = MutableSearchHistoryFilterEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableSearchHistoryFilterEnumSet.all() {
+    MutableSearchHistoryFilterEnumSet enumSet = MutableSearchHistoryFilterEnumSet();
+    enumSet.addAll(SearchHistoryFilter.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(SearchHistoryFilter value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<SearchHistoryFilter> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<SearchHistoryFilter> intersection(MutableEnumSet<SearchHistoryFilter> other) =>
+      MutableSearchHistoryFilterEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<SearchHistoryFilter> union(MutableEnumSet<SearchHistoryFilter> other) =>
+      MutableSearchHistoryFilterEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<SearchHistoryFilter> difference(MutableEnumSet<SearchHistoryFilter> other) =>
+      MutableSearchHistoryFilterEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<SearchHistoryFilter> toEnumSet() =>
+      SearchHistoryFilterEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<SearchHistoryFilter> toSet() {
+    Set<SearchHistoryFilter> result = {};
+    SearchHistoryFilter.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(SearchHistoryFilter value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<SearchHistoryFilter> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(SearchHistoryFilter value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<SearchHistoryFilter> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    SearchHistoryFilter.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CSearchHistoryFilter extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -18038,12 +18869,12 @@ extension _COptionSet_CSearchHistoryFilterBasicFunctions on _COptionSet_CSearchH
 }
 
 extension _COptionSet_CSearchHistoryFilterToDart on _COptionSet_CSearchHistoryFilter {
-  SearchHistoryFilterEnumSet _toDart() {
+  EnumSet<SearchHistoryFilter> _toDart() {
     return SearchHistoryFilterEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CSearchHistoryFilter on SearchHistoryFilterEnumSet {
+extension _DartTo_COptionSet_CSearchHistoryFilter on EnumSet<SearchHistoryFilter> {
   _COptionSet_CSearchHistoryFilter _copyFromDartTo_COptionSet_CSearchHistoryFilter() {
     return _COptionSet_CSearchHistoryFilterMakeDefault().._rawValue = this.rawValue;
   }
@@ -18054,18 +18885,18 @@ extension _DartTo_COptionSet_CSearchHistoryFilter on SearchHistoryFilterEnumSet 
 class SearchHistoryPage {
   final int limit;
   final int offset;
-  final SearchHistoryFilterEnumSet filter;
+  final EnumSet<SearchHistoryFilter> filter;
 
   const SearchHistoryPage({
     this.limit = 100,
     this.offset = 0,
-    required this.filter
+    this.filter = const SearchHistoryFilterEnumSet()
   });
 
   SearchHistoryPage copyWith({
     int? limit,
     int? offset,
-    SearchHistoryFilterEnumSet? filter
+    EnumSet<SearchHistoryFilter>? filter
   }) {
     return SearchHistoryPage(
       limit: limit ?? this.limit,
@@ -18149,15 +18980,6 @@ class SearchHistory implements ffi.Finalizable {
     return classObject;
   }
 
-  factory SearchHistory(
-    Context context
-  ) {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CSearchHistory res = _CSearchHistory_C_createWith_CContext(_a0);
-    _a0._releaseIntermediate();
-    return SearchHistory._create(res._impl);
-  }
-
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchHistory &&
@@ -18168,6 +18990,19 @@ class SearchHistory implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CSearchHistory_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CSearchHistory: Static Methods
+
+  static SearchHistory instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CSearchHistory res = _CSearchHistory_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   // MARK: SearchHistory: Methods
@@ -18235,6 +19070,21 @@ class SearchHistory implements ffi.Finalizable {
   /** Очищает историю поиска. */
   void clear()  {
     void res = _CSearchHistory_clear(_CSearchHistoryMakeDefault().._impl=_self);
+    return res;
+  }
+
+  /**
+   Устанавливает политику формирования ключей для истории поиска.
+   Миграцию уже существующих записей, созданных с использованием другой политики key_strategy,
+   необходимо выполнять вручную.
+   Если параметр не задан — используется алгоритм по умолчанию.
+  */
+  void setKeyStrategy(
+    SearchHistoryKeyStrategy? keyStrategy
+  )  {
+    var _a1 = keyStrategy._copyFromDartTo_COptional_CSearchHistoryKeyStrategy();
+    void res = _CSearchHistory_setKeyStrategy_COptional_CSearchHistoryKeyStrategy(_CSearchHistoryMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
     return res;
   }
 
@@ -18369,6 +19219,42 @@ extension _DartTo_CFuture_CSearchHistoryResult on CancelableOperation<SearchHist
   }
 }
 	
+// MARK: - SearchHistoryKeyStrategy? <-> _COptional_CSearchHistoryKeyStrategy
+
+final class _COptional_CSearchHistoryKeyStrategy extends ffi.Struct {
+  
+  external _CSearchHistoryKeyStrategy value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CSearchHistoryKeyStrategyBasicFunctions on _COptional_CSearchHistoryKeyStrategy {
+  void _releaseIntermediate() {
+    _COptional_CSearchHistoryKeyStrategy_release(this);
+  }
+}
+
+extension _COptional_CSearchHistoryKeyStrategyToDart on _COptional_CSearchHistoryKeyStrategy {
+  SearchHistoryKeyStrategy? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CSearchHistoryKeyStrategy on SearchHistoryKeyStrategy? {
+  _COptional_CSearchHistoryKeyStrategy _copyFromDartTo_COptional_CSearchHistoryKeyStrategy() {
+    final cOptional = _COptional_CSearchHistoryKeyStrategyMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CSearchHistoryKeyStrategy();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - Channel<ChangeType> <-> _CChannel_CChangeType
 
 class _CChannel_CChangeTypeImpl extends Channel<ChangeType> {
@@ -18750,42 +19636,6 @@ extension _DartTo_COptional_COrgId on OrgId? {
     final cOptional = _COptional_COrgIdMakeDefault();
     if (this != null) {
       cOptional.value = this!._copyFromDartTo_COrgId();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - Meter? <-> _COptional_CMeter
-
-final class _COptional_CMeter extends ffi.Struct {
-  
-  external _CMeter value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CMeterBasicFunctions on _COptional_CMeter {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CMeterToDart on _COptional_CMeter {
-  Meter? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CMeter on Meter? {
-  _COptional_CMeter _copyFromDartTo_COptional_CMeter() {
-    final cOptional = _COptional_CMeterMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CMeter();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -19814,6 +20664,309 @@ extension _DartTo_CCameraBehaviourChangeReason on CameraBehaviourChangeReason {
   }
 }
 	
+// MARK: - CameraChangeReason
+
+/** Причина изменения состояния камеры. */
+enum CameraChangeReason {
+  none(0),
+  /** Позиция камеры. */
+  position(1),
+  /** Ограничения уровня масштабирования. */
+  zoomRestrictions(2),
+  /** Разрешающая способность экрана (плотность пикселей на дюйм). */
+  devicePPI(4),
+  /** Отношение DPI к базовому DPI устройства. */
+  deviceDensity(8),
+  /** Размер области просмотра. */
+  size(16),
+  /** Отступы от краёв экрана. */
+  padding(32),
+  /** Точка экрана, к которой привязана позиция камеры. */
+  positionPoint(64),
+  /** Точка взгляда относительно полного размера вьюпорта. */
+  viewPoint(128),
+  /** Объемлющий прямоугольник видимой области карты. */
+  visibleRect(256),
+  /** Ограничения максимального угла наклона камеры. */
+  maxTiltRestriction(512),
+  /** Ограничения области видимости. */
+  viewportRestriction(1024),
+  /** Состояние камеры. */
+  state(2048),
+  /** Режим слежения камеры. */
+  behaviour(4096),
+  ;
+
+  const CameraChangeReason(this.rawValue);
+  final int rawValue;
+
+  static CameraChangeReason getByValue(int value) {
+    return CameraChangeReason.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CCameraChangeReason extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CCameraChangeReasonBasicFunctions on _CCameraChangeReason {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CCameraChangeReasonToDart on _CCameraChangeReason {
+  CameraChangeReason _toDart() {
+    return CameraChangeReason.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CCameraChangeReason on CameraChangeReason {
+  _CCameraChangeReason _copyFromDartTo_CCameraChangeReason() {
+    return _CCameraChangeReasonMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - EnumSet<CameraChangeReason>
+
+class CameraChangeReasonEnumSet extends EnumSet<CameraChangeReason> {
+  const CameraChangeReasonEnumSet([int rawValue = 0]) : super(rawValue);
+
+  factory CameraChangeReasonEnumSet.fromRawValue(int rawValue) {
+    return CameraChangeReasonEnumSet(rawValue);
+  }
+
+  factory CameraChangeReasonEnumSet.of(Iterable<CameraChangeReason> elements) {
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return CameraChangeReasonEnumSet(rawValue);
+  }
+
+  factory CameraChangeReasonEnumSet.all() {
+    final rawValue = CameraChangeReason.values.fold(0, (acc, type) => acc | type.rawValue);
+    return CameraChangeReasonEnumSet(rawValue);
+  }
+
+  @override
+  bool contains(CameraChangeReason value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(EnumSet<CameraChangeReason> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  EnumSet<CameraChangeReason> intersection(EnumSet<CameraChangeReason> other) =>
+      CameraChangeReasonEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  EnumSet<CameraChangeReason> union(EnumSet<CameraChangeReason> other) =>
+      CameraChangeReasonEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  EnumSet<CameraChangeReason> difference(EnumSet<CameraChangeReason> other) =>
+      CameraChangeReasonEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<CameraChangeReason> toMutableEnumSet() =>
+      MutableCameraChangeReasonEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<CameraChangeReason> toSet() {
+    Set<CameraChangeReason> result = {};
+    CameraChangeReason.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    CameraChangeReason.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
+class MutableCameraChangeReasonEnumSet extends MutableEnumSet<CameraChangeReason> {
+  MutableCameraChangeReasonEnumSet() : super();
+
+  factory MutableCameraChangeReasonEnumSet.fromRawValue(int rawValue) {
+    MutableCameraChangeReasonEnumSet enumSet = MutableCameraChangeReasonEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableCameraChangeReasonEnumSet.of(Iterable<CameraChangeReason> elements) {
+    MutableCameraChangeReasonEnumSet enumSet = MutableCameraChangeReasonEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableCameraChangeReasonEnumSet.all() {
+    MutableCameraChangeReasonEnumSet enumSet = MutableCameraChangeReasonEnumSet();
+    enumSet.addAll(CameraChangeReason.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(CameraChangeReason value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<CameraChangeReason> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<CameraChangeReason> intersection(MutableEnumSet<CameraChangeReason> other) =>
+      MutableCameraChangeReasonEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<CameraChangeReason> union(MutableEnumSet<CameraChangeReason> other) =>
+      MutableCameraChangeReasonEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<CameraChangeReason> difference(MutableEnumSet<CameraChangeReason> other) =>
+      MutableCameraChangeReasonEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<CameraChangeReason> toEnumSet() =>
+      CameraChangeReasonEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<CameraChangeReason> toSet() {
+    Set<CameraChangeReason> result = {};
+    CameraChangeReason.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(CameraChangeReason value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<CameraChangeReason> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(CameraChangeReason value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<CameraChangeReason> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    CameraChangeReason.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
+final class _COptionSet_CCameraChangeReason extends ffi.Struct {
+  @ffi.Uint32()
+  external int _rawValue;
+}
+
+extension _COptionSet_CCameraChangeReasonBasicFunctions on _COptionSet_CCameraChangeReason {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _COptionSet_CCameraChangeReasonToDart on _COptionSet_CCameraChangeReason {
+  EnumSet<CameraChangeReason> _toDart() {
+    return CameraChangeReasonEnumSet.fromRawValue(this._rawValue);
+  }
+}
+
+extension _DartTo_COptionSet_CCameraChangeReason on EnumSet<CameraChangeReason> {
+  _COptionSet_CCameraChangeReason _copyFromDartTo_COptionSet_CCameraChangeReason() {
+    return _COptionSet_CCameraChangeReasonMakeDefault().._rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - CameraChange
+
+/** Изменение состояние камеры. */
+class CameraChange {
+  /** Причины (набор флагов) изменения состояния камеры. */
+  final EnumSet<CameraChangeReason> changeReasons;
+
+  const CameraChange(this.changeReasons);
+
+  CameraChange copyWith({
+    EnumSet<CameraChangeReason>? changeReasons
+  }) {
+    return CameraChange(
+      changeReasons ?? this.changeReasons
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CameraChange &&
+    other.runtimeType == runtimeType &&
+    other.changeReasons == changeReasons;
+
+  @override
+  int get hashCode {
+    return changeReasons.hashCode;
+  }
+
+}
+final class _CCameraChange extends ffi.Struct {
+  external _COptionSet_CCameraChangeReason changeReasons;
+
+}
+// MARK: - CameraChange <-> _CCameraChange
+
+extension _CCameraChangeToDart on _CCameraChange {
+  CameraChange _toDart() {
+    return CameraChange(
+      this.changeReasons._toDart()
+    );
+  }
+}
+
+extension _DartTo_CCameraChange on CameraChange {
+  _CCameraChange _copyFromDartTo_CCameraChange() {
+    final res = _CCameraChangeMakeDefault();
+    res.changeReasons = this.changeReasons._copyFromDartTo_COptionSet_CCameraChangeReason();
+    return res;
+  }
+}
+extension _CCameraChangeRelease on _CCameraChange {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - CameraPositionPoint
 
 /**
@@ -20000,60 +21153,6 @@ extension _DartTo_CCameraViewPoint on CameraViewPoint {
   }
 }
 extension _CCameraViewPointRelease on _CCameraViewPoint {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - Color
-
-/** Цвет */
-class Color {
-  final int argb;
-
-  const Color([this.argb = 4278190080]);
-
-  Color copyWith({
-    int? argb
-  }) {
-    return Color(
-      argb ?? this.argb
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is Color &&
-    other.runtimeType == runtimeType &&
-    other.argb == argb;
-
-  @override
-  int get hashCode {
-    return argb.hashCode;
-  }
-
-}
-final class _CColor extends ffi.Struct {
-  @ffi.Uint32()
-  external int argb;
-
-}
-// MARK: - Color <-> _CColor
-
-extension _CColorToDart on _CColor {
-  Color _toDart() {
-    return Color(
-      this.argb
-    );
-  }
-}
-
-extension _DartTo_CColor on Color {
-  _CColor _copyFromDartTo_CColor() {
-    final res = _CColorMakeDefault();
-    res.argb = this.argb;
-    return res;
-  }
-}
-extension _CColorRelease on _CColor {
   void _releaseIntermediate() {
   }
 }
@@ -20278,6 +21377,62 @@ extension _CZIndexRelease on _CZIndex {
   }
 }
 
+// MARK: - CameraTransactionGuard
+
+class CameraTransactionGuard implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CCameraTransactionGuard_releasePtr);
+
+  CameraTransactionGuard._raw(this._self);
+  factory CameraTransactionGuard._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = CameraTransactionGuard._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CameraTransactionGuard &&
+    other.runtimeType == runtimeType &&
+    _CCameraTransactionGuard_cg_objectIdentifier(this._self) == _CCameraTransactionGuard_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CCameraTransactionGuard_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - CameraTransactionGuard <-> CCameraTransactionGuard
+
+final class _CCameraTransactionGuard extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CCameraTransactionGuardBasicFunctions on _CCameraTransactionGuard {
+  void _releaseIntermediate() {
+    _CCameraTransactionGuard_release(_impl);
+  }
+
+  _CCameraTransactionGuard _retain() {
+    return _CCameraTransactionGuard_retain(_impl);
+  }
+}
+
+extension _CCameraTransactionGuardToDart on _CCameraTransactionGuard {
+  CameraTransactionGuard _toDart() {
+    return CameraTransactionGuard._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCCameraTransactionGuard on CameraTransactionGuard {
+  _CCameraTransactionGuard _copyFromDartTo_CCameraTransactionGuard() {
+    return (_CCameraTransactionGuardMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - Zoom
 
 /**
@@ -20345,7 +21500,7 @@ extension _CZoomRelease on _CZoom {
 /**
  Угол наклона в градусах, где 0 - надир (смотрим вертикально вниз), 90 - горизонт спереди.
 
- Допустимыми считаются значения в интервале от 0 до 70 градусов.
+ Допустимыми считаются значения в интервале от #tilt_min до #tilt_max градусов.
  В случаях, когда точка позиции камеры расположена ближе к нижнему краю экрана,
  значение может быть дополнительно уменьшено.
 */
@@ -20928,7 +22083,7 @@ class _CustomFollowControllerCpp extends CustomFollowController implements ffi.F
   // MARK: _CustomFollowControllerCpp: Methods
 
   /** Набор видов значений, которыми умеет управлять данный контроллер. */
-  FollowValueEnumSet availableValues()  {
+  EnumSet<FollowValue> availableValues()  {
     _COptionSet_CFollowValue res = _CCustomFollowControllerCpp_availableValues(_CCustomFollowControllerCppMakeDefault().._impl=_self);
     return res._toDart();
   }
@@ -20941,7 +22096,7 @@ class _CustomFollowControllerCpp extends CustomFollowController implements ffi.F
    является последнее из них.
   */
   void requestValues(
-    FollowValueEnumSet values
+    EnumSet<FollowValue> values
   )  {
     var _a1 = values._copyFromDartTo_COptionSet_CFollowValue();
     void res = _CCustomFollowControllerCpp_requestValues_COptionSet_CFollowValue(_CCustomFollowControllerCppMakeDefault().._impl=_self, _a1);
@@ -21027,27 +22182,23 @@ extension _DartToCCustomFollowControllerCpp on _CustomFollowControllerCpp {
     return (_CCustomFollowControllerCppMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - FollowValueEnumSet
+// MARK: - EnumSet<FollowValue>
 
 class FollowValueEnumSet extends EnumSet<FollowValue> {
-  FollowValueEnumSet() : super();
+  const FollowValueEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory FollowValueEnumSet.fromRawValue(int rawValue) {
-    FollowValueEnumSet enumSet = FollowValueEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return FollowValueEnumSet(rawValue);
   }
 
   factory FollowValueEnumSet.of(Iterable<FollowValue> elements) {
-    FollowValueEnumSet enumSet = FollowValueEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return FollowValueEnumSet(rawValue);
   }
 
   factory FollowValueEnumSet.all() {
-    FollowValueEnumSet enumSet = FollowValueEnumSet();
-    enumSet.addAll(FollowValue.values);
-    return enumSet;
+    final rawValue = FollowValue.values.fold(0, (acc, type) => acc | type.rawValue);
+    return FollowValueEnumSet(rawValue);
   }
 
   @override
@@ -21057,32 +22208,6 @@ class FollowValueEnumSet extends EnumSet<FollowValue> {
   @override
   bool containsAllFromEnumSet(EnumSet<FollowValue> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(FollowValue value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<FollowValue> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(FollowValue value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<FollowValue> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<FollowValue> intersection(EnumSet<FollowValue> other) =>
@@ -21095,6 +22220,10 @@ class FollowValueEnumSet extends EnumSet<FollowValue> {
   @override
   EnumSet<FollowValue> difference(EnumSet<FollowValue> other) =>
       FollowValueEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<FollowValue> toMutableEnumSet() =>
+      MutableFollowValueEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<FollowValue> toSet() {
@@ -21120,6 +22249,102 @@ class FollowValueEnumSet extends EnumSet<FollowValue> {
   }
 }
 
+class MutableFollowValueEnumSet extends MutableEnumSet<FollowValue> {
+  MutableFollowValueEnumSet() : super();
+
+  factory MutableFollowValueEnumSet.fromRawValue(int rawValue) {
+    MutableFollowValueEnumSet enumSet = MutableFollowValueEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableFollowValueEnumSet.of(Iterable<FollowValue> elements) {
+    MutableFollowValueEnumSet enumSet = MutableFollowValueEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableFollowValueEnumSet.all() {
+    MutableFollowValueEnumSet enumSet = MutableFollowValueEnumSet();
+    enumSet.addAll(FollowValue.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(FollowValue value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<FollowValue> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<FollowValue> intersection(MutableEnumSet<FollowValue> other) =>
+      MutableFollowValueEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<FollowValue> union(MutableEnumSet<FollowValue> other) =>
+      MutableFollowValueEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<FollowValue> difference(MutableEnumSet<FollowValue> other) =>
+      MutableFollowValueEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<FollowValue> toEnumSet() =>
+      FollowValueEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<FollowValue> toSet() {
+    Set<FollowValue> result = {};
+    FollowValue.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(FollowValue value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<FollowValue> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(FollowValue value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<FollowValue> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    FollowValue.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CFollowValue extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -21131,12 +22356,12 @@ extension _COptionSet_CFollowValueBasicFunctions on _COptionSet_CFollowValue {
 }
 
 extension _COptionSet_CFollowValueToDart on _COptionSet_CFollowValue {
-  FollowValueEnumSet _toDart() {
+  EnumSet<FollowValue> _toDart() {
     return FollowValueEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CFollowValue on FollowValueEnumSet {
+extension _DartTo_COptionSet_CFollowValue on EnumSet<FollowValue> {
   _COptionSet_CFollowValue _copyFromDartTo_COptionSet_CFollowValue() {
     return _COptionSet_CFollowValueMakeDefault().._rawValue = this.rawValue;
   }
@@ -21258,9 +22483,9 @@ extension _DartTo_COptional_CStyleZoom on StyleZoom? {
  в качестве аргумента объект, реализующий данные интерфейс.
 */
 abstract class CustomFollowController {
-  FollowValueEnumSet availableValues();
+  EnumSet<FollowValue> availableValues();
   void requestValues(
-    FollowValueEnumSet values
+    EnumSet<FollowValue> values
   );
   void setNewValuesNotifier(
     NewValuesNotifier? notifier
@@ -21542,37 +22767,37 @@ extension _CEventToDart on _CEvent {
         final res = Event._create(_retain()._impl);
         return res;
       case 1:
-        final res = InputEvent._create(_retain()._impl);
+        final res = (_CInputEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = CancelEvent._create(_retain()._impl);
+        final res = (_CCancelEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = DirectMapControlBeginEvent._create(_retain()._impl);
+        final res = (_CDirectMapControlBeginEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = MapRotationBeginEvent._create(_retain()._impl);
+        final res = (_CMapRotationBeginEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 5:
-        final res = MapRotationEndEvent._create(_retain()._impl);
+        final res = (_CMapRotationEndEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 6:
-        final res = MapScalingBeginEvent._create(_retain()._impl);
+        final res = (_CMapScalingBeginEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 7:
-        final res = MapScalingEndEvent._create(_retain()._impl);
+        final res = (_CMapScalingEndEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 8:
-        final res = MapShiftBeginEvent._create(_retain()._impl);
+        final res = (_CMapShiftBeginEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 9:
-        final res = MapShiftEndEvent._create(_retain()._impl);
+        final res = (_CMapShiftEndEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 10:
-        final res = RotateMapToNorthEvent._create(_retain()._impl);
+        final res = (_CRotateMapToNorthEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 11:
-        final res = ScaleMapEvent._create(_retain()._impl);
+        final res = (_CScaleMapEventMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -21645,19 +22870,19 @@ extension _CInputEventToDart on _CInputEvent {
         final res = InputEvent._create(_retain()._impl);
         return res;
       case 1:
-        final res = DirectMapControlEndEvent._create(_retain()._impl);
+        final res = (_CDirectMapControlEndEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = DirectMapRotationEvent._create(_retain()._impl);
+        final res = (_CDirectMapRotationEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = DirectMapScalingEvent._create(_retain()._impl);
+        final res = (_CDirectMapScalingEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = DirectMapShiftEvent._create(_retain()._impl);
+        final res = (_CDirectMapShiftEventMakeDefault().._impl=_impl)._toDart();
         return res;
       case 5:
-        final res = DirectMapTiltEvent._create(_retain()._impl);
+        final res = (_CDirectMapTiltEventMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -21923,78 +23148,6 @@ extension _DartToCDirectMapControlEndEvent on DirectMapControlEndEvent {
     return (_CDirectMapControlEndEventMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - ScreenPoint
-
-/**
- Точка в экранных координатах.
-
- Направления осей: x - вправо, y - вниз.
- (0.0, 0.0) - левый верхний угол левого верхнего пикселя.
- Целая часть координаты - номер пикселя, дробная - относительное местоположение в пикселе.
-*/
-class ScreenPoint {
-  final double x;
-  final double y;
-
-  const ScreenPoint({
-    this.x = 0,
-    this.y = 0
-  });
-
-  ScreenPoint copyWith({
-    double? x,
-    double? y
-  }) {
-    return ScreenPoint(
-      x: x ?? this.x,
-      y: y ?? this.y
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenPoint &&
-    other.runtimeType == runtimeType &&
-    other.x == x &&
-    other.y == y;
-
-  @override
-  int get hashCode {
-    return Object.hash(x, y);
-  }
-
-}
-final class _CScreenPoint extends ffi.Struct {
-  @ffi.Float()
-  external double x;
-
-  @ffi.Float()
-  external double y;
-
-}
-// MARK: - ScreenPoint <-> _CScreenPoint
-
-extension _CScreenPointToDart on _CScreenPoint {
-  ScreenPoint _toDart() {
-    return ScreenPoint(
-      x: this.x,
-      y: this.y
-    );
-  }
-}
-
-extension _DartTo_CScreenPoint on ScreenPoint {
-  _CScreenPoint _copyFromDartTo_CScreenPoint() {
-    final res = _CScreenPointMakeDefault();
-    res.x = this.x;
-    res.y = this.y;
-    return res;
-  }
-}
-extension _CScreenPointRelease on _CScreenPoint {
-  void _releaseIntermediate() {
-  }
-}
-
 // MARK: - DirectMapRotationEvent
 
 /** Событие прямого вращения карты. О событиях прямого управления картой описано в DirectMapControlBeginEvent. */
@@ -22199,76 +23352,6 @@ extension _DartToCDirectMapScalingEvent on DirectMapScalingEvent {
     return (_CDirectMapScalingEventMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - ScreenShift
-
-/**
- Смещение карты по горизонтали и вертикали в координатном пространстве экрана.
-
- Положительное направление смещения: dx - вправо, dy - вниз.
-*/
-class ScreenShift {
-  final double dx;
-  final double dy;
-
-  const ScreenShift({
-    this.dx = 0,
-    this.dy = 0
-  });
-
-  ScreenShift copyWith({
-    double? dx,
-    double? dy
-  }) {
-    return ScreenShift(
-      dx: dx ?? this.dx,
-      dy: dy ?? this.dy
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenShift &&
-    other.runtimeType == runtimeType &&
-    other.dx == dx &&
-    other.dy == dy;
-
-  @override
-  int get hashCode {
-    return Object.hash(dx, dy);
-  }
-
-}
-final class _CScreenShift extends ffi.Struct {
-  @ffi.Float()
-  external double dx;
-
-  @ffi.Float()
-  external double dy;
-
-}
-// MARK: - ScreenShift <-> _CScreenShift
-
-extension _CScreenShiftToDart on _CScreenShift {
-  ScreenShift _toDart() {
-    return ScreenShift(
-      dx: this.dx,
-      dy: this.dy
-    );
-  }
-}
-
-extension _DartTo_CScreenShift on ScreenShift {
-  _CScreenShift _copyFromDartTo_CScreenShift() {
-    final res = _CScreenShiftMakeDefault();
-    res.dx = this.dx;
-    res.dy = this.dy;
-    return res;
-  }
-}
-extension _CScreenShiftRelease on _CScreenShift {
-  void _releaseIntermediate() {
-  }
-}
-
 // MARK: - DirectMapShiftEvent
 
 /** Событие прямого сдвига карты. События прямого управления картой описаны в DirectMapControlBeginEvent. */
@@ -22471,6 +23554,7 @@ extension _DartTo_CMapRotationDirection on MapRotationDirection {
 
 /** Событие начала вращения карты вокруг точки. */
 class MapRotationBeginEvent extends Event implements ffi.Finalizable {
+  /** Направление вращения карты. */
   MapRotationDirection get direction {
     _CMapRotationDirection res = _CMapRotationBeginEvent_direction(_CMapRotationBeginEventMakeDefault().._impl=_self);
     return res._toDart();
@@ -22486,9 +23570,9 @@ class MapRotationBeginEvent extends Event implements ffi.Finalizable {
   }
 
   factory MapRotationBeginEvent(
-    MapRotationDirection inDirection
+    MapRotationDirection direction
   ) {
-    var _a0 = inDirection._copyFromDartTo_CMapRotationDirection();
+    var _a0 = direction._copyFromDartTo_CMapRotationDirection();
     _CMapRotationBeginEvent res = _CMapRotationBeginEvent_C_createWith_CMapRotationDirection(_a0);
     return MapRotationBeginEvent._create(res._impl);
   }
@@ -22640,6 +23724,7 @@ extension _DartTo_CMapScalingDirection on MapScalingDirection {
 
 /** Событие начала изменения масштаба. */
 class MapScalingBeginEvent extends Event implements ffi.Finalizable {
+  /** Направление изменения масштаба карты. */
   MapScalingDirection get direction {
     _CMapScalingDirection res = _CMapScalingBeginEvent_direction(_CMapScalingBeginEventMakeDefault().._impl=_self);
     return res._toDart();
@@ -22655,9 +23740,9 @@ class MapScalingBeginEvent extends Event implements ffi.Finalizable {
   }
 
   factory MapScalingBeginEvent(
-    MapScalingDirection inDirection
+    MapScalingDirection direction
   ) {
-    var _a0 = inDirection._copyFromDartTo_CMapScalingDirection();
+    var _a0 = direction._copyFromDartTo_CMapScalingDirection();
     _CMapScalingBeginEvent res = _CMapScalingBeginEvent_C_createWith_CMapScalingDirection(_a0);
     return MapScalingBeginEvent._create(res._impl);
   }
@@ -22813,6 +23898,7 @@ extension _DartTo_CMapShiftDirection on MapShiftDirection {
 
 /** Событие начала сдвига карты. */
 class MapShiftBeginEvent extends Event implements ffi.Finalizable {
+  /** Направление смещения карты. */
   MapShiftDirection get direction {
     _CMapShiftDirection res = _CMapShiftBeginEvent_direction(_CMapShiftBeginEventMakeDefault().._impl=_self);
     return res._toDart();
@@ -22828,9 +23914,9 @@ class MapShiftBeginEvent extends Event implements ffi.Finalizable {
   }
 
   factory MapShiftBeginEvent(
-    MapShiftDirection inDirection
+    MapShiftDirection direction
   ) {
-    var _a0 = inDirection._copyFromDartTo_CMapShiftDirection();
+    var _a0 = direction._copyFromDartTo_CMapShiftDirection();
     _CMapShiftBeginEvent res = _CMapShiftBeginEvent_C_createWith_CMapShiftDirection(_a0);
     return MapShiftBeginEvent._create(res._impl);
   }
@@ -23916,34 +25002,34 @@ extension _CMapObjectToDart on _CMapObject {
         final res = MapObject._create(_retain()._impl);
         return res;
       case 1:
-        final res = GeometryMapObject._create(_retain()._impl);
+        final res = (_CGeometryMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = ClusterObject._create(_retain()._impl);
+        final res = (_CClusterObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = DgisMapObject._create(_retain()._impl);
+        final res = (_CDgisMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = MyLocationMapObject._create(_retain()._impl);
+        final res = (_CMyLocationMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 5:
-        final res = RoadEventMapObject._create(_retain()._impl);
+        final res = (_CRoadEventMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 6:
-        final res = SimpleMapObject._create(_retain()._impl);
+        final res = (_CSimpleMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 7:
-        final res = SimpleClusterObject._create(_retain()._impl);
+        final res = (_CSimpleClusterObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 8:
-        final res = RouteMapObject._create(_retain()._impl);
+        final res = (_CRouteMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 9:
-        final res = RouteInfoCalloutMapObject._create(_retain()._impl);
+        final res = (_CRouteInfoCalloutMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 10:
-        final res = RoutePointMapObject._create(_retain()._impl);
+        final res = (_CRoutePointMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -24561,28 +25647,28 @@ extension _CSourceToDart on _CSource {
         final res = Source._create(_retain()._impl);
         return res;
       case 1:
-        final res = DgisSource._create(_retain()._impl);
+        final res = (_CDgisSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = GeometryMapObjectSource._create(_retain()._impl);
+        final res = (_CGeometryMapObjectSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = MyLocationMapObjectSource._create(_retain()._impl);
+        final res = (_CMyLocationMapObjectSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = TrafficSource._create(_retain()._impl);
+        final res = (_CTrafficSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 5:
-        final res = RoadEventSource._create(_retain()._impl);
+        final res = (_CRoadEventSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 6:
-        final res = RasterTileSource._create(_retain()._impl);
+        final res = (_CRasterTileSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 7:
-        final res = RouteEditorSource._create(_retain()._impl);
+        final res = (_CRouteEditorSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       case 8:
-        final res = RouteMapObjectSource._create(_retain()._impl);
+        final res = (_CRouteMapObjectSourceMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -24647,6 +25733,18 @@ class DgisSource extends Source implements ffi.Finalizable {
     var _a0 = context._copyFromDartTo_CContext();
     var _a1 = workingMode._copyFromDartTo_CDgisSourceWorkingMode();
     _CSource res = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode(_a0, _a1);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /** Создание источника, получающего реалистичные данные с серверов 2ГИС. */
+  static Source createImmersiveDgisSource(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CSource res = _CDgisSource_S_createImmersiveDgisSource_CContext(_a0);
     _a0._releaseIntermediate();
     final t = res._toDart();
     res._releaseIntermediate();
@@ -24848,16 +25946,16 @@ extension _CFollowControllerToDart on _CFollowController {
         final res = FollowController._create(_retain()._impl);
         return res;
       case 1:
-        final res = BearingFollowController._create(_retain()._impl);
+        final res = (_CBearingFollowControllerMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = CoordinatesFollowController._create(_retain()._impl);
+        final res = (_CCoordinatesFollowControllerMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = StyleZoomFollowController._create(_retain()._impl);
+        final res = (_CStyleZoomFollowControllerMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = TiltFollowController._create(_retain()._impl);
+        final res = (_CTiltFollowControllerMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -25090,6 +26188,19 @@ class Image implements ffi.Finalizable {
     return classObject;
   }
 
+  @internal
+  factory Image(
+    Context context,
+    ImageLoader loader
+  ) {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = loader._copyFromDartTo_CImageLoader();
+    _CImage res = _CImage_C_createWith_CContext_CImageLoader(_a0, _a1);
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    return Image._create(res._impl);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Image &&
@@ -25130,6 +26241,71 @@ extension _CImageToDart on _CImage {
 extension _DartToCImage on Image {
   _CImage _copyFromDartTo_CImage() {
     return (_CImageMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - _ImageLoaderCpp
+
+class _ImageLoaderCpp extends ImageLoader implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CImageLoaderCpp_releasePtr);
+
+  _ImageLoaderCpp._raw(this._self);
+  factory _ImageLoaderCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _ImageLoaderCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _ImageLoaderCpp &&
+    other.runtimeType == runtimeType &&
+    _CImageLoaderCpp_cg_objectIdentifier(this._self) == _CImageLoaderCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CImageLoaderCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _ImageLoaderCpp: Methods
+
+  ImageData load()  {
+    _CImageData res = _CImageLoaderCpp_load(_CImageLoaderCppMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - _ImageLoaderCpp <-> CImageLoaderCpp
+
+final class _CImageLoaderCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CImageLoaderCppBasicFunctions on _CImageLoaderCpp {
+  void _releaseIntermediate() {
+    _CImageLoaderCpp_release(_impl);
+  }
+
+  _CImageLoaderCpp _retain() {
+    return _CImageLoaderCpp_retain(_impl);
+  }
+}
+
+extension _CImageLoaderCppToDart on _CImageLoaderCpp {
+  _ImageLoaderCpp _toDart() {
+    return _ImageLoaderCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCImageLoaderCpp on _ImageLoaderCpp {
+  _CImageLoaderCpp _copyFromDartTo_CImageLoaderCpp() {
+    return (_CImageLoaderCppMakeDefault().._impl=_self)._retain();
   }
 }
 // MARK: - ImageFormat
@@ -25250,71 +26426,6 @@ extension _CImageDataRelease on _CImageData {
   }
 }
 
-// MARK: - _ImageLoaderCpp
-
-class _ImageLoaderCpp extends ImageLoader implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  static final _finalizer = ffi.NativeFinalizer(_CImageLoaderCpp_releasePtr);
-
-  _ImageLoaderCpp._raw(this._self);
-  factory _ImageLoaderCpp._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = _ImageLoaderCpp._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is _ImageLoaderCpp &&
-    other.runtimeType == runtimeType &&
-    _CImageLoaderCpp_cg_objectIdentifier(this._self) == _CImageLoaderCpp_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CImageLoaderCpp_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: _ImageLoaderCpp: Methods
-
-  ImageData load()  {
-    _CImageData res = _CImageLoaderCpp_load(_CImageLoaderCppMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-// MARK: - _ImageLoaderCpp <-> CImageLoaderCpp
-
-final class _CImageLoaderCpp extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CImageLoaderCppBasicFunctions on _CImageLoaderCpp {
-  void _releaseIntermediate() {
-    _CImageLoaderCpp_release(_impl);
-  }
-
-  _CImageLoaderCpp _retain() {
-    return _CImageLoaderCpp_retain(_impl);
-  }
-}
-
-extension _CImageLoaderCppToDart on _CImageLoaderCpp {
-  _ImageLoaderCpp _toDart() {
-    return _ImageLoaderCpp._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCImageLoaderCpp on _ImageLoaderCpp {
-  _CImageLoaderCpp _copyFromDartTo_CImageLoaderCpp() {
-    return (_CImageLoaderCppMakeDefault().._impl=_self)._retain();
-  }
-}
 // MARK: - ImageLoader
 
 @internal
@@ -25758,6 +26869,19 @@ class ModelData implements ffi.Finalizable {
     return classObject;
   }
 
+  @internal
+  factory ModelData(
+    Context context,
+    ModelDataLoader loader
+  ) {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = loader._copyFromDartTo_CModelDataLoader();
+    _CModelData res = _CModelData_C_createWith_CContext_CModelDataLoader(_a0, _a1);
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    return ModelData._create(res._impl);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ModelData &&
@@ -25800,6 +26924,186 @@ extension _DartToCModelData on ModelData {
     return (_CModelDataMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - _ModelDataLoaderCpp
+
+/** Загрузчик данных модели. */
+class _ModelDataLoaderCpp extends ModelDataLoader implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CModelDataLoaderCpp_releasePtr);
+
+  _ModelDataLoaderCpp._raw(this._self);
+  factory _ModelDataLoaderCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _ModelDataLoaderCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _ModelDataLoaderCpp &&
+    other.runtimeType == runtimeType &&
+    _CModelDataLoaderCpp_cg_objectIdentifier(this._self) == _CModelDataLoaderCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CModelDataLoaderCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _ModelDataLoaderCpp: Methods
+
+  ByteData load()  {
+    _CData res = _CModelDataLoaderCpp_load(_CModelDataLoaderCppMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - _ModelDataLoaderCpp <-> CModelDataLoaderCpp
+
+final class _CModelDataLoaderCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CModelDataLoaderCppBasicFunctions on _CModelDataLoaderCpp {
+  void _releaseIntermediate() {
+    _CModelDataLoaderCpp_release(_impl);
+  }
+
+  _CModelDataLoaderCpp _retain() {
+    return _CModelDataLoaderCpp_retain(_impl);
+  }
+}
+
+extension _CModelDataLoaderCppToDart on _CModelDataLoaderCpp {
+  _ModelDataLoaderCpp _toDart() {
+    return _ModelDataLoaderCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCModelDataLoaderCpp on _ModelDataLoaderCpp {
+  _CModelDataLoaderCpp _copyFromDartTo_CModelDataLoaderCpp() {
+    return (_CModelDataLoaderCppMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - ModelDataLoader
+
+/** Загрузчик данных модели. */
+@internal
+abstract class ModelDataLoader {
+  ByteData load();
+}
+
+class _ModelDataLoader {
+  final ModelDataLoader object;
+  int refCounter = 1;
+
+  _ModelDataLoader(this.object);
+}
+
+final class _CModelDataLoader extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _value;
+  external ffi.Pointer<ffi.Void> _cppValue;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>>)>> _load;
+}
+
+extension _CModelDataLoaderBasicFunctions on _CModelDataLoader {
+  void _releaseIntermediate() {
+    _CModelDataLoader_release(this);
+  }
+}
+
+int _CModelDataLoaderInstanceCounter = 1;
+final _CModelDataLoaderInstanceMap = <int, _ModelDataLoader>{};
+
+extension _CModelDataLoaderToDart on _CModelDataLoader {
+  ModelDataLoader _toDart() {
+    late ModelDataLoader? result;
+    final platformValue = this._value.cast<ffi.Int64>();
+    if (platformValue.address != 0) {
+      result = _CModelDataLoaderInstanceMap[platformValue.address]?.object;
+    } else if (this._cppValue.address != 0) {
+      final cppValue = _CModelDataLoaderCppMakeDefault().._impl = this._cppValue;
+      result = cppValue._toDart();
+    }
+    if (result == null) {
+      throw Exception("Invalid intermediate object of type _CModelDataLoader");
+    }
+    return result;
+  }
+}
+
+extension _DartTo_CModelDataLoader on ModelDataLoader {
+  static void retainFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    _CModelDataLoaderInstanceMap[platformValue.address]?.refCounter += 1;
+  }
+
+  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    final platformObject = _CModelDataLoaderInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      return;
+    }
+    platformObject.refCounter -= 1;
+    if (platformObject.refCounter > 0) {
+      return;
+    }
+    _CModelDataLoaderInstanceMap.remove(platformValue.address);
+  }
+
+  _CModelDataLoader _copyFromDartTo_CModelDataLoader() {
+    var res = _CModelDataLoaderMakeDefault();
+    if (this is _ModelDataLoaderCpp) {
+      final cppValue = this as _ModelDataLoaderCpp;
+      res._cppValue = cppValue._copyFromDartTo_CModelDataLoaderCpp()._impl;
+      return res;
+    }
+    final instanceId = _CModelDataLoaderInstanceCounter;
+    _CModelDataLoaderInstanceCounter += 1;
+    _CModelDataLoaderInstanceMap[instanceId] = _ModelDataLoader(this);
+    res._value = ffi.Pointer.fromAddress(instanceId);
+    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
+    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
+    res._retain = retainFunctionCallable.nativeFunction;
+    //res._release = releaseFunctionCallable.nativeFunction;
+
+    final loadFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>>)>.listener(loadFunction);
+    res._load = loadFunctionCallable.nativeFunction;
+    return res;
+  }
+
+  static void loadFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>> resultValueCallback) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CModelDataLoader");
+    }
+    final platformObject = _CModelDataLoaderInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CModelDataLoader");
+    }
+
+    final res = platformObject.object.load();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>, _CData)>();
+    callbackFunction(context, res._copyFromDartTo_CData());
+  }
+
+
+}
+
 // MARK: - MyLocationMapObject
 
 /** Маркер геопозиции. */
@@ -26160,6 +27464,11 @@ class RoadEvent implements ffi.Finalizable {
     _CGeoPoint res = _CRoadEvent_location(_CRoadEventMakeDefault().._impl=_self);
     return res._toDart();
   }
+  /** Высота дорожного события. */
+  Elevation get elevation {
+    _CElevation res = _CRoadEvent_elevation(_CRoadEventMakeDefault().._impl=_self);
+    return res._toDart();
+  }
   /** Пользовательское описание дорожного события. */
   String get description {
     _CString res = _CRoadEvent_description(_CRoadEventMakeDefault().._impl=_self);
@@ -26192,7 +27501,7 @@ class RoadEvent implements ffi.Finalizable {
   
    - Note: На текущий момент могут быть проставлены только у пользовательских событий.
   */
-  LaneEnumSet get lanes {
+  EnumSet<Lane> get lanes {
     _COptionSet_CLane res = _CRoadEvent_lanes(_CRoadEventMakeDefault().._impl=_self);
     return res._toDart();
   }
@@ -26512,27 +27821,23 @@ extension _DartTo_CCameraPurpose on CameraPurpose {
   }
 }
 	
-// MARK: - CameraPurposeEnumSet
+// MARK: - EnumSet<CameraPurpose>
 
 class CameraPurposeEnumSet extends EnumSet<CameraPurpose> {
-  CameraPurposeEnumSet() : super();
+  const CameraPurposeEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory CameraPurposeEnumSet.fromRawValue(int rawValue) {
-    CameraPurposeEnumSet enumSet = CameraPurposeEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return CameraPurposeEnumSet(rawValue);
   }
 
   factory CameraPurposeEnumSet.of(Iterable<CameraPurpose> elements) {
-    CameraPurposeEnumSet enumSet = CameraPurposeEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return CameraPurposeEnumSet(rawValue);
   }
 
   factory CameraPurposeEnumSet.all() {
-    CameraPurposeEnumSet enumSet = CameraPurposeEnumSet();
-    enumSet.addAll(CameraPurpose.values);
-    return enumSet;
+    final rawValue = CameraPurpose.values.fold(0, (acc, type) => acc | type.rawValue);
+    return CameraPurposeEnumSet(rawValue);
   }
 
   @override
@@ -26542,32 +27847,6 @@ class CameraPurposeEnumSet extends EnumSet<CameraPurpose> {
   @override
   bool containsAllFromEnumSet(EnumSet<CameraPurpose> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(CameraPurpose value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<CameraPurpose> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(CameraPurpose value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<CameraPurpose> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<CameraPurpose> intersection(EnumSet<CameraPurpose> other) =>
@@ -26580,6 +27859,10 @@ class CameraPurposeEnumSet extends EnumSet<CameraPurpose> {
   @override
   EnumSet<CameraPurpose> difference(EnumSet<CameraPurpose> other) =>
       CameraPurposeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<CameraPurpose> toMutableEnumSet() =>
+      MutableCameraPurposeEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<CameraPurpose> toSet() {
@@ -26605,6 +27888,102 @@ class CameraPurposeEnumSet extends EnumSet<CameraPurpose> {
   }
 }
 
+class MutableCameraPurposeEnumSet extends MutableEnumSet<CameraPurpose> {
+  MutableCameraPurposeEnumSet() : super();
+
+  factory MutableCameraPurposeEnumSet.fromRawValue(int rawValue) {
+    MutableCameraPurposeEnumSet enumSet = MutableCameraPurposeEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableCameraPurposeEnumSet.of(Iterable<CameraPurpose> elements) {
+    MutableCameraPurposeEnumSet enumSet = MutableCameraPurposeEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableCameraPurposeEnumSet.all() {
+    MutableCameraPurposeEnumSet enumSet = MutableCameraPurposeEnumSet();
+    enumSet.addAll(CameraPurpose.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(CameraPurpose value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<CameraPurpose> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<CameraPurpose> intersection(MutableEnumSet<CameraPurpose> other) =>
+      MutableCameraPurposeEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<CameraPurpose> union(MutableEnumSet<CameraPurpose> other) =>
+      MutableCameraPurposeEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<CameraPurpose> difference(MutableEnumSet<CameraPurpose> other) =>
+      MutableCameraPurposeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<CameraPurpose> toEnumSet() =>
+      CameraPurposeEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<CameraPurpose> toSet() {
+    Set<CameraPurpose> result = {};
+    CameraPurpose.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(CameraPurpose value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<CameraPurpose> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(CameraPurpose value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<CameraPurpose> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    CameraPurpose.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CCameraPurpose extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -26616,12 +27995,12 @@ extension _COptionSet_CCameraPurposeBasicFunctions on _COptionSet_CCameraPurpose
 }
 
 extension _COptionSet_CCameraPurposeToDart on _COptionSet_CCameraPurpose {
-  CameraPurposeEnumSet _toDart() {
+  EnumSet<CameraPurpose> _toDart() {
     return CameraPurposeEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CCameraPurpose on CameraPurposeEnumSet {
+extension _DartTo_COptionSet_CCameraPurpose on EnumSet<CameraPurpose> {
   _COptionSet_CCameraPurpose _copyFromDartTo_COptionSet_CCameraPurpose() {
     return _COptionSet_CCameraPurposeMakeDefault().._rawValue = this.rawValue;
   }
@@ -26636,7 +28015,7 @@ class RoadCameraInfo {
   
    - Note: Могут отсутствовать, если нет информации, или если камеру добавил пользователь.
   */
-  final CameraPurposeEnumSet purposes;
+  final EnumSet<CameraPurpose> purposes;
   /**
    Ограничение скорости в км/ч.
   
@@ -26651,7 +28030,7 @@ class RoadCameraInfo {
   });
 
   RoadCameraInfo copyWith({
-    CameraPurposeEnumSet? purposes,
+    EnumSet<CameraPurpose>? purposes,
     Optional<int?>? speedLimit
   }) {
     return RoadCameraInfo(
@@ -26899,27 +28278,23 @@ extension _DartTo_CLane on Lane {
   }
 }
 	
-// MARK: - LaneEnumSet
+// MARK: - EnumSet<Lane>
 
 class LaneEnumSet extends EnumSet<Lane> {
-  LaneEnumSet() : super();
+  const LaneEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory LaneEnumSet.fromRawValue(int rawValue) {
-    LaneEnumSet enumSet = LaneEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return LaneEnumSet(rawValue);
   }
 
   factory LaneEnumSet.of(Iterable<Lane> elements) {
-    LaneEnumSet enumSet = LaneEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return LaneEnumSet(rawValue);
   }
 
   factory LaneEnumSet.all() {
-    LaneEnumSet enumSet = LaneEnumSet();
-    enumSet.addAll(Lane.values);
-    return enumSet;
+    final rawValue = Lane.values.fold(0, (acc, type) => acc | type.rawValue);
+    return LaneEnumSet(rawValue);
   }
 
   @override
@@ -26929,32 +28304,6 @@ class LaneEnumSet extends EnumSet<Lane> {
   @override
   bool containsAllFromEnumSet(EnumSet<Lane> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(Lane value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<Lane> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(Lane value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<Lane> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<Lane> intersection(EnumSet<Lane> other) =>
@@ -26967,6 +28316,10 @@ class LaneEnumSet extends EnumSet<Lane> {
   @override
   EnumSet<Lane> difference(EnumSet<Lane> other) =>
       LaneEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<Lane> toMutableEnumSet() =>
+      MutableLaneEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<Lane> toSet() {
@@ -26992,6 +28345,102 @@ class LaneEnumSet extends EnumSet<Lane> {
   }
 }
 
+class MutableLaneEnumSet extends MutableEnumSet<Lane> {
+  MutableLaneEnumSet() : super();
+
+  factory MutableLaneEnumSet.fromRawValue(int rawValue) {
+    MutableLaneEnumSet enumSet = MutableLaneEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableLaneEnumSet.of(Iterable<Lane> elements) {
+    MutableLaneEnumSet enumSet = MutableLaneEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableLaneEnumSet.all() {
+    MutableLaneEnumSet enumSet = MutableLaneEnumSet();
+    enumSet.addAll(Lane.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(Lane value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<Lane> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<Lane> intersection(MutableEnumSet<Lane> other) =>
+      MutableLaneEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<Lane> union(MutableEnumSet<Lane> other) =>
+      MutableLaneEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<Lane> difference(MutableEnumSet<Lane> other) =>
+      MutableLaneEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<Lane> toEnumSet() =>
+      LaneEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<Lane> toSet() {
+    Set<Lane> result = {};
+    Lane.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(Lane value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<Lane> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(Lane value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<Lane> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    Lane.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CLane extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -27003,12 +28452,12 @@ extension _COptionSet_CLaneBasicFunctions on _COptionSet_CLane {
 }
 
 extension _COptionSet_CLaneToDart on _COptionSet_CLane {
-  LaneEnumSet _toDart() {
+  EnumSet<Lane> _toDart() {
     return LaneEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CLane on LaneEnumSet {
+extension _DartTo_COptionSet_CLane on EnumSet<Lane> {
   _COptionSet_CLane _copyFromDartTo_COptionSet_CLane() {
     return _COptionSet_CLaneMakeDefault().._rawValue = this.rawValue;
   }
@@ -27847,6 +29296,42 @@ extension _DartTo_CRoadEventActionState on RoadEventActionState {
   }
 }
 	
+// MARK: - int? <-> _COptional_uint32_t
+
+final class _COptional_uint32_t extends ffi.Struct {
+  @ffi.Uint32()
+  external int value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_uint32_tBasicFunctions on _COptional_uint32_t {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_uint32_tToDart on _COptional_uint32_t {
+  int? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value;
+  }
+}
+
+extension _DartTo_COptional_uint32_t on int? {
+  _COptional_uint32_t _copyFromDartTo_COptional_uint32_t() {
+    final cOptional = _COptional_uint32_tMakeDefault();
+    if (this != null) {
+      cOptional.value = this!;
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - RoadEventActionInfo
 
 /** Информация о действии. */
@@ -28445,11 +29930,11 @@ extension _DartTo_CRoadEventDisplayCategory on RoadEventDisplayCategory {
 /** Интерфейс класса, управляющего отображением дорожных событий (tUGC) на карте. */
 class RoadEventSource extends Source implements ffi.Finalizable {
   /** Получение текущих категорий событий, предоставляемых данным источником. */
-  RoadEventDisplayCategoryEnumSet get visibleEvents {
+  EnumSet<RoadEventDisplayCategory> get visibleEvents {
     _COptionSet_CRoadEventDisplayCategory res = _CRoadEventSource_getVisibleEvents(_CRoadEventSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set visibleEvents(RoadEventDisplayCategoryEnumSet types) {
+  set visibleEvents(EnumSet<RoadEventDisplayCategory> types) {
     var _a1 = types._copyFromDartTo_COptionSet_CRoadEventDisplayCategory();
     void res = _CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategory(_CRoadEventSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -28549,27 +30034,23 @@ extension _DartToCRoadEventSource on RoadEventSource {
     return (_CRoadEventSourceMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - RoadEventDisplayCategoryEnumSet
+// MARK: - EnumSet<RoadEventDisplayCategory>
 
 class RoadEventDisplayCategoryEnumSet extends EnumSet<RoadEventDisplayCategory> {
-  RoadEventDisplayCategoryEnumSet() : super();
+  const RoadEventDisplayCategoryEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RoadEventDisplayCategoryEnumSet.fromRawValue(int rawValue) {
-    RoadEventDisplayCategoryEnumSet enumSet = RoadEventDisplayCategoryEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RoadEventDisplayCategoryEnumSet(rawValue);
   }
 
   factory RoadEventDisplayCategoryEnumSet.of(Iterable<RoadEventDisplayCategory> elements) {
-    RoadEventDisplayCategoryEnumSet enumSet = RoadEventDisplayCategoryEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RoadEventDisplayCategoryEnumSet(rawValue);
   }
 
   factory RoadEventDisplayCategoryEnumSet.all() {
-    RoadEventDisplayCategoryEnumSet enumSet = RoadEventDisplayCategoryEnumSet();
-    enumSet.addAll(RoadEventDisplayCategory.values);
-    return enumSet;
+    final rawValue = RoadEventDisplayCategory.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RoadEventDisplayCategoryEnumSet(rawValue);
   }
 
   @override
@@ -28579,32 +30060,6 @@ class RoadEventDisplayCategoryEnumSet extends EnumSet<RoadEventDisplayCategory> 
   @override
   bool containsAllFromEnumSet(EnumSet<RoadEventDisplayCategory> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RoadEventDisplayCategory value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RoadEventDisplayCategory> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RoadEventDisplayCategory value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RoadEventDisplayCategory> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RoadEventDisplayCategory> intersection(EnumSet<RoadEventDisplayCategory> other) =>
@@ -28617,6 +30072,10 @@ class RoadEventDisplayCategoryEnumSet extends EnumSet<RoadEventDisplayCategory> 
   @override
   EnumSet<RoadEventDisplayCategory> difference(EnumSet<RoadEventDisplayCategory> other) =>
       RoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RoadEventDisplayCategory> toMutableEnumSet() =>
+      MutableRoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RoadEventDisplayCategory> toSet() {
@@ -28642,6 +30101,102 @@ class RoadEventDisplayCategoryEnumSet extends EnumSet<RoadEventDisplayCategory> 
   }
 }
 
+class MutableRoadEventDisplayCategoryEnumSet extends MutableEnumSet<RoadEventDisplayCategory> {
+  MutableRoadEventDisplayCategoryEnumSet() : super();
+
+  factory MutableRoadEventDisplayCategoryEnumSet.fromRawValue(int rawValue) {
+    MutableRoadEventDisplayCategoryEnumSet enumSet = MutableRoadEventDisplayCategoryEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRoadEventDisplayCategoryEnumSet.of(Iterable<RoadEventDisplayCategory> elements) {
+    MutableRoadEventDisplayCategoryEnumSet enumSet = MutableRoadEventDisplayCategoryEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRoadEventDisplayCategoryEnumSet.all() {
+    MutableRoadEventDisplayCategoryEnumSet enumSet = MutableRoadEventDisplayCategoryEnumSet();
+    enumSet.addAll(RoadEventDisplayCategory.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RoadEventDisplayCategory value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RoadEventDisplayCategory> intersection(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      MutableRoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RoadEventDisplayCategory> union(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      MutableRoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RoadEventDisplayCategory> difference(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      MutableRoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RoadEventDisplayCategory> toEnumSet() =>
+      RoadEventDisplayCategoryEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RoadEventDisplayCategory> toSet() {
+    Set<RoadEventDisplayCategory> result = {};
+    RoadEventDisplayCategory.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RoadEventDisplayCategory value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RoadEventDisplayCategory value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RoadEventDisplayCategory> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RoadEventDisplayCategory.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRoadEventDisplayCategory extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -28653,12 +30208,12 @@ extension _COptionSet_CRoadEventDisplayCategoryBasicFunctions on _COptionSet_CRo
 }
 
 extension _COptionSet_CRoadEventDisplayCategoryToDart on _COptionSet_CRoadEventDisplayCategory {
-  RoadEventDisplayCategoryEnumSet _toDart() {
+  EnumSet<RoadEventDisplayCategory> _toDart() {
     return RoadEventDisplayCategoryEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRoadEventDisplayCategory on RoadEventDisplayCategoryEnumSet {
+extension _DartTo_COptionSet_CRoadEventDisplayCategory on EnumSet<RoadEventDisplayCategory> {
   _COptionSet_CRoadEventDisplayCategory _copyFromDartTo_COptionSet_CRoadEventDisplayCategory() {
     return _COptionSet_CRoadEventDisplayCategoryMakeDefault().._rawValue = this.rawValue;
   }
@@ -29315,64 +30870,6 @@ extension _CRenderedObjectRelease on _CRenderedObject {
   void _releaseIntermediate() {
     item._releaseIntermediate();
     source._releaseIntermediate();
-  }
-}
-
-// MARK: - ScreenDistance
-
-/**
- Расстояние между объектами на экране в миллиметрах.
-
- - Note: не может быть отрицательным
-*/
-class ScreenDistance {
-  final double value;
-
-  const ScreenDistance([this.value = 0]);
-
-  ScreenDistance copyWith({
-    double? value
-  }) {
-    return ScreenDistance(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenDistance &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CScreenDistance extends ffi.Struct {
-  @ffi.Float()
-  external double value;
-
-}
-// MARK: - ScreenDistance <-> _CScreenDistance
-
-extension _CScreenDistanceToDart on _CScreenDistance {
-  ScreenDistance _toDart() {
-    return ScreenDistance(
-      this.value
-    );
-  }
-}
-
-extension _DartTo_CScreenDistance on ScreenDistance {
-  _CScreenDistance _copyFromDartTo_CScreenDistance() {
-    final res = _CScreenDistanceMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CScreenDistanceRelease on _CScreenDistance {
-  void _releaseIntermediate() {
   }
 }
 
@@ -30354,6 +31851,191 @@ extension _DartToCGeometryMapObjectSourceBuilder on GeometryMapObjectSourceBuild
     return (_CGeometryMapObjectSourceBuilderMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - ActiveLevelMode
+
+/** Режим отображения этажного плана. */
+class ActiveLevelMode {
+  /** Индекс этажа в векторе IIndoorBuilding::levels(). */
+  final int index;
+
+  const ActiveLevelMode(this.index);
+
+  ActiveLevelMode copyWith({
+    int? index
+  }) {
+    return ActiveLevelMode(
+      index ?? this.index
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ActiveLevelMode &&
+    other.runtimeType == runtimeType &&
+    other.index == index;
+
+  @override
+  int get hashCode {
+    return index.hashCode;
+  }
+
+}
+final class _CActiveLevelMode extends ffi.Struct {
+  @ffi.Uint64()
+  external int index;
+
+}
+// MARK: - ActiveLevelMode <-> _CActiveLevelMode
+
+extension _CActiveLevelModeToDart on _CActiveLevelMode {
+  ActiveLevelMode _toDart() {
+    return ActiveLevelMode(
+      this.index
+    );
+  }
+}
+
+extension _DartTo_CActiveLevelMode on ActiveLevelMode {
+  _CActiveLevelMode _copyFromDartTo_CActiveLevelMode() {
+    final res = _CActiveLevelModeMakeDefault();
+    res.index = this.index;
+    return res;
+  }
+}
+extension _CActiveLevelModeRelease on _CActiveLevelMode {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - OverviewMode
+
+/** Режим обзорного вида здания (модель или мастер-план). */
+class OverviewMode {
+
+  const OverviewMode();
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is OverviewMode &&
+    other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode {
+    return 0;
+  }
+
+}
+final class _COverviewMode extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+// MARK: - OverviewMode <-> _COverviewMode
+
+extension _COverviewModeToDart on _COverviewMode {
+  OverviewMode _toDart() {
+    return OverviewMode(
+    );
+  }
+}
+
+extension _DartTo_COverviewMode on OverviewMode {
+  _COverviewMode _copyFromDartTo_COverviewMode() {
+    final res = _COverviewModeMakeDefault();
+    return res;
+  }
+}
+extension _COverviewModeRelease on _COverviewMode {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - IndoorBuildingMode
+
+/** Режим отображения здания. */
+final class IndoorBuildingMode {
+  final Object? _value;
+  final int _index;
+
+  IndoorBuildingMode._raw(this._value, this._index);
+
+  IndoorBuildingMode.activeLevel(ActiveLevelMode value) : this._raw(value, 0);
+  IndoorBuildingMode.overview(OverviewMode value) : this._raw(value, 1);
+
+  bool get isActiveLevel => this._index == 0;
+  ActiveLevelMode? get asActiveLevel => this.isActiveLevel ? this._value as ActiveLevelMode : null;
+
+  bool get isOverview => this._index == 1;
+  OverviewMode? get asOverview => this.isOverview ? this._value as OverviewMode : null;
+
+  T match<T>({
+    required T Function(ActiveLevelMode value) activeLevel,
+    required T Function(OverviewMode value) overview,
+  }) {
+    return switch (this._index) {
+      0 => activeLevel(this._value as ActiveLevelMode),
+      1 => overview(this._value as OverviewMode),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "IndoorBuildingMode(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is IndoorBuildingMode &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _CIndoorBuildingModeImpl extends ffi.Union {
+  external _CActiveLevelMode _activeLevel;
+  external _COverviewMode _overview;
+}
+
+final class _CIndoorBuildingMode extends ffi.Struct {
+  external _CIndoorBuildingModeImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CIndoorBuildingModeBasicFunctions on _CIndoorBuildingMode {
+  void _releaseIntermediate() {
+    _CIndoorBuildingMode_release(this);
+  }
+}
+	
+// MARK: - IndoorBuildingMode <-> CIndoorBuildingMode
+
+extension _CIndoorBuildingModeToDart on _CIndoorBuildingMode {
+  IndoorBuildingMode _toDart() {
+    return switch (this._index) {
+      0 => IndoorBuildingMode.activeLevel(this._impl._activeLevel._toDart()),
+      1 => IndoorBuildingMode.overview(this._impl._overview._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_CIndoorBuildingMode on IndoorBuildingMode {
+  _CIndoorBuildingMode _copyFromDartTo_CIndoorBuildingMode() {
+    var res = _CIndoorBuildingModeMakeDefault();
+    this.match<void>(
+      activeLevel: (ActiveLevelMode value) {
+        res._impl._activeLevel = value._copyFromDartTo_CActiveLevelMode();
+        res._index = 0;
+      },
+      overview: (OverviewMode value) {
+        res._impl._overview = value._copyFromDartTo_COverviewMode();
+        res._index = 1;
+      },
+    );
+    return res;
+  }
+}
+
 // MARK: - IndoorBuilding
 
 /** Здание с этажными планами. */
@@ -30393,6 +32075,31 @@ class IndoorBuilding implements ffi.Finalizable {
     void res = _CIndoorBuilding_setActiveLevelIndex_uint64_t(_CIndoorBuildingMakeDefault().._impl=_self, levelIndex);
     return res;
   }
+  /**
+   Активный режим.
+   Если ActiveLevelMode, то index указывает порядковый индекс активного этажа в levels.
+   Если OverviewMode, значит, активен обзорный вид на здание.
+  */
+  StatefulChannel<IndoorBuildingMode> get modeChannel {
+    _CStatefulChannel_CIndoorBuildingMode res = _CIndoorBuilding_modeChannel(_CIndoorBuildingMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /**
+   Активный режим.
+   Если ActiveLevelMode, то index указывает порядковый индекс активного этажа в levels.
+   Если OverviewMode, значит, активен обзорный вид на здание.
+  */
+  IndoorBuildingMode get mode {
+    _CIndoorBuildingMode res = _CIndoorBuilding_mode(_CIndoorBuildingMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set mode(IndoorBuildingMode mode) {
+    var _a1 = mode._copyFromDartTo_CIndoorBuildingMode();
+    void res = _CIndoorBuilding_setMode_CIndoorBuildingMode(_CIndoorBuildingMakeDefault().._impl=_self, _a1);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CIndoorBuilding_releasePtr);
 
@@ -30413,6 +32120,26 @@ class IndoorBuilding implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CIndoorBuilding_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: IndoorBuilding: Methods
+
+  /**
+   Признак того, что текущее здание и other связаны.
+  
+   Несколько зданий с этажными планами могут быть связаны между собой.
+   Группа связанных зданий ведёт себя как единое целое:
+  
+   * метод levels() выдаёт объединённый список этажей по всей группе;
+   * активный режим отображения меняется согласованно у всей группы.
+  */
+  bool linkedWith(
+    IndoorBuilding other
+  )  {
+    var _a1 = other._copyFromDartTo_CIndoorBuilding();
+    bool res = _CIndoorBuilding_linkedWith_CIndoorBuilding(_CIndoorBuildingMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    return res;
   }
 
 }
@@ -30528,6 +32255,92 @@ extension _CStatefulChannel_uint64_tToDart on _CStatefulChannel_uint64_t {
 extension _DartTo_CStatefulChannel_uint64_t on StatefulChannel<int> {
   _CStatefulChannel_uint64_t _copyFromDartTo_CStatefulChannel_uint64_t() {
     return _CStatefulChannel_uint64_tMakeDefault();
+  }
+}
+	
+// MARK: - StatefulChannel<IndoorBuildingMode> <-> _CStatefulChannel_CIndoorBuildingMode
+
+class _CStatefulChannel_CIndoorBuildingModeImpl extends StatefulChannel<IndoorBuildingMode> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<IndoorBuildingMode>>{};
+
+  final _CStatefulChannel_CIndoorBuildingMode _channel;
+
+  _CStatefulChannel_CIndoorBuildingModeImpl(this._channel);
+
+  @override
+  IndoorBuildingMode get value {
+    return this._channel._getter();
+  }
+
+  static void valueFunction(_CIndoorBuildingMode cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    
+  }
+
+  @override
+  StreamSubscription<IndoorBuildingMode> listen(void onData(IndoorBuildingMode event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CIndoorBuildingMode, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<IndoorBuildingMode>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CStatefulChannel_CIndoorBuildingMode extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStatefulChannel_CIndoorBuildingModeBasicFunctions on _CStatefulChannel_CIndoorBuildingMode {
+  void _releaseIntermediate() {
+    _CStatefulChannel_CIndoorBuildingMode_release(this);
+  }
+
+  _CStatefulChannel_CIndoorBuildingMode _retain() {
+    return _CStatefulChannel_CIndoorBuildingMode_retain(this);
+  }
+
+  IndoorBuildingMode _getter() {
+    final cValue = _CStatefulChannel_CIndoorBuildingModeGetCurrentValue(this);
+    final res = cValue._toDart();
+    
+    return res;
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CIndoorBuildingMode, ffi.Int64)> callback) {
+    return _CStatefulChannel_CIndoorBuildingModeConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CStatefulChannel_CIndoorBuildingModeToDart on _CStatefulChannel_CIndoorBuildingMode {
+  StatefulChannel<IndoorBuildingMode> _toDart() {
+    return _CStatefulChannel_CIndoorBuildingModeImpl(this._retain());
+  }
+}
+
+extension _DartTo_CStatefulChannel_CIndoorBuildingMode on StatefulChannel<IndoorBuildingMode> {
+  _CStatefulChannel_CIndoorBuildingMode _copyFromDartTo_CStatefulChannel_CIndoorBuildingMode() {
+    return _CStatefulChannel_CIndoorBuildingModeMakeDefault();
   }
 }
 	
@@ -31571,23 +33384,9 @@ extension _DartToCMap on Map {
 /** Камера для запуска перемещения карты и настроек слежения. */
 class Camera extends BaseCamera implements ffi.Finalizable {
   /** Получение актуального состояния камеры. */
-  StatefulChannel<CameraState> get stateChannel {
-    _CStatefulChannel_CCameraState res = _CCamera_stateChannel(_CCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Получение актуального состояния камеры. */
   CameraState get state {
     _CCameraState res = _CCamera_state(_CCameraMakeDefault().._impl=_self);
     return res._toDart();
-  }
-  /** Режим слежения камеры. */
-  StatefulChannel<CameraBehaviourChange> get behaviourChannel {
-    _CStatefulChannel_CCameraBehaviourChange res = _CCamera_behaviourChannel(_CCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /** Режим слежения камеры. */
   CameraBehaviourChange get behaviour {
@@ -31876,178 +33675,6 @@ extension _CFuture_CCameraAnimatedMoveResultToDart on _CFuture_CCameraAnimatedMo
 extension _DartTo_CFuture_CCameraAnimatedMoveResult on CancelableOperation<CameraAnimatedMoveResult> {
   _CFuture_CCameraAnimatedMoveResult _copyFromDartTo_CFuture_CCameraAnimatedMoveResult() {
     return _CFuture_CCameraAnimatedMoveResultMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<CameraState> <-> _CStatefulChannel_CCameraState
-
-class _CStatefulChannel_CCameraStateImpl extends StatefulChannel<CameraState> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<CameraState>>{};
-
-  final _CStatefulChannel_CCameraState _channel;
-
-  _CStatefulChannel_CCameraStateImpl(this._channel);
-
-  @override
-  CameraState get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CCameraState cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<CameraState> listen(void onData(CameraState event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<CameraState>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CCameraState extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CCameraStateBasicFunctions on _CStatefulChannel_CCameraState {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CCameraState_release(this);
-  }
-
-  _CStatefulChannel_CCameraState _retain() {
-    return _CStatefulChannel_CCameraState_retain(this);
-  }
-
-  CameraState _getter() {
-    final cValue = _CStatefulChannel_CCameraStateGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CCameraState, ffi.Int64)> callback) {
-    return _CStatefulChannel_CCameraStateConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CCameraStateToDart on _CStatefulChannel_CCameraState {
-  StatefulChannel<CameraState> _toDart() {
-    return _CStatefulChannel_CCameraStateImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CCameraState on StatefulChannel<CameraState> {
-  _CStatefulChannel_CCameraState _copyFromDartTo_CStatefulChannel_CCameraState() {
-    return _CStatefulChannel_CCameraStateMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<CameraBehaviourChange> <-> _CStatefulChannel_CCameraBehaviourChange
-
-class _CStatefulChannel_CCameraBehaviourChangeImpl extends StatefulChannel<CameraBehaviourChange> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<CameraBehaviourChange>>{};
-
-  final _CStatefulChannel_CCameraBehaviourChange _channel;
-
-  _CStatefulChannel_CCameraBehaviourChangeImpl(this._channel);
-
-  @override
-  CameraBehaviourChange get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CCameraBehaviourChange cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<CameraBehaviourChange> listen(void onData(CameraBehaviourChange event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraBehaviourChange, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<CameraBehaviourChange>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CCameraBehaviourChange extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CCameraBehaviourChangeBasicFunctions on _CStatefulChannel_CCameraBehaviourChange {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CCameraBehaviourChange_release(this);
-  }
-
-  _CStatefulChannel_CCameraBehaviourChange _retain() {
-    return _CStatefulChannel_CCameraBehaviourChange_retain(this);
-  }
-
-  CameraBehaviourChange _getter() {
-    final cValue = _CStatefulChannel_CCameraBehaviourChangeGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CCameraBehaviourChange, ffi.Int64)> callback) {
-    return _CStatefulChannel_CCameraBehaviourChangeConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CCameraBehaviourChangeToDart on _CStatefulChannel_CCameraBehaviourChange {
-  StatefulChannel<CameraBehaviourChange> _toDart() {
-    return _CStatefulChannel_CCameraBehaviourChangeImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CCameraBehaviourChange on StatefulChannel<CameraBehaviourChange> {
-  _CStatefulChannel_CCameraBehaviourChange _copyFromDartTo_CStatefulChannel_CCameraBehaviourChange() {
-    return _CStatefulChannel_CCameraBehaviourChangeMakeDefault();
   }
 }
 	
@@ -33361,13 +34988,6 @@ class BaseCamera implements ffi.Finalizable {
     return t;
   }
   /** Получение текущей позиции камеры. */
-  StatefulChannel<CameraPosition> get positionChannel {
-    _CStatefulChannel_CCameraPosition res = _CBaseCamera_positionChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Получение текущей позиции камеры. */
   CameraPosition get position {
     _CCameraPosition res = _CBaseCamera_position(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
@@ -33377,13 +34997,6 @@ class BaseCamera implements ffi.Finalizable {
     _CResult_CEmpty res = _CBaseCamera_setPosition_CCameraPosition(_CBaseCameraMakeDefault().._impl=_self, _a1);
     res._toDart();
     res._releaseIntermediate();
-  }
-  /** Получение актуальных ограничений уровня масштабирования. */
-  StatefulChannel<CameraZoomRestrictions> get zoomRestrictionsChannel {
-    _CStatefulChannel_CCameraZoomRestrictions res = _CBaseCamera_zoomRestrictionsChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /** Получение актуальных ограничений уровня масштабирования. */
   CameraZoomRestrictions get zoomRestrictions {
@@ -33397,35 +35010,14 @@ class BaseCamera implements ffi.Finalizable {
     res._releaseIntermediate();
   }
   /** Получение разрешающей способности экрана (плотность пикселей на дюйм). */
-  StatefulChannel<DevicePpi> get devicePpiChannel {
-    _CStatefulChannel_CDevicePpi res = _CBaseCamera_devicePpiChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Получение разрешающей способности экрана (плотность пикселей на дюйм). */
   DevicePpi get devicePpi {
     _CDevicePpi res = _CBaseCamera_devicePpi(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
   }
   /** Получение отношения DPI к базовому DPI устройства. */
-  StatefulChannel<DeviceDensity> get deviceDensityChannel {
-    _CStatefulChannel_CDeviceDensity res = _CBaseCamera_deviceDensityChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Получение отношения DPI к базовому DPI устройства. */
   DeviceDensity get deviceDensity {
     _CDeviceDensity res = _CBaseCamera_deviceDensity(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
-  }
-  /** Получение размера области просмотра. */
-  StatefulChannel<ScreenSize> get sizeChannel {
-    _CStatefulChannel_CScreenSize res = _CBaseCamera_sizeChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /** Получение размера области просмотра. */
   ScreenSize get size {
@@ -33438,13 +35030,6 @@ class BaseCamera implements ffi.Finalizable {
     return res;
   }
   /** Получение текущих отступов от краёв экрана. */
-  StatefulChannel<Padding> get paddingChannel {
-    _CStatefulChannel_CPadding res = _CBaseCamera_paddingChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Получение текущих отступов от краёв экрана. */
   Padding get padding {
     _CPadding res = _CBaseCamera_padding(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
@@ -33453,13 +35038,6 @@ class BaseCamera implements ffi.Finalizable {
     var _a1 = padding._copyFromDartTo_CPadding();
     void res = _CBaseCamera_setPadding_CPadding(_CBaseCameraMakeDefault().._impl=_self, _a1);
     return res;
-  }
-  /** Точка экрана, к которой привязана позиция камеры, задаётся с учётом отступов (padding). */
-  StatefulChannel<CameraPositionPoint> get positionPointChannel {
-    _CStatefulChannel_CCameraPositionPoint res = _CBaseCamera_positionPointChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /** Точка экрана, к которой привязана позиция камеры, задаётся с учётом отступов (padding). */
   CameraPositionPoint get positionPoint {
@@ -33496,27 +35074,9 @@ class BaseCamera implements ffi.Finalizable {
     return t;
   }
   /** Объемлющий прямоугольник видимой области карты. */
-  StatefulChannel<GeoRect> get visibleRectChannel {
-    _CStatefulChannel_CGeoRect res = _CBaseCamera_visibleRectChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Объемлющий прямоугольник видимой области карты. */
   GeoRect get visibleRect {
     _CGeoRect res = _CBaseCamera_visibleRect(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
-  }
-  /**
-   Получение текущей функции зависимости максимального угла наклона камеры от стилевого уровня масштабирования.
-  
-   - Returns: возвращает пустой объект, если функция не установлена.
-  */
-  StatefulChannel<StyleZoomToTiltRelation?> get maxTiltRestrictionChannel {
-    _CStatefulChannel_COptional_CStyleZoomToTiltRelation res = _CBaseCamera_maxTiltRestrictionChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /**
    Получение текущей функции зависимости максимального угла наклона камеры от стилевого уровня масштабирования.
@@ -33540,17 +35100,6 @@ class BaseCamera implements ffi.Finalizable {
   
    - Returns: null если ограничение не задано.
   */
-  StatefulChannel<GeoRect?> get viewportRestrictionChannel {
-    _CStatefulChannel_COptional_CGeoRect res = _CBaseCamera_viewportRestrictionChannel(_CBaseCameraMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /**
-   Получение ограничения на область видимости.
-  
-   - Returns: null если ограничение не задано.
-  */
   GeoRect? get viewportRestriction {
     _COptional_CGeoRect res = _CBaseCamera_viewportRestriction(_CBaseCameraMakeDefault().._impl=_self);
     return res._toDart();
@@ -33559,6 +35108,17 @@ class BaseCamera implements ffi.Finalizable {
     var _a1 = viewportRestriction._copyFromDartTo_COptional_CGeoRect();
     void res = _CBaseCamera_setViewportRestriction_COptional_CGeoRect(_CBaseCameraMakeDefault().._impl=_self, _a1);
     return res;
+  }
+  /**
+   Получение причин изменения состояния камеры.
+  
+   - Note: Измененные свойства доступны в соответствующих каналах.
+  */
+  Channel<CameraChange> get changed {
+    _CChannel_CCameraChange res = _CBaseCamera_changed(_CBaseCameraMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   static final _finalizer = ffi.NativeFinalizer(_CBaseCamera_releasePtr);
@@ -33624,6 +35184,14 @@ extension BaseCameraInternalMethods on BaseCamera {
     return res;
   }
 
+  @internal
+  CameraTransactionGuard startTransaction()  {
+    _CCameraTransactionGuard res = _CBaseCamera_startTransaction(_CBaseCameraMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
 }
 
 // MARK: - BaseCamera <-> CBaseCamera
@@ -33650,7 +35218,7 @@ extension _CBaseCameraToDart on _CBaseCamera {
         final res = BaseCamera._create(_retain()._impl);
         return res;
       case 1:
-        final res = Camera._create(_retain()._impl);
+        final res = (_CCameraMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -33662,608 +35230,6 @@ extension _DartToCBaseCamera on BaseCamera {
     return (_CBaseCameraMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - StatefulChannel<CameraPosition> <-> _CStatefulChannel_CCameraPosition
-
-class _CStatefulChannel_CCameraPositionImpl extends StatefulChannel<CameraPosition> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<CameraPosition>>{};
-
-  final _CStatefulChannel_CCameraPosition _channel;
-
-  _CStatefulChannel_CCameraPositionImpl(this._channel);
-
-  @override
-  CameraPosition get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CCameraPosition cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<CameraPosition> listen(void onData(CameraPosition event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraPosition, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<CameraPosition>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CCameraPosition extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CCameraPositionBasicFunctions on _CStatefulChannel_CCameraPosition {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CCameraPosition_release(this);
-  }
-
-  _CStatefulChannel_CCameraPosition _retain() {
-    return _CStatefulChannel_CCameraPosition_retain(this);
-  }
-
-  CameraPosition _getter() {
-    final cValue = _CStatefulChannel_CCameraPositionGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CCameraPosition, ffi.Int64)> callback) {
-    return _CStatefulChannel_CCameraPositionConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CCameraPositionToDart on _CStatefulChannel_CCameraPosition {
-  StatefulChannel<CameraPosition> _toDart() {
-    return _CStatefulChannel_CCameraPositionImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CCameraPosition on StatefulChannel<CameraPosition> {
-  _CStatefulChannel_CCameraPosition _copyFromDartTo_CStatefulChannel_CCameraPosition() {
-    return _CStatefulChannel_CCameraPositionMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<CameraZoomRestrictions> <-> _CStatefulChannel_CCameraZoomRestrictions
-
-class _CStatefulChannel_CCameraZoomRestrictionsImpl extends StatefulChannel<CameraZoomRestrictions> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<CameraZoomRestrictions>>{};
-
-  final _CStatefulChannel_CCameraZoomRestrictions _channel;
-
-  _CStatefulChannel_CCameraZoomRestrictionsImpl(this._channel);
-
-  @override
-  CameraZoomRestrictions get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CCameraZoomRestrictions cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<CameraZoomRestrictions> listen(void onData(CameraZoomRestrictions event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraZoomRestrictions, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<CameraZoomRestrictions>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CCameraZoomRestrictions extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CCameraZoomRestrictionsBasicFunctions on _CStatefulChannel_CCameraZoomRestrictions {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CCameraZoomRestrictions_release(this);
-  }
-
-  _CStatefulChannel_CCameraZoomRestrictions _retain() {
-    return _CStatefulChannel_CCameraZoomRestrictions_retain(this);
-  }
-
-  CameraZoomRestrictions _getter() {
-    final cValue = _CStatefulChannel_CCameraZoomRestrictionsGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CCameraZoomRestrictions, ffi.Int64)> callback) {
-    return _CStatefulChannel_CCameraZoomRestrictionsConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CCameraZoomRestrictionsToDart on _CStatefulChannel_CCameraZoomRestrictions {
-  StatefulChannel<CameraZoomRestrictions> _toDart() {
-    return _CStatefulChannel_CCameraZoomRestrictionsImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CCameraZoomRestrictions on StatefulChannel<CameraZoomRestrictions> {
-  _CStatefulChannel_CCameraZoomRestrictions _copyFromDartTo_CStatefulChannel_CCameraZoomRestrictions() {
-    return _CStatefulChannel_CCameraZoomRestrictionsMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<DevicePpi> <-> _CStatefulChannel_CDevicePpi
-
-class _CStatefulChannel_CDevicePpiImpl extends StatefulChannel<DevicePpi> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<DevicePpi>>{};
-
-  final _CStatefulChannel_CDevicePpi _channel;
-
-  _CStatefulChannel_CDevicePpiImpl(this._channel);
-
-  @override
-  DevicePpi get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CDevicePpi cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<DevicePpi> listen(void onData(DevicePpi event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDevicePpi, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<DevicePpi>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CDevicePpi extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CDevicePpiBasicFunctions on _CStatefulChannel_CDevicePpi {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CDevicePpi_release(this);
-  }
-
-  _CStatefulChannel_CDevicePpi _retain() {
-    return _CStatefulChannel_CDevicePpi_retain(this);
-  }
-
-  DevicePpi _getter() {
-    final cValue = _CStatefulChannel_CDevicePpiGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CDevicePpi, ffi.Int64)> callback) {
-    return _CStatefulChannel_CDevicePpiConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CDevicePpiToDart on _CStatefulChannel_CDevicePpi {
-  StatefulChannel<DevicePpi> _toDart() {
-    return _CStatefulChannel_CDevicePpiImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CDevicePpi on StatefulChannel<DevicePpi> {
-  _CStatefulChannel_CDevicePpi _copyFromDartTo_CStatefulChannel_CDevicePpi() {
-    return _CStatefulChannel_CDevicePpiMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<DeviceDensity> <-> _CStatefulChannel_CDeviceDensity
-
-class _CStatefulChannel_CDeviceDensityImpl extends StatefulChannel<DeviceDensity> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<DeviceDensity>>{};
-
-  final _CStatefulChannel_CDeviceDensity _channel;
-
-  _CStatefulChannel_CDeviceDensityImpl(this._channel);
-
-  @override
-  DeviceDensity get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CDeviceDensity cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<DeviceDensity> listen(void onData(DeviceDensity event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDeviceDensity, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<DeviceDensity>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CDeviceDensity extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CDeviceDensityBasicFunctions on _CStatefulChannel_CDeviceDensity {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CDeviceDensity_release(this);
-  }
-
-  _CStatefulChannel_CDeviceDensity _retain() {
-    return _CStatefulChannel_CDeviceDensity_retain(this);
-  }
-
-  DeviceDensity _getter() {
-    final cValue = _CStatefulChannel_CDeviceDensityGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CDeviceDensity, ffi.Int64)> callback) {
-    return _CStatefulChannel_CDeviceDensityConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CDeviceDensityToDart on _CStatefulChannel_CDeviceDensity {
-  StatefulChannel<DeviceDensity> _toDart() {
-    return _CStatefulChannel_CDeviceDensityImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CDeviceDensity on StatefulChannel<DeviceDensity> {
-  _CStatefulChannel_CDeviceDensity _copyFromDartTo_CStatefulChannel_CDeviceDensity() {
-    return _CStatefulChannel_CDeviceDensityMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<ScreenSize> <-> _CStatefulChannel_CScreenSize
-
-class _CStatefulChannel_CScreenSizeImpl extends StatefulChannel<ScreenSize> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<ScreenSize>>{};
-
-  final _CStatefulChannel_CScreenSize _channel;
-
-  _CStatefulChannel_CScreenSizeImpl(this._channel);
-
-  @override
-  ScreenSize get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CScreenSize cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<ScreenSize> listen(void onData(ScreenSize event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CScreenSize, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<ScreenSize>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CScreenSize extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CScreenSizeBasicFunctions on _CStatefulChannel_CScreenSize {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CScreenSize_release(this);
-  }
-
-  _CStatefulChannel_CScreenSize _retain() {
-    return _CStatefulChannel_CScreenSize_retain(this);
-  }
-
-  ScreenSize _getter() {
-    final cValue = _CStatefulChannel_CScreenSizeGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CScreenSize, ffi.Int64)> callback) {
-    return _CStatefulChannel_CScreenSizeConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CScreenSizeToDart on _CStatefulChannel_CScreenSize {
-  StatefulChannel<ScreenSize> _toDart() {
-    return _CStatefulChannel_CScreenSizeImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CScreenSize on StatefulChannel<ScreenSize> {
-  _CStatefulChannel_CScreenSize _copyFromDartTo_CStatefulChannel_CScreenSize() {
-    return _CStatefulChannel_CScreenSizeMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<Padding> <-> _CStatefulChannel_CPadding
-
-class _CStatefulChannel_CPaddingImpl extends StatefulChannel<Padding> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<Padding>>{};
-
-  final _CStatefulChannel_CPadding _channel;
-
-  _CStatefulChannel_CPaddingImpl(this._channel);
-
-  @override
-  Padding get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CPadding cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<Padding> listen(void onData(Padding event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CPadding, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<Padding>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CPadding extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CPaddingBasicFunctions on _CStatefulChannel_CPadding {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CPadding_release(this);
-  }
-
-  _CStatefulChannel_CPadding _retain() {
-    return _CStatefulChannel_CPadding_retain(this);
-  }
-
-  Padding _getter() {
-    final cValue = _CStatefulChannel_CPaddingGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CPadding, ffi.Int64)> callback) {
-    return _CStatefulChannel_CPaddingConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CPaddingToDart on _CStatefulChannel_CPadding {
-  StatefulChannel<Padding> _toDart() {
-    return _CStatefulChannel_CPaddingImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CPadding on StatefulChannel<Padding> {
-  _CStatefulChannel_CPadding _copyFromDartTo_CStatefulChannel_CPadding() {
-    return _CStatefulChannel_CPaddingMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<CameraPositionPoint> <-> _CStatefulChannel_CCameraPositionPoint
-
-class _CStatefulChannel_CCameraPositionPointImpl extends StatefulChannel<CameraPositionPoint> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<CameraPositionPoint>>{};
-
-  final _CStatefulChannel_CCameraPositionPoint _channel;
-
-  _CStatefulChannel_CCameraPositionPointImpl(this._channel);
-
-  @override
-  CameraPositionPoint get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CCameraPositionPoint cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<CameraPositionPoint> listen(void onData(CameraPositionPoint event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraPositionPoint, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<CameraPositionPoint>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CCameraPositionPoint extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CCameraPositionPointBasicFunctions on _CStatefulChannel_CCameraPositionPoint {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CCameraPositionPoint_release(this);
-  }
-
-  _CStatefulChannel_CCameraPositionPoint _retain() {
-    return _CStatefulChannel_CCameraPositionPoint_retain(this);
-  }
-
-  CameraPositionPoint _getter() {
-    final cValue = _CStatefulChannel_CCameraPositionPointGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CCameraPositionPoint, ffi.Int64)> callback) {
-    return _CStatefulChannel_CCameraPositionPointConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CCameraPositionPointToDart on _CStatefulChannel_CCameraPositionPoint {
-  StatefulChannel<CameraPositionPoint> _toDart() {
-    return _CStatefulChannel_CCameraPositionPointImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CCameraPositionPoint on StatefulChannel<CameraPositionPoint> {
-  _CStatefulChannel_CCameraPositionPoint _copyFromDartTo_CStatefulChannel_CCameraPositionPoint() {
-    return _CStatefulChannel_CCameraPositionPointMakeDefault();
-  }
-}
-	
 // MARK: - CameraViewPoint? <-> _COptional_CCameraViewPoint
 
 final class _COptional_CCameraViewPoint extends ffi.Struct {
@@ -34300,178 +35266,6 @@ extension _DartTo_COptional_CCameraViewPoint on CameraViewPoint? {
     return cOptional;
   }
 }
-// MARK: - StatefulChannel<GeoRect> <-> _CStatefulChannel_CGeoRect
-
-class _CStatefulChannel_CGeoRectImpl extends StatefulChannel<GeoRect> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<GeoRect>>{};
-
-  final _CStatefulChannel_CGeoRect _channel;
-
-  _CStatefulChannel_CGeoRectImpl(this._channel);
-
-  @override
-  GeoRect get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CGeoRect cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<GeoRect> listen(void onData(GeoRect event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CGeoRect, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<GeoRect>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CGeoRect extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CGeoRectBasicFunctions on _CStatefulChannel_CGeoRect {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CGeoRect_release(this);
-  }
-
-  _CStatefulChannel_CGeoRect _retain() {
-    return _CStatefulChannel_CGeoRect_retain(this);
-  }
-
-  GeoRect _getter() {
-    final cValue = _CStatefulChannel_CGeoRectGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CGeoRect, ffi.Int64)> callback) {
-    return _CStatefulChannel_CGeoRectConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CGeoRectToDart on _CStatefulChannel_CGeoRect {
-  StatefulChannel<GeoRect> _toDart() {
-    return _CStatefulChannel_CGeoRectImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CGeoRect on StatefulChannel<GeoRect> {
-  _CStatefulChannel_CGeoRect _copyFromDartTo_CStatefulChannel_CGeoRect() {
-    return _CStatefulChannel_CGeoRectMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<StyleZoomToTiltRelation?> <-> _CStatefulChannel_COptional_CStyleZoomToTiltRelation
-
-class _CStatefulChannel_COptional_CStyleZoomToTiltRelationImpl extends StatefulChannel<StyleZoomToTiltRelation?> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<StyleZoomToTiltRelation?>>{};
-
-  final _CStatefulChannel_COptional_CStyleZoomToTiltRelation _channel;
-
-  _CStatefulChannel_COptional_CStyleZoomToTiltRelationImpl(this._channel);
-
-  @override
-  StyleZoomToTiltRelation? get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_COptional_CStyleZoomToTiltRelation cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    cValue._releaseIntermediate();
-  }
-
-  @override
-  StreamSubscription<StyleZoomToTiltRelation?> listen(void onData(StyleZoomToTiltRelation? event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CStyleZoomToTiltRelation, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<StyleZoomToTiltRelation?>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_COptional_CStyleZoomToTiltRelation extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_COptional_CStyleZoomToTiltRelationBasicFunctions on _CStatefulChannel_COptional_CStyleZoomToTiltRelation {
-  void _releaseIntermediate() {
-    _CStatefulChannel_COptional_CStyleZoomToTiltRelation_release(this);
-  }
-
-  _CStatefulChannel_COptional_CStyleZoomToTiltRelation _retain() {
-    return _CStatefulChannel_COptional_CStyleZoomToTiltRelation_retain(this);
-  }
-
-  StyleZoomToTiltRelation? _getter() {
-    final cValue = _CStatefulChannel_COptional_CStyleZoomToTiltRelationGetCurrentValue(this);
-    final res = cValue._toDart();
-    cValue._releaseIntermediate();
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_COptional_CStyleZoomToTiltRelation, ffi.Int64)> callback) {
-    return _CStatefulChannel_COptional_CStyleZoomToTiltRelationConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_COptional_CStyleZoomToTiltRelationToDart on _CStatefulChannel_COptional_CStyleZoomToTiltRelation {
-  StatefulChannel<StyleZoomToTiltRelation?> _toDart() {
-    return _CStatefulChannel_COptional_CStyleZoomToTiltRelationImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_COptional_CStyleZoomToTiltRelation on StatefulChannel<StyleZoomToTiltRelation?> {
-  _CStatefulChannel_COptional_CStyleZoomToTiltRelation _copyFromDartTo_CStatefulChannel_COptional_CStyleZoomToTiltRelation() {
-    return _CStatefulChannel_COptional_CStyleZoomToTiltRelationMakeDefault();
-  }
-}
-	
 // MARK: - StyleZoomToTiltRelation? <-> _COptional_CStyleZoomToTiltRelation
 
 final class _COptional_CStyleZoomToTiltRelation extends ffi.Struct {
@@ -34508,22 +35302,17 @@ extension _DartTo_COptional_CStyleZoomToTiltRelation on StyleZoomToTiltRelation?
     return cOptional;
   }
 }
-// MARK: - StatefulChannel<GeoRect?> <-> _CStatefulChannel_COptional_CGeoRect
+// MARK: - Channel<CameraChange> <-> _CChannel_CCameraChange
 
-class _CStatefulChannel_COptional_CGeoRectImpl extends StatefulChannel<GeoRect?> {
+class _CChannel_CCameraChangeImpl extends Channel<CameraChange> {
   static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<GeoRect?>>{};
+  static final instanceMap = <int, StreamController<CameraChange>>{};
 
-  final _CStatefulChannel_COptional_CGeoRect _channel;
+  final _CChannel_CCameraChange _channel;
 
-  _CStatefulChannel_COptional_CGeoRectImpl(this._channel);
+  _CChannel_CCameraChangeImpl(this._channel);
 
-  @override
-  GeoRect? get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_COptional_CGeoRect cValue, int instanceId) {
+  static void valueFunction(_CCameraChange cValue, int instanceId) {
     final instance = instanceMap[instanceId];
     if (instance != null) {
       instance.add(cValue._toDart());
@@ -34532,15 +35321,15 @@ class _CStatefulChannel_COptional_CGeoRectImpl extends StatefulChannel<GeoRect?>
   }
 
   @override
-  StreamSubscription<GeoRect?> listen(void onData(GeoRect? event)?,
+  StreamSubscription<CameraChange> listen(void onData(CameraChange event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     final instanceId = instanceCounter;
     instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CGeoRect, ffi.Int64)>.listener(valueFunction);
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraChange, ffi.Int64)>.listener(valueFunction);
     final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
     final cancellable = cCancel._retain();
     cCancel._releaseIntermediate();
-    final streamController = new StreamController<GeoRect?>(
+    final streamController = new StreamController<CameraChange>(
       onCancel: () {
         cancellable._cancel();
         instanceMap.remove(instanceId);
@@ -34556,41 +35345,34 @@ class _CStatefulChannel_COptional_CGeoRectImpl extends StatefulChannel<GeoRect?>
   }
 }
 
-final class _CStatefulChannel_COptional_CGeoRect extends ffi.Struct {
+final class _CChannel_CCameraChange extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CStatefulChannel_COptional_CGeoRectBasicFunctions on _CStatefulChannel_COptional_CGeoRect {
+extension _CChannel_CCameraChangeBasicFunctions on _CChannel_CCameraChange {
   void _releaseIntermediate() {
-    _CStatefulChannel_COptional_CGeoRect_release(this);
+    _CChannel_CCameraChange_release(this);
   }
 
-  _CStatefulChannel_COptional_CGeoRect _retain() {
-    return _CStatefulChannel_COptional_CGeoRect_retain(this);
-  }
-
-  GeoRect? _getter() {
-    final cValue = _CStatefulChannel_COptional_CGeoRectGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
+  _CChannel_CCameraChange _retain() {
+    return _CChannel_CCameraChange_retain(this);
   }
 
   _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_COptional_CGeoRect, ffi.Int64)> callback) {
-    return _CStatefulChannel_COptional_CGeoRectConnect(this, instanceId, callback.nativeFunction);
+      ffi.NativeCallable<ffi.Void Function(_CCameraChange, ffi.Int64)> callback) {
+    return _CChannel_CCameraChangeConnect(this, instanceId, callback.nativeFunction);
   }
 }
 
-extension _CStatefulChannel_COptional_CGeoRectToDart on _CStatefulChannel_COptional_CGeoRect {
-  StatefulChannel<GeoRect?> _toDart() {
-    return _CStatefulChannel_COptional_CGeoRectImpl(this._retain());
+extension _CChannel_CCameraChangeToDart on _CChannel_CCameraChange {
+  Channel<CameraChange> _toDart() {
+    return _CChannel_CCameraChangeImpl(this._retain());
   }
 }
 
-extension _DartTo_CStatefulChannel_COptional_CGeoRect on StatefulChannel<GeoRect?> {
-  _CStatefulChannel_COptional_CGeoRect _copyFromDartTo_CStatefulChannel_COptional_CGeoRect() {
-    return _CStatefulChannel_COptional_CGeoRectMakeDefault();
+extension _DartTo_CChannel_CCameraChange on Channel<CameraChange> {
+  _CChannel_CCameraChange _copyFromDartTo_CChannel_CCameraChange() {
+    return _CChannel_CCameraChangeMakeDefault();
   }
 }
 	
@@ -34683,19 +35465,19 @@ extension _CSimpleMapObjectToDart on _CSimpleMapObject {
         final res = SimpleMapObject._create(_retain()._impl);
         return res;
       case 1:
-        final res = Marker._create(_retain()._impl);
+        final res = (_CMarkerMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = ModelMapObject._create(_retain()._impl);
+        final res = (_CModelMapObjectMakeDefault().._impl=_impl)._toDart();
         return res;
       case 3:
-        final res = Circle._create(_retain()._impl);
+        final res = (_CCircleMakeDefault().._impl=_impl)._toDart();
         return res;
       case 4:
-        final res = Polygon._create(_retain()._impl);
+        final res = (_CPolygonMakeDefault().._impl=_impl)._toDart();
         return res;
       case 5:
-        final res = Polyline._create(_retain()._impl);
+        final res = (_CPolylineMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -36021,186 +36803,6 @@ extension _CResult_CMarkerToDart on _CResult_CMarker {
   }
 }
 	
-// MARK: - _ModelDataLoaderCpp
-
-/** Загрузчик данных модели. */
-class _ModelDataLoaderCpp extends ModelDataLoader implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  static final _finalizer = ffi.NativeFinalizer(_CModelDataLoaderCpp_releasePtr);
-
-  _ModelDataLoaderCpp._raw(this._self);
-  factory _ModelDataLoaderCpp._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = _ModelDataLoaderCpp._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is _ModelDataLoaderCpp &&
-    other.runtimeType == runtimeType &&
-    _CModelDataLoaderCpp_cg_objectIdentifier(this._self) == _CModelDataLoaderCpp_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CModelDataLoaderCpp_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: _ModelDataLoaderCpp: Methods
-
-  ByteData load()  {
-    _CData res = _CModelDataLoaderCpp_load(_CModelDataLoaderCppMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-// MARK: - _ModelDataLoaderCpp <-> CModelDataLoaderCpp
-
-final class _CModelDataLoaderCpp extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CModelDataLoaderCppBasicFunctions on _CModelDataLoaderCpp {
-  void _releaseIntermediate() {
-    _CModelDataLoaderCpp_release(_impl);
-  }
-
-  _CModelDataLoaderCpp _retain() {
-    return _CModelDataLoaderCpp_retain(_impl);
-  }
-}
-
-extension _CModelDataLoaderCppToDart on _CModelDataLoaderCpp {
-  _ModelDataLoaderCpp _toDart() {
-    return _ModelDataLoaderCpp._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCModelDataLoaderCpp on _ModelDataLoaderCpp {
-  _CModelDataLoaderCpp _copyFromDartTo_CModelDataLoaderCpp() {
-    return (_CModelDataLoaderCppMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - ModelDataLoader
-
-/** Загрузчик данных модели. */
-@internal
-abstract class ModelDataLoader {
-  ByteData load();
-}
-
-class _ModelDataLoader {
-  final ModelDataLoader object;
-  int refCounter = 1;
-
-  _ModelDataLoader(this.object);
-}
-
-final class _CModelDataLoader extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _value;
-  external ffi.Pointer<ffi.Void> _cppValue;
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
-
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>>)>> _load;
-}
-
-extension _CModelDataLoaderBasicFunctions on _CModelDataLoader {
-  void _releaseIntermediate() {
-    _CModelDataLoader_release(this);
-  }
-}
-
-int _CModelDataLoaderInstanceCounter = 1;
-final _CModelDataLoaderInstanceMap = <int, _ModelDataLoader>{};
-
-extension _CModelDataLoaderToDart on _CModelDataLoader {
-  ModelDataLoader _toDart() {
-    late ModelDataLoader? result;
-    final platformValue = this._value.cast<ffi.Int64>();
-    if (platformValue.address != 0) {
-      result = _CModelDataLoaderInstanceMap[platformValue.address]?.object;
-    } else if (this._cppValue.address != 0) {
-      final cppValue = _CModelDataLoaderCppMakeDefault().._impl = this._cppValue;
-      result = cppValue._toDart();
-    }
-    if (result == null) {
-      throw Exception("Invalid intermediate object of type _CModelDataLoader");
-    }
-    return result;
-  }
-}
-
-extension _DartTo_CModelDataLoader on ModelDataLoader {
-  static void retainFunction(ffi.Pointer<ffi.Void> value) {
-    final platformValue = value.cast<ffi.Int64>();
-    if (platformValue.address == 0) {
-      return;
-    }
-    _CModelDataLoaderInstanceMap[platformValue.address]?.refCounter += 1;
-  }
-
-  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
-    final platformValue = value.cast<ffi.Int64>();
-    if (platformValue.address == 0) {
-      return;
-    }
-    final platformObject = _CModelDataLoaderInstanceMap[platformValue.address];
-    if (platformObject == null) {
-      return;
-    }
-    platformObject.refCounter -= 1;
-    if (platformObject.refCounter > 0) {
-      return;
-    }
-    _CModelDataLoaderInstanceMap.remove(platformValue.address);
-  }
-
-  _CModelDataLoader _copyFromDartTo_CModelDataLoader() {
-    var res = _CModelDataLoaderMakeDefault();
-    if (this is _ModelDataLoaderCpp) {
-      final cppValue = this as _ModelDataLoaderCpp;
-      res._cppValue = cppValue._copyFromDartTo_CModelDataLoaderCpp()._impl;
-      return res;
-    }
-    final instanceId = _CModelDataLoaderInstanceCounter;
-    _CModelDataLoaderInstanceCounter += 1;
-    _CModelDataLoaderInstanceMap[instanceId] = _ModelDataLoader(this);
-    res._value = ffi.Pointer.fromAddress(instanceId);
-    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
-    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
-    res._retain = retainFunctionCallable.nativeFunction;
-    //res._release = releaseFunctionCallable.nativeFunction;
-
-    final loadFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>>)>.listener(loadFunction);
-    res._load = loadFunctionCallable.nativeFunction;
-    return res;
-  }
-
-  static void loadFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, _CData)>> resultValueCallback) {
-    final platformValue = value.cast<ffi.Int64>();
-    if (platformValue.address == 0) {
-      throw Exception("Invalid object of type _CModelDataLoader");
-    }
-    final platformObject = _CModelDataLoaderInstanceMap[platformValue.address];
-    if (platformObject == null) {
-      throw Exception("Invalid object of type _CModelDataLoader");
-    }
-
-    final res = platformObject.object.load();
-    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>, _CData)>();
-    callbackFunction(context, res._copyFromDartTo_CData());
-  }
-
-
-}
-
 // MARK: - ModelSize
 
 /**
@@ -36585,930 +37187,6 @@ extension _CResult_CModelMapObjectToDart on _CResult_CModelMapObject {
   }
 }
 	
-// MARK: - createModelData
-
-@internal
-ModelData createModelData(
-  Context context,
-  ModelDataLoader loader
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  var _a1 = loader._copyFromDartTo_CModelDataLoader();
-  _CModelData res = _CFunction_G_createModelData_With_CContext_CModelDataLoader(_a0, _a1);
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - parseGeoJsonFile
-
-List<GeometryMapObject> parseGeoJsonFile(
-  String fsPath
-){
-  var _a0 = fsPath._copyFromDartTo_CString();
-  _CArray_CGeometryMapObject res = _CFunction_G_parseGeoJsonFile_With_CString(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - parseGeoJson
-
-List<GeometryMapObject> parseGeoJson(
-  String geoJsonData
-){
-  var _a0 = geoJsonData._copyFromDartTo_CString();
-  _CArray_CGeometryMapObject res = _CFunction_G_parseGeoJson_With_CString(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - calcPositionForGeometry
-
-CameraPosition calcPositionForGeometry(
-  BaseCamera camera,
-  Geometry geometry,
-  StyleZoomToTiltRelation? styleZoomToTiltRelation,
-  Padding? screenArea,
-  Tilt? tilt,
-  Bearing? bearing,
-  ScreenSize? size
-){
-  var _a0 = camera._copyFromDartTo_CBaseCamera();
-  var _a1 = geometry._copyFromDartTo_CGeometry();
-  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
-  var _a3 = screenArea._copyFromDartTo_COptional_CPadding();
-  var _a4 = tilt._copyFromDartTo_COptional_CTilt();
-  var _a5 = bearing._copyFromDartTo_COptional_CBearing();
-  var _a6 = size._copyFromDartTo_COptional_CScreenSize();
-  _CCameraPosition res = _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
-  _a2._releaseIntermediate();
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  return res._toDart();
-}
-
-// MARK: - Padding? <-> _COptional_CPadding
-
-final class _COptional_CPadding extends ffi.Struct {
-  
-  external _CPadding value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CPaddingBasicFunctions on _COptional_CPadding {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CPaddingToDart on _COptional_CPadding {
-  Padding? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CPadding on Padding? {
-  _COptional_CPadding _copyFromDartTo_COptional_CPadding() {
-    final cOptional = _COptional_CPaddingMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CPadding();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - ScreenSize? <-> _COptional_CScreenSize
-
-final class _COptional_CScreenSize extends ffi.Struct {
-  
-  external _CScreenSize value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CScreenSizeBasicFunctions on _COptional_CScreenSize {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CScreenSizeToDart on _COptional_CScreenSize {
-  ScreenSize? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CScreenSize on ScreenSize? {
-  _COptional_CScreenSize _copyFromDartTo_COptional_CScreenSize() {
-    final cOptional = _COptional_CScreenSizeMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CScreenSize();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - calcPositionForObjects
-
-CameraPosition calcPositionForObjects(
-  BaseCamera camera,
-  List<SimpleMapObject> objects,
-  StyleZoomToTiltRelation? styleZoomToTiltRelation,
-  Padding? screenArea,
-  Tilt? tilt,
-  Bearing? bearing,
-  ScreenSize? size
-){
-  var _a0 = camera._copyFromDartTo_CBaseCamera();
-  var _a1 = objects._copyFromDartTo_CArray_CSimpleMapObject();
-  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
-  var _a3 = screenArea._copyFromDartTo_COptional_CPadding();
-  var _a4 = tilt._copyFromDartTo_COptional_CTilt();
-  var _a5 = bearing._copyFromDartTo_COptional_CBearing();
-  var _a6 = size._copyFromDartTo_COptional_CScreenSize();
-  _CCameraPosition res = _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
-  _a2._releaseIntermediate();
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  return res._toDart();
-}
-
-// MARK: - zoomOutToFitForGeometry
-
-CameraPosition zoomOutToFitForGeometry(
-  BaseCamera camera,
-  Geometry geometry,
-  [StyleZoomToTiltRelation? styleZoomToTiltRelation = null,
-  ScreenSize? size = null
-  ]){
-  var _a0 = camera._copyFromDartTo_CBaseCamera();
-  var _a1 = geometry._copyFromDartTo_CGeometry();
-  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
-  var _a3 = size._copyFromDartTo_COptional_CScreenSize();
-  _CCameraPosition res = _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize(_a0, _a1, _a2, _a3);
-  _a2._releaseIntermediate();
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  return res._toDart();
-}
-
-// MARK: - zoomOutToFitForObjects
-
-CameraPosition zoomOutToFitForObjects(
-  BaseCamera camera,
-  List<SimpleMapObject> objects,
-  [StyleZoomToTiltRelation? styleZoomToTiltRelation = null,
-  ScreenSize? size = null
-  ]){
-  var _a0 = camera._copyFromDartTo_CBaseCamera();
-  var _a1 = objects._copyFromDartTo_CArray_CSimpleMapObject();
-  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
-  var _a3 = size._copyFromDartTo_COptional_CScreenSize();
-  _CCameraPosition res = _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize(_a0, _a1, _a2, _a3);
-  _a2._releaseIntermediate();
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  return res._toDart();
-}
-
-// MARK: - createImage
-
-@internal
-Image createImage(
-  Context context,
-  ImageLoader loader
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  var _a1 = loader._copyFromDartTo_CImageLoader();
-  _CImage res = _CFunction_G_createImage_With_CContext_CImageLoader(_a0, _a1);
-  _a1._releaseIntermediate();
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - createDefaultMaxTiltRestriction
-
-/** Получаем стандартную зависимость максимального угла наклона от стилевого уровня масштабирования. */
-StyleZoomToTiltRelation createDefaultMaxTiltRestriction(){
-  _CStyleZoomToTiltRelation res = _CFunction_G_createDefaultMaxTiltRestriction();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - createDefaultStyleZoomToTiltRelation
-
-/**
- Получение зависимости угла наклона камеры от стилевого уровня масштабирования
- для стандартного контроллера слежения за наклоном.
-*/
-StyleZoomToTiltRelation createDefaultStyleZoomToTiltRelation(){
-  _CStyleZoomToTiltRelation res = _CFunction_G_createDefaultStyleZoomToTiltRelation();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - createStyleZoomToTiltRelation
-
-/**
- Создаем зависимость угла наклона камеры от стилевого уровня масштабирования.
-
- - Parameter points: Точки, по которым строится зависимость.
- - Returns: зависимость угла наклона камеры от стилевого уровня масштабирования, если создать зависимость не
- удалось - бросаем исключение.
- - Note: Зависимость должна представлять собой монотонную непрерывную функцию.
- Если точками задана зависимость, не удовлетворяющая условиям, то функция бросает исключение.
- Зависимость, примерно как в 2гис, можно задать последовательностью точек [(17, 0), (19, 15), (20, 25)] в режиме карты
- и [(15, 0), (16, 34), (17, 48)] в режиме навигатора.
- Пусть нужно получить значение угла наклона камеры T для стилевого уровня масштабирования Z, такого что Z0
- <
- = Z
- <
- Z1 и
- зависимость задана точками [(Z0, T0), (Z1, T1)]. Тогда искомое значение рассчитывается по формуле
- T = T0 + k * (T1 - T0), где k = (Z - Z0) / (Z1 - Z0). Если Z
- <
- Z0, то T = T0. Если Z >= Z1, то T = T1.
-*/
-StyleZoomToTiltRelation createStyleZoomToTiltRelation(
-  core.Map<StyleZoom, Tilt> points
-){
-  var _a0 = points._copyFromDartTo_CDictionary_CStyleZoom_CTilt();
-  _CStyleZoomToTiltRelation res = _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - core.Map<StyleZoom, Tilt> <-> _CDictionary_CStyleZoom_CTilt
-
-final class _CDictionary_CStyleZoom_CTilt extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CDictionary_CStyleZoom_CTiltToDart on _CDictionary_CStyleZoom_CTilt {
-  core.Map<StyleZoom, Tilt> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CDictionary_CStyleZoom_CTilt on core.Map<StyleZoom, Tilt> {
-  _CDictionary_CStyleZoom_CTilt _copyFromDartTo_CDictionary_CStyleZoom_CTilt() {
-    final cDict = _CDictionary_CStyleZoom_CTiltmakeEmpty();
-    forEach((k, v) {
-        final cKey = k._copyFromDartTo_CStyleZoom();
-        final cValue = v._copyFromDartTo_CTilt();
-        _CDictionary_CStyleZoom_CTiltaddElement(cDict, cKey, cValue);
-        
-        
-    });
-    return cDict;
-  }
-}
-
-extension _CDictionary_CStyleZoom_CTiltBasicFunctions on _CDictionary_CStyleZoom_CTilt {
-  void _releaseIntermediate() {
-    _CDictionary_CStyleZoom_CTilt_release(this);
-  }
-
-  static final _mapToFill = <StyleZoom, Tilt>{};
-
-  static void _iterate(_CStyleZoom key, _CTilt value) {
-    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
-  }
-
-  core.Map<StyleZoom, Tilt> _fillFromC() {
-    _forEach_CDictionary_CStyleZoom_CTilt(this, ffi.Pointer.fromFunction<ffi.Void Function(_CStyleZoom, _CTilt value)>(_iterate));
-    final result = core.Map<StyleZoom, Tilt>.from(_mapToFill);
-    _mapToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - projectionZToStyleZ
-
-StyleZoom projectionZToStyleZ(
-  Zoom projectionZ,
-  Latitude latitude
-){
-  var _a0 = projectionZ._copyFromDartTo_CZoom();
-  var _a1 = latitude._copyFromDartTo_CLatitude();
-  _CStyleZoom res = _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude(_a0, _a1);
-  return res._toDart();
-}
-
-// MARK: - styleZToProjectionZ
-
-Zoom styleZToProjectionZ(
-  StyleZoom styleZ,
-  Latitude latitude
-){
-  var _a0 = styleZ._copyFromDartTo_CStyleZoom();
-  var _a1 = latitude._copyFromDartTo_CLatitude();
-  _CZoom res = _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude(_a0, _a1);
-  return res._toDart();
-}
-
-// MARK: - toMapGeometry
-
-/** Преобразовать геометрию маршрута в IGeometryPtr. */
-Geometry toMapGeometry(
-  GeoPointRouteAttribute geometry
-){
-  var _a0 = geometry._copyFromDartTo_CGeoPointRouteAttribute();
-  _CGeometry res = _CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - GeoPointRouteAttribute
-
-/**
- Контейнер, который описывает точечный атрибут маршрута.
- Каждый элемент хранится в виде точки на маршруте, в которой этот элемент расположен и значения самого элемента.
-*/
-class GeoPointRouteAttribute implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Количество элементов. */
-  int get size {
-    int res = _CGeoPointRouteAttribute_size(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    return res;
-  }
-  /** Элементы отсутствуют. */
-  bool get isEmpty {
-    bool res = _CGeoPointRouteAttribute_isEmpty(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    return res;
-  }
-  /** Первый элемент. */
-  GeoPointRouteEntry? get first {
-    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_first(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  /** Последний элемент. */
-  GeoPointRouteEntry? get last {
-    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_last(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  /** Все элементы. */
-  List<GeoPointRouteEntry> get entries {
-    _CArray_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_entries(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /** Длина маршрута. */
-  RouteDistance get length {
-    _CRouteDistance res = _CGeoPointRouteAttribute_length(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CGeoPointRouteAttribute_releasePtr);
-
-  GeoPointRouteAttribute._raw(this._self);
-  factory GeoPointRouteAttribute._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = GeoPointRouteAttribute._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GeoPointRouteAttribute &&
-    other.runtimeType == runtimeType &&
-    _CGeoPointRouteAttribute_cg_objectIdentifier(this._self) == _CGeoPointRouteAttribute_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CGeoPointRouteAttribute_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: GeoPointRouteAttribute: Methods
-
-  /**
-   Элементы, попадающие в отрезок [begin, end).
-  
-   - Throws: Exception если begin > end.
-  */
-  List<GeoPointRouteEntry> entriesInRange(
-    RoutePoint begin,
-    RoutePoint end
-  )  {
-    var _a1 = begin._copyFromDartTo_CRoutePoint();
-    var _a2 = end._copyFromDartTo_CRoutePoint();
-    _CArray_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1, _a2);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  /**
-   Найти ближайший элемент, позиция которого
-   <
-   = point.
-  
-   - Note: Сложность операции log2(N), где N = size.
-  */
-  GeoPointRouteEntry? findNearBackward(
-    RoutePoint point
-  )  {
-    var _a1 = point._copyFromDartTo_CRoutePoint();
-    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_findNearBackward_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
-    return res._toDart();
-  }
-
-  /**
-   Найти ближайший элемент, позиция которого >= point.
-  
-   - Note: Сложность операции log2(N), где N = size.
-  */
-  GeoPointRouteEntry? findNearForward(
-    RoutePoint point
-  )  {
-    var _a1 = point._copyFromDartTo_CRoutePoint();
-    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_findNearForward_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
-    return res._toDart();
-  }
-
-  /**
-   Вычисляет GeoPoint по известной RoutePoint.
-  
-   - Returns: Вычисленные географические координаты и направление сегмента, на который указывает параметр route_point.
-   Если маршрут пустой или route_point выходит за пределы маршрута, то возвращается null.
-   - Note: Сложность операции O(log2(N)), где N = route_geometry.size()
-  */
-  SegmentGeoPoint? calculateGeoPoint(
-    RoutePoint routePoint
-  )  {
-    var _a1 = routePoint._copyFromDartTo_CRoutePoint();
-    _COptional_CSegmentGeoPoint res = _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
-    return res._toDart();
-  }
-
-  /**
-   Вычисляет ближайшую точку на маршруте к заданной в географических координатах точке.
-  
-   - Parameter routeGeometry: Геометрия маршрута.
-   - Parameter point: Проецируемая на маршрут точка.
-   - Returns: Ближайшая точка на маршруте. Если маршрут пустой, либо точки range.first и range.second одновременно
-   лежат либо до маршрута, либо после, то возвращается null.
-   - Note: Сложность операции O(N), где N = route_geometry.size()
-  */
-  RoutePoint? calculateClosestPoint(
-    GeoPoint point
-  )  {
-    var _a1 = point._copyFromDartTo_CGeoPoint();
-    _COptional_CRoutePoint res = _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
-    return res._toDart();
-  }
-
-}
-
-// MARK: - GeoPointRouteAttribute <-> CGeoPointRouteAttribute
-
-final class _CGeoPointRouteAttribute extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CGeoPointRouteAttributeBasicFunctions on _CGeoPointRouteAttribute {
-  void _releaseIntermediate() {
-    _CGeoPointRouteAttribute_release(_impl);
-  }
-
-  _CGeoPointRouteAttribute _retain() {
-    return _CGeoPointRouteAttribute_retain(_impl);
-  }
-}
-
-extension _CGeoPointRouteAttributeToDart on _CGeoPointRouteAttribute {
-  GeoPointRouteAttribute _toDart() {
-    return GeoPointRouteAttribute._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCGeoPointRouteAttribute on GeoPointRouteAttribute {
-  _CGeoPointRouteAttribute _copyFromDartTo_CGeoPointRouteAttribute() {
-    return (_CGeoPointRouteAttributeMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - RouteDistance
-
-/** Расстояние вдоль маршрута. */
-class RouteDistance {
-  final int millimeters;
-
-  const RouteDistance([this.millimeters = 0]);
-
-  RouteDistance copyWith({
-    int? millimeters
-  }) {
-    return RouteDistance(
-      millimeters ?? this.millimeters
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RouteDistance &&
-    other.runtimeType == runtimeType &&
-    other.millimeters == millimeters;
-
-  @override
-  int get hashCode {
-    return millimeters.hashCode;
-  }
-
-}
-final class _CRouteDistance extends ffi.Struct {
-  @ffi.Int64()
-  external int millimeters;
-
-}
-// MARK: - RouteDistance <-> _CRouteDistance
-
-extension _CRouteDistanceToDart on _CRouteDistance {
-  RouteDistance _toDart() {
-    return RouteDistance(
-      this.millimeters
-    );
-  }
-}
-
-extension _DartTo_CRouteDistance on RouteDistance {
-  _CRouteDistance _copyFromDartTo_CRouteDistance() {
-    final res = _CRouteDistanceMakeDefault();
-    res.millimeters = this.millimeters;
-    return res;
-  }
-}
-extension _CRouteDistanceRelease on _CRouteDistance {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - RoutePoint
-
-/** Точка на маршруте, задается как расстояние вдоль маршрута относительно начала маршрута. */
-class RoutePoint {
-  final RouteDistance distance;
-
-  const RoutePoint(this.distance);
-
-  RoutePoint copyWith({
-    RouteDistance? distance
-  }) {
-    return RoutePoint(
-      distance ?? this.distance
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RoutePoint &&
-    other.runtimeType == runtimeType &&
-    other.distance == distance;
-
-  @override
-  int get hashCode {
-    return distance.hashCode;
-  }
-
-}
-final class _CRoutePoint extends ffi.Struct {
-  external _CRouteDistance distance;
-
-}
-// MARK: - RoutePoint <-> _CRoutePoint
-
-extension _CRoutePointToDart on _CRoutePoint {
-  RoutePoint _toDart() {
-    return RoutePoint(
-      this.distance._toDart()
-    );
-  }
-}
-
-extension _DartTo_CRoutePoint on RoutePoint {
-  _CRoutePoint _copyFromDartTo_CRoutePoint() {
-    final res = _CRoutePointMakeDefault();
-    res.distance = this.distance._copyFromDartTo_CRouteDistance();
-    return res;
-  }
-}
-extension _CRoutePointRelease on _CRoutePoint {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GeoPointRouteEntry
-
-/** Элемент маршрута - точка и значение в ней. */
-class GeoPointRouteEntry {
-  final RoutePoint point;
-  final GeoPoint value;
-
-  const GeoPointRouteEntry({
-    required this.point,
-    required this.value
-  });
-
-  GeoPointRouteEntry copyWith({
-    RoutePoint? point,
-    GeoPoint? value
-  }) {
-    return GeoPointRouteEntry(
-      point: point ?? this.point,
-      value: value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GeoPointRouteEntry &&
-    other.runtimeType == runtimeType &&
-    other.point == point &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return Object.hash(point, value);
-  }
-
-}
-final class _CGeoPointRouteEntry extends ffi.Struct {
-  external _CRoutePoint point;
-
-  external _CGeoPoint value;
-
-}
-// MARK: - GeoPointRouteEntry <-> _CGeoPointRouteEntry
-
-extension _CGeoPointRouteEntryToDart on _CGeoPointRouteEntry {
-  GeoPointRouteEntry _toDart() {
-    return GeoPointRouteEntry(
-      point: this.point._toDart(),
-      value: this.value._toDart()
-    );
-  }
-}
-
-extension _DartTo_CGeoPointRouteEntry on GeoPointRouteEntry {
-  _CGeoPointRouteEntry _copyFromDartTo_CGeoPointRouteEntry() {
-    final res = _CGeoPointRouteEntryMakeDefault();
-    res.point = this.point._copyFromDartTo_CRoutePoint();
-    res.value = this.value._copyFromDartTo_CGeoPoint();
-    return res;
-  }
-}
-extension _CGeoPointRouteEntryRelease on _CGeoPointRouteEntry {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GeoPointRouteEntry? <-> _COptional_CGeoPointRouteEntry
-
-final class _COptional_CGeoPointRouteEntry extends ffi.Struct {
-  
-  external _CGeoPointRouteEntry value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CGeoPointRouteEntryBasicFunctions on _COptional_CGeoPointRouteEntry {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CGeoPointRouteEntryToDart on _COptional_CGeoPointRouteEntry {
-  GeoPointRouteEntry? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CGeoPointRouteEntry on GeoPointRouteEntry? {
-  _COptional_CGeoPointRouteEntry _copyFromDartTo_COptional_CGeoPointRouteEntry() {
-    final cOptional = _COptional_CGeoPointRouteEntryMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CGeoPointRouteEntry();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - List<GeoPointRouteEntry> <-> _CArray_CGeoPointRouteEntry
-
-final class _CArray_CGeoPointRouteEntry extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CGeoPointRouteEntryToDart on _CArray_CGeoPointRouteEntry {
-  List<GeoPointRouteEntry> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CGeoPointRouteEntry on List<GeoPointRouteEntry> {
-  _CArray_CGeoPointRouteEntry _copyFromDartTo_CArray_CGeoPointRouteEntry() {
-    final cArray = _CArray_CGeoPointRouteEntrymakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CGeoPointRouteEntry();
-        _CArray_CGeoPointRouteEntryaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CGeoPointRouteEntryBasicFunctions on _CArray_CGeoPointRouteEntry {
-  void _releaseIntermediate() {
-    _CArray_CGeoPointRouteEntry_release(this);
-  }
-
-  static final _listToFill = <GeoPointRouteEntry>[];
-
-  static void _iterate(_CGeoPointRouteEntry item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<GeoPointRouteEntry> _fillFromC() {
-    _forEach_CArray_CGeoPointRouteEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CGeoPointRouteEntry)>(_iterate));
-    final result = List<GeoPointRouteEntry>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - SegmentGeoPoint
-
-/**
- Описывает географическую точку на сегменте и направление сегмента.
- Геометрия маршрута представляет собой последовательность точек, которые попарно образуют отрезки (сегменты).
- При этом во всех функциях, работающих с геометрией маршрута считается, что первая точка из образующей отрезок пары
- входит в этот отрезок, а вторая - нет: [point_1, point_2),[point_2, point_3),...,[point_n-1, point_n)[point_last].
- Последняя точка образует сама с собой отрезок нулевой длины. Т.о. каждая точка маршрута принадлежит ровно одному
- отрезку. Направление точки point_last не определено.
-*/
-class SegmentGeoPoint {
-  final GeoPoint point;
-  final Bearing bearing;
-
-  const SegmentGeoPoint({
-    required this.point,
-    required this.bearing
-  });
-
-  SegmentGeoPoint copyWith({
-    GeoPoint? point,
-    Bearing? bearing
-  }) {
-    return SegmentGeoPoint(
-      point: point ?? this.point,
-      bearing: bearing ?? this.bearing
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is SegmentGeoPoint &&
-    other.runtimeType == runtimeType &&
-    other.point == point &&
-    other.bearing == bearing;
-
-  @override
-  int get hashCode {
-    return Object.hash(point, bearing);
-  }
-
-}
-final class _CSegmentGeoPoint extends ffi.Struct {
-  external _CGeoPoint point;
-
-  external _CBearing bearing;
-
-}
-// MARK: - SegmentGeoPoint <-> _CSegmentGeoPoint
-
-extension _CSegmentGeoPointToDart on _CSegmentGeoPoint {
-  SegmentGeoPoint _toDart() {
-    return SegmentGeoPoint(
-      point: this.point._toDart(),
-      bearing: this.bearing._toDart()
-    );
-  }
-}
-
-extension _DartTo_CSegmentGeoPoint on SegmentGeoPoint {
-  _CSegmentGeoPoint _copyFromDartTo_CSegmentGeoPoint() {
-    final res = _CSegmentGeoPointMakeDefault();
-    res.point = this.point._copyFromDartTo_CGeoPoint();
-    res.bearing = this.bearing._copyFromDartTo_CBearing();
-    return res;
-  }
-}
-extension _CSegmentGeoPointRelease on _CSegmentGeoPoint {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - SegmentGeoPoint? <-> _COptional_CSegmentGeoPoint
-
-final class _COptional_CSegmentGeoPoint extends ffi.Struct {
-  
-  external _CSegmentGeoPoint value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CSegmentGeoPointBasicFunctions on _COptional_CSegmentGeoPoint {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CSegmentGeoPointToDart on _COptional_CSegmentGeoPoint {
-  SegmentGeoPoint? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CSegmentGeoPoint on SegmentGeoPoint? {
-  _COptional_CSegmentGeoPoint _copyFromDartTo_COptional_CSegmentGeoPoint() {
-    final cOptional = _COptional_CSegmentGeoPointMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CSegmentGeoPoint();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - RoutePoint? <-> _COptional_CRoutePoint
-
-final class _COptional_CRoutePoint extends ffi.Struct {
-  
-  external _CRoutePoint value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CRoutePointBasicFunctions on _COptional_CRoutePoint {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CRoutePointToDart on _COptional_CRoutePoint {
-  RoutePoint? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CRoutePoint on RoutePoint? {
-  _COptional_CRoutePoint _copyFromDartTo_COptional_CRoutePoint() {
-    final cOptional = _COptional_CRoutePointMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CRoutePoint();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - DashedStrokeCircleOptions
 
 class DashedStrokeCircleOptions {
@@ -39370,6 +39048,896 @@ extension _DartToCZoomControlModel on ZoomControlModel {
     return (_CZoomControlModelMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - parseGeoJsonFile
+
+List<GeometryMapObject> parseGeoJsonFile(
+  String fsPath
+){
+  var _a0 = fsPath._copyFromDartTo_CString();
+  _CArray_CGeometryMapObject res = _CFunction_G_parseGeoJsonFile_With_CString(_a0);
+  _a0._releaseIntermediate();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - parseGeoJson
+
+List<GeometryMapObject> parseGeoJson(
+  String geoJsonData
+){
+  var _a0 = geoJsonData._copyFromDartTo_CString();
+  _CArray_CGeometryMapObject res = _CFunction_G_parseGeoJson_With_CString(_a0);
+  _a0._releaseIntermediate();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - calcPositionForGeometry
+
+CameraPosition calcPositionForGeometry(
+  BaseCamera camera,
+  Geometry geometry,
+  StyleZoomToTiltRelation? styleZoomToTiltRelation,
+  Padding? screenArea,
+  Tilt? tilt,
+  Bearing? bearing,
+  ScreenSize? size
+){
+  var _a0 = camera._copyFromDartTo_CBaseCamera();
+  var _a1 = geometry._copyFromDartTo_CGeometry();
+  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
+  var _a3 = screenArea._copyFromDartTo_COptional_CPadding();
+  var _a4 = tilt._copyFromDartTo_COptional_CTilt();
+  var _a5 = bearing._copyFromDartTo_COptional_CBearing();
+  var _a6 = size._copyFromDartTo_COptional_CScreenSize();
+  _CCameraPosition res = _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
+  _a2._releaseIntermediate();
+  _a1._releaseIntermediate();
+  _a0._releaseIntermediate();
+  return res._toDart();
+}
+
+// MARK: - Padding? <-> _COptional_CPadding
+
+final class _COptional_CPadding extends ffi.Struct {
+  
+  external _CPadding value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPaddingBasicFunctions on _COptional_CPadding {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CPaddingToDart on _COptional_CPadding {
+  Padding? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPadding on Padding? {
+  _COptional_CPadding _copyFromDartTo_COptional_CPadding() {
+    final cOptional = _COptional_CPaddingMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPadding();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - ScreenSize? <-> _COptional_CScreenSize
+
+final class _COptional_CScreenSize extends ffi.Struct {
+  
+  external _CScreenSize value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CScreenSizeBasicFunctions on _COptional_CScreenSize {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CScreenSizeToDart on _COptional_CScreenSize {
+  ScreenSize? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CScreenSize on ScreenSize? {
+  _COptional_CScreenSize _copyFromDartTo_COptional_CScreenSize() {
+    final cOptional = _COptional_CScreenSizeMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CScreenSize();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - calcPositionForObjects
+
+CameraPosition calcPositionForObjects(
+  BaseCamera camera,
+  List<SimpleMapObject> objects,
+  StyleZoomToTiltRelation? styleZoomToTiltRelation,
+  Padding? screenArea,
+  Tilt? tilt,
+  Bearing? bearing,
+  ScreenSize? size
+){
+  var _a0 = camera._copyFromDartTo_CBaseCamera();
+  var _a1 = objects._copyFromDartTo_CArray_CSimpleMapObject();
+  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
+  var _a3 = screenArea._copyFromDartTo_COptional_CPadding();
+  var _a4 = tilt._copyFromDartTo_COptional_CTilt();
+  var _a5 = bearing._copyFromDartTo_COptional_CBearing();
+  var _a6 = size._copyFromDartTo_COptional_CScreenSize();
+  _CCameraPosition res = _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize(_a0, _a1, _a2, _a3, _a4, _a5, _a6);
+  _a2._releaseIntermediate();
+  _a1._releaseIntermediate();
+  _a0._releaseIntermediate();
+  return res._toDart();
+}
+
+// MARK: - zoomOutToFitForGeometry
+
+CameraPosition zoomOutToFitForGeometry(
+  BaseCamera camera,
+  Geometry geometry,
+  [StyleZoomToTiltRelation? styleZoomToTiltRelation = null,
+  ScreenSize? size = null
+  ]){
+  var _a0 = camera._copyFromDartTo_CBaseCamera();
+  var _a1 = geometry._copyFromDartTo_CGeometry();
+  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
+  var _a3 = size._copyFromDartTo_COptional_CScreenSize();
+  _CCameraPosition res = _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize(_a0, _a1, _a2, _a3);
+  _a2._releaseIntermediate();
+  _a1._releaseIntermediate();
+  _a0._releaseIntermediate();
+  return res._toDart();
+}
+
+// MARK: - zoomOutToFitForObjects
+
+CameraPosition zoomOutToFitForObjects(
+  BaseCamera camera,
+  List<SimpleMapObject> objects,
+  [StyleZoomToTiltRelation? styleZoomToTiltRelation = null,
+  ScreenSize? size = null
+  ]){
+  var _a0 = camera._copyFromDartTo_CBaseCamera();
+  var _a1 = objects._copyFromDartTo_CArray_CSimpleMapObject();
+  var _a2 = styleZoomToTiltRelation._copyFromDartTo_COptional_CStyleZoomToTiltRelation();
+  var _a3 = size._copyFromDartTo_COptional_CScreenSize();
+  _CCameraPosition res = _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize(_a0, _a1, _a2, _a3);
+  _a2._releaseIntermediate();
+  _a1._releaseIntermediate();
+  _a0._releaseIntermediate();
+  return res._toDart();
+}
+
+// MARK: - createDefaultMaxTiltRestriction
+
+/** Получаем стандартную зависимость максимального угла наклона от стилевого уровня масштабирования. */
+StyleZoomToTiltRelation createDefaultMaxTiltRestriction(){
+  _CStyleZoomToTiltRelation res = _CFunction_G_createDefaultMaxTiltRestriction();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - createDefaultStyleZoomToTiltRelation
+
+/**
+ Получение зависимости угла наклона камеры от стилевого уровня масштабирования
+ для стандартного контроллера слежения за наклоном.
+*/
+StyleZoomToTiltRelation createDefaultStyleZoomToTiltRelation(){
+  _CStyleZoomToTiltRelation res = _CFunction_G_createDefaultStyleZoomToTiltRelation();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - createStyleZoomToTiltRelation
+
+/**
+ Создаем зависимость угла наклона камеры от стилевого уровня масштабирования.
+
+ - Parameter points: Точки, по которым строится зависимость.
+ - Returns: зависимость угла наклона камеры от стилевого уровня масштабирования, если создать зависимость не
+ удалось - бросаем исключение.
+ - Note: Зависимость должна представлять собой монотонную непрерывную функцию.
+ Если точками задана зависимость, не удовлетворяющая условиям, то функция бросает исключение.
+ Зависимость, примерно как в 2гис, можно задать последовательностью точек [(17, 0), (19, 15), (20, 25)] в режиме карты
+ и [(15, 0), (16, 34), (17, 48)] в режиме навигатора.
+ Пусть нужно получить значение угла наклона камеры T для стилевого уровня масштабирования Z, такого что Z0
+ <
+ = Z
+ <
+ Z1 и
+ зависимость задана точками [(Z0, T0), (Z1, T1)]. Тогда искомое значение рассчитывается по формуле
+ T = T0 + k * (T1 - T0), где k = (Z - Z0) / (Z1 - Z0). Если Z
+ <
+ Z0, то T = T0. Если Z >= Z1, то T = T1.
+*/
+StyleZoomToTiltRelation createStyleZoomToTiltRelation(
+  core.Map<StyleZoom, Tilt> points
+){
+  var _a0 = points._copyFromDartTo_CDictionary_CStyleZoom_CTilt();
+  _CStyleZoomToTiltRelation res = _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt(_a0);
+  _a0._releaseIntermediate();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - core.Map<StyleZoom, Tilt> <-> _CDictionary_CStyleZoom_CTilt
+
+final class _CDictionary_CStyleZoom_CTilt extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CStyleZoom_CTiltToDart on _CDictionary_CStyleZoom_CTilt {
+  core.Map<StyleZoom, Tilt> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CStyleZoom_CTilt on core.Map<StyleZoom, Tilt> {
+  _CDictionary_CStyleZoom_CTilt _copyFromDartTo_CDictionary_CStyleZoom_CTilt() {
+    final cDict = _CDictionary_CStyleZoom_CTiltmakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CStyleZoom();
+        final cValue = v._copyFromDartTo_CTilt();
+        _CDictionary_CStyleZoom_CTiltaddElement(cDict, cKey, cValue);
+        
+        
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CStyleZoom_CTiltBasicFunctions on _CDictionary_CStyleZoom_CTilt {
+  void _releaseIntermediate() {
+    _CDictionary_CStyleZoom_CTilt_release(this);
+  }
+
+  static final _mapToFill = <StyleZoom, Tilt>{};
+
+  static void _iterate(_CStyleZoom key, _CTilt value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<StyleZoom, Tilt> _fillFromC() {
+    _forEach_CDictionary_CStyleZoom_CTilt(this, ffi.Pointer.fromFunction<ffi.Void Function(_CStyleZoom, _CTilt value)>(_iterate));
+    final result = core.Map<StyleZoom, Tilt>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - projectionZToStyleZ
+
+StyleZoom projectionZToStyleZ(
+  Zoom projectionZ,
+  Latitude latitude
+){
+  var _a0 = projectionZ._copyFromDartTo_CZoom();
+  var _a1 = latitude._copyFromDartTo_CLatitude();
+  _CStyleZoom res = _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude(_a0, _a1);
+  return res._toDart();
+}
+
+// MARK: - styleZToProjectionZ
+
+Zoom styleZToProjectionZ(
+  StyleZoom styleZ,
+  Latitude latitude
+){
+  var _a0 = styleZ._copyFromDartTo_CStyleZoom();
+  var _a1 = latitude._copyFromDartTo_CLatitude();
+  _CZoom res = _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude(_a0, _a1);
+  return res._toDart();
+}
+
+// MARK: - toMapGeometry
+
+/** Преобразовать геометрию маршрута в IGeometryPtr. */
+Geometry toMapGeometry(
+  GeoPointRouteAttribute geometry
+){
+  var _a0 = geometry._copyFromDartTo_CGeoPointRouteAttribute();
+  _CGeometry res = _CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute(_a0);
+  _a0._releaseIntermediate();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
+}
+
+// MARK: - GeoPointRouteAttribute
+
+/**
+ Контейнер, который описывает точечный атрибут маршрута.
+ Каждый элемент хранится в виде точки на маршруте, в которой этот элемент расположен и значения самого элемента.
+*/
+class GeoPointRouteAttribute implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Количество элементов. */
+  int get size {
+    int res = _CGeoPointRouteAttribute_size(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Элементы отсутствуют. */
+  bool get isEmpty {
+    bool res = _CGeoPointRouteAttribute_isEmpty(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Первый элемент. */
+  GeoPointRouteEntry? get first {
+    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_first(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Последний элемент. */
+  GeoPointRouteEntry? get last {
+    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_last(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Все элементы. */
+  List<GeoPointRouteEntry> get entries {
+    _CArray_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_entries(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Длина маршрута. */
+  RouteDistance get length {
+    _CRouteDistance res = _CGeoPointRouteAttribute_length(_CGeoPointRouteAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CGeoPointRouteAttribute_releasePtr);
+
+  GeoPointRouteAttribute._raw(this._self);
+  factory GeoPointRouteAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = GeoPointRouteAttribute._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GeoPointRouteAttribute &&
+    other.runtimeType == runtimeType &&
+    _CGeoPointRouteAttribute_cg_objectIdentifier(this._self) == _CGeoPointRouteAttribute_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CGeoPointRouteAttribute_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: GeoPointRouteAttribute: Methods
+
+  /**
+   Элементы, попадающие в отрезок [begin, end).
+  
+   - Throws: Exception если begin > end.
+  */
+  List<GeoPointRouteEntry> entriesInRange(
+    RoutePoint begin,
+    RoutePoint end
+  )  {
+    var _a1 = begin._copyFromDartTo_CRoutePoint();
+    var _a2 = end._copyFromDartTo_CRoutePoint();
+    _CArray_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1, _a2);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого
+   <
+   = point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  GeoPointRouteEntry? findNearBackward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_findNearBackward_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого >= point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  GeoPointRouteEntry? findNearForward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CGeoPointRouteEntry res = _CGeoPointRouteAttribute_findNearForward_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+  /**
+   Вычисляет GeoPoint по известной RoutePoint.
+  
+   - Returns: Вычисленные географические координаты и направление сегмента, на который указывает параметр route_point.
+   Если маршрут пустой или route_point выходит за пределы маршрута, то возвращается null.
+   - Note: Сложность операции O(log2(N)), где N = route_geometry.size()
+  */
+  SegmentGeoPoint? calculateGeoPoint(
+    RoutePoint routePoint
+  )  {
+    var _a1 = routePoint._copyFromDartTo_CRoutePoint();
+    _COptional_CSegmentGeoPoint res = _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+  /**
+   Вычисляет ближайшую точку на маршруте к заданной в географических координатах точке.
+  
+   - Parameter routeGeometry: Геометрия маршрута.
+   - Parameter point: Проецируемая на маршрут точка.
+   - Returns: Ближайшая точка на маршруте. Если маршрут пустой, либо точки range.first и range.second одновременно
+   лежат либо до маршрута, либо после, то возвращается null.
+   - Note: Сложность операции O(N), где N = route_geometry.size()
+  */
+  RoutePoint? calculateClosestPoint(
+    GeoPoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CGeoPoint();
+    _COptional_CRoutePoint res = _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint(_CGeoPointRouteAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+}
+
+// MARK: - GeoPointRouteAttribute <-> CGeoPointRouteAttribute
+
+final class _CGeoPointRouteAttribute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CGeoPointRouteAttributeBasicFunctions on _CGeoPointRouteAttribute {
+  void _releaseIntermediate() {
+    _CGeoPointRouteAttribute_release(_impl);
+  }
+
+  _CGeoPointRouteAttribute _retain() {
+    return _CGeoPointRouteAttribute_retain(_impl);
+  }
+}
+
+extension _CGeoPointRouteAttributeToDart on _CGeoPointRouteAttribute {
+  GeoPointRouteAttribute _toDart() {
+    return GeoPointRouteAttribute._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCGeoPointRouteAttribute on GeoPointRouteAttribute {
+  _CGeoPointRouteAttribute _copyFromDartTo_CGeoPointRouteAttribute() {
+    return (_CGeoPointRouteAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - RouteDistance
+
+/** Расстояние вдоль маршрута. */
+class RouteDistance {
+  final int millimeters;
+
+  const RouteDistance([this.millimeters = 0]);
+
+  RouteDistance copyWith({
+    int? millimeters
+  }) {
+    return RouteDistance(
+      millimeters ?? this.millimeters
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteDistance &&
+    other.runtimeType == runtimeType &&
+    other.millimeters == millimeters;
+
+  @override
+  int get hashCode {
+    return millimeters.hashCode;
+  }
+
+}
+final class _CRouteDistance extends ffi.Struct {
+  @ffi.Int64()
+  external int millimeters;
+
+}
+// MARK: - RouteDistance <-> _CRouteDistance
+
+extension _CRouteDistanceToDart on _CRouteDistance {
+  RouteDistance _toDart() {
+    return RouteDistance(
+      this.millimeters
+    );
+  }
+}
+
+extension _DartTo_CRouteDistance on RouteDistance {
+  _CRouteDistance _copyFromDartTo_CRouteDistance() {
+    final res = _CRouteDistanceMakeDefault();
+    res.millimeters = this.millimeters;
+    return res;
+  }
+}
+extension _CRouteDistanceRelease on _CRouteDistance {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - RoutePoint
+
+/** Точка на маршруте, задается как расстояние вдоль маршрута относительно начала маршрута. */
+class RoutePoint {
+  final RouteDistance distance;
+
+  const RoutePoint(this.distance);
+
+  RoutePoint copyWith({
+    RouteDistance? distance
+  }) {
+    return RoutePoint(
+      distance ?? this.distance
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RoutePoint &&
+    other.runtimeType == runtimeType &&
+    other.distance == distance;
+
+  @override
+  int get hashCode {
+    return distance.hashCode;
+  }
+
+}
+final class _CRoutePoint extends ffi.Struct {
+  external _CRouteDistance distance;
+
+}
+// MARK: - RoutePoint <-> _CRoutePoint
+
+extension _CRoutePointToDart on _CRoutePoint {
+  RoutePoint _toDart() {
+    return RoutePoint(
+      this.distance._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRoutePoint on RoutePoint {
+  _CRoutePoint _copyFromDartTo_CRoutePoint() {
+    final res = _CRoutePointMakeDefault();
+    res.distance = this.distance._copyFromDartTo_CRouteDistance();
+    return res;
+  }
+}
+extension _CRoutePointRelease on _CRoutePoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GeoPointRouteEntry
+
+/** Элемент маршрута - точка и значение в ней. */
+class GeoPointRouteEntry {
+  final RoutePoint point;
+  final GeoPoint value;
+
+  const GeoPointRouteEntry({
+    required this.point,
+    required this.value
+  });
+
+  GeoPointRouteEntry copyWith({
+    RoutePoint? point,
+    GeoPoint? value
+  }) {
+    return GeoPointRouteEntry(
+      point: point ?? this.point,
+      value: value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GeoPointRouteEntry &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, value);
+  }
+
+}
+final class _CGeoPointRouteEntry extends ffi.Struct {
+  external _CRoutePoint point;
+
+  external _CGeoPoint value;
+
+}
+// MARK: - GeoPointRouteEntry <-> _CGeoPointRouteEntry
+
+extension _CGeoPointRouteEntryToDart on _CGeoPointRouteEntry {
+  GeoPointRouteEntry _toDart() {
+    return GeoPointRouteEntry(
+      point: this.point._toDart(),
+      value: this.value._toDart()
+    );
+  }
+}
+
+extension _DartTo_CGeoPointRouteEntry on GeoPointRouteEntry {
+  _CGeoPointRouteEntry _copyFromDartTo_CGeoPointRouteEntry() {
+    final res = _CGeoPointRouteEntryMakeDefault();
+    res.point = this.point._copyFromDartTo_CRoutePoint();
+    res.value = this.value._copyFromDartTo_CGeoPoint();
+    return res;
+  }
+}
+extension _CGeoPointRouteEntryRelease on _CGeoPointRouteEntry {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GeoPointRouteEntry? <-> _COptional_CGeoPointRouteEntry
+
+final class _COptional_CGeoPointRouteEntry extends ffi.Struct {
+  
+  external _CGeoPointRouteEntry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CGeoPointRouteEntryBasicFunctions on _COptional_CGeoPointRouteEntry {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CGeoPointRouteEntryToDart on _COptional_CGeoPointRouteEntry {
+  GeoPointRouteEntry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CGeoPointRouteEntry on GeoPointRouteEntry? {
+  _COptional_CGeoPointRouteEntry _copyFromDartTo_COptional_CGeoPointRouteEntry() {
+    final cOptional = _COptional_CGeoPointRouteEntryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CGeoPointRouteEntry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<GeoPointRouteEntry> <-> _CArray_CGeoPointRouteEntry
+
+final class _CArray_CGeoPointRouteEntry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CGeoPointRouteEntryToDart on _CArray_CGeoPointRouteEntry {
+  List<GeoPointRouteEntry> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CGeoPointRouteEntry on List<GeoPointRouteEntry> {
+  _CArray_CGeoPointRouteEntry _copyFromDartTo_CArray_CGeoPointRouteEntry() {
+    final cArray = _CArray_CGeoPointRouteEntrymakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CGeoPointRouteEntry();
+        _CArray_CGeoPointRouteEntryaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CGeoPointRouteEntryBasicFunctions on _CArray_CGeoPointRouteEntry {
+  void _releaseIntermediate() {
+    _CArray_CGeoPointRouteEntry_release(this);
+  }
+
+  static final _listToFill = <GeoPointRouteEntry>[];
+
+  static void _iterate(_CGeoPointRouteEntry item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<GeoPointRouteEntry> _fillFromC() {
+    _forEach_CArray_CGeoPointRouteEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CGeoPointRouteEntry)>(_iterate));
+    final result = List<GeoPointRouteEntry>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - SegmentGeoPoint
+
+/**
+ Описывает географическую точку на сегменте и направление сегмента.
+ Геометрия маршрута представляет собой последовательность точек, которые попарно образуют отрезки (сегменты).
+ При этом во всех функциях, работающих с геометрией маршрута считается, что первая точка из образующей отрезок пары
+ входит в этот отрезок, а вторая - нет: [point_1, point_2),[point_2, point_3),...,[point_n-1, point_n)[point_last].
+ Последняя точка образует сама с собой отрезок нулевой длины. Т.о. каждая точка маршрута принадлежит ровно одному
+ отрезку. Направление точки point_last не определено.
+*/
+class SegmentGeoPoint {
+  final GeoPoint point;
+  final Bearing bearing;
+
+  const SegmentGeoPoint({
+    required this.point,
+    required this.bearing
+  });
+
+  SegmentGeoPoint copyWith({
+    GeoPoint? point,
+    Bearing? bearing
+  }) {
+    return SegmentGeoPoint(
+      point: point ?? this.point,
+      bearing: bearing ?? this.bearing
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is SegmentGeoPoint &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.bearing == bearing;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, bearing);
+  }
+
+}
+final class _CSegmentGeoPoint extends ffi.Struct {
+  external _CGeoPoint point;
+
+  external _CBearing bearing;
+
+}
+// MARK: - SegmentGeoPoint <-> _CSegmentGeoPoint
+
+extension _CSegmentGeoPointToDart on _CSegmentGeoPoint {
+  SegmentGeoPoint _toDart() {
+    return SegmentGeoPoint(
+      point: this.point._toDart(),
+      bearing: this.bearing._toDart()
+    );
+  }
+}
+
+extension _DartTo_CSegmentGeoPoint on SegmentGeoPoint {
+  _CSegmentGeoPoint _copyFromDartTo_CSegmentGeoPoint() {
+    final res = _CSegmentGeoPointMakeDefault();
+    res.point = this.point._copyFromDartTo_CGeoPoint();
+    res.bearing = this.bearing._copyFromDartTo_CBearing();
+    return res;
+  }
+}
+extension _CSegmentGeoPointRelease on _CSegmentGeoPoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - SegmentGeoPoint? <-> _COptional_CSegmentGeoPoint
+
+final class _COptional_CSegmentGeoPoint extends ffi.Struct {
+  
+  external _CSegmentGeoPoint value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CSegmentGeoPointBasicFunctions on _COptional_CSegmentGeoPoint {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CSegmentGeoPointToDart on _COptional_CSegmentGeoPoint {
+  SegmentGeoPoint? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CSegmentGeoPoint on SegmentGeoPoint? {
+  _COptional_CSegmentGeoPoint _copyFromDartTo_COptional_CSegmentGeoPoint() {
+    final cOptional = _COptional_CSegmentGeoPointMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CSegmentGeoPoint();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - RoutePoint? <-> _COptional_CRoutePoint
+
+final class _COptional_CRoutePoint extends ffi.Struct {
+  
+  external _CRoutePoint value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CRoutePointBasicFunctions on _COptional_CRoutePoint {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CRoutePointToDart on _COptional_CRoutePoint {
+  RoutePoint? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CRoutePoint on RoutePoint? {
+  _COptional_CRoutePoint _copyFromDartTo_COptional_CRoutePoint() {
+    final cOptional = _COptional_CRoutePointMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CRoutePoint();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - DefaultRasterUrlTemplate
 
 class DefaultRasterUrlTemplate {
@@ -40084,82 +40652,6 @@ extension _DartTo_CCalloutVisualizationMode on CalloutVisualizationMode {
   }
 }
 	
-// MARK: - LanesCalloutMapPosition
-
-/** Положение бабла полосности для маршрута. */
-class LanesCalloutMapPosition {
-  /** Идентификатор карты, для которой приведена позиция. */
-  final MapId mapId;
-  /** Позиция бабла полосности на маршруте. */
-  final RoutePoint routePoint;
-  /** Позиция бабла полосности на карте. */
-  final GeoPoint geoPoint;
-
-  const LanesCalloutMapPosition({
-    required this.mapId,
-    required this.routePoint,
-    required this.geoPoint
-  });
-
-  LanesCalloutMapPosition copyWith({
-    MapId? mapId,
-    RoutePoint? routePoint,
-    GeoPoint? geoPoint
-  }) {
-    return LanesCalloutMapPosition(
-      mapId: mapId ?? this.mapId,
-      routePoint: routePoint ?? this.routePoint,
-      geoPoint: geoPoint ?? this.geoPoint
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is LanesCalloutMapPosition &&
-    other.runtimeType == runtimeType &&
-    other.mapId == mapId &&
-    other.routePoint == routePoint &&
-    other.geoPoint == geoPoint;
-
-  @override
-  int get hashCode {
-    return Object.hash(mapId, routePoint, geoPoint);
-  }
-
-}
-final class _CLanesCalloutMapPosition extends ffi.Struct {
-  external _CMapId mapId;
-
-  external _CRoutePoint routePoint;
-
-  external _CGeoPoint geoPoint;
-
-}
-// MARK: - LanesCalloutMapPosition <-> _CLanesCalloutMapPosition
-
-extension _CLanesCalloutMapPositionToDart on _CLanesCalloutMapPosition {
-  LanesCalloutMapPosition _toDart() {
-    return LanesCalloutMapPosition(
-      mapId: this.mapId._toDart(),
-      routePoint: this.routePoint._toDart(),
-      geoPoint: this.geoPoint._toDart()
-    );
-  }
-}
-
-extension _DartTo_CLanesCalloutMapPosition on LanesCalloutMapPosition {
-  _CLanesCalloutMapPosition _copyFromDartTo_CLanesCalloutMapPosition() {
-    final res = _CLanesCalloutMapPositionMakeDefault();
-    res.mapId = this.mapId._copyFromDartTo_CMapId();
-    res.routePoint = this.routePoint._copyFromDartTo_CRoutePoint();
-    res.geoPoint = this.geoPoint._copyFromDartTo_CGeoPoint();
-    return res;
-  }
-}
-extension _CLanesCalloutMapPositionRelease on _CLanesCalloutMapPosition {
-  void _releaseIntermediate() {
-  }
-}
-
 // MARK: - IndoorRouteLevelsGetter
 
 /**
@@ -40426,6 +40918,8 @@ enum RouteMapObjectDisplayFlag {
   trafficLights(8388608),
   /** Использовать иммерсивную геометрию для отрезков маршрута (используется совместно с RouteParts). */
   immersiveRouteParts(16777216),
+  /** Начало и конец переправы. */
+  crossing(33554432),
   ;
 
   const RouteMapObjectDisplayFlag(this.rawValue);
@@ -40616,7 +41110,7 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
    Набор флагов для отображения различных частей маршрута.
    Если не задан, используется логика отображения на основе статуса активности маршрута.
   */
-  StatefulChannel<RouteMapObjectDisplayFlagEnumSet?> get displayFlagsChannel {
+  StatefulChannel<EnumSet<RouteMapObjectDisplayFlag>?> get displayFlagsChannel {
     _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag res = _CRouteMapObject_displayFlagsChannel(_CRouteMapObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
@@ -40626,11 +41120,11 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
    Набор флагов для отображения различных частей маршрута.
    Если не задан, используется логика отображения на основе статуса активности маршрута.
   */
-  RouteMapObjectDisplayFlagEnumSet? get displayFlags {
+  EnumSet<RouteMapObjectDisplayFlag>? get displayFlags {
     _COptional_COptionSet_CRouteMapObjectDisplayFlag res = _CRouteMapObject_displayFlags(_CRouteMapObjectMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set displayFlags(RouteMapObjectDisplayFlagEnumSet? flags) {
+  set displayFlags(EnumSet<RouteMapObjectDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag();
     void res = _CRouteMapObject_setDisplayFlags_COptional_COptionSet_CRouteMapObjectDisplayFlag(_CRouteMapObjectMakeDefault().._impl=_self, _a1);
     return res;
@@ -40641,7 +41135,7 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
    Если не задан, то при обновлении пройденного вдоль маршрута расстояния с карты скрываются
    все элементы маршрута, попадающие в неотображаемую часть маршрута.
   */
-  StatefulChannel<RouteMapObjectPermanentDisplayFlagEnumSet?> get permanentDisplayFlagsChannel {
+  StatefulChannel<EnumSet<RouteMapObjectPermanentDisplayFlag>?> get permanentDisplayFlagsChannel {
     _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteMapObject_permanentDisplayFlagsChannel(_CRouteMapObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
@@ -40653,11 +41147,11 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
    Если не задан, то при обновлении пройденного вдоль маршрута расстояния с карты скрываются
    все элементы маршрута, попадающие в неотображаемую часть маршрута.
   */
-  RouteMapObjectPermanentDisplayFlagEnumSet? get permanentDisplayFlags {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? get permanentDisplayFlags {
     _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteMapObject_permanentDisplayFlags(_CRouteMapObjectMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set permanentDisplayFlags(RouteMapObjectPermanentDisplayFlagEnumSet? flags) {
+  set permanentDisplayFlags(EnumSet<RouteMapObjectPermanentDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag();
     void res = _CRouteMapObject_setPermanentDisplayFlags_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag(_CRouteMapObjectMakeDefault().._impl=_self, _a1);
     return res;
@@ -40738,10 +41232,11 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
   }
   /**
    Набор флагов для отображения содержимого баблов маршрута.
+   Набор флагов для отображения содержимого баблов маршрута.
    Если не задан, то для активного маршрута отображается и время движения по маршруту, и его длина,
    а для неактивных маршрутов - только время движения.
   */
-  StatefulChannel<RouteMapObjectCalloutLabelFlagEnumSet?> get calloutLabelFlagsChannel {
+  StatefulChannel<EnumSet<RouteMapObjectCalloutLabelFlag>?> get calloutLabelFlagsChannel {
     _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag res = _CRouteMapObject_calloutLabelFlagsChannel(_CRouteMapObjectMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
@@ -40749,14 +41244,15 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
   }
   /**
    Набор флагов для отображения содержимого баблов маршрута.
+   Набор флагов для отображения содержимого баблов маршрута.
    Если не задан, то для активного маршрута отображается и время движения по маршруту, и его длина,
    а для неактивных маршрутов - только время движения.
   */
-  RouteMapObjectCalloutLabelFlagEnumSet? get calloutLabelFlags {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? get calloutLabelFlags {
     _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag res = _CRouteMapObject_calloutLabelFlags(_CRouteMapObjectMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set calloutLabelFlags(RouteMapObjectCalloutLabelFlagEnumSet? flags) {
+  set calloutLabelFlags(EnumSet<RouteMapObjectCalloutLabelFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag();
     void res = _CRouteMapObject_setCalloutLabelFlags_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag(_CRouteMapObjectMakeDefault().._impl=_self, _a1);
     return res;
@@ -40783,26 +41279,6 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
     var _a1 = mode._copyFromDartTo_CRouteMapObjectCalloutLabelDisplayMode();
     void res = _CRouteMapObject_setCalloutLabelDisplayMode_CRouteMapObjectCalloutLabelDisplayMode(_CRouteMapObjectMakeDefault().._impl=_self, _a1);
     return res;
-  }
-  /**
-   Положения баблов полосности. Возвращаются только актуальные положения для текущего пройденного расстояния
-   по маршруту и только если источник, в который помещён объект, работает в режиме навигации.
-  */
-  StatefulChannel<List<LanesCalloutMapPosition>> get lanesCalloutPositionsChannel {
-    _CStatefulChannel_CArray_CLanesCalloutMapPosition res = _CRouteMapObject_lanesCalloutPositionsChannel(_CRouteMapObjectMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /**
-   Положения баблов полосности. Возвращаются только актуальные положения для текущего пройденного расстояния
-   по маршруту и только если источник, в который помещён объект, работает в режиме навигации.
-  */
-  List<LanesCalloutMapPosition> get lanesCalloutPositions {
-    _CArray_CLanesCalloutMapPosition res = _CRouteMapObject_lanesCalloutPositions(_CRouteMapObjectMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
   }
   /** Отображаемые на карте объекты дорожных событий вдоль маршрута. */
   StatefulChannel<RoadEventMapObjectRouteAttribute> get roadEventObjectsChannel {
@@ -40832,10 +41308,10 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
     TrafficRoute trafficRoute,
     bool isActive,
     RouteIndex index,
-    [RouteMapObjectDisplayFlagEnumSet? displayFlags = null,
-    RouteMapObjectCalloutLabelFlagEnumSet? calloutLabelFlags = null,
+    [EnumSet<RouteMapObjectDisplayFlag>? displayFlags = null,
+    EnumSet<RouteMapObjectCalloutLabelFlag>? calloutLabelFlags = null,
     RouteMapObjectCalloutLabelDisplayMode calloutLabelDisplayMode = RouteMapObjectCalloutLabelDisplayMode.absoluteValues,
-    RouteMapObjectPermanentDisplayFlagEnumSet? permanentDisplayFlags = null
+    EnumSet<RouteMapObjectPermanentDisplayFlag>? permanentDisplayFlags = null
     ]) {
     var _a0 = trafficRoute._copyFromDartTo_CTrafficRoute();
     var _a2 = index._copyFromDartTo_CRouteIndex();
@@ -40890,18 +41366,18 @@ extension _DartToCRouteMapObject on RouteMapObject {
     return (_CRouteMapObjectMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - StatefulChannel<RouteMapObjectDisplayFlagEnumSet?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag
+// MARK: - StatefulChannel<EnumSet<RouteMapObjectDisplayFlag>?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag
 
-class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl extends StatefulChannel<RouteMapObjectDisplayFlagEnumSet?> {
+class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl extends StatefulChannel<EnumSet<RouteMapObjectDisplayFlag>?> {
   static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<RouteMapObjectDisplayFlagEnumSet?>>{};
+  static final instanceMap = <int, StreamController<EnumSet<RouteMapObjectDisplayFlag>?>>{};
 
   final _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag _channel;
 
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl(this._channel);
 
   @override
-  RouteMapObjectDisplayFlagEnumSet? get value {
+  EnumSet<RouteMapObjectDisplayFlag>? get value {
     return this._channel._getter();
   }
 
@@ -40914,7 +41390,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl exte
   }
 
   @override
-  StreamSubscription<RouteMapObjectDisplayFlagEnumSet?> listen(void onData(RouteMapObjectDisplayFlagEnumSet? event)?,
+  StreamSubscription<EnumSet<RouteMapObjectDisplayFlag>?> listen(void onData(EnumSet<RouteMapObjectDisplayFlag>? event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     final instanceId = instanceCounter;
     instanceCounter += 1;
@@ -40922,7 +41398,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl exte
     final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
     final cancellable = cCancel._retain();
     cCancel._releaseIntermediate();
-    final streamController = new StreamController<RouteMapObjectDisplayFlagEnumSet?>(
+    final streamController = new StreamController<EnumSet<RouteMapObjectDisplayFlag>?>(
       onCancel: () {
         cancellable._cancel();
         instanceMap.remove(instanceId);
@@ -40951,7 +41427,7 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagBasic
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag_retain(this);
   }
 
-  RouteMapObjectDisplayFlagEnumSet? _getter() {
+  EnumSet<RouteMapObjectDisplayFlag>? _getter() {
     final cValue = _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagGetCurrentValue(this);
     final res = cValue._toDart();
     
@@ -40965,38 +41441,34 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagBasic
 }
 
 extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagToDart on _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag {
-  StatefulChannel<RouteMapObjectDisplayFlagEnumSet?> _toDart() {
+  StatefulChannel<EnumSet<RouteMapObjectDisplayFlag>?> _toDart() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl(this._retain());
   }
 }
 
-extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag on StatefulChannel<RouteMapObjectDisplayFlagEnumSet?> {
+extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag on StatefulChannel<EnumSet<RouteMapObjectDisplayFlag>?> {
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag _copyFromDartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlag() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagMakeDefault();
   }
 }
 	
-// MARK: - RouteMapObjectDisplayFlagEnumSet
+// MARK: - EnumSet<RouteMapObjectDisplayFlag>
 
 class RouteMapObjectDisplayFlagEnumSet extends EnumSet<RouteMapObjectDisplayFlag> {
-  RouteMapObjectDisplayFlagEnumSet() : super();
+  const RouteMapObjectDisplayFlagEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RouteMapObjectDisplayFlagEnumSet.fromRawValue(int rawValue) {
-    RouteMapObjectDisplayFlagEnumSet enumSet = RouteMapObjectDisplayFlagEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RouteMapObjectDisplayFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectDisplayFlagEnumSet.of(Iterable<RouteMapObjectDisplayFlag> elements) {
-    RouteMapObjectDisplayFlagEnumSet enumSet = RouteMapObjectDisplayFlagEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RouteMapObjectDisplayFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectDisplayFlagEnumSet.all() {
-    RouteMapObjectDisplayFlagEnumSet enumSet = RouteMapObjectDisplayFlagEnumSet();
-    enumSet.addAll(RouteMapObjectDisplayFlag.values);
-    return enumSet;
+    final rawValue = RouteMapObjectDisplayFlag.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RouteMapObjectDisplayFlagEnumSet(rawValue);
   }
 
   @override
@@ -41006,32 +41478,6 @@ class RouteMapObjectDisplayFlagEnumSet extends EnumSet<RouteMapObjectDisplayFlag
   @override
   bool containsAllFromEnumSet(EnumSet<RouteMapObjectDisplayFlag> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RouteMapObjectDisplayFlag value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RouteMapObjectDisplayFlag> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RouteMapObjectDisplayFlag value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RouteMapObjectDisplayFlag> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RouteMapObjectDisplayFlag> intersection(EnumSet<RouteMapObjectDisplayFlag> other) =>
@@ -41044,6 +41490,10 @@ class RouteMapObjectDisplayFlagEnumSet extends EnumSet<RouteMapObjectDisplayFlag
   @override
   EnumSet<RouteMapObjectDisplayFlag> difference(EnumSet<RouteMapObjectDisplayFlag> other) =>
       RouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectDisplayFlag> toMutableEnumSet() =>
+      MutableRouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RouteMapObjectDisplayFlag> toSet() {
@@ -41069,6 +41519,102 @@ class RouteMapObjectDisplayFlagEnumSet extends EnumSet<RouteMapObjectDisplayFlag
   }
 }
 
+class MutableRouteMapObjectDisplayFlagEnumSet extends MutableEnumSet<RouteMapObjectDisplayFlag> {
+  MutableRouteMapObjectDisplayFlagEnumSet() : super();
+
+  factory MutableRouteMapObjectDisplayFlagEnumSet.fromRawValue(int rawValue) {
+    MutableRouteMapObjectDisplayFlagEnumSet enumSet = MutableRouteMapObjectDisplayFlagEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectDisplayFlagEnumSet.of(Iterable<RouteMapObjectDisplayFlag> elements) {
+    MutableRouteMapObjectDisplayFlagEnumSet enumSet = MutableRouteMapObjectDisplayFlagEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectDisplayFlagEnumSet.all() {
+    MutableRouteMapObjectDisplayFlagEnumSet enumSet = MutableRouteMapObjectDisplayFlagEnumSet();
+    enumSet.addAll(RouteMapObjectDisplayFlag.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RouteMapObjectDisplayFlag value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RouteMapObjectDisplayFlag> intersection(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      MutableRouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectDisplayFlag> union(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      MutableRouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectDisplayFlag> difference(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      MutableRouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RouteMapObjectDisplayFlag> toEnumSet() =>
+      RouteMapObjectDisplayFlagEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RouteMapObjectDisplayFlag> toSet() {
+    Set<RouteMapObjectDisplayFlag> result = {};
+    RouteMapObjectDisplayFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RouteMapObjectDisplayFlag value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RouteMapObjectDisplayFlag value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RouteMapObjectDisplayFlag> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RouteMapObjectDisplayFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRouteMapObjectDisplayFlag extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -41080,18 +41626,18 @@ extension _COptionSet_CRouteMapObjectDisplayFlagBasicFunctions on _COptionSet_CR
 }
 
 extension _COptionSet_CRouteMapObjectDisplayFlagToDart on _COptionSet_CRouteMapObjectDisplayFlag {
-  RouteMapObjectDisplayFlagEnumSet _toDart() {
+  EnumSet<RouteMapObjectDisplayFlag> _toDart() {
     return RouteMapObjectDisplayFlagEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRouteMapObjectDisplayFlag on RouteMapObjectDisplayFlagEnumSet {
+extension _DartTo_COptionSet_CRouteMapObjectDisplayFlag on EnumSet<RouteMapObjectDisplayFlag> {
   _COptionSet_CRouteMapObjectDisplayFlag _copyFromDartTo_COptionSet_CRouteMapObjectDisplayFlag() {
     return _COptionSet_CRouteMapObjectDisplayFlagMakeDefault().._rawValue = this.rawValue;
   }
 }
 	
-// MARK: - RouteMapObjectDisplayFlagEnumSet? <-> _COptional_COptionSet_CRouteMapObjectDisplayFlag
+// MARK: - EnumSet<RouteMapObjectDisplayFlag>? <-> _COptional_COptionSet_CRouteMapObjectDisplayFlag
 
 final class _COptional_COptionSet_CRouteMapObjectDisplayFlag extends ffi.Struct {
   
@@ -41107,7 +41653,7 @@ extension _COptional_COptionSet_CRouteMapObjectDisplayFlagBasicFunctions on _COp
 }
 
 extension _COptional_COptionSet_CRouteMapObjectDisplayFlagToDart on _COptional_COptionSet_CRouteMapObjectDisplayFlag {
-  RouteMapObjectDisplayFlagEnumSet? _toDart() {
+  EnumSet<RouteMapObjectDisplayFlag>? _toDart() {
     if (!this.hasValue) {
       return null;
     }
@@ -41115,7 +41661,7 @@ extension _COptional_COptionSet_CRouteMapObjectDisplayFlagToDart on _COptional_C
   }
 }
 
-extension _DartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag on RouteMapObjectDisplayFlagEnumSet? {
+extension _DartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag on EnumSet<RouteMapObjectDisplayFlag>? {
   _COptional_COptionSet_CRouteMapObjectDisplayFlag _copyFromDartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag() {
     final cOptional = _COptional_COptionSet_CRouteMapObjectDisplayFlagMakeDefault();
     if (this != null) {
@@ -41127,18 +41673,18 @@ extension _DartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag on RouteMapObj
     return cOptional;
   }
 }
-// MARK: - StatefulChannel<RouteMapObjectPermanentDisplayFlagEnumSet?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
+// MARK: - StatefulChannel<EnumSet<RouteMapObjectPermanentDisplayFlag>?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
 
-class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagImpl extends StatefulChannel<RouteMapObjectPermanentDisplayFlagEnumSet?> {
+class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagImpl extends StatefulChannel<EnumSet<RouteMapObjectPermanentDisplayFlag>?> {
   static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<RouteMapObjectPermanentDisplayFlagEnumSet?>>{};
+  static final instanceMap = <int, StreamController<EnumSet<RouteMapObjectPermanentDisplayFlag>?>>{};
 
   final _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag _channel;
 
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagImpl(this._channel);
 
   @override
-  RouteMapObjectPermanentDisplayFlagEnumSet? get value {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? get value {
     return this._channel._getter();
   }
 
@@ -41151,7 +41697,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
   }
 
   @override
-  StreamSubscription<RouteMapObjectPermanentDisplayFlagEnumSet?> listen(void onData(RouteMapObjectPermanentDisplayFlagEnumSet? event)?,
+  StreamSubscription<EnumSet<RouteMapObjectPermanentDisplayFlag>?> listen(void onData(EnumSet<RouteMapObjectPermanentDisplayFlag>? event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     final instanceId = instanceCounter;
     instanceCounter += 1;
@@ -41159,7 +41705,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
     final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
     final cancellable = cCancel._retain();
     cCancel._releaseIntermediate();
-    final streamController = new StreamController<RouteMapObjectPermanentDisplayFlagEnumSet?>(
+    final streamController = new StreamController<EnumSet<RouteMapObjectPermanentDisplayFlag>?>(
       onCancel: () {
         cancellable._cancel();
         instanceMap.remove(instanceId);
@@ -41188,7 +41734,7 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplay
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag_retain(this);
   }
 
-  RouteMapObjectPermanentDisplayFlagEnumSet? _getter() {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? _getter() {
     final cValue = _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagGetCurrentValue(this);
     final res = cValue._toDart();
     
@@ -41202,38 +41748,34 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplay
 }
 
 extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagToDart on _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag {
-  StatefulChannel<RouteMapObjectPermanentDisplayFlagEnumSet?> _toDart() {
+  StatefulChannel<EnumSet<RouteMapObjectPermanentDisplayFlag>?> _toDart() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagImpl(this._retain());
   }
 }
 
-extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag on StatefulChannel<RouteMapObjectPermanentDisplayFlagEnumSet?> {
+extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag on StatefulChannel<EnumSet<RouteMapObjectPermanentDisplayFlag>?> {
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag _copyFromDartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagMakeDefault();
   }
 }
 	
-// MARK: - RouteMapObjectPermanentDisplayFlagEnumSet
+// MARK: - EnumSet<RouteMapObjectPermanentDisplayFlag>
 
 class RouteMapObjectPermanentDisplayFlagEnumSet extends EnumSet<RouteMapObjectPermanentDisplayFlag> {
-  RouteMapObjectPermanentDisplayFlagEnumSet() : super();
+  const RouteMapObjectPermanentDisplayFlagEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(int rawValue) {
-    RouteMapObjectPermanentDisplayFlagEnumSet enumSet = RouteMapObjectPermanentDisplayFlagEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RouteMapObjectPermanentDisplayFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectPermanentDisplayFlagEnumSet.of(Iterable<RouteMapObjectPermanentDisplayFlag> elements) {
-    RouteMapObjectPermanentDisplayFlagEnumSet enumSet = RouteMapObjectPermanentDisplayFlagEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RouteMapObjectPermanentDisplayFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectPermanentDisplayFlagEnumSet.all() {
-    RouteMapObjectPermanentDisplayFlagEnumSet enumSet = RouteMapObjectPermanentDisplayFlagEnumSet();
-    enumSet.addAll(RouteMapObjectPermanentDisplayFlag.values);
-    return enumSet;
+    final rawValue = RouteMapObjectPermanentDisplayFlag.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RouteMapObjectPermanentDisplayFlagEnumSet(rawValue);
   }
 
   @override
@@ -41243,32 +41785,6 @@ class RouteMapObjectPermanentDisplayFlagEnumSet extends EnumSet<RouteMapObjectPe
   @override
   bool containsAllFromEnumSet(EnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RouteMapObjectPermanentDisplayFlag value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RouteMapObjectPermanentDisplayFlag value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RouteMapObjectPermanentDisplayFlag> intersection(EnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
@@ -41281,6 +41797,10 @@ class RouteMapObjectPermanentDisplayFlagEnumSet extends EnumSet<RouteMapObjectPe
   @override
   EnumSet<RouteMapObjectPermanentDisplayFlag> difference(EnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
       RouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectPermanentDisplayFlag> toMutableEnumSet() =>
+      MutableRouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RouteMapObjectPermanentDisplayFlag> toSet() {
@@ -41306,6 +41826,102 @@ class RouteMapObjectPermanentDisplayFlagEnumSet extends EnumSet<RouteMapObjectPe
   }
 }
 
+class MutableRouteMapObjectPermanentDisplayFlagEnumSet extends MutableEnumSet<RouteMapObjectPermanentDisplayFlag> {
+  MutableRouteMapObjectPermanentDisplayFlagEnumSet() : super();
+
+  factory MutableRouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(int rawValue) {
+    MutableRouteMapObjectPermanentDisplayFlagEnumSet enumSet = MutableRouteMapObjectPermanentDisplayFlagEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectPermanentDisplayFlagEnumSet.of(Iterable<RouteMapObjectPermanentDisplayFlag> elements) {
+    MutableRouteMapObjectPermanentDisplayFlagEnumSet enumSet = MutableRouteMapObjectPermanentDisplayFlagEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectPermanentDisplayFlagEnumSet.all() {
+    MutableRouteMapObjectPermanentDisplayFlagEnumSet enumSet = MutableRouteMapObjectPermanentDisplayFlagEnumSet();
+    enumSet.addAll(RouteMapObjectPermanentDisplayFlag.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RouteMapObjectPermanentDisplayFlag value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RouteMapObjectPermanentDisplayFlag> intersection(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      MutableRouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectPermanentDisplayFlag> union(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      MutableRouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectPermanentDisplayFlag> difference(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      MutableRouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RouteMapObjectPermanentDisplayFlag> toEnumSet() =>
+      RouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RouteMapObjectPermanentDisplayFlag> toSet() {
+    Set<RouteMapObjectPermanentDisplayFlag> result = {};
+    RouteMapObjectPermanentDisplayFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RouteMapObjectPermanentDisplayFlag value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RouteMapObjectPermanentDisplayFlag value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RouteMapObjectPermanentDisplayFlag> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RouteMapObjectPermanentDisplayFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRouteMapObjectPermanentDisplayFlag extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -41317,18 +41933,18 @@ extension _COptionSet_CRouteMapObjectPermanentDisplayFlagBasicFunctions on _COpt
 }
 
 extension _COptionSet_CRouteMapObjectPermanentDisplayFlagToDart on _COptionSet_CRouteMapObjectPermanentDisplayFlag {
-  RouteMapObjectPermanentDisplayFlagEnumSet _toDart() {
+  EnumSet<RouteMapObjectPermanentDisplayFlag> _toDart() {
     return RouteMapObjectPermanentDisplayFlagEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRouteMapObjectPermanentDisplayFlag on RouteMapObjectPermanentDisplayFlagEnumSet {
+extension _DartTo_COptionSet_CRouteMapObjectPermanentDisplayFlag on EnumSet<RouteMapObjectPermanentDisplayFlag> {
   _COptionSet_CRouteMapObjectPermanentDisplayFlag _copyFromDartTo_COptionSet_CRouteMapObjectPermanentDisplayFlag() {
     return _COptionSet_CRouteMapObjectPermanentDisplayFlagMakeDefault().._rawValue = this.rawValue;
   }
 }
 	
-// MARK: - RouteMapObjectPermanentDisplayFlagEnumSet? <-> _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
+// MARK: - EnumSet<RouteMapObjectPermanentDisplayFlag>? <-> _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
 
 final class _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag extends ffi.Struct {
   
@@ -41344,7 +41960,7 @@ extension _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagBasicFunction
 }
 
 extension _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagToDart on _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag {
-  RouteMapObjectPermanentDisplayFlagEnumSet? _toDart() {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? _toDart() {
     if (!this.hasValue) {
       return null;
     }
@@ -41352,7 +41968,7 @@ extension _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagToDart on _CO
   }
 }
 
-extension _DartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag on RouteMapObjectPermanentDisplayFlagEnumSet? {
+extension _DartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag on EnumSet<RouteMapObjectPermanentDisplayFlag>? {
   _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag _copyFromDartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag() {
     final cOptional = _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlagMakeDefault();
     if (this != null) {
@@ -41556,6 +42172,18 @@ class Route implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  CrossingTypeRouteLongAttribute get crossingTypes {
+    _CCrossingTypeRouteLongAttribute res = _CRoute_crossingTypes(_CRouteMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  RouteTollPaymentPointInfoRouteAttribute get tollPaymentPointInfos {
+    _CRouteTollPaymentPointInfoRouteAttribute res = _CRoute_tollPaymentPointInfos(_CRouteMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
   /** Дорожные камеры. */
   CameraRouteAttribute get cameras {
     _CCameraRouteAttribute res = _CRoute_cameras(_CRouteMakeDefault().._impl=_self);
@@ -41567,8 +42195,8 @@ class Route implements ffi.Finalizable {
    Ширина проезжей части в метрах.
    0 - ширина неизвестна.
   */
-  UIntRouteLongAttribute get carriagewaysWidth {
-    _CUIntRouteLongAttribute res = _CRoute_carriagewaysWidth(_CRouteMakeDefault().._impl=_self);
+  DoubleRouteLongAttribute get carriagewaysWidth {
+    _CDoubleRouteLongAttribute res = _CRoute_carriagewaysWidth(_CRouteMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -41683,8 +42311,8 @@ class Route implements ffi.Finalizable {
     return t;
   }
   /** Признак наличия светофоров. */
-  VoidRouteAttribute get trafficLights {
-    _CVoidRouteAttribute res = _CRoute_trafficLights(_CRouteMakeDefault().._impl=_self);
+  StringRouteAttribute get trafficLights {
+    _CStringRouteAttribute res = _CRoute_trafficLights(_CRouteMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -42285,16 +42913,38 @@ enum CarInstructionCrossroadLandmark {
   tunnelBefore(1),
   /** Въезд в тоннель. */
   tunnelEntry(2),
+  /** После тоннеля. */
+  tunnelAfter(3),
+  /** В тоннеле. */
+  inTunnel(4),
   /** Перед мостом. */
-  bridgeBefore(3),
+  bridgeBefore(5),
   /** Въезд на мост. */
-  bridgeEntry(4),
+  bridgeEntry(6),
+  /** После моста. */
+  bridgeAfter(7),
+  /** Под мостом. */
+  bridgeUnder(8),
+  /** На мосту. */
+  onBridge(9),
   /** Въезд под арку. */
-  archwayEntry(5),
+  archwayEntry(10),
+  /** Перед аркой. */
+  archwayBefore(11),
   /** На светофоре. */
-  onTrafficLight(6),
+  onTrafficLight(12),
   /** Въезд во двор. */
-  courtyardEntry(7),
+  courtyardEntry(13),
+  /** Дублер. */
+  doublerEntry(14),
+  /** Перед светофором. */
+  trafficLightBefore(15),
+  /** После светофора. */
+  trafficLightAfter(16),
+  /** На следующем светофоре. */
+  atNextTrafficLight(17),
+  /** Вдоль главной дороги. */
+  alongMainRoad(18),
   ;
 
   const CarInstructionCrossroadLandmark(this.rawValue);
@@ -44922,19 +45572,24 @@ extension _DartTo_CObstaclePassLimitation on ObstaclePassLimitation {
 class ObstacleInfo {
   final Obstacle type;
   final ObstaclePassLimitation limitation;
+  /** Идентификатор объекта препятствия. Остается неизменным при перестроении маршрута. */
+  final int objectId;
 
   const ObstacleInfo({
     this.type = Obstacle.other,
-    this.limitation = ObstaclePassLimitation.unlimited
+    this.limitation = ObstaclePassLimitation.unlimited,
+    this.objectId = 0
   });
 
   ObstacleInfo copyWith({
     Obstacle? type,
-    ObstaclePassLimitation? limitation
+    ObstaclePassLimitation? limitation,
+    int? objectId
   }) {
     return ObstacleInfo(
       type: type ?? this.type,
-      limitation: limitation ?? this.limitation
+      limitation: limitation ?? this.limitation,
+      objectId: objectId ?? this.objectId
     );
   }
   @override
@@ -44942,11 +45597,12 @@ class ObstacleInfo {
     identical(this, other) || other is ObstacleInfo &&
     other.runtimeType == runtimeType &&
     other.type == type &&
-    other.limitation == limitation;
+    other.limitation == limitation &&
+    other.objectId == objectId;
 
   @override
   int get hashCode {
-    return Object.hash(type, limitation);
+    return Object.hash(type, limitation, objectId);
   }
 
 }
@@ -44955,6 +45611,9 @@ final class _CObstacleInfo extends ffi.Struct {
 
   external _CObstaclePassLimitation limitation;
 
+  @ffi.Uint64()
+  external int objectId;
+
 }
 // MARK: - ObstacleInfo <-> _CObstacleInfo
 
@@ -44962,7 +45621,8 @@ extension _CObstacleInfoToDart on _CObstacleInfo {
   ObstacleInfo _toDart() {
     return ObstacleInfo(
       type: this.type._toDart(),
-      limitation: this.limitation._toDart()
+      limitation: this.limitation._toDart(),
+      objectId: this.objectId
     );
   }
 }
@@ -44972,6 +45632,7 @@ extension _DartTo_CObstacleInfo on ObstacleInfo {
     final res = _CObstacleInfoMakeDefault();
     res.type = this.type._copyFromDartTo_CObstacle();
     res.limitation = this.limitation._copyFromDartTo_CObstaclePassLimitation();
+    res.objectId = this.objectId;
     return res;
   }
 }
@@ -45841,12 +46502,14 @@ enum TransportType {
   bicycle(1),
   /** Автомобиль. */
   car(2),
+  /** Мотоцикл. */
+  motorcycle(3),
   /** Пешеход. */
-  pedestrian(3),
+  pedestrian(4),
   /** Общественный транспорт. */
-  public(4),
+  public(5),
   /** Самокат. */
-  scooter(5),
+  scooter(6),
   ;
 
   const TransportType(this.rawValue);
@@ -46027,6 +46690,786 @@ extension _CArray_CTransportTypeRouteLongEntryBasicFunctions on _CArray_CTranspo
   List<TransportTypeRouteLongEntry> _fillFromC() {
     _forEach_CArray_CTransportTypeRouteLongEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTransportTypeRouteLongEntry)>(_iterate));
     final result = List<TransportTypeRouteLongEntry>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - CrossingTypeRouteLongAttribute
+
+/**
+ Контейнер, который хранит протяженный атрибут маршрута.
+ Каждый элемент хранится в виде пары, состоящей из точки и значения элемента атрибута.
+ Действие атрибута начинается с данной точки и заканчивается в следущей точке,
+ начиная с которой начинается действие атрибута следующего элемента.
+*/
+class CrossingTypeRouteLongAttribute implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Количество элементов. */
+  int get size {
+    int res = _CCrossingTypeRouteLongAttribute_size(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Элементы отсутствуют. */
+  bool get isEmpty {
+    bool res = _CCrossingTypeRouteLongAttribute_isEmpty(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Первый элемент. */
+  CrossingTypeRouteLongEntry? get first {
+    _COptional_CCrossingTypeRouteLongEntry res = _CCrossingTypeRouteLongAttribute_first(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Последний элемент. */
+  CrossingTypeRouteLongEntry? get last {
+    _COptional_CCrossingTypeRouteLongEntry res = _CCrossingTypeRouteLongAttribute_last(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Все элементы. */
+  List<CrossingTypeRouteLongEntry> get entries {
+    _CArray_CCrossingTypeRouteLongEntry res = _CCrossingTypeRouteLongAttribute_entries(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CCrossingTypeRouteLongAttribute_releasePtr);
+
+  CrossingTypeRouteLongAttribute._raw(this._self);
+  factory CrossingTypeRouteLongAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = CrossingTypeRouteLongAttribute._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CrossingTypeRouteLongAttribute &&
+    other.runtimeType == runtimeType &&
+    _CCrossingTypeRouteLongAttribute_cg_objectIdentifier(this._self) == _CCrossingTypeRouteLongAttribute_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CCrossingTypeRouteLongAttribute_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CrossingTypeRouteLongAttribute: Methods
+
+  /** Элемент, в который попадает заданная точка. */
+  CrossingTypeRouteLongEntry? entry(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CCrossingTypeRouteLongEntry res = _CCrossingTypeRouteLongAttribute_entry_CRoutePoint(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+  /**
+   Элементы, частично или полностью покрываемые отрезком [begin, end].
+  
+   - Throws: Exception если begin > end.
+  */
+  List<CrossingTypeRouteLongEntry> entriesInRange(
+    RoutePoint begin,
+    RoutePoint end
+  )  {
+    var _a1 = begin._copyFromDartTo_CRoutePoint();
+    var _a2 = end._copyFromDartTo_CRoutePoint();
+    _CArray_CCrossingTypeRouteLongEntry res = _CCrossingTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self, _a1, _a2);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - CrossingTypeRouteLongAttribute <-> CCrossingTypeRouteLongAttribute
+
+final class _CCrossingTypeRouteLongAttribute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CCrossingTypeRouteLongAttributeBasicFunctions on _CCrossingTypeRouteLongAttribute {
+  void _releaseIntermediate() {
+    _CCrossingTypeRouteLongAttribute_release(_impl);
+  }
+
+  _CCrossingTypeRouteLongAttribute _retain() {
+    return _CCrossingTypeRouteLongAttribute_retain(_impl);
+  }
+}
+
+extension _CCrossingTypeRouteLongAttributeToDart on _CCrossingTypeRouteLongAttribute {
+  CrossingTypeRouteLongAttribute _toDart() {
+    return CrossingTypeRouteLongAttribute._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCCrossingTypeRouteLongAttribute on CrossingTypeRouteLongAttribute {
+  _CCrossingTypeRouteLongAttribute _copyFromDartTo_CCrossingTypeRouteLongAttribute() {
+    return (_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - CrossingType
+
+/** Признак наличия переправы. */
+enum CrossingType {
+  /** Нет переправы. */
+  noCrossing(0),
+  /** Паромная переправа. */
+  ferry(1),
+  /** Ледовая переправа. */
+  ice(2),
+  /** Понтонная переправа. */
+  pontoon(3),
+  ;
+
+  const CrossingType(this.rawValue);
+  final int rawValue;
+
+  static CrossingType getByValue(int value) {
+    return CrossingType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CCrossingType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CCrossingTypeBasicFunctions on _CCrossingType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CCrossingTypeToDart on _CCrossingType {
+  CrossingType _toDart() {
+    return CrossingType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CCrossingType on CrossingType {
+  _CCrossingType _copyFromDartTo_CCrossingType() {
+    return _CCrossingTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - CrossingTypeRouteLongEntry
+
+/** Протяженный элемент маршрута - отрезок и значение на нем. */
+class CrossingTypeRouteLongEntry {
+  final RoutePoint point;
+  final RouteDistance length;
+  final CrossingType value;
+
+  const CrossingTypeRouteLongEntry({
+    required this.point,
+    required this.length,
+    required this.value
+  });
+
+  CrossingTypeRouteLongEntry copyWith({
+    RoutePoint? point,
+    RouteDistance? length,
+    CrossingType? value
+  }) {
+    return CrossingTypeRouteLongEntry(
+      point: point ?? this.point,
+      length: length ?? this.length,
+      value: value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CrossingTypeRouteLongEntry &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.length == length &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, length, value);
+  }
+
+}
+final class _CCrossingTypeRouteLongEntry extends ffi.Struct {
+  external _CRoutePoint point;
+
+  external _CRouteDistance length;
+
+  external _CCrossingType value;
+
+}
+// MARK: - CrossingTypeRouteLongEntry <-> _CCrossingTypeRouteLongEntry
+
+extension _CCrossingTypeRouteLongEntryToDart on _CCrossingTypeRouteLongEntry {
+  CrossingTypeRouteLongEntry _toDart() {
+    return CrossingTypeRouteLongEntry(
+      point: this.point._toDart(),
+      length: this.length._toDart(),
+      value: this.value._toDart()
+    );
+  }
+}
+
+extension _DartTo_CCrossingTypeRouteLongEntry on CrossingTypeRouteLongEntry {
+  _CCrossingTypeRouteLongEntry _copyFromDartTo_CCrossingTypeRouteLongEntry() {
+    final res = _CCrossingTypeRouteLongEntryMakeDefault();
+    res.point = this.point._copyFromDartTo_CRoutePoint();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.value = this.value._copyFromDartTo_CCrossingType();
+    return res;
+  }
+}
+extension _CCrossingTypeRouteLongEntryRelease on _CCrossingTypeRouteLongEntry {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - CrossingTypeRouteLongEntry? <-> _COptional_CCrossingTypeRouteLongEntry
+
+final class _COptional_CCrossingTypeRouteLongEntry extends ffi.Struct {
+  
+  external _CCrossingTypeRouteLongEntry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CCrossingTypeRouteLongEntryBasicFunctions on _COptional_CCrossingTypeRouteLongEntry {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CCrossingTypeRouteLongEntryToDart on _COptional_CCrossingTypeRouteLongEntry {
+  CrossingTypeRouteLongEntry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CCrossingTypeRouteLongEntry on CrossingTypeRouteLongEntry? {
+  _COptional_CCrossingTypeRouteLongEntry _copyFromDartTo_COptional_CCrossingTypeRouteLongEntry() {
+    final cOptional = _COptional_CCrossingTypeRouteLongEntryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CCrossingTypeRouteLongEntry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<CrossingTypeRouteLongEntry> <-> _CArray_CCrossingTypeRouteLongEntry
+
+final class _CArray_CCrossingTypeRouteLongEntry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CCrossingTypeRouteLongEntryToDart on _CArray_CCrossingTypeRouteLongEntry {
+  List<CrossingTypeRouteLongEntry> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CCrossingTypeRouteLongEntry on List<CrossingTypeRouteLongEntry> {
+  _CArray_CCrossingTypeRouteLongEntry _copyFromDartTo_CArray_CCrossingTypeRouteLongEntry() {
+    final cArray = _CArray_CCrossingTypeRouteLongEntrymakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CCrossingTypeRouteLongEntry();
+        _CArray_CCrossingTypeRouteLongEntryaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CCrossingTypeRouteLongEntryBasicFunctions on _CArray_CCrossingTypeRouteLongEntry {
+  void _releaseIntermediate() {
+    _CArray_CCrossingTypeRouteLongEntry_release(this);
+  }
+
+  static final _listToFill = <CrossingTypeRouteLongEntry>[];
+
+  static void _iterate(_CCrossingTypeRouteLongEntry item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<CrossingTypeRouteLongEntry> _fillFromC() {
+    _forEach_CArray_CCrossingTypeRouteLongEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CCrossingTypeRouteLongEntry)>(_iterate));
+    final result = List<CrossingTypeRouteLongEntry>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - RouteTollPaymentPointInfoRouteAttribute
+
+/**
+ Контейнер, который описывает точечный атрибут маршрута.
+ Каждый элемент хранится в виде точки на маршруте, в которой этот элемент расположен и значения самого элемента.
+*/
+class RouteTollPaymentPointInfoRouteAttribute implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Количество элементов. */
+  int get size {
+    int res = _CRouteTollPaymentPointInfoRouteAttribute_size(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Элементы отсутствуют. */
+  bool get isEmpty {
+    bool res = _CRouteTollPaymentPointInfoRouteAttribute_isEmpty(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Первый элемент. */
+  RouteTollPaymentPointInfoRouteEntry? get first {
+    _COptional_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_first(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Последний элемент. */
+  RouteTollPaymentPointInfoRouteEntry? get last {
+    _COptional_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_last(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Все элементы. */
+  List<RouteTollPaymentPointInfoRouteEntry> get entries {
+    _CArray_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_entries(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CRouteTollPaymentPointInfoRouteAttribute_releasePtr);
+
+  RouteTollPaymentPointInfoRouteAttribute._raw(this._self);
+  factory RouteTollPaymentPointInfoRouteAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = RouteTollPaymentPointInfoRouteAttribute._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteTollPaymentPointInfoRouteAttribute &&
+    other.runtimeType == runtimeType &&
+    _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifier(this._self) == _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: RouteTollPaymentPointInfoRouteAttribute: Methods
+
+  /**
+   Элементы, попадающие в отрезок [begin, end).
+  
+   - Throws: Exception если begin > end.
+  */
+  List<RouteTollPaymentPointInfoRouteEntry> entriesInRange(
+    RoutePoint begin,
+    RoutePoint end
+  )  {
+    var _a1 = begin._copyFromDartTo_CRoutePoint();
+    var _a2 = end._copyFromDartTo_CRoutePoint();
+    _CArray_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self, _a1, _a2);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого
+   <
+   = point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  RouteTollPaymentPointInfoRouteEntry? findNearBackward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_findNearBackward_CRoutePoint(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого >= point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  RouteTollPaymentPointInfoRouteEntry? findNearForward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CRouteTollPaymentPointInfoRouteEntry res = _CRouteTollPaymentPointInfoRouteAttribute_findNearForward_CRoutePoint(_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - RouteTollPaymentPointInfoRouteAttribute <-> CRouteTollPaymentPointInfoRouteAttribute
+
+final class _CRouteTollPaymentPointInfoRouteAttribute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CRouteTollPaymentPointInfoRouteAttributeBasicFunctions on _CRouteTollPaymentPointInfoRouteAttribute {
+  void _releaseIntermediate() {
+    _CRouteTollPaymentPointInfoRouteAttribute_release(_impl);
+  }
+
+  _CRouteTollPaymentPointInfoRouteAttribute _retain() {
+    return _CRouteTollPaymentPointInfoRouteAttribute_retain(_impl);
+  }
+}
+
+extension _CRouteTollPaymentPointInfoRouteAttributeToDart on _CRouteTollPaymentPointInfoRouteAttribute {
+  RouteTollPaymentPointInfoRouteAttribute _toDart() {
+    return RouteTollPaymentPointInfoRouteAttribute._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCRouteTollPaymentPointInfoRouteAttribute on RouteTollPaymentPointInfoRouteAttribute {
+  _CRouteTollPaymentPointInfoRouteAttribute _copyFromDartTo_CRouteTollPaymentPointInfoRouteAttribute() {
+    return (_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - RouteTollPaymentPointType
+
+/** Тип оплаты проезда по платной дороге. */
+enum RouteTollPaymentPointType {
+  /** Неизвестный тип оплаты проезда. */
+  unknown(0),
+  /** Предварительная оплата проезда по платной дороге. */
+  prePayment(1),
+  /** Постоплата проезда по платной дороге. */
+  postPayment(2),
+  ;
+
+  const RouteTollPaymentPointType(this.rawValue);
+  final int rawValue;
+
+  static RouteTollPaymentPointType getByValue(int value) {
+    return RouteTollPaymentPointType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CRouteTollPaymentPointType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CRouteTollPaymentPointTypeBasicFunctions on _CRouteTollPaymentPointType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CRouteTollPaymentPointTypeToDart on _CRouteTollPaymentPointType {
+  RouteTollPaymentPointType _toDart() {
+    return RouteTollPaymentPointType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CRouteTollPaymentPointType on RouteTollPaymentPointType {
+  _CRouteTollPaymentPointType _copyFromDartTo_CRouteTollPaymentPointType() {
+    return _CRouteTollPaymentPointTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - RouteTollPaymentInfo
+
+/** Информация о стоимости проезда по платному участку маршрута. */
+class RouteTollPaymentInfo {
+  /** Трёхбуквенный код валюты, в которой указана стоимость проезда, согласно ISO 4217. */
+  final String currencyCode;
+  /** Стоимость проезда по платному участку маршрута. */
+  final double cost;
+
+  const RouteTollPaymentInfo({
+    required this.currencyCode,
+    this.cost = 0
+  });
+
+  RouteTollPaymentInfo copyWith({
+    String? currencyCode,
+    double? cost
+  }) {
+    return RouteTollPaymentInfo(
+      currencyCode: currencyCode ?? this.currencyCode,
+      cost: cost ?? this.cost
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteTollPaymentInfo &&
+    other.runtimeType == runtimeType &&
+    other.currencyCode == currencyCode &&
+    other.cost == cost;
+
+  @override
+  int get hashCode {
+    return Object.hash(currencyCode, cost);
+  }
+
+}
+final class _CRouteTollPaymentInfo extends ffi.Struct {
+  external _CString currencyCode;
+
+  @ffi.Float()
+  external double cost;
+
+}
+// MARK: - RouteTollPaymentInfo <-> _CRouteTollPaymentInfo
+
+extension _CRouteTollPaymentInfoToDart on _CRouteTollPaymentInfo {
+  RouteTollPaymentInfo _toDart() {
+    return RouteTollPaymentInfo(
+      currencyCode: this.currencyCode._toDart(),
+      cost: this.cost
+    );
+  }
+}
+
+extension _DartTo_CRouteTollPaymentInfo on RouteTollPaymentInfo {
+  _CRouteTollPaymentInfo _copyFromDartTo_CRouteTollPaymentInfo() {
+    final res = _CRouteTollPaymentInfoMakeDefault();
+    res.currencyCode = this.currencyCode._copyFromDartTo_CString();
+    res.cost = this.cost;
+    return res;
+  }
+}
+extension _CRouteTollPaymentInfoRelease on _CRouteTollPaymentInfo {
+  void _releaseIntermediate() {
+    currencyCode._releaseIntermediate();
+  }
+}
+
+// MARK: - RouteTollPaymentPointInfo
+
+/** Информация о пункте оплаты проезда платной дороги. */
+class RouteTollPaymentPointInfo {
+  /** Тип оплаты проезда по платной дороге. */
+  final RouteTollPaymentPointType type;
+  /** Информация о стоимости проезда по платной дороге. */
+  final RouteTollPaymentInfo payment;
+
+  const RouteTollPaymentPointInfo({
+    required this.type,
+    required this.payment
+  });
+
+  RouteTollPaymentPointInfo copyWith({
+    RouteTollPaymentPointType? type,
+    RouteTollPaymentInfo? payment
+  }) {
+    return RouteTollPaymentPointInfo(
+      type: type ?? this.type,
+      payment: payment ?? this.payment
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteTollPaymentPointInfo &&
+    other.runtimeType == runtimeType &&
+    other.type == type &&
+    other.payment == payment;
+
+  @override
+  int get hashCode {
+    return Object.hash(type, payment);
+  }
+
+}
+final class _CRouteTollPaymentPointInfo extends ffi.Struct {
+  external _CRouteTollPaymentPointType type;
+
+  external _CRouteTollPaymentInfo payment;
+
+}
+// MARK: - RouteTollPaymentPointInfo <-> _CRouteTollPaymentPointInfo
+
+extension _CRouteTollPaymentPointInfoToDart on _CRouteTollPaymentPointInfo {
+  RouteTollPaymentPointInfo _toDart() {
+    return RouteTollPaymentPointInfo(
+      type: this.type._toDart(),
+      payment: this.payment._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRouteTollPaymentPointInfo on RouteTollPaymentPointInfo {
+  _CRouteTollPaymentPointInfo _copyFromDartTo_CRouteTollPaymentPointInfo() {
+    final res = _CRouteTollPaymentPointInfoMakeDefault();
+    res.type = this.type._copyFromDartTo_CRouteTollPaymentPointType();
+    res.payment = this.payment._copyFromDartTo_CRouteTollPaymentInfo();
+    return res;
+  }
+}
+extension _CRouteTollPaymentPointInfoRelease on _CRouteTollPaymentPointInfo {
+  void _releaseIntermediate() {
+    payment._releaseIntermediate();
+  }
+}
+
+// MARK: - RouteTollPaymentPointInfoRouteEntry
+
+/** Элемент маршрута - точка и значение в ней. */
+class RouteTollPaymentPointInfoRouteEntry {
+  final RoutePoint point;
+  final RouteTollPaymentPointInfo value;
+
+  const RouteTollPaymentPointInfoRouteEntry({
+    required this.point,
+    required this.value
+  });
+
+  RouteTollPaymentPointInfoRouteEntry copyWith({
+    RoutePoint? point,
+    RouteTollPaymentPointInfo? value
+  }) {
+    return RouteTollPaymentPointInfoRouteEntry(
+      point: point ?? this.point,
+      value: value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouteTollPaymentPointInfoRouteEntry &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, value);
+  }
+
+}
+final class _CRouteTollPaymentPointInfoRouteEntry extends ffi.Struct {
+  external _CRoutePoint point;
+
+  external _CRouteTollPaymentPointInfo value;
+
+}
+// MARK: - RouteTollPaymentPointInfoRouteEntry <-> _CRouteTollPaymentPointInfoRouteEntry
+
+extension _CRouteTollPaymentPointInfoRouteEntryToDart on _CRouteTollPaymentPointInfoRouteEntry {
+  RouteTollPaymentPointInfoRouteEntry _toDart() {
+    return RouteTollPaymentPointInfoRouteEntry(
+      point: this.point._toDart(),
+      value: this.value._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRouteTollPaymentPointInfoRouteEntry on RouteTollPaymentPointInfoRouteEntry {
+  _CRouteTollPaymentPointInfoRouteEntry _copyFromDartTo_CRouteTollPaymentPointInfoRouteEntry() {
+    final res = _CRouteTollPaymentPointInfoRouteEntryMakeDefault();
+    res.point = this.point._copyFromDartTo_CRoutePoint();
+    res.value = this.value._copyFromDartTo_CRouteTollPaymentPointInfo();
+    return res;
+  }
+}
+extension _CRouteTollPaymentPointInfoRouteEntryRelease on _CRouteTollPaymentPointInfoRouteEntry {
+  void _releaseIntermediate() {
+    value._releaseIntermediate();
+  }
+}
+
+// MARK: - RouteTollPaymentPointInfoRouteEntry? <-> _COptional_CRouteTollPaymentPointInfoRouteEntry
+
+final class _COptional_CRouteTollPaymentPointInfoRouteEntry extends ffi.Struct {
+  
+  external _CRouteTollPaymentPointInfoRouteEntry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CRouteTollPaymentPointInfoRouteEntryBasicFunctions on _COptional_CRouteTollPaymentPointInfoRouteEntry {
+  void _releaseIntermediate() {
+    _COptional_CRouteTollPaymentPointInfoRouteEntry_release(this);
+  }
+}
+
+extension _COptional_CRouteTollPaymentPointInfoRouteEntryToDart on _COptional_CRouteTollPaymentPointInfoRouteEntry {
+  RouteTollPaymentPointInfoRouteEntry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CRouteTollPaymentPointInfoRouteEntry on RouteTollPaymentPointInfoRouteEntry? {
+  _COptional_CRouteTollPaymentPointInfoRouteEntry _copyFromDartTo_COptional_CRouteTollPaymentPointInfoRouteEntry() {
+    final cOptional = _COptional_CRouteTollPaymentPointInfoRouteEntryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CRouteTollPaymentPointInfoRouteEntry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<RouteTollPaymentPointInfoRouteEntry> <-> _CArray_CRouteTollPaymentPointInfoRouteEntry
+
+final class _CArray_CRouteTollPaymentPointInfoRouteEntry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CRouteTollPaymentPointInfoRouteEntryToDart on _CArray_CRouteTollPaymentPointInfoRouteEntry {
+  List<RouteTollPaymentPointInfoRouteEntry> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CRouteTollPaymentPointInfoRouteEntry on List<RouteTollPaymentPointInfoRouteEntry> {
+  _CArray_CRouteTollPaymentPointInfoRouteEntry _copyFromDartTo_CArray_CRouteTollPaymentPointInfoRouteEntry() {
+    final cArray = _CArray_CRouteTollPaymentPointInfoRouteEntrymakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CRouteTollPaymentPointInfoRouteEntry();
+        _CArray_CRouteTollPaymentPointInfoRouteEntryaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CRouteTollPaymentPointInfoRouteEntryBasicFunctions on _CArray_CRouteTollPaymentPointInfoRouteEntry {
+  void _releaseIntermediate() {
+    _CArray_CRouteTollPaymentPointInfoRouteEntry_release(this);
+  }
+
+  static final _listToFill = <RouteTollPaymentPointInfoRouteEntry>[];
+
+  static void _iterate(_CRouteTollPaymentPointInfoRouteEntry item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<RouteTollPaymentPointInfoRouteEntry> _fillFromC() {
+    _forEach_CArray_CRouteTollPaymentPointInfoRouteEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CRouteTollPaymentPointInfoRouteEntry)>(_iterate));
+    final result = List<RouteTollPaymentPointInfoRouteEntry>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -46228,27 +47671,23 @@ extension _DartTo_CRouteCameraPurpose on RouteCameraPurpose {
   }
 }
 	
-// MARK: - RouteCameraPurposeEnumSet
+// MARK: - EnumSet<RouteCameraPurpose>
 
 class RouteCameraPurposeEnumSet extends EnumSet<RouteCameraPurpose> {
-  RouteCameraPurposeEnumSet() : super();
+  const RouteCameraPurposeEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RouteCameraPurposeEnumSet.fromRawValue(int rawValue) {
-    RouteCameraPurposeEnumSet enumSet = RouteCameraPurposeEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RouteCameraPurposeEnumSet(rawValue);
   }
 
   factory RouteCameraPurposeEnumSet.of(Iterable<RouteCameraPurpose> elements) {
-    RouteCameraPurposeEnumSet enumSet = RouteCameraPurposeEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RouteCameraPurposeEnumSet(rawValue);
   }
 
   factory RouteCameraPurposeEnumSet.all() {
-    RouteCameraPurposeEnumSet enumSet = RouteCameraPurposeEnumSet();
-    enumSet.addAll(RouteCameraPurpose.values);
-    return enumSet;
+    final rawValue = RouteCameraPurpose.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RouteCameraPurposeEnumSet(rawValue);
   }
 
   @override
@@ -46258,32 +47697,6 @@ class RouteCameraPurposeEnumSet extends EnumSet<RouteCameraPurpose> {
   @override
   bool containsAllFromEnumSet(EnumSet<RouteCameraPurpose> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RouteCameraPurpose value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RouteCameraPurpose> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RouteCameraPurpose value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RouteCameraPurpose> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RouteCameraPurpose> intersection(EnumSet<RouteCameraPurpose> other) =>
@@ -46296,6 +47709,10 @@ class RouteCameraPurposeEnumSet extends EnumSet<RouteCameraPurpose> {
   @override
   EnumSet<RouteCameraPurpose> difference(EnumSet<RouteCameraPurpose> other) =>
       RouteCameraPurposeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RouteCameraPurpose> toMutableEnumSet() =>
+      MutableRouteCameraPurposeEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RouteCameraPurpose> toSet() {
@@ -46321,6 +47738,102 @@ class RouteCameraPurposeEnumSet extends EnumSet<RouteCameraPurpose> {
   }
 }
 
+class MutableRouteCameraPurposeEnumSet extends MutableEnumSet<RouteCameraPurpose> {
+  MutableRouteCameraPurposeEnumSet() : super();
+
+  factory MutableRouteCameraPurposeEnumSet.fromRawValue(int rawValue) {
+    MutableRouteCameraPurposeEnumSet enumSet = MutableRouteCameraPurposeEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRouteCameraPurposeEnumSet.of(Iterable<RouteCameraPurpose> elements) {
+    MutableRouteCameraPurposeEnumSet enumSet = MutableRouteCameraPurposeEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRouteCameraPurposeEnumSet.all() {
+    MutableRouteCameraPurposeEnumSet enumSet = MutableRouteCameraPurposeEnumSet();
+    enumSet.addAll(RouteCameraPurpose.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RouteCameraPurpose value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RouteCameraPurpose> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RouteCameraPurpose> intersection(MutableEnumSet<RouteCameraPurpose> other) =>
+      MutableRouteCameraPurposeEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RouteCameraPurpose> union(MutableEnumSet<RouteCameraPurpose> other) =>
+      MutableRouteCameraPurposeEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RouteCameraPurpose> difference(MutableEnumSet<RouteCameraPurpose> other) =>
+      MutableRouteCameraPurposeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RouteCameraPurpose> toEnumSet() =>
+      RouteCameraPurposeEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RouteCameraPurpose> toSet() {
+    Set<RouteCameraPurpose> result = {};
+    RouteCameraPurpose.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RouteCameraPurpose value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RouteCameraPurpose> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RouteCameraPurpose value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RouteCameraPurpose> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RouteCameraPurpose.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRouteCameraPurpose extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -46332,12 +47845,12 @@ extension _COptionSet_CRouteCameraPurposeBasicFunctions on _COptionSet_CRouteCam
 }
 
 extension _COptionSet_CRouteCameraPurposeToDart on _COptionSet_CRouteCameraPurpose {
-  RouteCameraPurposeEnumSet _toDart() {
+  EnumSet<RouteCameraPurpose> _toDart() {
     return RouteCameraPurposeEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRouteCameraPurpose on RouteCameraPurposeEnumSet {
+extension _DartTo_COptionSet_CRouteCameraPurpose on EnumSet<RouteCameraPurpose> {
   _COptionSet_CRouteCameraPurpose _copyFromDartTo_COptionSet_CRouteCameraPurpose() {
     return _COptionSet_CRouteCameraPurposeMakeDefault().._rawValue = this.rawValue;
   }
@@ -46391,7 +47904,7 @@ extension _DartTo_CRouteCameraDirection on RouteCameraDirection {
 /** Структура, описывающая дорожную камеру. */
 class RouteCamera {
   /** Назначения камеры. */
-  final RouteCameraPurposeEnumSet purposes;
+  final EnumSet<RouteCameraPurpose> purposes;
   /** Дальность действия камеры против хода движения. */
   final RouteDistance rangeAgainst;
   /** Дальность действия камеры по ходу движения. */
@@ -46403,28 +47916,33 @@ class RouteCamera {
    камера не фиксирует превышение скорости.
   */
   final double? maxSpeedLimit;
+  /** Флаг, указывающий на мобильность камеры. */
+  final bool mobility;
 
   const RouteCamera({
     required this.purposes,
     required this.rangeAgainst,
     required this.rangeAlong,
     this.direction = RouteCameraDirection.against,
-    required this.maxSpeedLimit
+    required this.maxSpeedLimit,
+    this.mobility = false
   });
 
   RouteCamera copyWith({
-    RouteCameraPurposeEnumSet? purposes,
+    EnumSet<RouteCameraPurpose>? purposes,
     RouteDistance? rangeAgainst,
     RouteDistance? rangeAlong,
     RouteCameraDirection? direction,
-    Optional<double?>? maxSpeedLimit
+    Optional<double?>? maxSpeedLimit,
+    bool? mobility
   }) {
     return RouteCamera(
       purposes: purposes ?? this.purposes,
       rangeAgainst: rangeAgainst ?? this.rangeAgainst,
       rangeAlong: rangeAlong ?? this.rangeAlong,
       direction: direction ?? this.direction,
-      maxSpeedLimit: maxSpeedLimit != null ? maxSpeedLimit.value : this.maxSpeedLimit
+      maxSpeedLimit: maxSpeedLimit != null ? maxSpeedLimit.value : this.maxSpeedLimit,
+      mobility: mobility ?? this.mobility
     );
   }
   @override
@@ -46435,11 +47953,12 @@ class RouteCamera {
     other.rangeAgainst == rangeAgainst &&
     other.rangeAlong == rangeAlong &&
     other.direction == direction &&
-    other.maxSpeedLimit == maxSpeedLimit;
+    other.maxSpeedLimit == maxSpeedLimit &&
+    other.mobility == mobility;
 
   @override
   int get hashCode {
-    return Object.hash(purposes, rangeAgainst, rangeAlong, direction, maxSpeedLimit);
+    return Object.hash(purposes, rangeAgainst, rangeAlong, direction, maxSpeedLimit, mobility);
   }
 
 }
@@ -46454,6 +47973,9 @@ final class _CRouteCamera extends ffi.Struct {
 
   external _COptional_float maxSpeedLimit;
 
+  @ffi.Bool()
+  external bool mobility;
+
 }
 // MARK: - RouteCamera <-> _CRouteCamera
 
@@ -46464,7 +47986,8 @@ extension _CRouteCameraToDart on _CRouteCamera {
       rangeAgainst: this.rangeAgainst._toDart(),
       rangeAlong: this.rangeAlong._toDart(),
       direction: this.direction._toDart(),
-      maxSpeedLimit: this.maxSpeedLimit._toDart()
+      maxSpeedLimit: this.maxSpeedLimit._toDart(),
+      mobility: this.mobility
     );
   }
 }
@@ -46477,6 +48000,7 @@ extension _DartTo_CRouteCamera on RouteCamera {
     res.rangeAlong = this.rangeAlong._copyFromDartTo_CRouteDistance();
     res.direction = this.direction._copyFromDartTo_CRouteCameraDirection();
     res.maxSpeedLimit = this.maxSpeedLimit._copyFromDartTo_COptional_float();
+    res.mobility = this.mobility;
     return res;
   }
 }
@@ -46628,7 +48152,7 @@ extension _CArray_CCameraRouteEntryBasicFunctions on _CArray_CCameraRouteEntry {
   }
 }
 	
-// MARK: - UIntRouteLongAttribute
+// MARK: - DoubleRouteLongAttribute
 
 /**
  Контейнер, который хранит протяженный атрибут маршрута.
@@ -46636,66 +48160,66 @@ extension _CArray_CCameraRouteEntryBasicFunctions on _CArray_CCameraRouteEntry {
  Действие атрибута начинается с данной точки и заканчивается в следущей точке,
  начиная с которой начинается действие атрибута следующего элемента.
 */
-class UIntRouteLongAttribute implements ffi.Finalizable {
+class DoubleRouteLongAttribute implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
   /** Количество элементов. */
   int get size {
-    int res = _CUIntRouteLongAttribute_size(_CUIntRouteLongAttributeMakeDefault().._impl=_self);
+    int res = _CDoubleRouteLongAttribute_size(_CDoubleRouteLongAttributeMakeDefault().._impl=_self);
     return res;
   }
   /** Элементы отсутствуют. */
   bool get isEmpty {
-    bool res = _CUIntRouteLongAttribute_isEmpty(_CUIntRouteLongAttributeMakeDefault().._impl=_self);
+    bool res = _CDoubleRouteLongAttribute_isEmpty(_CDoubleRouteLongAttributeMakeDefault().._impl=_self);
     return res;
   }
   /** Первый элемент. */
-  UIntRouteLongEntry? get first {
-    _COptional_CUIntRouteLongEntry res = _CUIntRouteLongAttribute_first(_CUIntRouteLongAttributeMakeDefault().._impl=_self);
+  DoubleRouteLongEntry? get first {
+    _COptional_CDoubleRouteLongEntry res = _CDoubleRouteLongAttribute_first(_CDoubleRouteLongAttributeMakeDefault().._impl=_self);
     return res._toDart();
   }
   /** Последний элемент. */
-  UIntRouteLongEntry? get last {
-    _COptional_CUIntRouteLongEntry res = _CUIntRouteLongAttribute_last(_CUIntRouteLongAttributeMakeDefault().._impl=_self);
+  DoubleRouteLongEntry? get last {
+    _COptional_CDoubleRouteLongEntry res = _CDoubleRouteLongAttribute_last(_CDoubleRouteLongAttributeMakeDefault().._impl=_self);
     return res._toDart();
   }
   /** Все элементы. */
-  List<UIntRouteLongEntry> get entries {
-    _CArray_CUIntRouteLongEntry res = _CUIntRouteLongAttribute_entries(_CUIntRouteLongAttributeMakeDefault().._impl=_self);
+  List<DoubleRouteLongEntry> get entries {
+    _CArray_CDoubleRouteLongEntry res = _CDoubleRouteLongAttribute_entries(_CDoubleRouteLongAttributeMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
   }
 
-  static final _finalizer = ffi.NativeFinalizer(_CUIntRouteLongAttribute_releasePtr);
+  static final _finalizer = ffi.NativeFinalizer(_CDoubleRouteLongAttribute_releasePtr);
 
-  UIntRouteLongAttribute._raw(this._self);
-  factory UIntRouteLongAttribute._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = UIntRouteLongAttribute._raw(self);
+  DoubleRouteLongAttribute._raw(this._self);
+  factory DoubleRouteLongAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = DoubleRouteLongAttribute._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
   }
 
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is UIntRouteLongAttribute &&
+    identical(this, other) || other is DoubleRouteLongAttribute &&
     other.runtimeType == runtimeType &&
-    _CUIntRouteLongAttribute_cg_objectIdentifier(this._self) == _CUIntRouteLongAttribute_cg_objectIdentifier(other._self);
+    _CDoubleRouteLongAttribute_cg_objectIdentifier(this._self) == _CDoubleRouteLongAttribute_cg_objectIdentifier(other._self);
 
   @override
   int get hashCode {
-    final identifier = _CUIntRouteLongAttribute_cg_objectIdentifier(this._self);
+    final identifier = _CDoubleRouteLongAttribute_cg_objectIdentifier(this._self);
     return identifier.hashCode;
   }
 
-  // MARK: UIntRouteLongAttribute: Methods
+  // MARK: DoubleRouteLongAttribute: Methods
 
   /** Элемент, в который попадает заданная точка. */
-  UIntRouteLongEntry? entry(
+  DoubleRouteLongEntry? entry(
     RoutePoint point
   )  {
     var _a1 = point._copyFromDartTo_CRoutePoint();
-    _COptional_CUIntRouteLongEntry res = _CUIntRouteLongAttribute_entry_CRoutePoint(_CUIntRouteLongAttributeMakeDefault().._impl=_self, _a1);
+    _COptional_CDoubleRouteLongEntry res = _CDoubleRouteLongAttribute_entry_CRoutePoint(_CDoubleRouteLongAttributeMakeDefault().._impl=_self, _a1);
     return res._toDart();
   }
 
@@ -46704,13 +48228,13 @@ class UIntRouteLongAttribute implements ffi.Finalizable {
   
    - Throws: Exception если begin > end.
   */
-  List<UIntRouteLongEntry> entriesInRange(
+  List<DoubleRouteLongEntry> entriesInRange(
     RoutePoint begin,
     RoutePoint end
   )  {
     var _a1 = begin._copyFromDartTo_CRoutePoint();
     var _a2 = end._copyFromDartTo_CRoutePoint();
-    _CArray_CUIntRouteLongEntry res = _CUIntRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CUIntRouteLongAttributeMakeDefault().._impl=_self, _a1, _a2);
+    _CArray_CDoubleRouteLongEntry res = _CDoubleRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CDoubleRouteLongAttributeMakeDefault().._impl=_self, _a1, _a2);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -46718,54 +48242,54 @@ class UIntRouteLongAttribute implements ffi.Finalizable {
 
 }
 
-// MARK: - UIntRouteLongAttribute <-> CUIntRouteLongAttribute
+// MARK: - DoubleRouteLongAttribute <-> CDoubleRouteLongAttribute
 
-final class _CUIntRouteLongAttribute extends ffi.Struct {
+final class _CDoubleRouteLongAttribute extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CUIntRouteLongAttributeBasicFunctions on _CUIntRouteLongAttribute {
+extension _CDoubleRouteLongAttributeBasicFunctions on _CDoubleRouteLongAttribute {
   void _releaseIntermediate() {
-    _CUIntRouteLongAttribute_release(_impl);
+    _CDoubleRouteLongAttribute_release(_impl);
   }
 
-  _CUIntRouteLongAttribute _retain() {
-    return _CUIntRouteLongAttribute_retain(_impl);
-  }
-}
-
-extension _CUIntRouteLongAttributeToDart on _CUIntRouteLongAttribute {
-  UIntRouteLongAttribute _toDart() {
-    return UIntRouteLongAttribute._create(_retain()._impl);
+  _CDoubleRouteLongAttribute _retain() {
+    return _CDoubleRouteLongAttribute_retain(_impl);
   }
 }
 
-
-extension _DartToCUIntRouteLongAttribute on UIntRouteLongAttribute {
-  _CUIntRouteLongAttribute _copyFromDartTo_CUIntRouteLongAttribute() {
-    return (_CUIntRouteLongAttributeMakeDefault().._impl=_self)._retain();
+extension _CDoubleRouteLongAttributeToDart on _CDoubleRouteLongAttribute {
+  DoubleRouteLongAttribute _toDart() {
+    return DoubleRouteLongAttribute._create(_retain()._impl);
   }
 }
-// MARK: - UIntRouteLongEntry
+
+
+extension _DartToCDoubleRouteLongAttribute on DoubleRouteLongAttribute {
+  _CDoubleRouteLongAttribute _copyFromDartTo_CDoubleRouteLongAttribute() {
+    return (_CDoubleRouteLongAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - DoubleRouteLongEntry
 
 /** Протяженный элемент маршрута - отрезок и значение на нем. */
-class UIntRouteLongEntry {
+class DoubleRouteLongEntry {
   final RoutePoint point;
   final RouteDistance length;
-  final int value;
+  final double value;
 
-  const UIntRouteLongEntry({
+  const DoubleRouteLongEntry({
     required this.point,
     required this.length,
     required this.value
   });
 
-  UIntRouteLongEntry copyWith({
+  DoubleRouteLongEntry copyWith({
     RoutePoint? point,
     RouteDistance? length,
-    int? value
+    double? value
   }) {
-    return UIntRouteLongEntry(
+    return DoubleRouteLongEntry(
       point: point ?? this.point,
       length: length ?? this.length,
       value: value ?? this.value
@@ -46773,7 +48297,7 @@ class UIntRouteLongEntry {
   }
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is UIntRouteLongEntry &&
+    identical(this, other) || other is DoubleRouteLongEntry &&
     other.runtimeType == runtimeType &&
     other.point == point &&
     other.length == length &&
@@ -46785,20 +48309,20 @@ class UIntRouteLongEntry {
   }
 
 }
-final class _CUIntRouteLongEntry extends ffi.Struct {
+final class _CDoubleRouteLongEntry extends ffi.Struct {
   external _CRoutePoint point;
 
   external _CRouteDistance length;
 
-  @ffi.Uint32()
-  external int value;
+  @ffi.Double()
+  external double value;
 
 }
-// MARK: - UIntRouteLongEntry <-> _CUIntRouteLongEntry
+// MARK: - DoubleRouteLongEntry <-> _CDoubleRouteLongEntry
 
-extension _CUIntRouteLongEntryToDart on _CUIntRouteLongEntry {
-  UIntRouteLongEntry _toDart() {
-    return UIntRouteLongEntry(
+extension _CDoubleRouteLongEntryToDart on _CDoubleRouteLongEntry {
+  DoubleRouteLongEntry _toDart() {
+    return DoubleRouteLongEntry(
       point: this.point._toDart(),
       length: this.length._toDart(),
       value: this.value
@@ -46806,37 +48330,37 @@ extension _CUIntRouteLongEntryToDart on _CUIntRouteLongEntry {
   }
 }
 
-extension _DartTo_CUIntRouteLongEntry on UIntRouteLongEntry {
-  _CUIntRouteLongEntry _copyFromDartTo_CUIntRouteLongEntry() {
-    final res = _CUIntRouteLongEntryMakeDefault();
+extension _DartTo_CDoubleRouteLongEntry on DoubleRouteLongEntry {
+  _CDoubleRouteLongEntry _copyFromDartTo_CDoubleRouteLongEntry() {
+    final res = _CDoubleRouteLongEntryMakeDefault();
     res.point = this.point._copyFromDartTo_CRoutePoint();
     res.length = this.length._copyFromDartTo_CRouteDistance();
     res.value = this.value;
     return res;
   }
 }
-extension _CUIntRouteLongEntryRelease on _CUIntRouteLongEntry {
+extension _CDoubleRouteLongEntryRelease on _CDoubleRouteLongEntry {
   void _releaseIntermediate() {
   }
 }
 
-// MARK: - UIntRouteLongEntry? <-> _COptional_CUIntRouteLongEntry
+// MARK: - DoubleRouteLongEntry? <-> _COptional_CDoubleRouteLongEntry
 
-final class _COptional_CUIntRouteLongEntry extends ffi.Struct {
+final class _COptional_CDoubleRouteLongEntry extends ffi.Struct {
   
-  external _CUIntRouteLongEntry value;
+  external _CDoubleRouteLongEntry value;
   @ffi.Bool()
   external bool hasValue;
 }
 
-extension _COptional_CUIntRouteLongEntryBasicFunctions on _COptional_CUIntRouteLongEntry {
+extension _COptional_CDoubleRouteLongEntryBasicFunctions on _COptional_CDoubleRouteLongEntry {
   void _releaseIntermediate() {
     
   }
 }
 
-extension _COptional_CUIntRouteLongEntryToDart on _COptional_CUIntRouteLongEntry {
-  UIntRouteLongEntry? _toDart() {
+extension _COptional_CDoubleRouteLongEntryToDart on _COptional_CDoubleRouteLongEntry {
+  DoubleRouteLongEntry? _toDart() {
     if (!this.hasValue) {
       return null;
     }
@@ -46844,11 +48368,11 @@ extension _COptional_CUIntRouteLongEntryToDart on _COptional_CUIntRouteLongEntry
   }
 }
 
-extension _DartTo_COptional_CUIntRouteLongEntry on UIntRouteLongEntry? {
-  _COptional_CUIntRouteLongEntry _copyFromDartTo_COptional_CUIntRouteLongEntry() {
-    final cOptional = _COptional_CUIntRouteLongEntryMakeDefault();
+extension _DartTo_COptional_CDoubleRouteLongEntry on DoubleRouteLongEntry? {
+  _COptional_CDoubleRouteLongEntry _copyFromDartTo_COptional_CDoubleRouteLongEntry() {
+    final cOptional = _COptional_CDoubleRouteLongEntryMakeDefault();
     if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CUIntRouteLongEntry();
+      cOptional.value = this!._copyFromDartTo_CDoubleRouteLongEntry();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -46856,44 +48380,44 @@ extension _DartTo_COptional_CUIntRouteLongEntry on UIntRouteLongEntry? {
     return cOptional;
   }
 }
-// MARK: - List<UIntRouteLongEntry> <-> _CArray_CUIntRouteLongEntry
+// MARK: - List<DoubleRouteLongEntry> <-> _CArray_CDoubleRouteLongEntry
 
-final class _CArray_CUIntRouteLongEntry extends ffi.Struct {
+final class _CArray_CDoubleRouteLongEntry extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CArray_CUIntRouteLongEntryToDart on _CArray_CUIntRouteLongEntry {
-  List<UIntRouteLongEntry> _toDart() {
+extension _CArray_CDoubleRouteLongEntryToDart on _CArray_CDoubleRouteLongEntry {
+  List<DoubleRouteLongEntry> _toDart() {
     return _fillFromC();
   }
 }
 
-extension _DartTo_CArray_CUIntRouteLongEntry on List<UIntRouteLongEntry> {
-  _CArray_CUIntRouteLongEntry _copyFromDartTo_CArray_CUIntRouteLongEntry() {
-    final cArray = _CArray_CUIntRouteLongEntrymakeEmpty();
+extension _DartTo_CArray_CDoubleRouteLongEntry on List<DoubleRouteLongEntry> {
+  _CArray_CDoubleRouteLongEntry _copyFromDartTo_CArray_CDoubleRouteLongEntry() {
+    final cArray = _CArray_CDoubleRouteLongEntrymakeEmpty();
     forEach((item) {
-        final cItem = item._copyFromDartTo_CUIntRouteLongEntry();
-        _CArray_CUIntRouteLongEntryaddElement(cArray, cItem);
+        final cItem = item._copyFromDartTo_CDoubleRouteLongEntry();
+        _CArray_CDoubleRouteLongEntryaddElement(cArray, cItem);
         
     });
     return cArray;
   }
 }
 
-extension _CArray_CUIntRouteLongEntryBasicFunctions on _CArray_CUIntRouteLongEntry {
+extension _CArray_CDoubleRouteLongEntryBasicFunctions on _CArray_CDoubleRouteLongEntry {
   void _releaseIntermediate() {
-    _CArray_CUIntRouteLongEntry_release(this);
+    _CArray_CDoubleRouteLongEntry_release(this);
   }
 
-  static final _listToFill = <UIntRouteLongEntry>[];
+  static final _listToFill = <DoubleRouteLongEntry>[];
 
-  static void _iterate(_CUIntRouteLongEntry item) {
+  static void _iterate(_CDoubleRouteLongEntry item) {
     _listToFill.add(item._toDart());
   }
 
-  List<UIntRouteLongEntry> _fillFromC() {
-    _forEach_CArray_CUIntRouteLongEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CUIntRouteLongEntry)>(_iterate));
-    final result = List<UIntRouteLongEntry>.from(_listToFill);
+  List<DoubleRouteLongEntry> _fillFromC() {
+    _forEach_CArray_CDoubleRouteLongEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDoubleRouteLongEntry)>(_iterate));
+    final result = List<DoubleRouteLongEntry>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -48074,27 +49598,23 @@ extension _DartTo_CRouteLaneManeuver on RouteLaneManeuver {
   }
 }
 	
-// MARK: - RouteLaneManeuverEnumSet
+// MARK: - EnumSet<RouteLaneManeuver>
 
 class RouteLaneManeuverEnumSet extends EnumSet<RouteLaneManeuver> {
-  RouteLaneManeuverEnumSet() : super();
+  const RouteLaneManeuverEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RouteLaneManeuverEnumSet.fromRawValue(int rawValue) {
-    RouteLaneManeuverEnumSet enumSet = RouteLaneManeuverEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RouteLaneManeuverEnumSet(rawValue);
   }
 
   factory RouteLaneManeuverEnumSet.of(Iterable<RouteLaneManeuver> elements) {
-    RouteLaneManeuverEnumSet enumSet = RouteLaneManeuverEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RouteLaneManeuverEnumSet(rawValue);
   }
 
   factory RouteLaneManeuverEnumSet.all() {
-    RouteLaneManeuverEnumSet enumSet = RouteLaneManeuverEnumSet();
-    enumSet.addAll(RouteLaneManeuver.values);
-    return enumSet;
+    final rawValue = RouteLaneManeuver.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RouteLaneManeuverEnumSet(rawValue);
   }
 
   @override
@@ -48104,32 +49624,6 @@ class RouteLaneManeuverEnumSet extends EnumSet<RouteLaneManeuver> {
   @override
   bool containsAllFromEnumSet(EnumSet<RouteLaneManeuver> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RouteLaneManeuver value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RouteLaneManeuver> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RouteLaneManeuver value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RouteLaneManeuver> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RouteLaneManeuver> intersection(EnumSet<RouteLaneManeuver> other) =>
@@ -48142,6 +49636,10 @@ class RouteLaneManeuverEnumSet extends EnumSet<RouteLaneManeuver> {
   @override
   EnumSet<RouteLaneManeuver> difference(EnumSet<RouteLaneManeuver> other) =>
       RouteLaneManeuverEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RouteLaneManeuver> toMutableEnumSet() =>
+      MutableRouteLaneManeuverEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RouteLaneManeuver> toSet() {
@@ -48167,6 +49665,102 @@ class RouteLaneManeuverEnumSet extends EnumSet<RouteLaneManeuver> {
   }
 }
 
+class MutableRouteLaneManeuverEnumSet extends MutableEnumSet<RouteLaneManeuver> {
+  MutableRouteLaneManeuverEnumSet() : super();
+
+  factory MutableRouteLaneManeuverEnumSet.fromRawValue(int rawValue) {
+    MutableRouteLaneManeuverEnumSet enumSet = MutableRouteLaneManeuverEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRouteLaneManeuverEnumSet.of(Iterable<RouteLaneManeuver> elements) {
+    MutableRouteLaneManeuverEnumSet enumSet = MutableRouteLaneManeuverEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRouteLaneManeuverEnumSet.all() {
+    MutableRouteLaneManeuverEnumSet enumSet = MutableRouteLaneManeuverEnumSet();
+    enumSet.addAll(RouteLaneManeuver.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RouteLaneManeuver value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RouteLaneManeuver> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RouteLaneManeuver> intersection(MutableEnumSet<RouteLaneManeuver> other) =>
+      MutableRouteLaneManeuverEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RouteLaneManeuver> union(MutableEnumSet<RouteLaneManeuver> other) =>
+      MutableRouteLaneManeuverEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RouteLaneManeuver> difference(MutableEnumSet<RouteLaneManeuver> other) =>
+      MutableRouteLaneManeuverEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RouteLaneManeuver> toEnumSet() =>
+      RouteLaneManeuverEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RouteLaneManeuver> toSet() {
+    Set<RouteLaneManeuver> result = {};
+    RouteLaneManeuver.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RouteLaneManeuver value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RouteLaneManeuver> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RouteLaneManeuver value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RouteLaneManeuver> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RouteLaneManeuver.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRouteLaneManeuver extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -48178,12 +49772,12 @@ extension _COptionSet_CRouteLaneManeuverBasicFunctions on _COptionSet_CRouteLane
 }
 
 extension _COptionSet_CRouteLaneManeuverToDart on _COptionSet_CRouteLaneManeuver {
-  RouteLaneManeuverEnumSet _toDart() {
+  EnumSet<RouteLaneManeuver> _toDart() {
     return RouteLaneManeuverEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRouteLaneManeuver on RouteLaneManeuverEnumSet {
+extension _DartTo_COptionSet_CRouteLaneManeuver on EnumSet<RouteLaneManeuver> {
   _COptionSet_CRouteLaneManeuver _copyFromDartTo_COptionSet_CRouteLaneManeuver() {
     return _COptionSet_CRouteLaneManeuverMakeDefault().._rawValue = this.rawValue;
   }
@@ -48196,7 +49790,7 @@ class RouteLane {
   /** Манёвр, который необходимо совершить для движения по маршруту. */
   final RouteLaneManeuver routeManeuver;
   /** Допустимые манёвры на полосе. */
-  final RouteLaneManeuverEnumSet maneuvers;
+  final EnumSet<RouteLaneManeuver> maneuvers;
   /** Максимальная разрешенная скорость на полосе, м/с. 0 - ограничение скорости неизвестно. */
   final double speedLimit;
   /** Проезд по полосе запрещён. */
@@ -48214,7 +49808,7 @@ class RouteLane {
 
   RouteLane copyWith({
     RouteLaneManeuver? routeManeuver,
-    RouteLaneManeuverEnumSet? maneuvers,
+    EnumSet<RouteLaneManeuver>? maneuvers,
     double? speedLimit,
     bool? prohibited,
     bool? onlyPublicTransport
@@ -49432,6 +51026,14 @@ enum RoadSubtype {
   tunnel(14),
   /** Подземный переход. */
   underpass(15),
+  /** Пандус, направленный вниз. */
+  rampDown(16),
+  /** Пандус, направленный вверх. */
+  rampUp(17),
+  /** Плавный пандус, направленный вниз. */
+  smoothRampDown(18),
+  /** Плавный пандус, направленный вверх. */
+  smoothRampUp(19),
   ;
 
   const RoadSubtype(this.rawValue);
@@ -50590,6 +52192,293 @@ extension _CArray_CTruckPassZoneIdRouteLongEntryBasicFunctions on _CArray_CTruck
   }
 }
 	
+// MARK: - StringRouteAttribute
+
+/**
+ Контейнер, который описывает точечный атрибут маршрута.
+ Каждый элемент хранится в виде точки на маршруте, в которой этот элемент расположен и значения самого элемента.
+*/
+class StringRouteAttribute implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Количество элементов. */
+  int get size {
+    int res = _CStringRouteAttribute_size(_CStringRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Элементы отсутствуют. */
+  bool get isEmpty {
+    bool res = _CStringRouteAttribute_isEmpty(_CStringRouteAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Первый элемент. */
+  StringRouteEntry? get first {
+    _COptional_CStringRouteEntry res = _CStringRouteAttribute_first(_CStringRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Последний элемент. */
+  StringRouteEntry? get last {
+    _COptional_CStringRouteEntry res = _CStringRouteAttribute_last(_CStringRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Все элементы. */
+  List<StringRouteEntry> get entries {
+    _CArray_CStringRouteEntry res = _CStringRouteAttribute_entries(_CStringRouteAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CStringRouteAttribute_releasePtr);
+
+  StringRouteAttribute._raw(this._self);
+  factory StringRouteAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = StringRouteAttribute._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is StringRouteAttribute &&
+    other.runtimeType == runtimeType &&
+    _CStringRouteAttribute_cg_objectIdentifier(this._self) == _CStringRouteAttribute_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CStringRouteAttribute_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: StringRouteAttribute: Methods
+
+  /**
+   Элементы, попадающие в отрезок [begin, end).
+  
+   - Throws: Exception если begin > end.
+  */
+  List<StringRouteEntry> entriesInRange(
+    RoutePoint begin,
+    RoutePoint end
+  )  {
+    var _a1 = begin._copyFromDartTo_CRoutePoint();
+    var _a2 = end._copyFromDartTo_CRoutePoint();
+    _CArray_CStringRouteEntry res = _CStringRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CStringRouteAttributeMakeDefault().._impl=_self, _a1, _a2);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого
+   <
+   = point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  StringRouteEntry? findNearBackward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CStringRouteEntry res = _CStringRouteAttribute_findNearBackward_CRoutePoint(_CStringRouteAttributeMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Найти ближайший элемент, позиция которого >= point.
+  
+   - Note: Сложность операции log2(N), где N = size.
+  */
+  StringRouteEntry? findNearForward(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CStringRouteEntry res = _CStringRouteAttribute_findNearForward_CRoutePoint(_CStringRouteAttributeMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - StringRouteAttribute <-> CStringRouteAttribute
+
+final class _CStringRouteAttribute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStringRouteAttributeBasicFunctions on _CStringRouteAttribute {
+  void _releaseIntermediate() {
+    _CStringRouteAttribute_release(_impl);
+  }
+
+  _CStringRouteAttribute _retain() {
+    return _CStringRouteAttribute_retain(_impl);
+  }
+}
+
+extension _CStringRouteAttributeToDart on _CStringRouteAttribute {
+  StringRouteAttribute _toDart() {
+    return StringRouteAttribute._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCStringRouteAttribute on StringRouteAttribute {
+  _CStringRouteAttribute _copyFromDartTo_CStringRouteAttribute() {
+    return (_CStringRouteAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - StringRouteEntry
+
+/** Элемент маршрута - точка и значение в ней. */
+class StringRouteEntry {
+  final RoutePoint point;
+  final String value;
+
+  const StringRouteEntry({
+    required this.point,
+    required this.value
+  });
+
+  StringRouteEntry copyWith({
+    RoutePoint? point,
+    String? value
+  }) {
+    return StringRouteEntry(
+      point: point ?? this.point,
+      value: value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is StringRouteEntry &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, value);
+  }
+
+}
+final class _CStringRouteEntry extends ffi.Struct {
+  external _CRoutePoint point;
+
+  external _CString value;
+
+}
+// MARK: - StringRouteEntry <-> _CStringRouteEntry
+
+extension _CStringRouteEntryToDart on _CStringRouteEntry {
+  StringRouteEntry _toDart() {
+    return StringRouteEntry(
+      point: this.point._toDart(),
+      value: this.value._toDart()
+    );
+  }
+}
+
+extension _DartTo_CStringRouteEntry on StringRouteEntry {
+  _CStringRouteEntry _copyFromDartTo_CStringRouteEntry() {
+    final res = _CStringRouteEntryMakeDefault();
+    res.point = this.point._copyFromDartTo_CRoutePoint();
+    res.value = this.value._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CStringRouteEntryRelease on _CStringRouteEntry {
+  void _releaseIntermediate() {
+    value._releaseIntermediate();
+  }
+}
+
+// MARK: - StringRouteEntry? <-> _COptional_CStringRouteEntry
+
+final class _COptional_CStringRouteEntry extends ffi.Struct {
+  
+  external _CStringRouteEntry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CStringRouteEntryBasicFunctions on _COptional_CStringRouteEntry {
+  void _releaseIntermediate() {
+    _COptional_CStringRouteEntry_release(this);
+  }
+}
+
+extension _COptional_CStringRouteEntryToDart on _COptional_CStringRouteEntry {
+  StringRouteEntry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CStringRouteEntry on StringRouteEntry? {
+  _COptional_CStringRouteEntry _copyFromDartTo_COptional_CStringRouteEntry() {
+    final cOptional = _COptional_CStringRouteEntryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CStringRouteEntry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<StringRouteEntry> <-> _CArray_CStringRouteEntry
+
+final class _CArray_CStringRouteEntry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CStringRouteEntryToDart on _CArray_CStringRouteEntry {
+  List<StringRouteEntry> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CStringRouteEntry on List<StringRouteEntry> {
+  _CArray_CStringRouteEntry _copyFromDartTo_CArray_CStringRouteEntry() {
+    final cArray = _CArray_CStringRouteEntrymakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CStringRouteEntry();
+        _CArray_CStringRouteEntryaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CStringRouteEntryBasicFunctions on _CArray_CStringRouteEntry {
+  void _releaseIntermediate() {
+    _CArray_CStringRouteEntry_release(this);
+  }
+
+  static final _listToFill = <StringRouteEntry>[];
+
+  static void _iterate(_CStringRouteEntry item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<StringRouteEntry> _fillFromC() {
+    _forEach_CArray_CStringRouteEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CStringRouteEntry)>(_iterate));
+    final result = List<StringRouteEntry>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - PublicTransportTransferRouteLongAttribute
 
 /**
@@ -51229,14 +53118,55 @@ extension _CArray_uint32_tBasicFunctions on _CArray_uint32_t {
   }
 }
 	
+// MARK: - List<PublicTransportRouteInfo> <-> _CArray_CPublicTransportRouteInfo
+
+final class _CArray_CPublicTransportRouteInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportRouteInfoToDart on _CArray_CPublicTransportRouteInfo {
+  List<PublicTransportRouteInfo> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportRouteInfo on List<PublicTransportRouteInfo> {
+  _CArray_CPublicTransportRouteInfo _copyFromDartTo_CArray_CPublicTransportRouteInfo() {
+    final cArray = _CArray_CPublicTransportRouteInfomakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportRouteInfo();
+        _CArray_CPublicTransportRouteInfoaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportRouteInfoBasicFunctions on _CArray_CPublicTransportRouteInfo {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportRouteInfo_release(this);
+  }
+
+  static final _listToFill = <PublicTransportRouteInfo>[];
+
+  static void _iterate(_CPublicTransportRouteInfo item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportRouteInfo> _fillFromC() {
+    _forEach_CArray_CPublicTransportRouteInfo(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteInfo)>(_iterate));
+    final result = List<PublicTransportRouteInfo>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - PublicTransportInfo
 
 /** Описание общественного транспортного средства. */
 class PublicTransportInfo {
   /** Тип общественного транспортного средства. */
   final PublicTransportType type;
-  /** Названия маршрутов общественного транспорта, на которых происходит проезд. */
-  final List<String> names;
   /**
    Номера вагонов, в которые рекомендуется посадка.
   
@@ -51253,31 +53183,33 @@ class PublicTransportInfo {
   final int? color;
   /** Идентификатор иконки для остановок маршрута. Пустая строка, если информация недоступна. Техническое поле. */
   final String routeLogo;
+  /** Описания маршрутов общественного транспорта, на которых происходит проезд. */
+  final List<PublicTransportRouteInfo> routeInfos;
 
   const PublicTransportInfo({
     this.type = PublicTransportType.bus,
-    required this.names,
     required this.suggestedCarNumbers,
     required this.boardingSuggest,
     required this.color,
-    required this.routeLogo
+    required this.routeLogo,
+    required this.routeInfos
   });
 
   PublicTransportInfo copyWith({
     PublicTransportType? type,
-    List<String>? names,
     List<int>? suggestedCarNumbers,
     String? boardingSuggest,
     Optional<int?>? color,
-    String? routeLogo
+    String? routeLogo,
+    List<PublicTransportRouteInfo>? routeInfos
   }) {
     return PublicTransportInfo(
       type: type ?? this.type,
-      names: names ?? this.names,
       suggestedCarNumbers: suggestedCarNumbers ?? this.suggestedCarNumbers,
       boardingSuggest: boardingSuggest ?? this.boardingSuggest,
       color: color != null ? color.value : this.color,
-      routeLogo: routeLogo ?? this.routeLogo
+      routeLogo: routeLogo ?? this.routeLogo,
+      routeInfos: routeInfos ?? this.routeInfos
     );
   }
   @override
@@ -51285,22 +53217,20 @@ class PublicTransportInfo {
     identical(this, other) || other is PublicTransportInfo &&
     other.runtimeType == runtimeType &&
     other.type == type &&
-    other.names == names &&
     other.suggestedCarNumbers == suggestedCarNumbers &&
     other.boardingSuggest == boardingSuggest &&
     other.color == color &&
-    other.routeLogo == routeLogo;
+    other.routeLogo == routeLogo &&
+    other.routeInfos == routeInfos;
 
   @override
   int get hashCode {
-    return Object.hash(type, names, suggestedCarNumbers, boardingSuggest, color, routeLogo);
+    return Object.hash(type, suggestedCarNumbers, boardingSuggest, color, routeLogo, routeInfos);
   }
 
 }
 final class _CPublicTransportInfo extends ffi.Struct {
   external _CPublicTransportType type;
-
-  external _CArray_CString names;
 
   external _CArray_uint32_t suggestedCarNumbers;
 
@@ -51310,6 +53240,8 @@ final class _CPublicTransportInfo extends ffi.Struct {
 
   external _CString routeLogo;
 
+  external _CArray_CPublicTransportRouteInfo routeInfos;
+
 }
 // MARK: - PublicTransportInfo <-> _CPublicTransportInfo
 
@@ -51317,11 +53249,11 @@ extension _CPublicTransportInfoToDart on _CPublicTransportInfo {
   PublicTransportInfo _toDart() {
     return PublicTransportInfo(
       type: this.type._toDart(),
-      names: this.names._toDart(),
       suggestedCarNumbers: this.suggestedCarNumbers._toDart(),
       boardingSuggest: this.boardingSuggest._toDart(),
       color: this.color._toDart(),
-      routeLogo: this.routeLogo._toDart()
+      routeLogo: this.routeLogo._toDart(),
+      routeInfos: this.routeInfos._toDart()
     );
   }
 }
@@ -51330,20 +53262,334 @@ extension _DartTo_CPublicTransportInfo on PublicTransportInfo {
   _CPublicTransportInfo _copyFromDartTo_CPublicTransportInfo() {
     final res = _CPublicTransportInfoMakeDefault();
     res.type = this.type._copyFromDartTo_CPublicTransportType();
-    res.names = this.names._copyFromDartTo_CArray_CString();
     res.suggestedCarNumbers = this.suggestedCarNumbers._copyFromDartTo_CArray_uint32_t();
     res.boardingSuggest = this.boardingSuggest._copyFromDartTo_CString();
     res.color = this.color._copyFromDartTo_COptional_uint32_t();
     res.routeLogo = this.routeLogo._copyFromDartTo_CString();
+    res.routeInfos = this.routeInfos._copyFromDartTo_CArray_CPublicTransportRouteInfo();
     return res;
   }
 }
 extension _CPublicTransportInfoRelease on _CPublicTransportInfo {
   void _releaseIntermediate() {
-    names._releaseIntermediate();
     suggestedCarNumbers._releaseIntermediate();
     boardingSuggest._releaseIntermediate();
     routeLogo._releaseIntermediate();
+    routeInfos._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportCostInfo
+
+/** Информация о стоимости проезда на общественном транспорте. */
+class PublicTransportCostInfo {
+  /**
+   Стоимость проезда на общественном транспорте в основных единицах валюты,
+   (например, в рублях для РФ).
+  */
+  final int value;
+  /**
+   Добавочная стоимость проезда на общественном транспорте в наименьших
+   единицах валюты (например, стоимость в копейках, добавляющаяся к
+   стоимости в рублях для РФ).
+  */
+  final int fraction;
+  /**
+   Степень десятки, обозначающая, сколько наименьших единиц валюты
+   содержится в одной основной единице валюты. Например, в 1 рубле 100
+   копеек, значит, для рублей значение exponent будет равно 2.
+  */
+  final int exponent;
+  /** Трёхбуквенный код валюты по ISO 4217. */
+  final String currencyCode;
+
+  const PublicTransportCostInfo({
+    this.value = 0,
+    this.fraction = 0,
+    this.exponent = 0,
+    required this.currencyCode
+  });
+
+  PublicTransportCostInfo copyWith({
+    int? value,
+    int? fraction,
+    int? exponent,
+    String? currencyCode
+  }) {
+    return PublicTransportCostInfo(
+      value: value ?? this.value,
+      fraction: fraction ?? this.fraction,
+      exponent: exponent ?? this.exponent,
+      currencyCode: currencyCode ?? this.currencyCode
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportCostInfo &&
+    other.runtimeType == runtimeType &&
+    other.value == value &&
+    other.fraction == fraction &&
+    other.exponent == exponent &&
+    other.currencyCode == currencyCode;
+
+  @override
+  int get hashCode {
+    return Object.hash(value, fraction, exponent, currencyCode);
+  }
+
+}
+final class _CPublicTransportCostInfo extends ffi.Struct {
+  @ffi.Uint32()
+  external int value;
+
+  @ffi.Uint32()
+  external int fraction;
+
+  @ffi.Uint32()
+  external int exponent;
+
+  external _CString currencyCode;
+
+}
+// MARK: - PublicTransportCostInfo <-> _CPublicTransportCostInfo
+
+extension _CPublicTransportCostInfoToDart on _CPublicTransportCostInfo {
+  PublicTransportCostInfo _toDart() {
+    return PublicTransportCostInfo(
+      value: this.value,
+      fraction: this.fraction,
+      exponent: this.exponent,
+      currencyCode: this.currencyCode._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportCostInfo on PublicTransportCostInfo {
+  _CPublicTransportCostInfo _copyFromDartTo_CPublicTransportCostInfo() {
+    final res = _CPublicTransportCostInfoMakeDefault();
+    res.value = this.value;
+    res.fraction = this.fraction;
+    res.exponent = this.exponent;
+    res.currencyCode = this.currencyCode._copyFromDartTo_CString();
+    return res;
+  }
+}
+extension _CPublicTransportCostInfoRelease on _CPublicTransportCostInfo {
+  void _releaseIntermediate() {
+    currencyCode._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportCostInfo? <-> _COptional_CPublicTransportCostInfo
+
+final class _COptional_CPublicTransportCostInfo extends ffi.Struct {
+  
+  external _CPublicTransportCostInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CPublicTransportCostInfoBasicFunctions on _COptional_CPublicTransportCostInfo {
+  void _releaseIntermediate() {
+    _COptional_CPublicTransportCostInfo_release(this);
+  }
+}
+
+extension _COptional_CPublicTransportCostInfoToDart on _COptional_CPublicTransportCostInfo {
+  PublicTransportCostInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CPublicTransportCostInfo on PublicTransportCostInfo? {
+  _COptional_CPublicTransportCostInfo _copyFromDartTo_COptional_CPublicTransportCostInfo() {
+    final cOptional = _COptional_CPublicTransportCostInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CPublicTransportCostInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - TraversalType
+
+/** Направление движения для кольцевых линий транспорта (например, МЦК). */
+enum TraversalType {
+  /** По часовой. */
+  clockwise(0),
+  /** Против часовой. */
+  counterClockwise(1),
+  ;
+
+  const TraversalType(this.rawValue);
+  final int rawValue;
+
+  static TraversalType getByValue(int value) {
+    return TraversalType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CTraversalType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CTraversalTypeBasicFunctions on _CTraversalType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CTraversalTypeToDart on _CTraversalType {
+  TraversalType _toDart() {
+    return TraversalType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CTraversalType on TraversalType {
+  _CTraversalType _copyFromDartTo_CTraversalType() {
+    return _CTraversalTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - TraversalType? <-> _COptional_CTraversalType
+
+final class _COptional_CTraversalType extends ffi.Struct {
+  
+  external _CTraversalType value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTraversalTypeBasicFunctions on _COptional_CTraversalType {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CTraversalTypeToDart on _COptional_CTraversalType {
+  TraversalType? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTraversalType on TraversalType? {
+  _COptional_CTraversalType _copyFromDartTo_COptional_CTraversalType() {
+    final cOptional = _COptional_CTraversalTypeMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTraversalType();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - PublicTransportRouteInfo
+
+/** Описание маршрута общественного транспорта. */
+class PublicTransportRouteInfo {
+  /** Имя маршрута. */
+  final String name;
+  /** Название направления (если есть). */
+  final String directionName;
+  /** Название конечной остановки (если известно). */
+  final String lastPlatformName;
+  /** Информация о стоимости проезда (если известна). */
+  final PublicTransportCostInfo? costInfo;
+  /** Информация о направлении движения (если известна). */
+  final TraversalType? traversalType;
+
+  const PublicTransportRouteInfo({
+    required this.name,
+    required this.directionName,
+    required this.lastPlatformName,
+    required this.costInfo,
+    required this.traversalType
+  });
+
+  PublicTransportRouteInfo copyWith({
+    String? name,
+    String? directionName,
+    String? lastPlatformName,
+    Optional<PublicTransportCostInfo?>? costInfo,
+    Optional<TraversalType?>? traversalType
+  }) {
+    return PublicTransportRouteInfo(
+      name: name ?? this.name,
+      directionName: directionName ?? this.directionName,
+      lastPlatformName: lastPlatformName ?? this.lastPlatformName,
+      costInfo: costInfo != null ? costInfo.value : this.costInfo,
+      traversalType: traversalType != null ? traversalType.value : this.traversalType
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is PublicTransportRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.name == name &&
+    other.directionName == directionName &&
+    other.lastPlatformName == lastPlatformName &&
+    other.costInfo == costInfo &&
+    other.traversalType == traversalType;
+
+  @override
+  int get hashCode {
+    return Object.hash(name, directionName, lastPlatformName, costInfo, traversalType);
+  }
+
+}
+final class _CPublicTransportRouteInfo extends ffi.Struct {
+  external _CString name;
+
+  external _CString directionName;
+
+  external _CString lastPlatformName;
+
+  external _COptional_CPublicTransportCostInfo costInfo;
+
+  external _COptional_CTraversalType traversalType;
+
+}
+// MARK: - PublicTransportRouteInfo <-> _CPublicTransportRouteInfo
+
+extension _CPublicTransportRouteInfoToDart on _CPublicTransportRouteInfo {
+  PublicTransportRouteInfo _toDart() {
+    return PublicTransportRouteInfo(
+      name: this.name._toDart(),
+      directionName: this.directionName._toDart(),
+      lastPlatformName: this.lastPlatformName._toDart(),
+      costInfo: this.costInfo._toDart(),
+      traversalType: this.traversalType._toDart()
+    );
+  }
+}
+
+extension _DartTo_CPublicTransportRouteInfo on PublicTransportRouteInfo {
+  _CPublicTransportRouteInfo _copyFromDartTo_CPublicTransportRouteInfo() {
+    final res = _CPublicTransportRouteInfoMakeDefault();
+    res.name = this.name._copyFromDartTo_CString();
+    res.directionName = this.directionName._copyFromDartTo_CString();
+    res.lastPlatformName = this.lastPlatformName._copyFromDartTo_CString();
+    res.costInfo = this.costInfo._copyFromDartTo_COptional_CPublicTransportCostInfo();
+    res.traversalType = this.traversalType._copyFromDartTo_COptional_CTraversalType();
+    return res;
+  }
+}
+extension _CPublicTransportRouteInfoRelease on _CPublicTransportRouteInfo {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    directionName._releaseIntermediate();
+    lastPlatformName._releaseIntermediate();
+    costInfo._releaseIntermediate();
   }
 }
 
@@ -51955,10 +54201,12 @@ extension _DartToCTrafficSpeedColorRouteLongAttribute on TrafficSpeedColorRouteL
 
 enum TrafficSpeedColor {
   undefined(0),
-  green(1),
-  yellow(2),
-  red(3),
-  deepRed(4),
+  deepGreen(1),
+  green(2),
+  yellow(3),
+  orange(4),
+  red(5),
+  deepRed(6),
   ;
 
   const TrafficSpeedColor(this.rawValue);
@@ -52187,74 +54435,6 @@ extension _CArray_CRouteTollPaymentInfoBasicFunctions on _CArray_CRouteTollPayme
   }
 }
 	
-// MARK: - RouteTollPaymentInfo
-
-/** Информация о стоимости проезда по платному участку маршрута. */
-class RouteTollPaymentInfo {
-  /** Трёхбуквенный код валюты, в которой указана стоимость проезда, согласно ISO 4217. */
-  final String currencyCode;
-  /** Стоимость проезда по платному участку маршрута. */
-  final double cost;
-
-  const RouteTollPaymentInfo({
-    required this.currencyCode,
-    this.cost = 0
-  });
-
-  RouteTollPaymentInfo copyWith({
-    String? currencyCode,
-    double? cost
-  }) {
-    return RouteTollPaymentInfo(
-      currencyCode: currencyCode ?? this.currencyCode,
-      cost: cost ?? this.cost
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RouteTollPaymentInfo &&
-    other.runtimeType == runtimeType &&
-    other.currencyCode == currencyCode &&
-    other.cost == cost;
-
-  @override
-  int get hashCode {
-    return Object.hash(currencyCode, cost);
-  }
-
-}
-final class _CRouteTollPaymentInfo extends ffi.Struct {
-  external _CString currencyCode;
-
-  @ffi.Float()
-  external double cost;
-
-}
-// MARK: - RouteTollPaymentInfo <-> _CRouteTollPaymentInfo
-
-extension _CRouteTollPaymentInfoToDart on _CRouteTollPaymentInfo {
-  RouteTollPaymentInfo _toDart() {
-    return RouteTollPaymentInfo(
-      currencyCode: this.currencyCode._toDart(),
-      cost: this.cost
-    );
-  }
-}
-
-extension _DartTo_CRouteTollPaymentInfo on RouteTollPaymentInfo {
-  _CRouteTollPaymentInfo _copyFromDartTo_CRouteTollPaymentInfo() {
-    final res = _CRouteTollPaymentInfoMakeDefault();
-    res.currencyCode = this.currencyCode._copyFromDartTo_CString();
-    res.cost = this.cost;
-    return res;
-  }
-}
-extension _CRouteTollPaymentInfoRelease on _CRouteTollPaymentInfo {
-  void _releaseIntermediate() {
-    currencyCode._releaseIntermediate();
-  }
-}
-
 // MARK: - State
 
 /** Состояние навигатора. */
@@ -52530,6 +54710,8 @@ class BicycleRouteSearchOptions {
   final bool avoidStairways;
   /** Избегать подземных и надземных переходов. */
   final bool avoidUnderpassesAndOverpasses;
+  /** Избегать грунтовых дорог. */
+  final bool avoidUnpavedRoads;
   /** Исключаемые области (не больше 25). */
   final List<ExcludedArea> excludedAreas;
 
@@ -52537,6 +54719,7 @@ class BicycleRouteSearchOptions {
     this.avoidCarRoads = false,
     this.avoidStairways = false,
     this.avoidUnderpassesAndOverpasses = false,
+    this.avoidUnpavedRoads = false,
     this.excludedAreas = const []
   });
 
@@ -52544,12 +54727,14 @@ class BicycleRouteSearchOptions {
     bool? avoidCarRoads,
     bool? avoidStairways,
     bool? avoidUnderpassesAndOverpasses,
+    bool? avoidUnpavedRoads,
     List<ExcludedArea>? excludedAreas
   }) {
     return BicycleRouteSearchOptions(
       avoidCarRoads: avoidCarRoads ?? this.avoidCarRoads,
       avoidStairways: avoidStairways ?? this.avoidStairways,
       avoidUnderpassesAndOverpasses: avoidUnderpassesAndOverpasses ?? this.avoidUnderpassesAndOverpasses,
+      avoidUnpavedRoads: avoidUnpavedRoads ?? this.avoidUnpavedRoads,
       excludedAreas: excludedAreas ?? this.excludedAreas
     );
   }
@@ -52560,11 +54745,12 @@ class BicycleRouteSearchOptions {
     other.avoidCarRoads == avoidCarRoads &&
     other.avoidStairways == avoidStairways &&
     other.avoidUnderpassesAndOverpasses == avoidUnderpassesAndOverpasses &&
+    other.avoidUnpavedRoads == avoidUnpavedRoads &&
     other.excludedAreas == excludedAreas;
 
   @override
   int get hashCode {
-    return Object.hash(avoidCarRoads, avoidStairways, avoidUnderpassesAndOverpasses, excludedAreas);
+    return Object.hash(avoidCarRoads, avoidStairways, avoidUnderpassesAndOverpasses, avoidUnpavedRoads, excludedAreas);
   }
 
 }
@@ -52578,6 +54764,9 @@ final class _CBicycleRouteSearchOptions extends ffi.Struct {
   @ffi.Bool()
   external bool avoidUnderpassesAndOverpasses;
 
+  @ffi.Bool()
+  external bool avoidUnpavedRoads;
+
   external _CArray_CExcludedArea excludedAreas;
 
 }
@@ -52589,6 +54778,7 @@ extension _CBicycleRouteSearchOptionsToDart on _CBicycleRouteSearchOptions {
       avoidCarRoads: this.avoidCarRoads,
       avoidStairways: this.avoidStairways,
       avoidUnderpassesAndOverpasses: this.avoidUnderpassesAndOverpasses,
+      avoidUnpavedRoads: this.avoidUnpavedRoads,
       excludedAreas: this.excludedAreas._toDart()
     );
   }
@@ -52600,6 +54790,7 @@ extension _DartTo_CBicycleRouteSearchOptions on BicycleRouteSearchOptions {
     res.avoidCarRoads = this.avoidCarRoads;
     res.avoidStairways = this.avoidStairways;
     res.avoidUnderpassesAndOverpasses = this.avoidUnderpassesAndOverpasses;
+    res.avoidUnpavedRoads = this.avoidUnpavedRoads;
     res.excludedAreas = this.excludedAreas._copyFromDartTo_CArray_CExcludedArea();
     return res;
   }
@@ -52769,6 +54960,122 @@ extension _CCarRouteSearchOptionsRelease on _CCarRouteSearchOptions {
   }
 }
 
+// MARK: - MotorcycleRouteSearchOptions
+
+/** Параметры поиска маршрута на мотоцикле. */
+class MotorcycleRouteSearchOptions {
+  /** Избегать платных дорог. */
+  final bool avoidTollRoads;
+  /** Избегать грунтовых дорог. */
+  final bool avoidUnpavedRoads;
+  /** Избегать паромных переправ. */
+  final bool avoidFerries;
+  /**
+   Избегать закрытых для проезда дорог.
+   При значении true поиск маршрута не будет учитывать перекрытые для проезда участки дорог.
+   При значении false маршрут может быть проложен через перекрытые для проезда участки дорог, если невозможно
+   построить маршрут без проезда через перекрытые участки.
+  */
+  final bool avoidLockedRoads;
+  /** Тип поиска маршрута. */
+  final RouteSearchType routeSearchType;
+  /** Исключаемые области (не больше 25). */
+  final List<ExcludedArea> excludedAreas;
+
+  const MotorcycleRouteSearchOptions({
+    this.avoidTollRoads = false,
+    this.avoidUnpavedRoads = false,
+    this.avoidFerries = false,
+    this.avoidLockedRoads = true,
+    this.routeSearchType = RouteSearchType.jam,
+    this.excludedAreas = const []
+  });
+
+  MotorcycleRouteSearchOptions copyWith({
+    bool? avoidTollRoads,
+    bool? avoidUnpavedRoads,
+    bool? avoidFerries,
+    bool? avoidLockedRoads,
+    RouteSearchType? routeSearchType,
+    List<ExcludedArea>? excludedAreas
+  }) {
+    return MotorcycleRouteSearchOptions(
+      avoidTollRoads: avoidTollRoads ?? this.avoidTollRoads,
+      avoidUnpavedRoads: avoidUnpavedRoads ?? this.avoidUnpavedRoads,
+      avoidFerries: avoidFerries ?? this.avoidFerries,
+      avoidLockedRoads: avoidLockedRoads ?? this.avoidLockedRoads,
+      routeSearchType: routeSearchType ?? this.routeSearchType,
+      excludedAreas: excludedAreas ?? this.excludedAreas
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MotorcycleRouteSearchOptions &&
+    other.runtimeType == runtimeType &&
+    other.avoidTollRoads == avoidTollRoads &&
+    other.avoidUnpavedRoads == avoidUnpavedRoads &&
+    other.avoidFerries == avoidFerries &&
+    other.avoidLockedRoads == avoidLockedRoads &&
+    other.routeSearchType == routeSearchType &&
+    other.excludedAreas == excludedAreas;
+
+  @override
+  int get hashCode {
+    return Object.hash(avoidTollRoads, avoidUnpavedRoads, avoidFerries, avoidLockedRoads, routeSearchType, excludedAreas);
+  }
+
+}
+final class _CMotorcycleRouteSearchOptions extends ffi.Struct {
+  @ffi.Bool()
+  external bool avoidTollRoads;
+
+  @ffi.Bool()
+  external bool avoidUnpavedRoads;
+
+  @ffi.Bool()
+  external bool avoidFerries;
+
+  @ffi.Bool()
+  external bool avoidLockedRoads;
+
+  external _CRouteSearchType routeSearchType;
+
+  external _CArray_CExcludedArea excludedAreas;
+
+}
+// MARK: - MotorcycleRouteSearchOptions <-> _CMotorcycleRouteSearchOptions
+
+extension _CMotorcycleRouteSearchOptionsToDart on _CMotorcycleRouteSearchOptions {
+  MotorcycleRouteSearchOptions _toDart() {
+    return MotorcycleRouteSearchOptions(
+      avoidTollRoads: this.avoidTollRoads,
+      avoidUnpavedRoads: this.avoidUnpavedRoads,
+      avoidFerries: this.avoidFerries,
+      avoidLockedRoads: this.avoidLockedRoads,
+      routeSearchType: this.routeSearchType._toDart(),
+      excludedAreas: this.excludedAreas._toDart()
+    );
+  }
+}
+
+extension _DartTo_CMotorcycleRouteSearchOptions on MotorcycleRouteSearchOptions {
+  _CMotorcycleRouteSearchOptions _copyFromDartTo_CMotorcycleRouteSearchOptions() {
+    final res = _CMotorcycleRouteSearchOptionsMakeDefault();
+    res.avoidTollRoads = this.avoidTollRoads;
+    res.avoidUnpavedRoads = this.avoidUnpavedRoads;
+    res.avoidFerries = this.avoidFerries;
+    res.avoidLockedRoads = this.avoidLockedRoads;
+    res.routeSearchType = this.routeSearchType._copyFromDartTo_CRouteSearchType();
+    res.excludedAreas = this.excludedAreas._copyFromDartTo_CArray_CExcludedArea();
+    return res;
+  }
+}
+extension _CMotorcycleRouteSearchOptionsRelease on _CMotorcycleRouteSearchOptions {
+  void _releaseIntermediate() {
+    excludedAreas._releaseIntermediate();
+  }
+}
+
 // MARK: - PedestrianRouteSearchOptions
 
 /** Параметры поиска пешеходного маршрута. */
@@ -52779,6 +55086,8 @@ class PedestrianRouteSearchOptions {
   final bool avoidUnderpassesAndOverpasses;
   /** Строить маршруты внутри зданий. */
   final bool useIndoor;
+  /** Избегать грунтовых дорог. */
+  final bool avoidUnpavedRoads;
   /** Исключаемые области (не больше 25). */
   final List<ExcludedArea> excludedAreas;
 
@@ -52786,6 +55095,7 @@ class PedestrianRouteSearchOptions {
     this.avoidStairways = false,
     this.avoidUnderpassesAndOverpasses = false,
     this.useIndoor = true,
+    this.avoidUnpavedRoads = false,
     this.excludedAreas = const []
   });
 
@@ -52793,12 +55103,14 @@ class PedestrianRouteSearchOptions {
     bool? avoidStairways,
     bool? avoidUnderpassesAndOverpasses,
     bool? useIndoor,
+    bool? avoidUnpavedRoads,
     List<ExcludedArea>? excludedAreas
   }) {
     return PedestrianRouteSearchOptions(
       avoidStairways: avoidStairways ?? this.avoidStairways,
       avoidUnderpassesAndOverpasses: avoidUnderpassesAndOverpasses ?? this.avoidUnderpassesAndOverpasses,
       useIndoor: useIndoor ?? this.useIndoor,
+      avoidUnpavedRoads: avoidUnpavedRoads ?? this.avoidUnpavedRoads,
       excludedAreas: excludedAreas ?? this.excludedAreas
     );
   }
@@ -52809,11 +55121,12 @@ class PedestrianRouteSearchOptions {
     other.avoidStairways == avoidStairways &&
     other.avoidUnderpassesAndOverpasses == avoidUnderpassesAndOverpasses &&
     other.useIndoor == useIndoor &&
+    other.avoidUnpavedRoads == avoidUnpavedRoads &&
     other.excludedAreas == excludedAreas;
 
   @override
   int get hashCode {
-    return Object.hash(avoidStairways, avoidUnderpassesAndOverpasses, useIndoor, excludedAreas);
+    return Object.hash(avoidStairways, avoidUnderpassesAndOverpasses, useIndoor, avoidUnpavedRoads, excludedAreas);
   }
 
 }
@@ -52827,6 +55140,9 @@ final class _CPedestrianRouteSearchOptions extends ffi.Struct {
   @ffi.Bool()
   external bool useIndoor;
 
+  @ffi.Bool()
+  external bool avoidUnpavedRoads;
+
   external _CArray_CExcludedArea excludedAreas;
 
 }
@@ -52838,6 +55154,7 @@ extension _CPedestrianRouteSearchOptionsToDart on _CPedestrianRouteSearchOptions
       avoidStairways: this.avoidStairways,
       avoidUnderpassesAndOverpasses: this.avoidUnderpassesAndOverpasses,
       useIndoor: this.useIndoor,
+      avoidUnpavedRoads: this.avoidUnpavedRoads,
       excludedAreas: this.excludedAreas._toDart()
     );
   }
@@ -52849,6 +55166,7 @@ extension _DartTo_CPedestrianRouteSearchOptions on PedestrianRouteSearchOptions 
     res.avoidStairways = this.avoidStairways;
     res.avoidUnderpassesAndOverpasses = this.avoidUnderpassesAndOverpasses;
     res.useIndoor = this.useIndoor;
+    res.avoidUnpavedRoads = this.avoidUnpavedRoads;
     res.excludedAreas = this.excludedAreas._copyFromDartTo_CArray_CExcludedArea();
     return res;
   }
@@ -52859,27 +55177,23 @@ extension _CPedestrianRouteSearchOptionsRelease on _CPedestrianRouteSearchOption
   }
 }
 
-// MARK: - PublicTransportTypeEnumSet
+// MARK: - EnumSet<PublicTransportType>
 
 class PublicTransportTypeEnumSet extends EnumSet<PublicTransportType> {
-  PublicTransportTypeEnumSet() : super();
+  const PublicTransportTypeEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory PublicTransportTypeEnumSet.fromRawValue(int rawValue) {
-    PublicTransportTypeEnumSet enumSet = PublicTransportTypeEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return PublicTransportTypeEnumSet(rawValue);
   }
 
   factory PublicTransportTypeEnumSet.of(Iterable<PublicTransportType> elements) {
-    PublicTransportTypeEnumSet enumSet = PublicTransportTypeEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return PublicTransportTypeEnumSet(rawValue);
   }
 
   factory PublicTransportTypeEnumSet.all() {
-    PublicTransportTypeEnumSet enumSet = PublicTransportTypeEnumSet();
-    enumSet.addAll(PublicTransportType.values);
-    return enumSet;
+    final rawValue = PublicTransportType.values.fold(0, (acc, type) => acc | type.rawValue);
+    return PublicTransportTypeEnumSet(rawValue);
   }
 
   @override
@@ -52889,32 +55203,6 @@ class PublicTransportTypeEnumSet extends EnumSet<PublicTransportType> {
   @override
   bool containsAllFromEnumSet(EnumSet<PublicTransportType> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(PublicTransportType value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<PublicTransportType> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(PublicTransportType value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<PublicTransportType> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<PublicTransportType> intersection(EnumSet<PublicTransportType> other) =>
@@ -52927,6 +55215,10 @@ class PublicTransportTypeEnumSet extends EnumSet<PublicTransportType> {
   @override
   EnumSet<PublicTransportType> difference(EnumSet<PublicTransportType> other) =>
       PublicTransportTypeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<PublicTransportType> toMutableEnumSet() =>
+      MutablePublicTransportTypeEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<PublicTransportType> toSet() {
@@ -52952,6 +55244,102 @@ class PublicTransportTypeEnumSet extends EnumSet<PublicTransportType> {
   }
 }
 
+class MutablePublicTransportTypeEnumSet extends MutableEnumSet<PublicTransportType> {
+  MutablePublicTransportTypeEnumSet() : super();
+
+  factory MutablePublicTransportTypeEnumSet.fromRawValue(int rawValue) {
+    MutablePublicTransportTypeEnumSet enumSet = MutablePublicTransportTypeEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutablePublicTransportTypeEnumSet.of(Iterable<PublicTransportType> elements) {
+    MutablePublicTransportTypeEnumSet enumSet = MutablePublicTransportTypeEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutablePublicTransportTypeEnumSet.all() {
+    MutablePublicTransportTypeEnumSet enumSet = MutablePublicTransportTypeEnumSet();
+    enumSet.addAll(PublicTransportType.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(PublicTransportType value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<PublicTransportType> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<PublicTransportType> intersection(MutableEnumSet<PublicTransportType> other) =>
+      MutablePublicTransportTypeEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<PublicTransportType> union(MutableEnumSet<PublicTransportType> other) =>
+      MutablePublicTransportTypeEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<PublicTransportType> difference(MutableEnumSet<PublicTransportType> other) =>
+      MutablePublicTransportTypeEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<PublicTransportType> toEnumSet() =>
+      PublicTransportTypeEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<PublicTransportType> toSet() {
+    Set<PublicTransportType> result = {};
+    PublicTransportType.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(PublicTransportType value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<PublicTransportType> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(PublicTransportType value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<PublicTransportType> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    PublicTransportType.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CPublicTransportType extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -52963,12 +55351,12 @@ extension _COptionSet_CPublicTransportTypeBasicFunctions on _COptionSet_CPublicT
 }
 
 extension _COptionSet_CPublicTransportTypeToDart on _COptionSet_CPublicTransportType {
-  PublicTransportTypeEnumSet _toDart() {
+  EnumSet<PublicTransportType> _toDart() {
     return PublicTransportTypeEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CPublicTransportType on PublicTransportTypeEnumSet {
+extension _DartTo_COptionSet_CPublicTransportType on EnumSet<PublicTransportType> {
   _COptionSet_CPublicTransportType _copyFromDartTo_COptionSet_CPublicTransportType() {
     return _COptionSet_CPublicTransportTypeMakeDefault().._rawValue = this.rawValue;
   }
@@ -52986,18 +55374,18 @@ class PublicTransportRouteSearchOptions {
    Типы общественного транспорта. Если не заполнены, маршруты будут строиться для всех поддерживаемых типов
    общественного транспорта.
   */
-  final PublicTransportTypeEnumSet transportTypes;
+  final EnumSet<PublicTransportType> transportTypes;
 
   const PublicTransportRouteSearchOptions({
     this.startTime = null,
     this.useSchedule = false,
-    required this.transportTypes
+    this.transportTypes = const PublicTransportTypeEnumSet()
   });
 
   PublicTransportRouteSearchOptions copyWith({
     Optional<DateTime?>? startTime,
     bool? useSchedule,
-    PublicTransportTypeEnumSet? transportTypes
+    EnumSet<PublicTransportType>? transportTypes
   }) {
     return PublicTransportRouteSearchOptions(
       startTime: startTime != null ? startTime.value : this.startTime,
@@ -53064,6 +55452,8 @@ class ScooterRouteSearchOptions {
   final bool avoidStairways;
   /** Избегать подземных и надземных переходов. */
   final bool avoidUnderpassesAndOverpasses;
+  /** Избегать грунтовых дорог. */
+  final bool avoidUnpavedRoads;
   /** Исключаемые области (не больше 25). */
   final List<ExcludedArea> excludedAreas;
 
@@ -53071,6 +55461,7 @@ class ScooterRouteSearchOptions {
     this.avoidCarRoads = true,
     this.avoidStairways = true,
     this.avoidUnderpassesAndOverpasses = true,
+    this.avoidUnpavedRoads = true,
     this.excludedAreas = const []
   });
 
@@ -53078,12 +55469,14 @@ class ScooterRouteSearchOptions {
     bool? avoidCarRoads,
     bool? avoidStairways,
     bool? avoidUnderpassesAndOverpasses,
+    bool? avoidUnpavedRoads,
     List<ExcludedArea>? excludedAreas
   }) {
     return ScooterRouteSearchOptions(
       avoidCarRoads: avoidCarRoads ?? this.avoidCarRoads,
       avoidStairways: avoidStairways ?? this.avoidStairways,
       avoidUnderpassesAndOverpasses: avoidUnderpassesAndOverpasses ?? this.avoidUnderpassesAndOverpasses,
+      avoidUnpavedRoads: avoidUnpavedRoads ?? this.avoidUnpavedRoads,
       excludedAreas: excludedAreas ?? this.excludedAreas
     );
   }
@@ -53094,11 +55487,12 @@ class ScooterRouteSearchOptions {
     other.avoidCarRoads == avoidCarRoads &&
     other.avoidStairways == avoidStairways &&
     other.avoidUnderpassesAndOverpasses == avoidUnderpassesAndOverpasses &&
+    other.avoidUnpavedRoads == avoidUnpavedRoads &&
     other.excludedAreas == excludedAreas;
 
   @override
   int get hashCode {
-    return Object.hash(avoidCarRoads, avoidStairways, avoidUnderpassesAndOverpasses, excludedAreas);
+    return Object.hash(avoidCarRoads, avoidStairways, avoidUnderpassesAndOverpasses, avoidUnpavedRoads, excludedAreas);
   }
 
 }
@@ -53112,6 +55506,9 @@ final class _CScooterRouteSearchOptions extends ffi.Struct {
   @ffi.Bool()
   external bool avoidUnderpassesAndOverpasses;
 
+  @ffi.Bool()
+  external bool avoidUnpavedRoads;
+
   external _CArray_CExcludedArea excludedAreas;
 
 }
@@ -53123,6 +55520,7 @@ extension _CScooterRouteSearchOptionsToDart on _CScooterRouteSearchOptions {
       avoidCarRoads: this.avoidCarRoads,
       avoidStairways: this.avoidStairways,
       avoidUnderpassesAndOverpasses: this.avoidUnderpassesAndOverpasses,
+      avoidUnpavedRoads: this.avoidUnpavedRoads,
       excludedAreas: this.excludedAreas._toDart()
     );
   }
@@ -53134,6 +55532,7 @@ extension _DartTo_CScooterRouteSearchOptions on ScooterRouteSearchOptions {
     res.avoidCarRoads = this.avoidCarRoads;
     res.avoidStairways = this.avoidStairways;
     res.avoidUnderpassesAndOverpasses = this.avoidUnderpassesAndOverpasses;
+    res.avoidUnpavedRoads = this.avoidUnpavedRoads;
     res.excludedAreas = this.excludedAreas._copyFromDartTo_CArray_CExcludedArea();
     return res;
   }
@@ -53420,11 +55819,12 @@ final class RouteSearchOptions {
 
   RouteSearchOptions.bicycle(BicycleRouteSearchOptions value) : this._raw(value, 0);
   RouteSearchOptions.car(CarRouteSearchOptions value) : this._raw(value, 1);
-  RouteSearchOptions.pedestrian(PedestrianRouteSearchOptions value) : this._raw(value, 2);
-  RouteSearchOptions.publicTransport(PublicTransportRouteSearchOptions value) : this._raw(value, 3);
-  RouteSearchOptions.scooter(ScooterRouteSearchOptions value) : this._raw(value, 4);
-  RouteSearchOptions.taxi(TaxiRouteSearchOptions value) : this._raw(value, 5);
-  RouteSearchOptions.truck(TruckRouteSearchOptions value) : this._raw(value, 6);
+  RouteSearchOptions.motorcycle(MotorcycleRouteSearchOptions value) : this._raw(value, 2);
+  RouteSearchOptions.pedestrian(PedestrianRouteSearchOptions value) : this._raw(value, 3);
+  RouteSearchOptions.publicTransport(PublicTransportRouteSearchOptions value) : this._raw(value, 4);
+  RouteSearchOptions.scooter(ScooterRouteSearchOptions value) : this._raw(value, 5);
+  RouteSearchOptions.taxi(TaxiRouteSearchOptions value) : this._raw(value, 6);
+  RouteSearchOptions.truck(TruckRouteSearchOptions value) : this._raw(value, 7);
 
   bool get isBicycle => this._index == 0;
   BicycleRouteSearchOptions? get asBicycle => this.isBicycle ? this._value as BicycleRouteSearchOptions : null;
@@ -53432,24 +55832,28 @@ final class RouteSearchOptions {
   bool get isCar => this._index == 1;
   CarRouteSearchOptions? get asCar => this.isCar ? this._value as CarRouteSearchOptions : null;
 
-  bool get isPedestrian => this._index == 2;
+  bool get isMotorcycle => this._index == 2;
+  MotorcycleRouteSearchOptions? get asMotorcycle => this.isMotorcycle ? this._value as MotorcycleRouteSearchOptions : null;
+
+  bool get isPedestrian => this._index == 3;
   PedestrianRouteSearchOptions? get asPedestrian => this.isPedestrian ? this._value as PedestrianRouteSearchOptions : null;
 
-  bool get isPublicTransport => this._index == 3;
+  bool get isPublicTransport => this._index == 4;
   PublicTransportRouteSearchOptions? get asPublicTransport => this.isPublicTransport ? this._value as PublicTransportRouteSearchOptions : null;
 
-  bool get isScooter => this._index == 4;
+  bool get isScooter => this._index == 5;
   ScooterRouteSearchOptions? get asScooter => this.isScooter ? this._value as ScooterRouteSearchOptions : null;
 
-  bool get isTaxi => this._index == 5;
+  bool get isTaxi => this._index == 6;
   TaxiRouteSearchOptions? get asTaxi => this.isTaxi ? this._value as TaxiRouteSearchOptions : null;
 
-  bool get isTruck => this._index == 6;
+  bool get isTruck => this._index == 7;
   TruckRouteSearchOptions? get asTruck => this.isTruck ? this._value as TruckRouteSearchOptions : null;
 
   T match<T>({
     required T Function(BicycleRouteSearchOptions value) bicycle,
     required T Function(CarRouteSearchOptions value) car,
+    required T Function(MotorcycleRouteSearchOptions value) motorcycle,
     required T Function(PedestrianRouteSearchOptions value) pedestrian,
     required T Function(PublicTransportRouteSearchOptions value) publicTransport,
     required T Function(ScooterRouteSearchOptions value) scooter,
@@ -53459,11 +55863,12 @@ final class RouteSearchOptions {
     return switch (this._index) {
       0 => bicycle(this._value as BicycleRouteSearchOptions),
       1 => car(this._value as CarRouteSearchOptions),
-      2 => pedestrian(this._value as PedestrianRouteSearchOptions),
-      3 => publicTransport(this._value as PublicTransportRouteSearchOptions),
-      4 => scooter(this._value as ScooterRouteSearchOptions),
-      5 => taxi(this._value as TaxiRouteSearchOptions),
-      6 => truck(this._value as TruckRouteSearchOptions),
+      2 => motorcycle(this._value as MotorcycleRouteSearchOptions),
+      3 => pedestrian(this._value as PedestrianRouteSearchOptions),
+      4 => publicTransport(this._value as PublicTransportRouteSearchOptions),
+      5 => scooter(this._value as ScooterRouteSearchOptions),
+      6 => taxi(this._value as TaxiRouteSearchOptions),
+      7 => truck(this._value as TruckRouteSearchOptions),
       _ => throw NativeException("Unrecognized case index ${this._index}")
     };
   }
@@ -53484,6 +55889,7 @@ final class RouteSearchOptions {
 final class _CRouteSearchOptionsImpl extends ffi.Union {
   external _CBicycleRouteSearchOptions _bicycle;
   external _CCarRouteSearchOptions _car;
+  external _CMotorcycleRouteSearchOptions _motorcycle;
   external _CPedestrianRouteSearchOptions _pedestrian;
   external _CPublicTransportRouteSearchOptions _publicTransport;
   external _CScooterRouteSearchOptions _scooter;
@@ -53510,11 +55916,12 @@ extension _CRouteSearchOptionsToDart on _CRouteSearchOptions {
     return switch (this._index) {
       0 => RouteSearchOptions.bicycle(this._impl._bicycle._toDart()),
       1 => RouteSearchOptions.car(this._impl._car._toDart()),
-      2 => RouteSearchOptions.pedestrian(this._impl._pedestrian._toDart()),
-      3 => RouteSearchOptions.publicTransport(this._impl._publicTransport._toDart()),
-      4 => RouteSearchOptions.scooter(this._impl._scooter._toDart()),
-      5 => RouteSearchOptions.taxi(this._impl._taxi._toDart()),
-      6 => RouteSearchOptions.truck(this._impl._truck._toDart()),
+      2 => RouteSearchOptions.motorcycle(this._impl._motorcycle._toDart()),
+      3 => RouteSearchOptions.pedestrian(this._impl._pedestrian._toDart()),
+      4 => RouteSearchOptions.publicTransport(this._impl._publicTransport._toDart()),
+      5 => RouteSearchOptions.scooter(this._impl._scooter._toDart()),
+      6 => RouteSearchOptions.taxi(this._impl._taxi._toDart()),
+      7 => RouteSearchOptions.truck(this._impl._truck._toDart()),
       _ => throw NativeException("Unrecognized case index ${this._index}")
     };
   }
@@ -53532,25 +55939,29 @@ extension _DartTo_CRouteSearchOptions on RouteSearchOptions {
         res._impl._car = value._copyFromDartTo_CCarRouteSearchOptions();
         res._index = 1;
       },
+      motorcycle: (MotorcycleRouteSearchOptions value) {
+        res._impl._motorcycle = value._copyFromDartTo_CMotorcycleRouteSearchOptions();
+        res._index = 2;
+      },
       pedestrian: (PedestrianRouteSearchOptions value) {
         res._impl._pedestrian = value._copyFromDartTo_CPedestrianRouteSearchOptions();
-        res._index = 2;
+        res._index = 3;
       },
       publicTransport: (PublicTransportRouteSearchOptions value) {
         res._impl._publicTransport = value._copyFromDartTo_CPublicTransportRouteSearchOptions();
-        res._index = 3;
+        res._index = 4;
       },
       scooter: (ScooterRouteSearchOptions value) {
         res._impl._scooter = value._copyFromDartTo_CScooterRouteSearchOptions();
-        res._index = 4;
+        res._index = 5;
       },
       taxi: (TaxiRouteSearchOptions value) {
         res._impl._taxi = value._copyFromDartTo_CTaxiRouteSearchOptions();
-        res._index = 5;
+        res._index = 6;
       },
       truck: (TruckRouteSearchOptions value) {
         res._impl._truck = value._copyFromDartTo_CTruckRouteSearchOptions();
-        res._index = 6;
+        res._index = 7;
       },
     );
     return res;
@@ -54994,26 +57405,35 @@ extension _CDynamicRouteInfoRelease on _CDynamicRouteInfo {
 
 // MARK: - BriefRoadEvent
 
+/** Дорожное событие. */
 class BriefRoadEvent {
+  /** Идентификатор дорожного события. */
   final int id;
+  /** Тип дорожного события. */
   final RoadEventType eventType;
-  final LaneEnumSet lanes;
+  /** Полосы дорожного события. */
+  final EnumSet<Lane> lanes;
+  /** Флаг достоверности дорожного события. */
+  final bool trustworthy;
 
   const BriefRoadEvent({
     this.id = 0,
     this.eventType = RoadEventType.other,
-    required this.lanes
+    required this.lanes,
+    this.trustworthy = false
   });
 
   BriefRoadEvent copyWith({
     int? id,
     RoadEventType? eventType,
-    LaneEnumSet? lanes
+    EnumSet<Lane>? lanes,
+    bool? trustworthy
   }) {
     return BriefRoadEvent(
       id: id ?? this.id,
       eventType: eventType ?? this.eventType,
-      lanes: lanes ?? this.lanes
+      lanes: lanes ?? this.lanes,
+      trustworthy: trustworthy ?? this.trustworthy
     );
   }
   @override
@@ -55022,11 +57442,12 @@ class BriefRoadEvent {
     other.runtimeType == runtimeType &&
     other.id == id &&
     other.eventType == eventType &&
-    other.lanes == lanes;
+    other.lanes == lanes &&
+    other.trustworthy == trustworthy;
 
   @override
   int get hashCode {
-    return Object.hash(id, eventType, lanes);
+    return Object.hash(id, eventType, lanes, trustworthy);
   }
 
 }
@@ -55038,6 +57459,9 @@ final class _CBriefRoadEvent extends ffi.Struct {
 
   external _COptionSet_CLane lanes;
 
+  @ffi.Bool()
+  external bool trustworthy;
+
 }
 // MARK: - BriefRoadEvent <-> _CBriefRoadEvent
 
@@ -55046,7 +57470,8 @@ extension _CBriefRoadEventToDart on _CBriefRoadEvent {
     return BriefRoadEvent(
       id: this.id,
       eventType: this.eventType._toDart(),
-      lanes: this.lanes._toDart()
+      lanes: this.lanes._toDart(),
+      trustworthy: this.trustworthy
     );
   }
 }
@@ -55057,6 +57482,7 @@ extension _DartTo_CBriefRoadEvent on BriefRoadEvent {
     res.id = this.id;
     res.eventType = this.eventType._copyFromDartTo_CRoadEventType();
     res.lanes = this.lanes._copyFromDartTo_COptionSet_CLane();
+    res.trustworthy = this.trustworthy;
     return res;
   }
 }
@@ -55841,18 +58267,18 @@ extension _CArray_CCalloutMapPositionBasicFunctions on _CArray_CCalloutMapPositi
   }
 }
 	
-// MARK: - StatefulChannel<RouteMapObjectCalloutLabelFlagEnumSet?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
+// MARK: - StatefulChannel<EnumSet<RouteMapObjectCalloutLabelFlag>?> <-> _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
 
-class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl extends StatefulChannel<RouteMapObjectCalloutLabelFlagEnumSet?> {
+class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl extends StatefulChannel<EnumSet<RouteMapObjectCalloutLabelFlag>?> {
   static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<RouteMapObjectCalloutLabelFlagEnumSet?>>{};
+  static final instanceMap = <int, StreamController<EnumSet<RouteMapObjectCalloutLabelFlag>?>>{};
 
   final _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag _channel;
 
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl(this._channel);
 
   @override
-  RouteMapObjectCalloutLabelFlagEnumSet? get value {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? get value {
     return this._channel._getter();
   }
 
@@ -55865,7 +58291,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl
   }
 
   @override
-  StreamSubscription<RouteMapObjectCalloutLabelFlagEnumSet?> listen(void onData(RouteMapObjectCalloutLabelFlagEnumSet? event)?,
+  StreamSubscription<EnumSet<RouteMapObjectCalloutLabelFlag>?> listen(void onData(EnumSet<RouteMapObjectCalloutLabelFlag>? event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     final instanceId = instanceCounter;
     instanceCounter += 1;
@@ -55873,7 +58299,7 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl
     final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
     final cancellable = cCancel._retain();
     cCancel._releaseIntermediate();
-    final streamController = new StreamController<RouteMapObjectCalloutLabelFlagEnumSet?>(
+    final streamController = new StreamController<EnumSet<RouteMapObjectCalloutLabelFlag>?>(
       onCancel: () {
         cancellable._cancel();
         instanceMap.remove(instanceId);
@@ -55902,7 +58328,7 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag_retain(this);
   }
 
-  RouteMapObjectCalloutLabelFlagEnumSet? _getter() {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? _getter() {
     final cValue = _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagGetCurrentValue(this);
     final res = cValue._toDart();
     
@@ -55916,38 +58342,34 @@ extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
 }
 
 extension _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagToDart on _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag {
-  StatefulChannel<RouteMapObjectCalloutLabelFlagEnumSet?> _toDart() {
+  StatefulChannel<EnumSet<RouteMapObjectCalloutLabelFlag>?> _toDart() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl(this._retain());
   }
 }
 
-extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag on StatefulChannel<RouteMapObjectCalloutLabelFlagEnumSet?> {
+extension _DartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag on StatefulChannel<EnumSet<RouteMapObjectCalloutLabelFlag>?> {
   _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag _copyFromDartTo_CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag() {
     return _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagMakeDefault();
   }
 }
 	
-// MARK: - RouteMapObjectCalloutLabelFlagEnumSet
+// MARK: - EnumSet<RouteMapObjectCalloutLabelFlag>
 
 class RouteMapObjectCalloutLabelFlagEnumSet extends EnumSet<RouteMapObjectCalloutLabelFlag> {
-  RouteMapObjectCalloutLabelFlagEnumSet() : super();
+  const RouteMapObjectCalloutLabelFlagEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory RouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(int rawValue) {
-    RouteMapObjectCalloutLabelFlagEnumSet enumSet = RouteMapObjectCalloutLabelFlagEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return RouteMapObjectCalloutLabelFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectCalloutLabelFlagEnumSet.of(Iterable<RouteMapObjectCalloutLabelFlag> elements) {
-    RouteMapObjectCalloutLabelFlagEnumSet enumSet = RouteMapObjectCalloutLabelFlagEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return RouteMapObjectCalloutLabelFlagEnumSet(rawValue);
   }
 
   factory RouteMapObjectCalloutLabelFlagEnumSet.all() {
-    RouteMapObjectCalloutLabelFlagEnumSet enumSet = RouteMapObjectCalloutLabelFlagEnumSet();
-    enumSet.addAll(RouteMapObjectCalloutLabelFlag.values);
-    return enumSet;
+    final rawValue = RouteMapObjectCalloutLabelFlag.values.fold(0, (acc, type) => acc | type.rawValue);
+    return RouteMapObjectCalloutLabelFlagEnumSet(rawValue);
   }
 
   @override
@@ -55957,32 +58379,6 @@ class RouteMapObjectCalloutLabelFlagEnumSet extends EnumSet<RouteMapObjectCallou
   @override
   bool containsAllFromEnumSet(EnumSet<RouteMapObjectCalloutLabelFlag> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(RouteMapObjectCalloutLabelFlag value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<RouteMapObjectCalloutLabelFlag> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(RouteMapObjectCalloutLabelFlag value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<RouteMapObjectCalloutLabelFlag> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<RouteMapObjectCalloutLabelFlag> intersection(EnumSet<RouteMapObjectCalloutLabelFlag> other) =>
@@ -55995,6 +58391,10 @@ class RouteMapObjectCalloutLabelFlagEnumSet extends EnumSet<RouteMapObjectCallou
   @override
   EnumSet<RouteMapObjectCalloutLabelFlag> difference(EnumSet<RouteMapObjectCalloutLabelFlag> other) =>
       RouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectCalloutLabelFlag> toMutableEnumSet() =>
+      MutableRouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<RouteMapObjectCalloutLabelFlag> toSet() {
@@ -56020,6 +58420,102 @@ class RouteMapObjectCalloutLabelFlagEnumSet extends EnumSet<RouteMapObjectCallou
   }
 }
 
+class MutableRouteMapObjectCalloutLabelFlagEnumSet extends MutableEnumSet<RouteMapObjectCalloutLabelFlag> {
+  MutableRouteMapObjectCalloutLabelFlagEnumSet() : super();
+
+  factory MutableRouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(int rawValue) {
+    MutableRouteMapObjectCalloutLabelFlagEnumSet enumSet = MutableRouteMapObjectCalloutLabelFlagEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectCalloutLabelFlagEnumSet.of(Iterable<RouteMapObjectCalloutLabelFlag> elements) {
+    MutableRouteMapObjectCalloutLabelFlagEnumSet enumSet = MutableRouteMapObjectCalloutLabelFlagEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableRouteMapObjectCalloutLabelFlagEnumSet.all() {
+    MutableRouteMapObjectCalloutLabelFlagEnumSet enumSet = MutableRouteMapObjectCalloutLabelFlagEnumSet();
+    enumSet.addAll(RouteMapObjectCalloutLabelFlag.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(RouteMapObjectCalloutLabelFlag value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<RouteMapObjectCalloutLabelFlag> intersection(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      MutableRouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectCalloutLabelFlag> union(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      MutableRouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<RouteMapObjectCalloutLabelFlag> difference(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      MutableRouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<RouteMapObjectCalloutLabelFlag> toEnumSet() =>
+      RouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<RouteMapObjectCalloutLabelFlag> toSet() {
+    Set<RouteMapObjectCalloutLabelFlag> result = {};
+    RouteMapObjectCalloutLabelFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(RouteMapObjectCalloutLabelFlag value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(RouteMapObjectCalloutLabelFlag value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<RouteMapObjectCalloutLabelFlag> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    RouteMapObjectCalloutLabelFlag.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CRouteMapObjectCalloutLabelFlag extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -56031,18 +58527,18 @@ extension _COptionSet_CRouteMapObjectCalloutLabelFlagBasicFunctions on _COptionS
 }
 
 extension _COptionSet_CRouteMapObjectCalloutLabelFlagToDart on _COptionSet_CRouteMapObjectCalloutLabelFlag {
-  RouteMapObjectCalloutLabelFlagEnumSet _toDart() {
+  EnumSet<RouteMapObjectCalloutLabelFlag> _toDart() {
     return RouteMapObjectCalloutLabelFlagEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CRouteMapObjectCalloutLabelFlag on RouteMapObjectCalloutLabelFlagEnumSet {
+extension _DartTo_COptionSet_CRouteMapObjectCalloutLabelFlag on EnumSet<RouteMapObjectCalloutLabelFlag> {
   _COptionSet_CRouteMapObjectCalloutLabelFlag _copyFromDartTo_COptionSet_CRouteMapObjectCalloutLabelFlag() {
     return _COptionSet_CRouteMapObjectCalloutLabelFlagMakeDefault().._rawValue = this.rawValue;
   }
 }
 	
-// MARK: - RouteMapObjectCalloutLabelFlagEnumSet? <-> _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
+// MARK: - EnumSet<RouteMapObjectCalloutLabelFlag>? <-> _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag
 
 final class _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag extends ffi.Struct {
   
@@ -56058,7 +58554,7 @@ extension _COptional_COptionSet_CRouteMapObjectCalloutLabelFlagBasicFunctions on
 }
 
 extension _COptional_COptionSet_CRouteMapObjectCalloutLabelFlagToDart on _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag {
-  RouteMapObjectCalloutLabelFlagEnumSet? _toDart() {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? _toDart() {
     if (!this.hasValue) {
       return null;
     }
@@ -56066,7 +58562,7 @@ extension _COptional_COptionSet_CRouteMapObjectCalloutLabelFlagToDart on _COptio
   }
 }
 
-extension _DartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag on RouteMapObjectCalloutLabelFlagEnumSet? {
+extension _DartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag on EnumSet<RouteMapObjectCalloutLabelFlag>? {
   _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag _copyFromDartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag() {
     final cOptional = _COptional_COptionSet_CRouteMapObjectCalloutLabelFlagMakeDefault();
     if (this != null) {
@@ -56161,135 +58657,6 @@ extension _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayModeToDart on _CSt
 extension _DartTo_CStatefulChannel_CRouteMapObjectCalloutLabelDisplayMode on StatefulChannel<RouteMapObjectCalloutLabelDisplayMode> {
   _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayMode _copyFromDartTo_CStatefulChannel_CRouteMapObjectCalloutLabelDisplayMode() {
     return _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayModeMakeDefault();
-  }
-}
-	
-// MARK: - StatefulChannel<List<LanesCalloutMapPosition>> <-> _CStatefulChannel_CArray_CLanesCalloutMapPosition
-
-class _CStatefulChannel_CArray_CLanesCalloutMapPositionImpl extends StatefulChannel<List<LanesCalloutMapPosition>> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<List<LanesCalloutMapPosition>>>{};
-
-  final _CStatefulChannel_CArray_CLanesCalloutMapPosition _channel;
-
-  _CStatefulChannel_CArray_CLanesCalloutMapPositionImpl(this._channel);
-
-  @override
-  List<LanesCalloutMapPosition> get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CArray_CLanesCalloutMapPosition cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    cValue._releaseIntermediate();
-  }
-
-  @override
-  StreamSubscription<List<LanesCalloutMapPosition>> listen(void onData(List<LanesCalloutMapPosition> event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CLanesCalloutMapPosition, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<List<LanesCalloutMapPosition>>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CArray_CLanesCalloutMapPosition extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CArray_CLanesCalloutMapPositionBasicFunctions on _CStatefulChannel_CArray_CLanesCalloutMapPosition {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CArray_CLanesCalloutMapPosition_release(this);
-  }
-
-  _CStatefulChannel_CArray_CLanesCalloutMapPosition _retain() {
-    return _CStatefulChannel_CArray_CLanesCalloutMapPosition_retain(this);
-  }
-
-  List<LanesCalloutMapPosition> _getter() {
-    final cValue = _CStatefulChannel_CArray_CLanesCalloutMapPositionGetCurrentValue(this);
-    final res = cValue._toDart();
-    cValue._releaseIntermediate();
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CArray_CLanesCalloutMapPosition, ffi.Int64)> callback) {
-    return _CStatefulChannel_CArray_CLanesCalloutMapPositionConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CArray_CLanesCalloutMapPositionToDart on _CStatefulChannel_CArray_CLanesCalloutMapPosition {
-  StatefulChannel<List<LanesCalloutMapPosition>> _toDart() {
-    return _CStatefulChannel_CArray_CLanesCalloutMapPositionImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CArray_CLanesCalloutMapPosition on StatefulChannel<List<LanesCalloutMapPosition>> {
-  _CStatefulChannel_CArray_CLanesCalloutMapPosition _copyFromDartTo_CStatefulChannel_CArray_CLanesCalloutMapPosition() {
-    return _CStatefulChannel_CArray_CLanesCalloutMapPositionMakeDefault();
-  }
-}
-	
-// MARK: - List<LanesCalloutMapPosition> <-> _CArray_CLanesCalloutMapPosition
-
-final class _CArray_CLanesCalloutMapPosition extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CLanesCalloutMapPositionToDart on _CArray_CLanesCalloutMapPosition {
-  List<LanesCalloutMapPosition> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CLanesCalloutMapPosition on List<LanesCalloutMapPosition> {
-  _CArray_CLanesCalloutMapPosition _copyFromDartTo_CArray_CLanesCalloutMapPosition() {
-    final cArray = _CArray_CLanesCalloutMapPositionmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CLanesCalloutMapPosition();
-        _CArray_CLanesCalloutMapPositionaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CLanesCalloutMapPositionBasicFunctions on _CArray_CLanesCalloutMapPosition {
-  void _releaseIntermediate() {
-    _CArray_CLanesCalloutMapPosition_release(this);
-  }
-
-  static final _listToFill = <LanesCalloutMapPosition>[];
-
-  static void _iterate(_CLanesCalloutMapPosition item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<LanesCalloutMapPosition> _fillFromC() {
-    _forEach_CArray_CLanesCalloutMapPosition(this, ffi.Pointer.fromFunction<ffi.Void Function(_CLanesCalloutMapPosition)>(_iterate));
-    final result = List<LanesCalloutMapPosition>.from(_listToFill);
-    _listToFill.clear();
-    return result;
   }
 }
 	
@@ -56900,11 +59267,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги отображения активного маршрута.
    См. IRouteMapObject::display_flags.
   */
-  RouteMapObjectDisplayFlagEnumSet? get activeDisplayFlags {
+  EnumSet<RouteMapObjectDisplayFlag>? get activeDisplayFlags {
     _COptional_COptionSet_CRouteMapObjectDisplayFlag res = _CRouteEditorSource_activeDisplayFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set activeDisplayFlags(RouteMapObjectDisplayFlagEnumSet? flags) {
+  set activeDisplayFlags(EnumSet<RouteMapObjectDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag();
     void res = _CRouteEditorSource_setActiveDisplayFlags_COptional_COptionSet_CRouteMapObjectDisplayFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -56913,11 +59280,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги отображения неактивных маршрутов.
    См. IRouteMapObject::display_flags.
   */
-  RouteMapObjectDisplayFlagEnumSet? get inactiveDisplayFlags {
+  EnumSet<RouteMapObjectDisplayFlag>? get inactiveDisplayFlags {
     _COptional_COptionSet_CRouteMapObjectDisplayFlag res = _CRouteEditorSource_inactiveDisplayFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set inactiveDisplayFlags(RouteMapObjectDisplayFlagEnumSet? flags) {
+  set inactiveDisplayFlags(EnumSet<RouteMapObjectDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectDisplayFlag();
     void res = _CRouteEditorSource_setInactiveDisplayFlags_COptional_COptionSet_CRouteMapObjectDisplayFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -56926,11 +59293,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги, включающие отображение содержимого в баблах активного маршрута.
    См. IRouteMapObject::callout_label_flags.
   */
-  RouteMapObjectCalloutLabelFlagEnumSet? get activeCalloutLabelFlags {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? get activeCalloutLabelFlags {
     _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag res = _CRouteEditorSource_activeCalloutLabelFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set activeCalloutLabelFlags(RouteMapObjectCalloutLabelFlagEnumSet? flags) {
+  set activeCalloutLabelFlags(EnumSet<RouteMapObjectCalloutLabelFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag();
     void res = _CRouteEditorSource_setActiveCalloutLabelFlags_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -56939,11 +59306,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги, включающие отображение содержимого в баблах неактивных маршрутов.
    См. IRouteMapObject::callout_label_flags.
   */
-  RouteMapObjectCalloutLabelFlagEnumSet? get inactiveCalloutLabelFlags {
+  EnumSet<RouteMapObjectCalloutLabelFlag>? get inactiveCalloutLabelFlags {
     _COptional_COptionSet_CRouteMapObjectCalloutLabelFlag res = _CRouteEditorSource_inactiveCalloutLabelFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set inactiveCalloutLabelFlags(RouteMapObjectCalloutLabelFlagEnumSet? flags) {
+  set inactiveCalloutLabelFlags(EnumSet<RouteMapObjectCalloutLabelFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag();
     void res = _CRouteEditorSource_setInactiveCalloutLabelFlags_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -56965,11 +59332,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги, исключающие скрытие компонентов активного маршрута с карты.
    См. IRouteMapObject::permanent_display_flags.
   */
-  RouteMapObjectPermanentDisplayFlagEnumSet? get activePermanentDisplayFlags {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? get activePermanentDisplayFlags {
     _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteEditorSource_activePermanentDisplayFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set activePermanentDisplayFlags(RouteMapObjectPermanentDisplayFlagEnumSet? flags) {
+  set activePermanentDisplayFlags(EnumSet<RouteMapObjectPermanentDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag();
     void res = _CRouteEditorSource_setActivePermanentDisplayFlags_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -56978,11 +59345,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
    Флаги, исключающие скрытие компонентов неактивных маршрутов с карты.
    См. IRouteMapObject::permanent_display_flags.
   */
-  RouteMapObjectPermanentDisplayFlagEnumSet? get inactivePermanentDisplayFlags {
+  EnumSet<RouteMapObjectPermanentDisplayFlag>? get inactivePermanentDisplayFlags {
     _COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteEditorSource_inactivePermanentDisplayFlags(_CRouteEditorSourceMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set inactivePermanentDisplayFlags(RouteMapObjectPermanentDisplayFlagEnumSet? flags) {
+  set inactivePermanentDisplayFlags(EnumSet<RouteMapObjectPermanentDisplayFlag>? flags) {
     var _a1 = flags._copyFromDartTo_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag();
     void res = _CRouteEditorSource_setInactivePermanentDisplayFlags_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag(_CRouteEditorSourceMakeDefault().._impl=_self, _a1);
     return res;
@@ -57006,13 +59373,13 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
   factory RouteEditorSource(
     Context context,
     RouteEditor routeEditor,
-    [RouteMapObjectDisplayFlagEnumSet? activeDisplayFlags = null,
-    RouteMapObjectDisplayFlagEnumSet? inactiveDisplayFlags = null,
-    RouteMapObjectCalloutLabelFlagEnumSet? activeCalloutLabelFlags = null,
-    RouteMapObjectCalloutLabelFlagEnumSet? inactiveCalloutLabelFlags = null,
+    [EnumSet<RouteMapObjectDisplayFlag>? activeDisplayFlags = null,
+    EnumSet<RouteMapObjectDisplayFlag>? inactiveDisplayFlags = null,
+    EnumSet<RouteMapObjectCalloutLabelFlag>? activeCalloutLabelFlags = null,
+    EnumSet<RouteMapObjectCalloutLabelFlag>? inactiveCalloutLabelFlags = null,
     RouteMapObjectCalloutLabelDisplayMode calloutLabelDisplayMode = RouteMapObjectCalloutLabelDisplayMode.absoluteValues,
-    RouteMapObjectPermanentDisplayFlagEnumSet? activePermanentDisplayFlags = null,
-    RouteMapObjectPermanentDisplayFlagEnumSet? inactivePermanentDisplayFlags = null
+    EnumSet<RouteMapObjectPermanentDisplayFlag>? activePermanentDisplayFlags = null,
+    EnumSet<RouteMapObjectPermanentDisplayFlag>? inactivePermanentDisplayFlags = null
     ]) {
     var _a0 = context._copyFromDartTo_CContext();
     var _a1 = routeEditor._copyFromDartTo_CRouteEditor();
@@ -58690,6 +61057,128 @@ extension _CCarBriefRouteInfoRelease on _CCarBriefRouteInfo {
   }
 }
 
+// MARK: - MotorcycleBriefRouteInfoTrafficSpeed
+
+/** Скорость движения. */
+enum MotorcycleBriefRouteInfoTrafficSpeed {
+  /** Скорость неизвестна. */
+  unknown(0),
+  /** Низкая скорость движения. */
+  slow(1),
+  /** Нормальная скорость движения. */
+  normal(2),
+  /** Высокая скорость движения. */
+  fast(3),
+  ;
+
+  const MotorcycleBriefRouteInfoTrafficSpeed(this.rawValue);
+  final int rawValue;
+
+  static MotorcycleBriefRouteInfoTrafficSpeed getByValue(int value) {
+    return MotorcycleBriefRouteInfoTrafficSpeed.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CMotorcycleBriefRouteInfoTrafficSpeed extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CMotorcycleBriefRouteInfoTrafficSpeedBasicFunctions on _CMotorcycleBriefRouteInfoTrafficSpeed {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CMotorcycleBriefRouteInfoTrafficSpeedToDart on _CMotorcycleBriefRouteInfoTrafficSpeed {
+  MotorcycleBriefRouteInfoTrafficSpeed _toDart() {
+    return MotorcycleBriefRouteInfoTrafficSpeed.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CMotorcycleBriefRouteInfoTrafficSpeed on MotorcycleBriefRouteInfoTrafficSpeed {
+  _CMotorcycleBriefRouteInfoTrafficSpeed _copyFromDartTo_CMotorcycleBriefRouteInfoTrafficSpeed() {
+    return _CMotorcycleBriefRouteInfoTrafficSpeedMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - MotorcycleBriefRouteInfo
+
+/** Базовая информация об маршруте на мотоцикле. */
+class MotorcycleBriefRouteInfo {
+  /** Длина маршрута. */
+  final RouteDistance length;
+  /** Ориентир. */
+  final String landmark;
+  /** Скорость движения. */
+  final MotorcycleBriefRouteInfoTrafficSpeed trafficSpeed;
+
+  const MotorcycleBriefRouteInfo({
+    required this.length,
+    required this.landmark,
+    required this.trafficSpeed
+  });
+
+  MotorcycleBriefRouteInfo copyWith({
+    RouteDistance? length,
+    String? landmark,
+    MotorcycleBriefRouteInfoTrafficSpeed? trafficSpeed
+  }) {
+    return MotorcycleBriefRouteInfo(
+      length: length ?? this.length,
+      landmark: landmark ?? this.landmark,
+      trafficSpeed: trafficSpeed ?? this.trafficSpeed
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MotorcycleBriefRouteInfo &&
+    other.runtimeType == runtimeType &&
+    other.length == length &&
+    other.landmark == landmark &&
+    other.trafficSpeed == trafficSpeed;
+
+  @override
+  int get hashCode {
+    return Object.hash(length, landmark, trafficSpeed);
+  }
+
+}
+final class _CMotorcycleBriefRouteInfo extends ffi.Struct {
+  external _CRouteDistance length;
+
+  external _CString landmark;
+
+  external _CMotorcycleBriefRouteInfoTrafficSpeed trafficSpeed;
+
+}
+// MARK: - MotorcycleBriefRouteInfo <-> _CMotorcycleBriefRouteInfo
+
+extension _CMotorcycleBriefRouteInfoToDart on _CMotorcycleBriefRouteInfo {
+  MotorcycleBriefRouteInfo _toDart() {
+    return MotorcycleBriefRouteInfo(
+      length: this.length._toDart(),
+      landmark: this.landmark._toDart(),
+      trafficSpeed: this.trafficSpeed._toDart()
+    );
+  }
+}
+
+extension _DartTo_CMotorcycleBriefRouteInfo on MotorcycleBriefRouteInfo {
+  _CMotorcycleBriefRouteInfo _copyFromDartTo_CMotorcycleBriefRouteInfo() {
+    final res = _CMotorcycleBriefRouteInfoMakeDefault();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.landmark = this.landmark._copyFromDartTo_CString();
+    res.trafficSpeed = this.trafficSpeed._copyFromDartTo_CMotorcycleBriefRouteInfoTrafficSpeed();
+    return res;
+  }
+}
+extension _CMotorcycleBriefRouteInfoRelease on _CMotorcycleBriefRouteInfo {
+  void _releaseIntermediate() {
+    landmark._releaseIntermediate();
+  }
+}
+
 // MARK: - PedestrianBriefRouteInfo
 
 /** Базовая информация о пешеходном маршруте. */
@@ -58933,9 +61422,10 @@ final class BriefExtraRouteInfo {
 
   BriefExtraRouteInfo.bicycle(BicycleBriefRouteInfo value) : this._raw(value, 0);
   BriefExtraRouteInfo.car(CarBriefRouteInfo value) : this._raw(value, 1);
-  BriefExtraRouteInfo.pedestrian(PedestrianBriefRouteInfo value) : this._raw(value, 2);
-  BriefExtraRouteInfo.publicTransport(PublicBriefRouteInfo value) : this._raw(value, 3);
-  BriefExtraRouteInfo.scooter(ScooterBriefRouteInfo value) : this._raw(value, 4);
+  BriefExtraRouteInfo.motorcycle(MotorcycleBriefRouteInfo value) : this._raw(value, 2);
+  BriefExtraRouteInfo.pedestrian(PedestrianBriefRouteInfo value) : this._raw(value, 3);
+  BriefExtraRouteInfo.publicTransport(PublicBriefRouteInfo value) : this._raw(value, 4);
+  BriefExtraRouteInfo.scooter(ScooterBriefRouteInfo value) : this._raw(value, 5);
 
   bool get isBicycle => this._index == 0;
   BicycleBriefRouteInfo? get asBicycle => this.isBicycle ? this._value as BicycleBriefRouteInfo : null;
@@ -58943,18 +61433,22 @@ final class BriefExtraRouteInfo {
   bool get isCar => this._index == 1;
   CarBriefRouteInfo? get asCar => this.isCar ? this._value as CarBriefRouteInfo : null;
 
-  bool get isPedestrian => this._index == 2;
+  bool get isMotorcycle => this._index == 2;
+  MotorcycleBriefRouteInfo? get asMotorcycle => this.isMotorcycle ? this._value as MotorcycleBriefRouteInfo : null;
+
+  bool get isPedestrian => this._index == 3;
   PedestrianBriefRouteInfo? get asPedestrian => this.isPedestrian ? this._value as PedestrianBriefRouteInfo : null;
 
-  bool get isPublicTransport => this._index == 3;
+  bool get isPublicTransport => this._index == 4;
   PublicBriefRouteInfo? get asPublicTransport => this.isPublicTransport ? this._value as PublicBriefRouteInfo : null;
 
-  bool get isScooter => this._index == 4;
+  bool get isScooter => this._index == 5;
   ScooterBriefRouteInfo? get asScooter => this.isScooter ? this._value as ScooterBriefRouteInfo : null;
 
   T match<T>({
     required T Function(BicycleBriefRouteInfo value) bicycle,
     required T Function(CarBriefRouteInfo value) car,
+    required T Function(MotorcycleBriefRouteInfo value) motorcycle,
     required T Function(PedestrianBriefRouteInfo value) pedestrian,
     required T Function(PublicBriefRouteInfo value) publicTransport,
     required T Function(ScooterBriefRouteInfo value) scooter,
@@ -58962,9 +61456,10 @@ final class BriefExtraRouteInfo {
     return switch (this._index) {
       0 => bicycle(this._value as BicycleBriefRouteInfo),
       1 => car(this._value as CarBriefRouteInfo),
-      2 => pedestrian(this._value as PedestrianBriefRouteInfo),
-      3 => publicTransport(this._value as PublicBriefRouteInfo),
-      4 => scooter(this._value as ScooterBriefRouteInfo),
+      2 => motorcycle(this._value as MotorcycleBriefRouteInfo),
+      3 => pedestrian(this._value as PedestrianBriefRouteInfo),
+      4 => publicTransport(this._value as PublicBriefRouteInfo),
+      5 => scooter(this._value as ScooterBriefRouteInfo),
       _ => throw NativeException("Unrecognized case index ${this._index}")
     };
   }
@@ -58985,6 +61480,7 @@ final class BriefExtraRouteInfo {
 final class _CBriefExtraRouteInfoImpl extends ffi.Union {
   external _CBicycleBriefRouteInfo _bicycle;
   external _CCarBriefRouteInfo _car;
+  external _CMotorcycleBriefRouteInfo _motorcycle;
   external _CPedestrianBriefRouteInfo _pedestrian;
   external _CPublicBriefRouteInfo _publicTransport;
   external _CScooterBriefRouteInfo _scooter;
@@ -59009,9 +61505,10 @@ extension _CBriefExtraRouteInfoToDart on _CBriefExtraRouteInfo {
     return switch (this._index) {
       0 => BriefExtraRouteInfo.bicycle(this._impl._bicycle._toDart()),
       1 => BriefExtraRouteInfo.car(this._impl._car._toDart()),
-      2 => BriefExtraRouteInfo.pedestrian(this._impl._pedestrian._toDart()),
-      3 => BriefExtraRouteInfo.publicTransport(this._impl._publicTransport._toDart()),
-      4 => BriefExtraRouteInfo.scooter(this._impl._scooter._toDart()),
+      2 => BriefExtraRouteInfo.motorcycle(this._impl._motorcycle._toDart()),
+      3 => BriefExtraRouteInfo.pedestrian(this._impl._pedestrian._toDart()),
+      4 => BriefExtraRouteInfo.publicTransport(this._impl._publicTransport._toDart()),
+      5 => BriefExtraRouteInfo.scooter(this._impl._scooter._toDart()),
       _ => throw NativeException("Unrecognized case index ${this._index}")
     };
   }
@@ -59029,17 +61526,21 @@ extension _DartTo_CBriefExtraRouteInfo on BriefExtraRouteInfo {
         res._impl._car = value._copyFromDartTo_CCarBriefRouteInfo();
         res._index = 1;
       },
+      motorcycle: (MotorcycleBriefRouteInfo value) {
+        res._impl._motorcycle = value._copyFromDartTo_CMotorcycleBriefRouteInfo();
+        res._index = 2;
+      },
       pedestrian: (PedestrianBriefRouteInfo value) {
         res._impl._pedestrian = value._copyFromDartTo_CPedestrianBriefRouteInfo();
-        res._index = 2;
+        res._index = 3;
       },
       publicTransport: (PublicBriefRouteInfo value) {
         res._impl._publicTransport = value._copyFromDartTo_CPublicBriefRouteInfo();
-        res._index = 3;
+        res._index = 4;
       },
       scooter: (ScooterBriefRouteInfo value) {
         res._impl._scooter = value._copyFromDartTo_CScooterBriefRouteInfo();
-        res._index = 4;
+        res._index = 5;
       },
     );
     return res;
@@ -59670,6 +62171,8 @@ enum RoutePointKind {
   bicycleLane(22),
   /** Светофор. */
   trafficLight(23),
+  /** Начало и конец переправы. */
+  crossing(24),
   ;
 
   const RoutePointKind(this.rawValue);
@@ -61077,165 +63580,6 @@ extension _DartTo_CFuture_CStyle on CancelableOperation<Style> {
   }
 }
 	
-// MARK: - RotationCenter
-
-/** Задает правило обработки событий вращения карты. */
-enum RotationCenter {
-  /** Вращать относительно геометрического центра множества точек постановки пальцев. */
-  eventCenter(0),
-  /** Вращать относительно точки позиции карты. */
-  mapPosition(1),
-  /**
-   Вращать относительно геопозиции.
-   Геопозиция устанавливается через метод set_target_geo_point.
-   Если геопозиция не указана, то вращение производится относительно точки позиции карты.
-  */
-  geoPosition(2),
-  ;
-
-  const RotationCenter(this.rawValue);
-  final int rawValue;
-
-  static RotationCenter getByValue(int value) {
-    return RotationCenter.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CRotationCenter extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CRotationCenterBasicFunctions on _CRotationCenter {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CRotationCenterToDart on _CRotationCenter {
-  RotationCenter _toDart() {
-    return RotationCenter.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CRotationCenter on RotationCenter {
-  _CRotationCenter _copyFromDartTo_CRotationCenter() {
-    return _CRotationCenterMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - ScalingCenter
-
-/** Задает правило обработки событий масштабирования карты. */
-enum ScalingCenter {
-  /** Масштабировать относительно геометрического центра множества точек постановки пальцев. */
-  eventCenter(0),
-  /** Масштабировать относительно точки позиции карты. */
-  mapPosition(1),
-  /**
-   Масштабировать относительно геопозиции.
-   Геопозиция устанавливается через метод set_target_geo_point.
-   Если геопозиция не указана, то масштабирование производится относительно точки позиции карты.
-  */
-  geoPosition(2),
-  ;
-
-  const ScalingCenter(this.rawValue);
-  final int rawValue;
-
-  static ScalingCenter getByValue(int value) {
-    return ScalingCenter.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CScalingCenter extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CScalingCenterBasicFunctions on _CScalingCenter {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CScalingCenterToDart on _CScalingCenter {
-  ScalingCenter _toDart() {
-    return ScalingCenter.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CScalingCenter on ScalingCenter {
-  _CScalingCenter _copyFromDartTo_CScalingCenter() {
-    return _CScalingCenterMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - EventsProcessingSettings
-
-class EventsProcessingSettings {
-  /** Точка, относительно которой производится вращение карты. */
-  final RotationCenter rotationCenter;
-  /** Точка, относительно которой производится масштабирование карты. */
-  final ScalingCenter scalingCenter;
-
-  const EventsProcessingSettings({
-    required this.rotationCenter,
-    required this.scalingCenter
-  });
-
-  EventsProcessingSettings copyWith({
-    RotationCenter? rotationCenter,
-    ScalingCenter? scalingCenter
-  }) {
-    return EventsProcessingSettings(
-      rotationCenter: rotationCenter ?? this.rotationCenter,
-      scalingCenter: scalingCenter ?? this.scalingCenter
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is EventsProcessingSettings &&
-    other.runtimeType == runtimeType &&
-    other.rotationCenter == rotationCenter &&
-    other.scalingCenter == scalingCenter;
-
-  @override
-  int get hashCode {
-    return Object.hash(rotationCenter, scalingCenter);
-  }
-
-}
-final class _CEventsProcessingSettings extends ffi.Struct {
-  external _CRotationCenter rotationCenter;
-
-  external _CScalingCenter scalingCenter;
-
-}
-// MARK: - EventsProcessingSettings <-> _CEventsProcessingSettings
-
-extension _CEventsProcessingSettingsToDart on _CEventsProcessingSettings {
-  EventsProcessingSettings _toDart() {
-    return EventsProcessingSettings(
-      rotationCenter: this.rotationCenter._toDart(),
-      scalingCenter: this.scalingCenter._toDart()
-    );
-  }
-}
-
-extension _DartTo_CEventsProcessingSettings on EventsProcessingSettings {
-  _CEventsProcessingSettings _copyFromDartTo_CEventsProcessingSettings() {
-    final res = _CEventsProcessingSettingsMakeDefault();
-    res.rotationCenter = this.rotationCenter._copyFromDartTo_CRotationCenter();
-    res.scalingCenter = this.scalingCenter._copyFromDartTo_CScalingCenter();
-    return res;
-  }
-}
-extension _CEventsProcessingSettingsRelease on _CEventsProcessingSettings {
-  void _releaseIntermediate() {
-  }
-}
-
 // MARK: - DragBeginData
 
 /** Данные о начале перетаскивания: точка старта перемещения и перемещаемый объект. */
@@ -61301,321 +63645,853 @@ extension _CDragBeginDataRelease on _CDragBeginData {
   }
 }
 
-// MARK: - Gesture
+// MARK: - TransformGesture
 
-enum Gesture {
-  shift(1),
+enum TransformGesture {
+  rotation(1),
   scaling(2),
-  rotation(4),
+  shift(4),
   multiTouchShift(8),
   tilt(16),
   ;
 
-  const Gesture(this.rawValue);
+  const TransformGesture(this.rawValue);
   final int rawValue;
 
-  static Gesture getByValue(int value) {
-    return Gesture.values.firstWhere((x) => x.rawValue == value);
+  static TransformGesture getByValue(int value) {
+    return TransformGesture.values.firstWhere((x) => x.rawValue == value);
   }
 }
 
 
-final class _CGesture extends ffi.Struct {
+final class _CTransformGesture extends ffi.Struct {
   @ffi.Uint32()
   external int rawValue;
 }
 
-extension _CGestureBasicFunctions on _CGesture {
+extension _CTransformGestureBasicFunctions on _CTransformGesture {
   void _releaseIntermediate() {
   }
 }
 
-extension _CGestureToDart on _CGesture {
-  Gesture _toDart() {
-    return Gesture.getByValue(this.rawValue);
+extension _CTransformGestureToDart on _CTransformGesture {
+  TransformGesture _toDart() {
+    return TransformGesture.getByValue(this.rawValue);
   }
 }
 
-extension _DartTo_CGesture on Gesture {
-  _CGesture _copyFromDartTo_CGesture() {
-    return _CGestureMakeDefault()..rawValue = this.rawValue;
+extension _DartTo_CTransformGesture on TransformGesture {
+  _CTransformGesture _copyFromDartTo_CTransformGesture() {
+    return _CTransformGestureMakeDefault()..rawValue = this.rawValue;
   }
 }
 	
-// MARK: - ScalingSettings
+// MARK: - ScalingRecognizeSettings
 
-class ScalingSettings {
+/**
+ Настройки распознавания масштабирования.
+ Коэффициент масштабирования рассчитывается как отношения расстояния
+ между точками после перемещения и исходным расстоянием.
+*/
+class ScalingRecognizeSettings {
   /**
-   Порог коэффицента масштабирования, по достижению которого начнёт отправляться событие масштабирования.
-   Используется, если вращение неактивно. Множитель должен выйти за пределы
-   (1 / scale_ratio_threshold, scale_ratio_threshold).
+   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
+   Используется, если вращение неактивно.
+   Множитель должен выйти за пределы (1 / scale_ratio_threshold, scale_ratio_threshold).
   */
   final double scaleRatioThreshold;
   /**
-   Порог коэффицента масштабирования, по достижению которого начнёт отправляться сообщения масштабирования.
-   Используется, если вращение активно. Множитель должен выйти за пределы
-   (1 / scale_ratio_threshold_in_rotation, scale_ratio_threshold_in_rotation).
+   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
+   Используется, если вращение активно.
+   Множитель должен выйти за пределы (1 / scale_ratio_threshold_in_rotation, scale_ratio_threshold_in_rotation).
   */
   final double scaleRatioThresholdInRotation;
+  /** Отношение логарифмов старого и нового масштабов при обработке мгновенного события изменения масштаба. */
+  final double zoomScaleRatio;
+  /** Разница логарифмов масштабов при смещении на 1 мм. на экране. */
+  final double scaleLogDiffPerMm;
+  /** Отключение жестов ZoomEvent и DirectMapScaleEvent. */
+  final bool disableZoom;
 
-  const ScalingSettings({
-    required this.scaleRatioThreshold,
-    required this.scaleRatioThresholdInRotation
+  const ScalingRecognizeSettings({
+    this.scaleRatioThreshold = 1.100000023841858,
+    this.scaleRatioThresholdInRotation = 1.2000000476837158,
+    this.zoomScaleRatio = 2,
+    this.scaleLogDiffPerMm = 0.05000000074505806,
+    this.disableZoom = false
   });
 
-  ScalingSettings copyWith({
+  ScalingRecognizeSettings copyWith({
     double? scaleRatioThreshold,
-    double? scaleRatioThresholdInRotation
+    double? scaleRatioThresholdInRotation,
+    double? zoomScaleRatio,
+    double? scaleLogDiffPerMm,
+    bool? disableZoom
   }) {
-    return ScalingSettings(
+    return ScalingRecognizeSettings(
       scaleRatioThreshold: scaleRatioThreshold ?? this.scaleRatioThreshold,
-      scaleRatioThresholdInRotation: scaleRatioThresholdInRotation ?? this.scaleRatioThresholdInRotation
+      scaleRatioThresholdInRotation: scaleRatioThresholdInRotation ?? this.scaleRatioThresholdInRotation,
+      zoomScaleRatio: zoomScaleRatio ?? this.zoomScaleRatio,
+      scaleLogDiffPerMm: scaleLogDiffPerMm ?? this.scaleLogDiffPerMm,
+      disableZoom: disableZoom ?? this.disableZoom
     );
   }
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is ScalingSettings &&
+    identical(this, other) || other is ScalingRecognizeSettings &&
     other.runtimeType == runtimeType &&
     other.scaleRatioThreshold == scaleRatioThreshold &&
-    other.scaleRatioThresholdInRotation == scaleRatioThresholdInRotation;
+    other.scaleRatioThresholdInRotation == scaleRatioThresholdInRotation &&
+    other.zoomScaleRatio == zoomScaleRatio &&
+    other.scaleLogDiffPerMm == scaleLogDiffPerMm &&
+    other.disableZoom == disableZoom;
 
   @override
   int get hashCode {
-    return Object.hash(scaleRatioThreshold, scaleRatioThresholdInRotation);
+    return Object.hash(scaleRatioThreshold, scaleRatioThresholdInRotation, zoomScaleRatio, scaleLogDiffPerMm, disableZoom);
   }
 
 }
-final class _CScalingSettings extends ffi.Struct {
+final class _CScalingRecognizeSettings extends ffi.Struct {
   @ffi.Float()
   external double scaleRatioThreshold;
 
   @ffi.Float()
   external double scaleRatioThresholdInRotation;
 
-}
-// MARK: - ScalingSettings <-> _CScalingSettings
+  @ffi.Float()
+  external double zoomScaleRatio;
 
-extension _CScalingSettingsToDart on _CScalingSettings {
-  ScalingSettings _toDart() {
-    return ScalingSettings(
+  @ffi.Float()
+  external double scaleLogDiffPerMm;
+
+  @ffi.Bool()
+  external bool disableZoom;
+
+}
+// MARK: - ScalingRecognizeSettings <-> _CScalingRecognizeSettings
+
+extension _CScalingRecognizeSettingsToDart on _CScalingRecognizeSettings {
+  ScalingRecognizeSettings _toDart() {
+    return ScalingRecognizeSettings(
       scaleRatioThreshold: this.scaleRatioThreshold,
-      scaleRatioThresholdInRotation: this.scaleRatioThresholdInRotation
+      scaleRatioThresholdInRotation: this.scaleRatioThresholdInRotation,
+      zoomScaleRatio: this.zoomScaleRatio,
+      scaleLogDiffPerMm: this.scaleLogDiffPerMm,
+      disableZoom: this.disableZoom
     );
   }
 }
 
-extension _DartTo_CScalingSettings on ScalingSettings {
-  _CScalingSettings _copyFromDartTo_CScalingSettings() {
-    final res = _CScalingSettingsMakeDefault();
+extension _DartTo_CScalingRecognizeSettings on ScalingRecognizeSettings {
+  _CScalingRecognizeSettings _copyFromDartTo_CScalingRecognizeSettings() {
+    final res = _CScalingRecognizeSettingsMakeDefault();
     res.scaleRatioThreshold = this.scaleRatioThreshold;
     res.scaleRatioThresholdInRotation = this.scaleRatioThresholdInRotation;
+    res.zoomScaleRatio = this.zoomScaleRatio;
+    res.scaleLogDiffPerMm = this.scaleLogDiffPerMm;
+    res.disableZoom = this.disableZoom;
     return res;
   }
 }
-extension _CScalingSettingsRelease on _CScalingSettings {
+extension _CScalingRecognizeSettingsRelease on _CScalingRecognizeSettings {
   void _releaseIntermediate() {
   }
 }
 
-// MARK: - RotationSettings
+// MARK: - GestureActionEventCenter
 
-/** Настройки обработки вращения карты. */
-class RotationSettings {
-  /**
-   Порог изменения угла, в градусах, по достижению которого начнёт отправлять сообщения вращения.
-   Используется, если масштабирование неактивно.
-  */
-  final double angleDiffDeg;
-  /**
-   Порог среднего радиального сдвига точек, в миллиметрах, по достижению которого начнёт отправлять
-   сообщения вращения. Используется, если масштабирование неактивно.
-  */
-  final double distanceDiffMm;
-  /**
-   Порог изменения угла, в градусах, по достижению которого начнёт отправлять сообщения вращения.
-   Используется, если масштабирование активно.
-  */
-  final double angleDiffInScalingDeg;
-  /**
-   Порог среднего радиального сдвига точек, в миллиметрах, по достижению которого начнёт отправлять
-   сообщения вращения. Используется, если масштабирование активно.
-  */
-  final double distanceDiffInScalingMm;
+/** Выполнить жест относительно геометрического центра множества точек постановки пальцев. */
+class GestureActionEventCenter {
 
-  const RotationSettings({
-    required this.angleDiffDeg,
-    required this.distanceDiffMm,
-    required this.angleDiffInScalingDeg,
-    required this.distanceDiffInScalingMm
-  });
+  const GestureActionEventCenter();
 
-  RotationSettings copyWith({
-    double? angleDiffDeg,
-    double? distanceDiffMm,
-    double? angleDiffInScalingDeg,
-    double? distanceDiffInScalingMm
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionEventCenter &&
+    other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode {
+    return 0;
+  }
+
+}
+final class _CGestureActionEventCenter extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+// MARK: - GestureActionEventCenter <-> _CGestureActionEventCenter
+
+extension _CGestureActionEventCenterToDart on _CGestureActionEventCenter {
+  GestureActionEventCenter _toDart() {
+    return GestureActionEventCenter(
+    );
+  }
+}
+
+extension _DartTo_CGestureActionEventCenter on GestureActionEventCenter {
+  _CGestureActionEventCenter _copyFromDartTo_CGestureActionEventCenter() {
+    final res = _CGestureActionEventCenterMakeDefault();
+    return res;
+  }
+}
+extension _CGestureActionEventCenterRelease on _CGestureActionEventCenter {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionMapPosition
+
+/** Выполнить жест относительно точки позиции карты. */
+class GestureActionMapPosition {
+
+  const GestureActionMapPosition();
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionMapPosition &&
+    other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode {
+    return 0;
+  }
+
+}
+final class _CGestureActionMapPosition extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+// MARK: - GestureActionMapPosition <-> _CGestureActionMapPosition
+
+extension _CGestureActionMapPositionToDart on _CGestureActionMapPosition {
+  GestureActionMapPosition _toDart() {
+    return GestureActionMapPosition(
+    );
+  }
+}
+
+extension _DartTo_CGestureActionMapPosition on GestureActionMapPosition {
+  _CGestureActionMapPosition _copyFromDartTo_CGestureActionMapPosition() {
+    final res = _CGestureActionMapPositionMakeDefault();
+    return res;
+  }
+}
+extension _CGestureActionMapPositionRelease on _CGestureActionMapPosition {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionTargetGeoPoint
+
+/** Выполнить жест относительно геопозиции target_geo_point. */
+class GestureActionTargetGeoPoint {
+  final GeoPoint targetGeoPoint;
+
+  const GestureActionTargetGeoPoint(this.targetGeoPoint);
+
+  GestureActionTargetGeoPoint copyWith({
+    GeoPoint? targetGeoPoint
   }) {
-    return RotationSettings(
-      angleDiffDeg: angleDiffDeg ?? this.angleDiffDeg,
-      distanceDiffMm: distanceDiffMm ?? this.distanceDiffMm,
-      angleDiffInScalingDeg: angleDiffInScalingDeg ?? this.angleDiffInScalingDeg,
-      distanceDiffInScalingMm: distanceDiffInScalingMm ?? this.distanceDiffInScalingMm
+    return GestureActionTargetGeoPoint(
+      targetGeoPoint ?? this.targetGeoPoint
     );
   }
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is RotationSettings &&
+    identical(this, other) || other is GestureActionTargetGeoPoint &&
     other.runtimeType == runtimeType &&
-    other.angleDiffDeg == angleDiffDeg &&
-    other.distanceDiffMm == distanceDiffMm &&
-    other.angleDiffInScalingDeg == angleDiffInScalingDeg &&
-    other.distanceDiffInScalingMm == distanceDiffInScalingMm;
+    other.targetGeoPoint == targetGeoPoint;
 
   @override
   int get hashCode {
-    return Object.hash(angleDiffDeg, distanceDiffMm, angleDiffInScalingDeg, distanceDiffInScalingMm);
+    return targetGeoPoint.hashCode;
   }
 
 }
-final class _CRotationSettings extends ffi.Struct {
+final class _CGestureActionTargetGeoPoint extends ffi.Struct {
+  external _CGeoPoint targetGeoPoint;
+
+}
+// MARK: - GestureActionTargetGeoPoint <-> _CGestureActionTargetGeoPoint
+
+extension _CGestureActionTargetGeoPointToDart on _CGestureActionTargetGeoPoint {
+  GestureActionTargetGeoPoint _toDart() {
+    return GestureActionTargetGeoPoint(
+      this.targetGeoPoint._toDart()
+    );
+  }
+}
+
+extension _DartTo_CGestureActionTargetGeoPoint on GestureActionTargetGeoPoint {
+  _CGestureActionTargetGeoPoint _copyFromDartTo_CGestureActionTargetGeoPoint() {
+    final res = _CGestureActionTargetGeoPointMakeDefault();
+    res.targetGeoPoint = this.targetGeoPoint._copyFromDartTo_CGeoPoint();
+    return res;
+  }
+}
+extension _CGestureActionTargetGeoPointRelease on _CGestureActionTargetGeoPoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionPoint
+
+/** Задает правило обработки событий карты. */
+final class GestureActionPoint {
+  final Object? _value;
+  final int _index;
+
+  GestureActionPoint._raw(this._value, this._index);
+
+  GestureActionPoint.eventCenter(GestureActionEventCenter value) : this._raw(value, 0);
+  GestureActionPoint.mapPosition(GestureActionMapPosition value) : this._raw(value, 1);
+  GestureActionPoint.targetGeoPoint(GestureActionTargetGeoPoint value) : this._raw(value, 2);
+
+  bool get isEventCenter => this._index == 0;
+  GestureActionEventCenter? get asEventCenter => this.isEventCenter ? this._value as GestureActionEventCenter : null;
+
+  bool get isMapPosition => this._index == 1;
+  GestureActionMapPosition? get asMapPosition => this.isMapPosition ? this._value as GestureActionMapPosition : null;
+
+  bool get isTargetGeoPoint => this._index == 2;
+  GestureActionTargetGeoPoint? get asTargetGeoPoint => this.isTargetGeoPoint ? this._value as GestureActionTargetGeoPoint : null;
+
+  T match<T>({
+    required T Function(GestureActionEventCenter value) eventCenter,
+    required T Function(GestureActionMapPosition value) mapPosition,
+    required T Function(GestureActionTargetGeoPoint value) targetGeoPoint,
+  }) {
+    return switch (this._index) {
+      0 => eventCenter(this._value as GestureActionEventCenter),
+      1 => mapPosition(this._value as GestureActionMapPosition),
+      2 => targetGeoPoint(this._value as GestureActionTargetGeoPoint),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "GestureActionPoint(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionPoint &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _CGestureActionPointImpl extends ffi.Union {
+  external _CGestureActionEventCenter _eventCenter;
+  external _CGestureActionMapPosition _mapPosition;
+  external _CGestureActionTargetGeoPoint _targetGeoPoint;
+}
+
+final class _CGestureActionPoint extends ffi.Struct {
+  external _CGestureActionPointImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CGestureActionPointBasicFunctions on _CGestureActionPoint {
+  void _releaseIntermediate() {
+    _CGestureActionPoint_release(this);
+  }
+}
+	
+// MARK: - GestureActionPoint <-> CGestureActionPoint
+
+extension _CGestureActionPointToDart on _CGestureActionPoint {
+  GestureActionPoint _toDart() {
+    return switch (this._index) {
+      0 => GestureActionPoint.eventCenter(this._impl._eventCenter._toDart()),
+      1 => GestureActionPoint.mapPosition(this._impl._mapPosition._toDart()),
+      2 => GestureActionPoint.targetGeoPoint(this._impl._targetGeoPoint._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_CGestureActionPoint on GestureActionPoint {
+  _CGestureActionPoint _copyFromDartTo_CGestureActionPoint() {
+    var res = _CGestureActionPointMakeDefault();
+    this.match<void>(
+      eventCenter: (GestureActionEventCenter value) {
+        res._impl._eventCenter = value._copyFromDartTo_CGestureActionEventCenter();
+        res._index = 0;
+      },
+      mapPosition: (GestureActionMapPosition value) {
+        res._impl._mapPosition = value._copyFromDartTo_CGestureActionMapPosition();
+        res._index = 1;
+      },
+      targetGeoPoint: (GestureActionTargetGeoPoint value) {
+        res._impl._targetGeoPoint = value._copyFromDartTo_CGestureActionTargetGeoPoint();
+        res._index = 2;
+      },
+    );
+    return res;
+  }
+}
+
+// MARK: - ScalingGestureSettings
+
+/** Настройки жеста масштабирования. */
+class ScalingGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания масштабирования. */
+  ScalingRecognizeSettings get recognizeSettings {
+    _CScalingRecognizeSettings res = _CScalingGestureSettings_recognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(ScalingRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CScalingRecognizeSettings();
+    void res = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Точка, относительно которой производится масштабирование карты. */
+  GestureActionPoint get scalingCenter {
+    _CGestureActionPoint res = _CScalingGestureSettings_scalingCenter(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set scalingCenter(GestureActionPoint actionPoint) {
+    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
+    void res = _CScalingGestureSettings_setScalingCenter_CGestureActionPoint(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CScalingGestureSettings_releasePtr);
+
+  ScalingGestureSettings._raw(this._self);
+  factory ScalingGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = ScalingGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScalingGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CScalingGestureSettings_cg_objectIdentifier(this._self) == _CScalingGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CScalingGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - ScalingGestureSettings <-> CScalingGestureSettings
+
+final class _CScalingGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CScalingGestureSettingsBasicFunctions on _CScalingGestureSettings {
+  void _releaseIntermediate() {
+    _CScalingGestureSettings_release(_impl);
+  }
+
+  _CScalingGestureSettings _retain() {
+    return _CScalingGestureSettings_retain(_impl);
+  }
+}
+
+extension _CScalingGestureSettingsToDart on _CScalingGestureSettings {
+  ScalingGestureSettings _toDart() {
+    return ScalingGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCScalingGestureSettings on ScalingGestureSettings {
+  _CScalingGestureSettings _copyFromDartTo_CScalingGestureSettings() {
+    return (_CScalingGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - RotationRecognizeThresholds
+
+class RotationRecognizeThresholds {
+  /** Порог изменения угла, в градусах, преодоление которого говорит о начале вращения. */
+  final double angleDiffDeg;
+  /** Порог среднего радиального сдвига точек, в миллиметрах, преодоление которого говорит о начале вращения. */
+  final double distanceDiffMm;
+
+  const RotationRecognizeThresholds({
+    this.angleDiffDeg = 5,
+    this.distanceDiffMm = 5
+  });
+
+  RotationRecognizeThresholds copyWith({
+    double? angleDiffDeg,
+    double? distanceDiffMm
+  }) {
+    return RotationRecognizeThresholds(
+      angleDiffDeg: angleDiffDeg ?? this.angleDiffDeg,
+      distanceDiffMm: distanceDiffMm ?? this.distanceDiffMm
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationRecognizeThresholds &&
+    other.runtimeType == runtimeType &&
+    other.angleDiffDeg == angleDiffDeg &&
+    other.distanceDiffMm == distanceDiffMm;
+
+  @override
+  int get hashCode {
+    return Object.hash(angleDiffDeg, distanceDiffMm);
+  }
+
+}
+final class _CRotationRecognizeThresholds extends ffi.Struct {
   @ffi.Float()
   external double angleDiffDeg;
 
   @ffi.Float()
   external double distanceDiffMm;
 
-  @ffi.Float()
-  external double angleDiffInScalingDeg;
-
-  @ffi.Float()
-  external double distanceDiffInScalingMm;
-
 }
-// MARK: - RotationSettings <-> _CRotationSettings
+// MARK: - RotationRecognizeThresholds <-> _CRotationRecognizeThresholds
 
-extension _CRotationSettingsToDart on _CRotationSettings {
-  RotationSettings _toDart() {
-    return RotationSettings(
+extension _CRotationRecognizeThresholdsToDart on _CRotationRecognizeThresholds {
+  RotationRecognizeThresholds _toDart() {
+    return RotationRecognizeThresholds(
       angleDiffDeg: this.angleDiffDeg,
-      distanceDiffMm: this.distanceDiffMm,
-      angleDiffInScalingDeg: this.angleDiffInScalingDeg,
-      distanceDiffInScalingMm: this.distanceDiffInScalingMm
+      distanceDiffMm: this.distanceDiffMm
     );
   }
 }
 
-extension _DartTo_CRotationSettings on RotationSettings {
-  _CRotationSettings _copyFromDartTo_CRotationSettings() {
-    final res = _CRotationSettingsMakeDefault();
+extension _DartTo_CRotationRecognizeThresholds on RotationRecognizeThresholds {
+  _CRotationRecognizeThresholds _copyFromDartTo_CRotationRecognizeThresholds() {
+    final res = _CRotationRecognizeThresholdsMakeDefault();
     res.angleDiffDeg = this.angleDiffDeg;
     res.distanceDiffMm = this.distanceDiffMm;
-    res.angleDiffInScalingDeg = this.angleDiffInScalingDeg;
-    res.distanceDiffInScalingMm = this.distanceDiffInScalingMm;
     return res;
   }
 }
-extension _CRotationSettingsRelease on _CRotationSettings {
+extension _CRotationRecognizeThresholdsRelease on _CRotationRecognizeThresholds {
   void _releaseIntermediate() {
   }
 }
 
-// MARK: - MultiTouchShiftSettings
+// MARK: - RotationRecognizeSettings
 
-/** Настройки обработки сдвига при касании несколькими пальцами. */
-class MultiTouchShiftSettings {
-  /**
-   Порог сдвига взвешенного среднего точек постановки пальцев, в миллиметрах, по достижению которого начинают
-   генерироваться события смещения несколькими пальцами
-  */
-  final double thresholdMm;
+/** Настройки распознавания вращения. */
+class RotationRecognizeSettings {
+  /** Пороги перехода к вращению, если масштабирование не активно. */
+  final RotationRecognizeThresholds rotationThreshold;
+  /** Пороги перехода к вращению, если масштабирование активно. */
+  final RotationRecognizeThresholds rotationThresholdInScaling;
 
-  const MultiTouchShiftSettings(this.thresholdMm);
+  const RotationRecognizeSettings({
+    required this.rotationThreshold,
+    required this.rotationThresholdInScaling
+  });
 
-  MultiTouchShiftSettings copyWith({
-    double? thresholdMm
+  RotationRecognizeSettings copyWith({
+    RotationRecognizeThresholds? rotationThreshold,
+    RotationRecognizeThresholds? rotationThresholdInScaling
   }) {
-    return MultiTouchShiftSettings(
-      thresholdMm ?? this.thresholdMm
+    return RotationRecognizeSettings(
+      rotationThreshold: rotationThreshold ?? this.rotationThreshold,
+      rotationThresholdInScaling: rotationThresholdInScaling ?? this.rotationThresholdInScaling
     );
   }
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is MultiTouchShiftSettings &&
+    identical(this, other) || other is RotationRecognizeSettings &&
     other.runtimeType == runtimeType &&
-    other.thresholdMm == thresholdMm;
+    other.rotationThreshold == rotationThreshold &&
+    other.rotationThresholdInScaling == rotationThresholdInScaling;
 
   @override
   int get hashCode {
-    return thresholdMm.hashCode;
+    return Object.hash(rotationThreshold, rotationThresholdInScaling);
   }
 
 }
-final class _CMultiTouchShiftSettings extends ffi.Struct {
-  @ffi.Float()
-  external double thresholdMm;
+final class _CRotationRecognizeSettings extends ffi.Struct {
+  external _CRotationRecognizeThresholds rotationThreshold;
+
+  external _CRotationRecognizeThresholds rotationThresholdInScaling;
 
 }
-// MARK: - MultiTouchShiftSettings <-> _CMultiTouchShiftSettings
+// MARK: - RotationRecognizeSettings <-> _CRotationRecognizeSettings
 
-extension _CMultiTouchShiftSettingsToDart on _CMultiTouchShiftSettings {
-  MultiTouchShiftSettings _toDart() {
-    return MultiTouchShiftSettings(
-      this.thresholdMm
+extension _CRotationRecognizeSettingsToDart on _CRotationRecognizeSettings {
+  RotationRecognizeSettings _toDart() {
+    return RotationRecognizeSettings(
+      rotationThreshold: this.rotationThreshold._toDart(),
+      rotationThresholdInScaling: this.rotationThresholdInScaling._toDart()
     );
   }
 }
 
-extension _DartTo_CMultiTouchShiftSettings on MultiTouchShiftSettings {
-  _CMultiTouchShiftSettings _copyFromDartTo_CMultiTouchShiftSettings() {
-    final res = _CMultiTouchShiftSettingsMakeDefault();
-    res.thresholdMm = this.thresholdMm;
+extension _DartTo_CRotationRecognizeSettings on RotationRecognizeSettings {
+  _CRotationRecognizeSettings _copyFromDartTo_CRotationRecognizeSettings() {
+    final res = _CRotationRecognizeSettingsMakeDefault();
+    res.rotationThreshold = this.rotationThreshold._copyFromDartTo_CRotationRecognizeThresholds();
+    res.rotationThresholdInScaling = this.rotationThresholdInScaling._copyFromDartTo_CRotationRecognizeThresholds();
     return res;
   }
 }
-extension _CMultiTouchShiftSettingsRelease on _CMultiTouchShiftSettings {
+extension _CRotationRecognizeSettingsRelease on _CRotationRecognizeSettings {
   void _releaseIntermediate() {
   }
 }
 
-// MARK: - TiltSettings
+// MARK: - RotationGestureSettings
 
-class TiltSettings {
+/** Настройки жеста вращения. */
+class RotationGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания вращения. */
+  RotationRecognizeSettings get recognizeSettings {
+    _CRotationRecognizeSettings res = _CRotationGestureSettings_recognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(RotationRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CRotationRecognizeSettings();
+    void res = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Точка, относительно которой производится вращение карты. */
+  GestureActionPoint get rotationCenter {
+    _CGestureActionPoint res = _CRotationGestureSettings_rotationCenter(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set rotationCenter(GestureActionPoint actionPoint) {
+    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
+    void res = _CRotationGestureSettings_setRotationCenter_CGestureActionPoint(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CRotationGestureSettings_releasePtr);
+
+  RotationGestureSettings._raw(this._self);
+  factory RotationGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = RotationGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CRotationGestureSettings_cg_objectIdentifier(this._self) == _CRotationGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CRotationGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - RotationGestureSettings <-> CRotationGestureSettings
+
+final class _CRotationGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CRotationGestureSettingsBasicFunctions on _CRotationGestureSettings {
+  void _releaseIntermediate() {
+    _CRotationGestureSettings_release(_impl);
+  }
+
+  _CRotationGestureSettings _retain() {
+    return _CRotationGestureSettings_retain(_impl);
+  }
+}
+
+extension _CRotationGestureSettingsToDart on _CRotationGestureSettings {
+  RotationGestureSettings _toDart() {
+    return RotationGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCRotationGestureSettings on RotationGestureSettings {
+  _CRotationGestureSettings _copyFromDartTo_CRotationGestureSettings() {
+    return (_CRotationGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - MultiTouchRecognizeSettings
+
+/** Настройки распознавания касания несколькими пальцами. */
+class MultiTouchRecognizeSettings {
   /**
-   Расстояние, в мм, на которое нужно сдвинуть пальцы по экрану, чтобы изменить угол наклона камеры на 1 градус.
-   Отрицательное значение прведет к инверсии направления. значение 0 недопустимо.
+   Порог сдвига взвешенного среднего точек, в миллиметрах, преодоление которого
+   говорит о начале сдвига несколькими пальцами.
+  */
+  final double multitouchShiftThresholdMm;
+
+  const MultiTouchRecognizeSettings([this.multitouchShiftThresholdMm = 7]);
+
+  MultiTouchRecognizeSettings copyWith({
+    double? multitouchShiftThresholdMm
+  }) {
+    return MultiTouchRecognizeSettings(
+      multitouchShiftThresholdMm ?? this.multitouchShiftThresholdMm
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MultiTouchRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.multitouchShiftThresholdMm == multitouchShiftThresholdMm;
+
+  @override
+  int get hashCode {
+    return multitouchShiftThresholdMm.hashCode;
+  }
+
+}
+final class _CMultiTouchRecognizeSettings extends ffi.Struct {
+  @ffi.Float()
+  external double multitouchShiftThresholdMm;
+
+}
+// MARK: - MultiTouchRecognizeSettings <-> _CMultiTouchRecognizeSettings
+
+extension _CMultiTouchRecognizeSettingsToDart on _CMultiTouchRecognizeSettings {
+  MultiTouchRecognizeSettings _toDart() {
+    return MultiTouchRecognizeSettings(
+      this.multitouchShiftThresholdMm
+    );
+  }
+}
+
+extension _DartTo_CMultiTouchRecognizeSettings on MultiTouchRecognizeSettings {
+  _CMultiTouchRecognizeSettings _copyFromDartTo_CMultiTouchRecognizeSettings() {
+    final res = _CMultiTouchRecognizeSettingsMakeDefault();
+    res.multitouchShiftThresholdMm = this.multitouchShiftThresholdMm;
+    return res;
+  }
+}
+extension _CMultiTouchRecognizeSettingsRelease on _CMultiTouchRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - MultiTouchGestureSettings
+
+/** Настройки жеста касания несколькими пальцами. */
+class MultiTouchGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания касания несколькими пальцами. */
+  MultiTouchRecognizeSettings get recognizeSettings {
+    _CMultiTouchRecognizeSettings res = _CMultiTouchGestureSettings_recognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(MultiTouchRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CMultiTouchRecognizeSettings();
+    void res = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CMultiTouchGestureSettings_releasePtr);
+
+  MultiTouchGestureSettings._raw(this._self);
+  factory MultiTouchGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MultiTouchGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MultiTouchGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CMultiTouchGestureSettings_cg_objectIdentifier(this._self) == _CMultiTouchGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMultiTouchGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - MultiTouchGestureSettings <-> CMultiTouchGestureSettings
+
+final class _CMultiTouchGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMultiTouchGestureSettingsBasicFunctions on _CMultiTouchGestureSettings {
+  void _releaseIntermediate() {
+    _CMultiTouchGestureSettings_release(_impl);
+  }
+
+  _CMultiTouchGestureSettings _retain() {
+    return _CMultiTouchGestureSettings_retain(_impl);
+  }
+}
+
+extension _CMultiTouchGestureSettingsToDart on _CMultiTouchGestureSettings {
+  MultiTouchGestureSettings _toDart() {
+    return MultiTouchGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMultiTouchGestureSettings on MultiTouchGestureSettings {
+  _CMultiTouchGestureSettings _copyFromDartTo_CMultiTouchGestureSettings() {
+    return (_CMultiTouchGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - TiltRecognizeSettings
+
+/** Настройки распознавания наклона. */
+class TiltRecognizeSettings {
+  /**
+   Расстояние, в миллиметрах, на которое нужно сдвинуть пальцы по экрану,
+   чтобы изменить угол наклона камеры на 1 градус.
+   Отрицательное значение приведет к инверсии направления, значение 0 недопустимо.
   */
   final double lenOnDegreeMm;
   /**
-   Максимальный допустимый угол отклонения линии постановки пальцев от горизонта для вертикального свайпа.
-   В градусах.
+   Максимально допустимый угол, в градусах, отклонения линии постановки пальцев
+   от горизонта для вертикального свайпа.
   */
   final double horizontalSwerveDeg;
-  /** Максимально допустимый угол отклонения направления свайпа от вертикальной линии. Измеряется в градусах */
+  /** Максимально допустимый угол, в градусах, отклонения направления свайпа от вертикальной линии. */
   final double verticalSwerveDeg;
-  /** Порог сдвига взвешенного среднего точек в миллиметрах. Если сдвиг не превысит порог, то событие не отправляется. */
+  /** Порог сдвига взвешенного среднего точек в миллиметрах, преодоление которого говорит о начале наклона. */
   final double thresholdMm;
   /**
-   Максимально допустимый угол между векторами, до достижения которого они считаются сонаправленными во время
-   распознавания жеста наклона.
+   Максимально допустимый угол между векторами, в градусах, преодоление которого
+   говорит о нарушении сонаправленности.
   */
   final double maxParallelsDeviationDeg;
 
-  const TiltSettings({
-    required this.lenOnDegreeMm,
-    required this.horizontalSwerveDeg,
-    required this.verticalSwerveDeg,
-    required this.thresholdMm,
-    required this.maxParallelsDeviationDeg
+  const TiltRecognizeSettings({
+    this.lenOnDegreeMm = 1,
+    this.horizontalSwerveDeg = 20,
+    this.verticalSwerveDeg = 10,
+    this.thresholdMm = 1.100000023841858,
+    this.maxParallelsDeviationDeg = 16
   });
 
-  TiltSettings copyWith({
+  TiltRecognizeSettings copyWith({
     double? lenOnDegreeMm,
     double? horizontalSwerveDeg,
     double? verticalSwerveDeg,
     double? thresholdMm,
     double? maxParallelsDeviationDeg
   }) {
-    return TiltSettings(
+    return TiltRecognizeSettings(
       lenOnDegreeMm: lenOnDegreeMm ?? this.lenOnDegreeMm,
       horizontalSwerveDeg: horizontalSwerveDeg ?? this.horizontalSwerveDeg,
       verticalSwerveDeg: verticalSwerveDeg ?? this.verticalSwerveDeg,
@@ -61625,7 +64501,7 @@ class TiltSettings {
   }
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is TiltSettings &&
+    identical(this, other) || other is TiltRecognizeSettings &&
     other.runtimeType == runtimeType &&
     other.lenOnDegreeMm == lenOnDegreeMm &&
     other.horizontalSwerveDeg == horizontalSwerveDeg &&
@@ -61639,7 +64515,7 @@ class TiltSettings {
   }
 
 }
-final class _CTiltSettings extends ffi.Struct {
+final class _CTiltRecognizeSettings extends ffi.Struct {
   @ffi.Float()
   external double lenOnDegreeMm;
 
@@ -61656,11 +64532,11 @@ final class _CTiltSettings extends ffi.Struct {
   external double maxParallelsDeviationDeg;
 
 }
-// MARK: - TiltSettings <-> _CTiltSettings
+// MARK: - TiltRecognizeSettings <-> _CTiltRecognizeSettings
 
-extension _CTiltSettingsToDart on _CTiltSettings {
-  TiltSettings _toDart() {
-    return TiltSettings(
+extension _CTiltRecognizeSettingsToDart on _CTiltRecognizeSettings {
+  TiltRecognizeSettings _toDart() {
+    return TiltRecognizeSettings(
       lenOnDegreeMm: this.lenOnDegreeMm,
       horizontalSwerveDeg: this.horizontalSwerveDeg,
       verticalSwerveDeg: this.verticalSwerveDeg,
@@ -61670,9 +64546,9 @@ extension _CTiltSettingsToDart on _CTiltSettings {
   }
 }
 
-extension _DartTo_CTiltSettings on TiltSettings {
-  _CTiltSettings _copyFromDartTo_CTiltSettings() {
-    final res = _CTiltSettingsMakeDefault();
+extension _DartTo_CTiltRecognizeSettings on TiltRecognizeSettings {
+  _CTiltRecognizeSettings _copyFromDartTo_CTiltRecognizeSettings() {
+    final res = _CTiltRecognizeSettingsMakeDefault();
     res.lenOnDegreeMm = this.lenOnDegreeMm;
     res.horizontalSwerveDeg = this.horizontalSwerveDeg;
     res.verticalSwerveDeg = this.verticalSwerveDeg;
@@ -61681,61 +64557,117 @@ extension _DartTo_CTiltSettings on TiltSettings {
     return res;
   }
 }
-extension _CTiltSettingsRelease on _CTiltSettings {
+extension _CTiltRecognizeSettingsRelease on _CTiltRecognizeSettings {
   void _releaseIntermediate() {
   }
 }
 
+// MARK: - TiltGestureSettings
+
+/** Настройки жеста наклона. */
+class TiltGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания наклона. */
+  TiltRecognizeSettings get recognizeSettings {
+    _CTiltRecognizeSettings res = _CTiltGestureSettings_recognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(TiltRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CTiltRecognizeSettings();
+    void res = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTiltGestureSettings_releasePtr);
+
+  TiltGestureSettings._raw(this._self);
+  factory TiltGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TiltGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TiltGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CTiltGestureSettings_cg_objectIdentifier(this._self) == _CTiltGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTiltGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - TiltGestureSettings <-> CTiltGestureSettings
+
+final class _CTiltGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTiltGestureSettingsBasicFunctions on _CTiltGestureSettings {
+  void _releaseIntermediate() {
+    _CTiltGestureSettings_release(_impl);
+  }
+
+  _CTiltGestureSettings _retain() {
+    return _CTiltGestureSettings_retain(_impl);
+  }
+}
+
+extension _CTiltGestureSettingsToDart on _CTiltGestureSettings {
+  TiltGestureSettings _toDart() {
+    return TiltGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTiltGestureSettings on TiltGestureSettings {
+  _CTiltGestureSettings _copyFromDartTo_CTiltGestureSettings() {
+    return (_CTiltGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - GestureManager
 
 /** Класс для управления обработкой жестов. */
 class GestureManager implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
-  GestureEnumSet get enabledGestures {
-    _COptionSet_CGesture res = _CGestureManager_enabledGestures(_CGestureManagerMakeDefault().._impl=_self);
+  EnumSet<TransformGesture> get enabledGestures {
+    _COptionSet_CTransformGesture res = _CGestureManager_enabledGestures(_CGestureManagerMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set enabledGestures(GestureEnumSet flags) {
-    var _a1 = flags._copyFromDartTo_COptionSet_CGesture();
-    void res = _CGestureManager_setEnabledGestures_COptionSet_CGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+  set enabledGestures(EnumSet<TransformGesture> flags) {
+    var _a1 = flags._copyFromDartTo_COptionSet_CTransformGesture();
+    void res = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
     return res;
   }
-  ScalingSettings get scalingSettings {
-    _CScalingSettings res = _CGestureManager_scalingSettings(_CGestureManagerMakeDefault().._impl=_self);
-    return res._toDart();
+  ScalingGestureSettings get scalingSettings {
+    _CScalingGestureSettings res = _CGestureManager_scalingSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
-  set scalingSettings(ScalingSettings settings) {
-    var _a1 = settings._copyFromDartTo_CScalingSettings();
-    void res = _CGestureManager_setScalingSettings_CScalingSettings(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
+  RotationGestureSettings get rotationSettings {
+    _CRotationGestureSettings res = _CGestureManager_rotationSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
-  RotationSettings get rotationSettings {
-    _CRotationSettings res = _CGestureManager_rotationSettings(_CGestureManagerMakeDefault().._impl=_self);
-    return res._toDart();
+  MultiTouchGestureSettings get multitouchShiftSettings {
+    _CMultiTouchGestureSettings res = _CGestureManager_multitouchShiftSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
-  set rotationSettings(RotationSettings settings) {
-    var _a1 = settings._copyFromDartTo_CRotationSettings();
-    void res = _CGestureManager_setRotationSettings_CRotationSettings(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  MultiTouchShiftSettings get multitouchShiftSettings {
-    _CMultiTouchShiftSettings res = _CGestureManager_multitouchShiftSettings(_CGestureManagerMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set multitouchShiftSettings(MultiTouchShiftSettings settings) {
-    var _a1 = settings._copyFromDartTo_CMultiTouchShiftSettings();
-    void res = _CGestureManager_setMultitouchShiftSettings_CMultiTouchShiftSettings(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  TiltSettings get tiltSettings {
-    _CTiltSettings res = _CGestureManager_tiltSettings(_CGestureManagerMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set tiltSettings(TiltSettings settings) {
-    var _a1 = settings._copyFromDartTo_CTiltSettings();
-    void res = _CGestureManager_setTiltSettings_CTiltSettings(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
+  TiltGestureSettings get tiltSettings {
+    _CTiltGestureSettings res = _CGestureManager_tiltSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   static final _finalizer = ffi.NativeFinalizer(_CGestureManager_releasePtr);
@@ -61762,49 +64694,26 @@ class GestureManager implements ffi.Finalizable {
   // MARK: GestureManager: Methods
 
   void enableGesture(
-    Gesture gesture
+    TransformGesture gesture
   )  {
-    var _a1 = gesture._copyFromDartTo_CGesture();
-    void res = _CGestureManager_enableGesture_CGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    void res = _CGestureManager_enableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
     return res;
   }
 
   void disableGesture(
-    Gesture gesture
+    TransformGesture gesture
   )  {
-    var _a1 = gesture._copyFromDartTo_CGesture();
-    void res = _CGestureManager_disableGesture_CGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    void res = _CGestureManager_disableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
     return res;
   }
 
   bool gestureEnabled(
-    Gesture gesture
+    TransformGesture gesture
   )  {
-    var _a1 = gesture._copyFromDartTo_CGesture();
-    bool res = _CGestureManager_gestureEnabled_CGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  /**
-   Настройка точки, относительно которой происходит масштабирование и поворот.
-  
-   - Parameter settings: настройки обработки событий.
-   - Note: при вызове функции происходит пересоздание инструментов распознавания жестов.
-  */
-  void setSettingsAboutMapPositionPoint(
-    EventsProcessingSettings settings
-  )  {
-    var _a1 = settings._copyFromDartTo_CEventsProcessingSettings();
-    void res = _CGestureManager_setSettingsAboutMapPositionPoint_CEventsProcessingSettings(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  /** Установка геопозиции, относительно которой происходит масштабирование и поворот. */
-  void setTargetGeoPoint(
-    GeoPoint? geoPoint
-  )  {
-    var _a1 = geoPoint._copyFromDartTo_COptional_CGeoPoint();
-    void res = _CGestureManager_setTargetGeoPoint_COptional_CGeoPoint(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    bool res = _CGestureManager_gestureEnabled_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
     return res;
   }
 
@@ -61819,10 +64728,10 @@ class GestureManager implements ffi.Finalizable {
    Порядок приоритета жестов (по убыванию): (Shift ->) Tilt -> Scaling -> Rotation -> MultiTouchShift
   */
   void setMutuallyExclusiveGestures(
-    List<GestureEnumSet> rules
+    List<EnumSet<TransformGesture>> rules
   )  {
-    var _a1 = rules._copyFromDartTo_CArray_COptionSet_CGesture();
-    void res = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    var _a1 = rules._copyFromDartTo_CArray_COptionSet_CTransformGesture();
+    void res = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
     _a1._releaseIntermediate();
     return res;
   }
@@ -61857,79 +64766,53 @@ extension _DartToCGestureManager on GestureManager {
     return (_CGestureManagerMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - GestureEnumSet
+// MARK: - EnumSet<TransformGesture>
 
-class GestureEnumSet extends EnumSet<Gesture> {
-  GestureEnumSet() : super();
+class TransformGestureEnumSet extends EnumSet<TransformGesture> {
+  const TransformGestureEnumSet([int rawValue = 0]) : super(rawValue);
 
-  factory GestureEnumSet.fromRawValue(int rawValue) {
-    GestureEnumSet enumSet = GestureEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+  factory TransformGestureEnumSet.fromRawValue(int rawValue) {
+    return TransformGestureEnumSet(rawValue);
   }
 
-  factory GestureEnumSet.of(Iterable<Gesture> elements) {
-    GestureEnumSet enumSet = GestureEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+  factory TransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return TransformGestureEnumSet(rawValue);
   }
 
-  factory GestureEnumSet.all() {
-    GestureEnumSet enumSet = GestureEnumSet();
-    enumSet.addAll(Gesture.values);
-    return enumSet;
+  factory TransformGestureEnumSet.all() {
+    final rawValue = TransformGesture.values.fold(0, (acc, type) => acc | type.rawValue);
+    return TransformGestureEnumSet(rawValue);
   }
 
   @override
-  bool contains(Gesture value) =>
+  bool contains(TransformGesture value) =>
       (this.rawValue & value.rawValue) == value.rawValue;
 
   @override
-  bool containsAllFromEnumSet(EnumSet<Gesture> other) =>
+  bool containsAllFromEnumSet(EnumSet<TransformGesture> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
 
   @override
-  bool add(Gesture value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
+  EnumSet<TransformGesture> intersection(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
 
   @override
-  void addAllFromEnumSet(EnumSet<Gesture> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
+  EnumSet<TransformGesture> union(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
 
   @override
-  bool remove(Gesture value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
+  EnumSet<TransformGesture> difference(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
 
   @override
-  void removeAllFromEnumSet(EnumSet<Gesture> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
+  MutableEnumSet<TransformGesture> toMutableEnumSet() =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue);
 
   @override
-  EnumSet<Gesture> intersection(EnumSet<Gesture> other) =>
-      GestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
-
-  @override
-  EnumSet<Gesture> union(EnumSet<Gesture> other) =>
-      GestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
-
-  @override
-  EnumSet<Gesture> difference(EnumSet<Gesture> other) =>
-      GestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
-
-  @override
-  Set<Gesture> toSet() {
-    Set<Gesture> result = {};
-    Gesture.values.forEach((element) {
+  Set<TransformGesture> toSet() {
+    Set<TransformGesture> result = {};
+    TransformGesture.values.forEach((element) {
       if (this.contains(element)) {
         result.add(element);
       }
@@ -61940,7 +64823,7 @@ class GestureEnumSet extends EnumSet<Gesture> {
   @override
   String toString() {
     List<String> validOptionNames = [];
-    Gesture.values.forEach((element) {
+    TransformGesture.values.forEach((element) {
       if (this.contains(element)) {
         validOptionNames.add(element.name);
       }
@@ -61950,66 +64833,162 @@ class GestureEnumSet extends EnumSet<Gesture> {
   }
 }
 
-final class _COptionSet_CGesture extends ffi.Struct {
+class MutableTransformGestureEnumSet extends MutableEnumSet<TransformGesture> {
+  MutableTransformGestureEnumSet() : super();
+
+  factory MutableTransformGestureEnumSet.fromRawValue(int rawValue) {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableTransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableTransformGestureEnumSet.all() {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.addAll(TransformGesture.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(TransformGesture value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<TransformGesture> intersection(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<TransformGesture> union(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<TransformGesture> difference(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<TransformGesture> toEnumSet() =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<TransformGesture> toSet() {
+    Set<TransformGesture> result = {};
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(TransformGesture value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(TransformGesture value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
+final class _COptionSet_CTransformGesture extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
 }
 
-extension _COptionSet_CGestureBasicFunctions on _COptionSet_CGesture {
+extension _COptionSet_CTransformGestureBasicFunctions on _COptionSet_CTransformGesture {
   void _releaseIntermediate() {
   }
 }
 
-extension _COptionSet_CGestureToDart on _COptionSet_CGesture {
-  GestureEnumSet _toDart() {
-    return GestureEnumSet.fromRawValue(this._rawValue);
+extension _COptionSet_CTransformGestureToDart on _COptionSet_CTransformGesture {
+  EnumSet<TransformGesture> _toDart() {
+    return TransformGestureEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CGesture on GestureEnumSet {
-  _COptionSet_CGesture _copyFromDartTo_COptionSet_CGesture() {
-    return _COptionSet_CGestureMakeDefault().._rawValue = this.rawValue;
+extension _DartTo_COptionSet_CTransformGesture on EnumSet<TransformGesture> {
+  _COptionSet_CTransformGesture _copyFromDartTo_COptionSet_CTransformGesture() {
+    return _COptionSet_CTransformGestureMakeDefault().._rawValue = this.rawValue;
   }
 }
 	
-// MARK: - List<GestureEnumSet> <-> _CArray_COptionSet_CGesture
+// MARK: - List<EnumSet<TransformGesture>> <-> _CArray_COptionSet_CTransformGesture
 
-final class _CArray_COptionSet_CGesture extends ffi.Struct {
+final class _CArray_COptionSet_CTransformGesture extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CArray_COptionSet_CGestureToDart on _CArray_COptionSet_CGesture {
-  List<GestureEnumSet> _toDart() {
+extension _CArray_COptionSet_CTransformGestureToDart on _CArray_COptionSet_CTransformGesture {
+  List<EnumSet<TransformGesture>> _toDart() {
     return _fillFromC();
   }
 }
 
-extension _DartTo_CArray_COptionSet_CGesture on List<GestureEnumSet> {
-  _CArray_COptionSet_CGesture _copyFromDartTo_CArray_COptionSet_CGesture() {
-    final cArray = _CArray_COptionSet_CGesturemakeEmpty();
+extension _DartTo_CArray_COptionSet_CTransformGesture on List<EnumSet<TransformGesture>> {
+  _CArray_COptionSet_CTransformGesture _copyFromDartTo_CArray_COptionSet_CTransformGesture() {
+    final cArray = _CArray_COptionSet_CTransformGesturemakeEmpty();
     forEach((item) {
-        final cItem = item._copyFromDartTo_COptionSet_CGesture();
-        _CArray_COptionSet_CGestureaddElement(cArray, cItem);
+        final cItem = item._copyFromDartTo_COptionSet_CTransformGesture();
+        _CArray_COptionSet_CTransformGestureaddElement(cArray, cItem);
         
     });
     return cArray;
   }
 }
 
-extension _CArray_COptionSet_CGestureBasicFunctions on _CArray_COptionSet_CGesture {
+extension _CArray_COptionSet_CTransformGestureBasicFunctions on _CArray_COptionSet_CTransformGesture {
   void _releaseIntermediate() {
-    _CArray_COptionSet_CGesture_release(this);
+    _CArray_COptionSet_CTransformGesture_release(this);
   }
 
-  static final _listToFill = <GestureEnumSet>[];
+  static final _listToFill = <EnumSet<TransformGesture>>[];
 
-  static void _iterate(_COptionSet_CGesture item) {
+  static void _iterate(_COptionSet_CTransformGesture item) {
     _listToFill.add(item._toDart());
   }
 
-  List<GestureEnumSet> _fillFromC() {
-    _forEach_CArray_COptionSet_CGesture(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptionSet_CGesture)>(_iterate));
-    final result = List<GestureEnumSet>.from(_listToFill);
+  List<EnumSet<TransformGesture>> _fillFromC() {
+    _forEach_CArray_COptionSet_CTransformGesture(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptionSet_CTransformGesture)>(_iterate));
+    final result = List<EnumSet<TransformGesture>>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -62017,11 +64996,14 @@ extension _CArray_COptionSet_CGestureBasicFunctions on _CArray_COptionSet_CGestu
 	
 // MARK: - TouchPointState
 
+/** Тип состояния точки прикосновения. */
 enum TouchPointState {
-  pressed(0),
-  released(1),
-  moved(2),
-  endThisEnum(3),
+  /** Точка нажата. */
+  pressed(1),
+  /** Точка нажата. */
+  released(2),
+  /** Точка переместилась или осталась на месте. */
+  moved(4),
   ;
 
   const TouchPointState(this.rawValue);
@@ -62563,6 +65545,15 @@ class MapLocationController implements ffi.Finalizable {
     void res = _CMapLocationController_setMapToNorthOrientation_bool(_CMapLocationControllerMakeDefault().._impl=_self, enable);
     return res;
   }
+  /** Признак использования пользовательских значений зума и наклона для отображения карты. */
+  bool get userControlOverMap {
+    bool res = _CMapLocationController_userControlOverMap(_CMapLocationControllerMakeDefault().._impl=_self);
+    return res;
+  }
+  set userControlOverMap(bool enable) {
+    void res = _CMapLocationController_setUserControlOverMap_bool(_CMapLocationControllerMakeDefault().._impl=_self, enable);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CMapLocationController_releasePtr);
 
@@ -62758,9 +65749,99 @@ extension _CSpeedRangeRelease on _CSpeedRange {
   }
 }
 
+// MARK: - core.Map<RoadType, StyleZoom> <-> _CDictionary_CRoadType_CStyleZoom
+
+final class _CDictionary_CRoadType_CStyleZoom extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CRoadType_CStyleZoomToDart on _CDictionary_CRoadType_CStyleZoom {
+  core.Map<RoadType, StyleZoom> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CRoadType_CStyleZoom on core.Map<RoadType, StyleZoom> {
+  _CDictionary_CRoadType_CStyleZoom _copyFromDartTo_CDictionary_CRoadType_CStyleZoom() {
+    final cDict = _CDictionary_CRoadType_CStyleZoommakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CRoadType();
+        final cValue = v._copyFromDartTo_CStyleZoom();
+        _CDictionary_CRoadType_CStyleZoomaddElement(cDict, cKey, cValue);
+        
+        
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CRoadType_CStyleZoomBasicFunctions on _CDictionary_CRoadType_CStyleZoom {
+  void _releaseIntermediate() {
+    _CDictionary_CRoadType_CStyleZoom_release(this);
+  }
+
+  static final _mapToFill = <RoadType, StyleZoom>{};
+
+  static void _iterate(_CRoadType key, _CStyleZoom value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<RoadType, StyleZoom> _fillFromC() {
+    _forEach_CDictionary_CRoadType_CStyleZoom(this, ffi.Pointer.fromFunction<ffi.Void Function(_CRoadType, _CStyleZoom value)>(_iterate));
+    final result = core.Map<RoadType, StyleZoom>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - core.Map<RoadType, Tilt> <-> _CDictionary_CRoadType_CTilt
+
+final class _CDictionary_CRoadType_CTilt extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDictionary_CRoadType_CTiltToDart on _CDictionary_CRoadType_CTilt {
+  core.Map<RoadType, Tilt> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CDictionary_CRoadType_CTilt on core.Map<RoadType, Tilt> {
+  _CDictionary_CRoadType_CTilt _copyFromDartTo_CDictionary_CRoadType_CTilt() {
+    final cDict = _CDictionary_CRoadType_CTiltmakeEmpty();
+    forEach((k, v) {
+        final cKey = k._copyFromDartTo_CRoadType();
+        final cValue = v._copyFromDartTo_CTilt();
+        _CDictionary_CRoadType_CTiltaddElement(cDict, cKey, cValue);
+        
+        
+    });
+    return cDict;
+  }
+}
+
+extension _CDictionary_CRoadType_CTiltBasicFunctions on _CDictionary_CRoadType_CTilt {
+  void _releaseIntermediate() {
+    _CDictionary_CRoadType_CTilt_release(this);
+  }
+
+  static final _mapToFill = <RoadType, Tilt>{};
+
+  static void _iterate(_CRoadType key, _CTilt value) {
+    _mapToFill.putIfAbsent(key._toDart(), () => value._toDart());
+  }
+
+  core.Map<RoadType, Tilt> _fillFromC() {
+    _forEach_CDictionary_CRoadType_CTilt(this, ffi.Pointer.fromFunction<ffi.Void Function(_CRoadType, _CTilt value)>(_iterate));
+    final result = core.Map<RoadType, Tilt>.from(_mapToFill);
+    _mapToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - SpeedRangeToStyleZoom
 
-/** Соответствие интервала скоростей и стилевого уровня масштабирования. */
+/** Соответствие интервала скоростей, класса дорог и стилевого уровня масштабирования. */
 class SpeedRangeToStyleZoom {
   /** Интервал скоростей. */
   final SpeedRange range;
@@ -62774,27 +65855,48 @@ class SpeedRangeToStyleZoom {
    зума должно завершиться.
   */
   final RouteDistance maxDistanceToManeuver;
-  /** Стилевой уровень масштабирования. */
+  /**
+   Стилевой уровень масштабирования для определенного класса дорог.
+   Переопределяет style_zoom значение по умолчанию.
+  */
+  final core.Map<RoadType, StyleZoom> roadClassesStyleZooms;
+  /**
+   Стилевой наклон для определенного класса дорог.
+   Переопределяет style_tilt значение по умолчанию.
+  */
+  final core.Map<RoadType, Tilt> roadClassesTilts;
+  /** Стилевой уровень масштабирования по умолчанию. Применяется для всех классов дорог. */
   final StyleZoom styleZoom;
+  /** Стилевой угол наклона по умолчанию. Применяется для всех классов дорог. */
+  final Tilt styleTilt;
 
   const SpeedRangeToStyleZoom({
     required this.range,
     required this.minDistanceToManeuver,
     required this.maxDistanceToManeuver,
-    required this.styleZoom
+    required this.roadClassesStyleZooms,
+    required this.roadClassesTilts,
+    required this.styleZoom,
+    required this.styleTilt
   });
 
   SpeedRangeToStyleZoom copyWith({
     SpeedRange? range,
     RouteDistance? minDistanceToManeuver,
     RouteDistance? maxDistanceToManeuver,
-    StyleZoom? styleZoom
+    core.Map<RoadType, StyleZoom>? roadClassesStyleZooms,
+    core.Map<RoadType, Tilt>? roadClassesTilts,
+    StyleZoom? styleZoom,
+    Tilt? styleTilt
   }) {
     return SpeedRangeToStyleZoom(
       range: range ?? this.range,
       minDistanceToManeuver: minDistanceToManeuver ?? this.minDistanceToManeuver,
       maxDistanceToManeuver: maxDistanceToManeuver ?? this.maxDistanceToManeuver,
-      styleZoom: styleZoom ?? this.styleZoom
+      roadClassesStyleZooms: roadClassesStyleZooms ?? this.roadClassesStyleZooms,
+      roadClassesTilts: roadClassesTilts ?? this.roadClassesTilts,
+      styleZoom: styleZoom ?? this.styleZoom,
+      styleTilt: styleTilt ?? this.styleTilt
     );
   }
   @override
@@ -62804,11 +65906,14 @@ class SpeedRangeToStyleZoom {
     other.range == range &&
     other.minDistanceToManeuver == minDistanceToManeuver &&
     other.maxDistanceToManeuver == maxDistanceToManeuver &&
-    other.styleZoom == styleZoom;
+    other.roadClassesStyleZooms == roadClassesStyleZooms &&
+    other.roadClassesTilts == roadClassesTilts &&
+    other.styleZoom == styleZoom &&
+    other.styleTilt == styleTilt;
 
   @override
   int get hashCode {
-    return Object.hash(range, minDistanceToManeuver, maxDistanceToManeuver, styleZoom);
+    return Object.hash(range, minDistanceToManeuver, maxDistanceToManeuver, roadClassesStyleZooms, roadClassesTilts, styleZoom, styleTilt);
   }
 
 }
@@ -62819,7 +65924,13 @@ final class _CSpeedRangeToStyleZoom extends ffi.Struct {
 
   external _CRouteDistance maxDistanceToManeuver;
 
+  external _CDictionary_CRoadType_CStyleZoom roadClassesStyleZooms;
+
+  external _CDictionary_CRoadType_CTilt roadClassesTilts;
+
   external _CStyleZoom styleZoom;
+
+  external _CTilt styleTilt;
 
 }
 // MARK: - SpeedRangeToStyleZoom <-> _CSpeedRangeToStyleZoom
@@ -62830,7 +65941,10 @@ extension _CSpeedRangeToStyleZoomToDart on _CSpeedRangeToStyleZoom {
       range: this.range._toDart(),
       minDistanceToManeuver: this.minDistanceToManeuver._toDart(),
       maxDistanceToManeuver: this.maxDistanceToManeuver._toDart(),
-      styleZoom: this.styleZoom._toDart()
+      roadClassesStyleZooms: this.roadClassesStyleZooms._toDart(),
+      roadClassesTilts: this.roadClassesTilts._toDart(),
+      styleZoom: this.styleZoom._toDart(),
+      styleTilt: this.styleTilt._toDart()
     );
   }
 }
@@ -62841,12 +65955,17 @@ extension _DartTo_CSpeedRangeToStyleZoom on SpeedRangeToStyleZoom {
     res.range = this.range._copyFromDartTo_CSpeedRange();
     res.minDistanceToManeuver = this.minDistanceToManeuver._copyFromDartTo_CRouteDistance();
     res.maxDistanceToManeuver = this.maxDistanceToManeuver._copyFromDartTo_CRouteDistance();
+    res.roadClassesStyleZooms = this.roadClassesStyleZooms._copyFromDartTo_CDictionary_CRoadType_CStyleZoom();
+    res.roadClassesTilts = this.roadClassesTilts._copyFromDartTo_CDictionary_CRoadType_CTilt();
     res.styleZoom = this.styleZoom._copyFromDartTo_CStyleZoom();
+    res.styleTilt = this.styleTilt._copyFromDartTo_CTilt();
     return res;
   }
 }
 extension _CSpeedRangeToStyleZoomRelease on _CSpeedRangeToStyleZoom {
   void _releaseIntermediate() {
+    roadClassesStyleZooms._releaseIntermediate();
+    roadClassesTilts._releaseIntermediate();
   }
 }
 
@@ -62885,11 +66004,12 @@ extension _CSpeedRangeToStyleZoomRelease on _CSpeedRangeToStyleZoom {
  2. Во время движение происходит проверка на то, не вышло ли текущее значение скорости за пределы интервала
  скоростей, указанных в элементе последовательности с индексом index. Если скорость вышла за пределы интервала,
  то происходит поиск соседнего интервала, в который попадает значение скорости, и запоминается его индекс.
- 3. Происходит проверка, не проезжаем ли мы маневр. Считается, что мы проезжаем маневр, если есть маневр по ходу
- движения и дистанция до маневра не превышает указанной в SpeedRangeToStyleZoom, или мы проехали маневр, но не
- отдалились от него на дистанцию больше указанной в SpeedRangeToStyleZoom.
- Если мы проезжаем маневр, то выбирается масштаб, соответствующий элементу последовательности с index == 0,
- иначе выбирается масштаб, соответствующий элементу index.
+ 3. Происходит проверка, не проезжаем ли мы маневр (только для определенных классов дорог).
+ Считается, что мы проезжаем маневр, если есть маневр по ходу движения и дистанция до маневра не превышает
+ указанной в поле min_distance_to_maneuver_m из SpeedRangeToStyleZoom, или мы проехали маневр, но не отдалились от
+ него на дистанцию больше указанной в max_distance_to_maneuver_m из SpeedRangeToStyleZoom. Если мы проезжаем
+ маневр, то выбирается масштаб, соответствующий элементу последовательности с index == 0, иначе выбирается
+ масштаб, соответствующий элементу index.
 
  При приближении к маневру на текущей скорости масштаб будет плавно увеличиваться. Время увеличения зависит от
  скорости и расстояния до манёвра. При увеличении скорости время анимации увеличивается, при снижении скорости -
@@ -63093,7 +66213,7 @@ extension _DartTo_CArray_CSpeedRangeToStyleZoom on List<SpeedRangeToStyleZoom> {
     forEach((item) {
         final cItem = item._copyFromDartTo_CSpeedRangeToStyleZoom();
         _CArray_CSpeedRangeToStyleZoomaddElement(cArray, cItem);
-        
+        cItem._releaseIntermediate();
     });
     return cArray;
   }
@@ -63128,11 +66248,11 @@ class RouteMapSettings implements ffi.Finalizable {
    Флаги отображения маршрута на карте для режима ведения по маршруту.
    По умолчанию включены все флаги, за исключением флага InactiveFloors.
   */
-  RouteMapObjectDisplayFlagEnumSet get onRouteDisplayFlags {
+  EnumSet<RouteMapObjectDisplayFlag> get onRouteDisplayFlags {
     _COptionSet_CRouteMapObjectDisplayFlag res = _CRouteMapSettings_onRouteDisplayFlags(_CRouteMapSettingsMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set onRouteDisplayFlags(RouteMapObjectDisplayFlagEnumSet displayFlags) {
+  set onRouteDisplayFlags(EnumSet<RouteMapObjectDisplayFlag> displayFlags) {
     var _a1 = displayFlags._copyFromDartTo_COptionSet_CRouteMapObjectDisplayFlag();
     void res = _CRouteMapSettings_setOnRouteDisplayFlags_COptionSet_CRouteMapObjectDisplayFlag(_CRouteMapSettingsMakeDefault().._impl=_self, _a1);
     return res;
@@ -63141,11 +66261,11 @@ class RouteMapSettings implements ffi.Finalizable {
    Флаги отображения маршрута на карте для режима free roam.
    По умолчанию включены флаги Cameras, Humps, Accidents, RoadWorks, Comments, RoadRestrictions, OtherEvents.
   */
-  RouteMapObjectDisplayFlagEnumSet get freeRoamDisplayFlags {
+  EnumSet<RouteMapObjectDisplayFlag> get freeRoamDisplayFlags {
     _COptionSet_CRouteMapObjectDisplayFlag res = _CRouteMapSettings_freeRoamDisplayFlags(_CRouteMapSettingsMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set freeRoamDisplayFlags(RouteMapObjectDisplayFlagEnumSet displayFlags) {
+  set freeRoamDisplayFlags(EnumSet<RouteMapObjectDisplayFlag> displayFlags) {
     var _a1 = displayFlags._copyFromDartTo_COptionSet_CRouteMapObjectDisplayFlag();
     void res = _CRouteMapSettings_setFreeRoamDisplayFlags_COptionSet_CRouteMapObjectDisplayFlag(_CRouteMapSettingsMakeDefault().._impl=_self, _a1);
     return res;
@@ -63154,11 +66274,11 @@ class RouteMapSettings implements ffi.Finalizable {
    Флаги, исключающие скрытие различных составных частей маршрута с карты при обновлении пройденного вдоль
    маршрута расстояния для режима ведения по маршруту. По умолчанию скрываются все элементы маршрута.
   */
-  RouteMapObjectPermanentDisplayFlagEnumSet get onRoutePermanentDisplayFlags {
+  EnumSet<RouteMapObjectPermanentDisplayFlag> get onRoutePermanentDisplayFlags {
     _COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteMapSettings_onRoutePermanentDisplayFlags(_CRouteMapSettingsMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set onRoutePermanentDisplayFlags(RouteMapObjectPermanentDisplayFlagEnumSet flags) {
+  set onRoutePermanentDisplayFlags(EnumSet<RouteMapObjectPermanentDisplayFlag> flags) {
     var _a1 = flags._copyFromDartTo_COptionSet_CRouteMapObjectPermanentDisplayFlag();
     void res = _CRouteMapSettings_setOnRoutePermanentDisplayFlags_COptionSet_CRouteMapObjectPermanentDisplayFlag(_CRouteMapSettingsMakeDefault().._impl=_self, _a1);
     return res;
@@ -63167,11 +66287,11 @@ class RouteMapSettings implements ffi.Finalizable {
    Флаги, исключающие скрытие различных составных частей маршрута с карты при обновлении пройденного вдоль
    маршрута расстояния для режима free roam. По умолчанию скрываются все элементы маршрута.
   */
-  RouteMapObjectPermanentDisplayFlagEnumSet get freeRoamPermanentDisplayFlags {
+  EnumSet<RouteMapObjectPermanentDisplayFlag> get freeRoamPermanentDisplayFlags {
     _COptionSet_CRouteMapObjectPermanentDisplayFlag res = _CRouteMapSettings_freeRoamPermanentDisplayFlags(_CRouteMapSettingsMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set freeRoamPermanentDisplayFlags(RouteMapObjectPermanentDisplayFlagEnumSet flags) {
+  set freeRoamPermanentDisplayFlags(EnumSet<RouteMapObjectPermanentDisplayFlag> flags) {
     var _a1 = flags._copyFromDartTo_COptionSet_CRouteMapObjectPermanentDisplayFlag();
     void res = _CRouteMapSettings_setFreeRoamPermanentDisplayFlags_COptionSet_CRouteMapObjectPermanentDisplayFlag(_CRouteMapSettingsMakeDefault().._impl=_self, _a1);
     return res;
@@ -63997,6 +67117,10 @@ enum SoundCategory {
   lostLocation(65536),
   /** Завершение маршрута. */
   routeEnd(131072),
+  /** Маршрут лучше. */
+  betterRoute(262144),
+  /** Лежачие полицейские. */
+  humps(524288),
   ;
 
   const SoundCategory(this.rawValue);
@@ -64041,11 +67165,11 @@ class SoundNotificationSettings implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
   /** Набор флагов для звуковых оповещений. */
-  SoundCategoryEnumSet get enabledSoundCategories {
+  EnumSet<SoundCategory> get enabledSoundCategories {
     _COptionSet_CSoundCategory res = _CSoundNotificationSettings_enabledSoundCategories(_CSoundNotificationSettingsMakeDefault().._impl=_self);
     return res._toDart();
   }
-  set enabledSoundCategories(SoundCategoryEnumSet soundCategories) {
+  set enabledSoundCategories(EnumSet<SoundCategory> soundCategories) {
     var _a1 = soundCategories._copyFromDartTo_COptionSet_CSoundCategory();
     void res = _CSoundNotificationSettings_setEnabledSoundCategories_COptionSet_CSoundCategory(_CSoundNotificationSettingsMakeDefault().._impl=_self, _a1);
     return res;
@@ -64102,27 +67226,23 @@ extension _DartToCSoundNotificationSettings on SoundNotificationSettings {
     return (_CSoundNotificationSettingsMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - SoundCategoryEnumSet
+// MARK: - EnumSet<SoundCategory>
 
 class SoundCategoryEnumSet extends EnumSet<SoundCategory> {
-  SoundCategoryEnumSet() : super();
+  const SoundCategoryEnumSet([int rawValue = 0]) : super(rawValue);
 
   factory SoundCategoryEnumSet.fromRawValue(int rawValue) {
-    SoundCategoryEnumSet enumSet = SoundCategoryEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
+    return SoundCategoryEnumSet(rawValue);
   }
 
   factory SoundCategoryEnumSet.of(Iterable<SoundCategory> elements) {
-    SoundCategoryEnumSet enumSet = SoundCategoryEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return SoundCategoryEnumSet(rawValue);
   }
 
   factory SoundCategoryEnumSet.all() {
-    SoundCategoryEnumSet enumSet = SoundCategoryEnumSet();
-    enumSet.addAll(SoundCategory.values);
-    return enumSet;
+    final rawValue = SoundCategory.values.fold(0, (acc, type) => acc | type.rawValue);
+    return SoundCategoryEnumSet(rawValue);
   }
 
   @override
@@ -64132,32 +67252,6 @@ class SoundCategoryEnumSet extends EnumSet<SoundCategory> {
   @override
   bool containsAllFromEnumSet(EnumSet<SoundCategory> other) =>
       (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  bool add(SoundCategory value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(EnumSet<SoundCategory> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(SoundCategory value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(EnumSet<SoundCategory> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
 
   @override
   EnumSet<SoundCategory> intersection(EnumSet<SoundCategory> other) =>
@@ -64170,6 +67264,10 @@ class SoundCategoryEnumSet extends EnumSet<SoundCategory> {
   @override
   EnumSet<SoundCategory> difference(EnumSet<SoundCategory> other) =>
       SoundCategoryEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<SoundCategory> toMutableEnumSet() =>
+      MutableSoundCategoryEnumSet.fromRawValue(this.rawValue);
 
   @override
   Set<SoundCategory> toSet() {
@@ -64195,6 +67293,102 @@ class SoundCategoryEnumSet extends EnumSet<SoundCategory> {
   }
 }
 
+class MutableSoundCategoryEnumSet extends MutableEnumSet<SoundCategory> {
+  MutableSoundCategoryEnumSet() : super();
+
+  factory MutableSoundCategoryEnumSet.fromRawValue(int rawValue) {
+    MutableSoundCategoryEnumSet enumSet = MutableSoundCategoryEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableSoundCategoryEnumSet.of(Iterable<SoundCategory> elements) {
+    MutableSoundCategoryEnumSet enumSet = MutableSoundCategoryEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableSoundCategoryEnumSet.all() {
+    MutableSoundCategoryEnumSet enumSet = MutableSoundCategoryEnumSet();
+    enumSet.addAll(SoundCategory.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(SoundCategory value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<SoundCategory> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<SoundCategory> intersection(MutableEnumSet<SoundCategory> other) =>
+      MutableSoundCategoryEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<SoundCategory> union(MutableEnumSet<SoundCategory> other) =>
+      MutableSoundCategoryEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<SoundCategory> difference(MutableEnumSet<SoundCategory> other) =>
+      MutableSoundCategoryEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<SoundCategory> toEnumSet() =>
+      SoundCategoryEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<SoundCategory> toSet() {
+    Set<SoundCategory> result = {};
+    SoundCategory.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(SoundCategory value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<SoundCategory> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(SoundCategory value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<SoundCategory> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    SoundCategory.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
 final class _COptionSet_CSoundCategory extends ffi.Struct {
   @ffi.Uint32()
   external int _rawValue;
@@ -64206,12 +67400,12 @@ extension _COptionSet_CSoundCategoryBasicFunctions on _COptionSet_CSoundCategory
 }
 
 extension _COptionSet_CSoundCategoryToDart on _COptionSet_CSoundCategory {
-  SoundCategoryEnumSet _toDart() {
+  EnumSet<SoundCategory> _toDart() {
     return SoundCategoryEnumSet.fromRawValue(this._rawValue);
   }
 }
 
-extension _DartTo_COptionSet_CSoundCategory on SoundCategoryEnumSet {
+extension _DartTo_COptionSet_CSoundCategory on EnumSet<SoundCategory> {
   _COptionSet_CSoundCategory _copyFromDartTo_COptionSet_CSoundCategory() {
     return _COptionSet_CSoundCategoryMakeDefault().._rawValue = this.rawValue;
   }
@@ -64529,6 +67723,280 @@ extension _DartToCAlternativeRouteSelector on AlternativeRouteSelector {
     return (_CAlternativeRouteSelectorMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - TrafficJamInfo
+
+/** Информация о пробке. */
+class TrafficJamInfo {
+  /** Точка на маршруте, в которой начинается пробка. */
+  final RoutePoint startPoint;
+  /** Точка на маршруте, в которой заканчивается пробка. */
+  final RoutePoint finishPoint;
+  /**
+   Ожидаемая длительность движения через пробку (оставшаяся длительность,
+   если уже въехали в пробку).
+  */
+  final Duration duration;
+
+  const TrafficJamInfo({
+    required this.startPoint,
+    required this.finishPoint,
+    required this.duration
+  });
+
+  TrafficJamInfo copyWith({
+    RoutePoint? startPoint,
+    RoutePoint? finishPoint,
+    Duration? duration
+  }) {
+    return TrafficJamInfo(
+      startPoint: startPoint ?? this.startPoint,
+      finishPoint: finishPoint ?? this.finishPoint,
+      duration: duration ?? this.duration
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TrafficJamInfo &&
+    other.runtimeType == runtimeType &&
+    other.startPoint == startPoint &&
+    other.finishPoint == finishPoint &&
+    other.duration == duration;
+
+  @override
+  int get hashCode {
+    return Object.hash(startPoint, finishPoint, duration);
+  }
+
+}
+final class _CTrafficJamInfo extends ffi.Struct {
+  external _CRoutePoint startPoint;
+
+  external _CRoutePoint finishPoint;
+
+  external _CTimeInterval duration;
+
+}
+// MARK: - TrafficJamInfo <-> _CTrafficJamInfo
+
+extension _CTrafficJamInfoToDart on _CTrafficJamInfo {
+  TrafficJamInfo _toDart() {
+    return TrafficJamInfo(
+      startPoint: this.startPoint._toDart(),
+      finishPoint: this.finishPoint._toDart(),
+      duration: this.duration._toDart()
+    );
+  }
+}
+
+extension _DartTo_CTrafficJamInfo on TrafficJamInfo {
+  _CTrafficJamInfo _copyFromDartTo_CTrafficJamInfo() {
+    final res = _CTrafficJamInfoMakeDefault();
+    res.startPoint = this.startPoint._copyFromDartTo_CRoutePoint();
+    res.finishPoint = this.finishPoint._copyFromDartTo_CRoutePoint();
+    res.duration = this.duration._copyFromDartTo_CTimeInterval();
+    return res;
+  }
+}
+extension _CTrafficJamInfoRelease on _CTrafficJamInfo {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - TrafficJamDetector
+
+/**
+ Детектор, который определяет, находится ли пользователь вблизи пробки
+ на маршруте.
+*/
+class TrafficJamDetector implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Канал, который оповещает о пробке на маршруте. */
+  StatefulChannel<TrafficJamInfo?> get trafficJamInfoChannel {
+    _CStatefulChannel_COptional_CTrafficJamInfo res = _CTrafficJamDetector_trafficJamInfoChannel(_CTrafficJamDetectorMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Канал, который оповещает о пробке на маршруте. */
+  TrafficJamInfo? get trafficJamInfo {
+    _COptional_CTrafficJamInfo res = _CTrafficJamDetector_trafficJamInfo(_CTrafficJamDetectorMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTrafficJamDetector_releasePtr);
+
+  TrafficJamDetector._raw(this._self);
+  factory TrafficJamDetector._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TrafficJamDetector._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TrafficJamDetector &&
+    other.runtimeType == runtimeType &&
+    _CTrafficJamDetector_cg_objectIdentifier(this._self) == _CTrafficJamDetector_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTrafficJamDetector_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - TrafficJamDetector <-> CTrafficJamDetector
+
+final class _CTrafficJamDetector extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTrafficJamDetectorBasicFunctions on _CTrafficJamDetector {
+  void _releaseIntermediate() {
+    _CTrafficJamDetector_release(_impl);
+  }
+
+  _CTrafficJamDetector _retain() {
+    return _CTrafficJamDetector_retain(_impl);
+  }
+}
+
+extension _CTrafficJamDetectorToDart on _CTrafficJamDetector {
+  TrafficJamDetector _toDart() {
+    return TrafficJamDetector._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTrafficJamDetector on TrafficJamDetector {
+  _CTrafficJamDetector _copyFromDartTo_CTrafficJamDetector() {
+    return (_CTrafficJamDetectorMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - StatefulChannel<TrafficJamInfo?> <-> _CStatefulChannel_COptional_CTrafficJamInfo
+
+class _CStatefulChannel_COptional_CTrafficJamInfoImpl extends StatefulChannel<TrafficJamInfo?> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<TrafficJamInfo?>>{};
+
+  final _CStatefulChannel_COptional_CTrafficJamInfo _channel;
+
+  _CStatefulChannel_COptional_CTrafficJamInfoImpl(this._channel);
+
+  @override
+  TrafficJamInfo? get value {
+    return this._channel._getter();
+  }
+
+  static void valueFunction(_COptional_CTrafficJamInfo cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    
+  }
+
+  @override
+  StreamSubscription<TrafficJamInfo?> listen(void onData(TrafficJamInfo? event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CTrafficJamInfo, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<TrafficJamInfo?>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CStatefulChannel_COptional_CTrafficJamInfo extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStatefulChannel_COptional_CTrafficJamInfoBasicFunctions on _CStatefulChannel_COptional_CTrafficJamInfo {
+  void _releaseIntermediate() {
+    _CStatefulChannel_COptional_CTrafficJamInfo_release(this);
+  }
+
+  _CStatefulChannel_COptional_CTrafficJamInfo _retain() {
+    return _CStatefulChannel_COptional_CTrafficJamInfo_retain(this);
+  }
+
+  TrafficJamInfo? _getter() {
+    final cValue = _CStatefulChannel_COptional_CTrafficJamInfoGetCurrentValue(this);
+    final res = cValue._toDart();
+    
+    return res;
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_COptional_CTrafficJamInfo, ffi.Int64)> callback) {
+    return _CStatefulChannel_COptional_CTrafficJamInfoConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CStatefulChannel_COptional_CTrafficJamInfoToDart on _CStatefulChannel_COptional_CTrafficJamInfo {
+  StatefulChannel<TrafficJamInfo?> _toDart() {
+    return _CStatefulChannel_COptional_CTrafficJamInfoImpl(this._retain());
+  }
+}
+
+extension _DartTo_CStatefulChannel_COptional_CTrafficJamInfo on StatefulChannel<TrafficJamInfo?> {
+  _CStatefulChannel_COptional_CTrafficJamInfo _copyFromDartTo_CStatefulChannel_COptional_CTrafficJamInfo() {
+    return _CStatefulChannel_COptional_CTrafficJamInfoMakeDefault();
+  }
+}
+	
+// MARK: - TrafficJamInfo? <-> _COptional_CTrafficJamInfo
+
+final class _COptional_CTrafficJamInfo extends ffi.Struct {
+  
+  external _CTrafficJamInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTrafficJamInfoBasicFunctions on _COptional_CTrafficJamInfo {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CTrafficJamInfoToDart on _COptional_CTrafficJamInfo {
+  TrafficJamInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTrafficJamInfo on TrafficJamInfo? {
+  _COptional_CTrafficJamInfo _copyFromDartTo_COptional_CTrafficJamInfo() {
+    final cOptional = _COptional_CTrafficJamInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTrafficJamInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - MyLocationMapObjectSourceProvider
 
 /** Провайдер, предоставляющий источник маркера геопозиции. */
@@ -64726,6 +68194,253 @@ extension _DartToCFreeRoamSelector on FreeRoamSelector {
     return (_CFreeRoamSelectorMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - DataPrefetcher
+
+/**
+ Контроллер предварительной загрузки данных карты вдоль маршрута. Данные карты
+ загружаются для источников, которые поддерживают предварительное кэширование.
+ Данные загружаются для отрезков маршрута, определяемых длиной segment_size
+ на расстояние до max_prefetch_distance вперёд. По мере проезда отрезков
+ маршрута соответствующие им предварительно загруженные данные перестают
+ удерживаться в кэше, вместо них загружаются данные дальше по маршруту.
+*/
+class DataPrefetcher implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /**
+   Включение/выключение предварительной загрузки тайлов карты вдоль маршрута.
+   По умолчанию предварительная загрузка включена.
+  
+   - Warning: Вызывать этот метод можно только когда навигатор находится в состоянии Disabled, в противном случае поведение программы не определено.
+  */
+  bool get enabled {
+    bool res = _CDataPrefetcher_enabled(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res;
+  }
+  set enabled(bool enabled) {
+    void res = _CDataPrefetcher_setEnabled_bool(_CDataPrefetcherMakeDefault().._impl=_self, enabled);
+    return res;
+  }
+  /**
+   Минимальный уровень зума, для которого предварительно загружаются тайлы карты.
+   По умолчанию 8.
+  */
+  Zoom get minZoom {
+    _CZoom res = _CDataPrefetcher_minZoom(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set minZoom(Zoom minZoom) {
+    var _a1 = minZoom._copyFromDartTo_CZoom();
+    void res = _CDataPrefetcher_setMinZoom_CZoom(_CDataPrefetcherMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /**
+   Максимальный уровень зума, для которого предварительно загружаются тайлы карты.
+   По умолчанию 16.
+  */
+  Zoom get maxZoom {
+    _CZoom res = _CDataPrefetcher_maxZoom(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set maxZoom(Zoom maxZoom) {
+    var _a1 = maxZoom._copyFromDartTo_CZoom();
+    void res = _CDataPrefetcher_setMaxZoom_CZoom(_CDataPrefetcherMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /**
+   Радиус охвата для предварительной загрузки тайлов карты.
+   По умолчанию 128.
+  */
+  LogicalPixel get radius {
+    _CLogicalPixel res = _CDataPrefetcher_radius(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set radius(LogicalPixel radius) {
+    var _a1 = radius._copyFromDartTo_CLogicalPixel();
+    void res = _CDataPrefetcher_setRadius_CLogicalPixel(_CDataPrefetcherMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /**
+   Размер минимального участка геометрии маршрута, для которого выполняется
+   предварительная загрузка тайлов карты.
+   По умолчанию 2 км.
+  */
+  RouteDistance get segmentSize {
+    _CRouteDistance res = _CDataPrefetcher_segmentSize(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set segmentSize(RouteDistance segmentSize) {
+    var _a1 = segmentSize._copyFromDartTo_CRouteDistance();
+    void res = _CDataPrefetcher_setSegmentSize_CRouteDistance(_CDataPrefetcherMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /**
+   Расстояние впереди текущей позиции на маршруте, для которого нужно
+   выполнить предварительную загрузку тайлов карты.
+   По умолчанию 4 км.
+  */
+  RouteDistance get maxPrefetchDistance {
+    _CRouteDistance res = _CDataPrefetcher_maxPrefetchDistance(_CDataPrefetcherMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set maxPrefetchDistance(RouteDistance maxPrefetchDistance) {
+    var _a1 = maxPrefetchDistance._copyFromDartTo_CRouteDistance();
+    void res = _CDataPrefetcher_setMaxPrefetchDistance_CRouteDistance(_CDataPrefetcherMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CDataPrefetcher_releasePtr);
+
+  DataPrefetcher._raw(this._self);
+  factory DataPrefetcher._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = DataPrefetcher._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DataPrefetcher &&
+    other.runtimeType == runtimeType &&
+    _CDataPrefetcher_cg_objectIdentifier(this._self) == _CDataPrefetcher_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CDataPrefetcher_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - DataPrefetcher <-> CDataPrefetcher
+
+final class _CDataPrefetcher extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDataPrefetcherBasicFunctions on _CDataPrefetcher {
+  void _releaseIntermediate() {
+    _CDataPrefetcher_release(_impl);
+  }
+
+  _CDataPrefetcher _retain() {
+    return _CDataPrefetcher_retain(_impl);
+  }
+}
+
+extension _CDataPrefetcherToDart on _CDataPrefetcher {
+  DataPrefetcher _toDart() {
+    return DataPrefetcher._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCDataPrefetcher on DataPrefetcher {
+  _CDataPrefetcher _copyFromDartTo_CDataPrefetcher() {
+    return (_CDataPrefetcherMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - FinishDetector
+
+class FinishDetector implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  RouteDistance get softLimitMeters {
+    _CRouteDistance res = _CFinishDetector_softLimitMeters(_CFinishDetectorMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set softLimitMeters(RouteDistance limit) {
+    var _a1 = limit._copyFromDartTo_CRouteDistance();
+    void res = _CFinishDetector_setSoftLimitMeters_CRouteDistance(_CFinishDetectorMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  RouteDistance get hardLimitMeters {
+    _CRouteDistance res = _CFinishDetector_hardLimitMeters(_CFinishDetectorMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set hardLimitMeters(RouteDistance limit) {
+    var _a1 = limit._copyFromDartTo_CRouteDistance();
+    void res = _CFinishDetector_setHardLimitMeters_CRouteDistance(_CFinishDetectorMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  RouteDistance get vehicleSoftLimitMeters {
+    _CRouteDistance res = _CFinishDetector_vehicleSoftLimitMeters(_CFinishDetectorMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set vehicleSoftLimitMeters(RouteDistance limit) {
+    var _a1 = limit._copyFromDartTo_CRouteDistance();
+    void res = _CFinishDetector_setVehicleSoftLimitMeters_CRouteDistance(_CFinishDetectorMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  RouteDistance get vehicleHardLimitMeters {
+    _CRouteDistance res = _CFinishDetector_vehicleHardLimitMeters(_CFinishDetectorMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set vehicleHardLimitMeters(RouteDistance limit) {
+    var _a1 = limit._copyFromDartTo_CRouteDistance();
+    void res = _CFinishDetector_setVehicleHardLimitMeters_CRouteDistance(_CFinishDetectorMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  double get distanceToFinishInStraightLineLimitMeters {
+    double res = _CFinishDetector_distanceToFinishInStraightLineLimitMeters(_CFinishDetectorMakeDefault().._impl=_self);
+    return res;
+  }
+  set distanceToFinishInStraightLineLimitMeters(double limit) {
+    void res = _CFinishDetector_setDistanceToFinishInStraightLineLimitMeters_double(_CFinishDetectorMakeDefault().._impl=_self, limit);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CFinishDetector_releasePtr);
+
+  FinishDetector._raw(this._self);
+  factory FinishDetector._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = FinishDetector._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is FinishDetector &&
+    other.runtimeType == runtimeType &&
+    _CFinishDetector_cg_objectIdentifier(this._self) == _CFinishDetector_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CFinishDetector_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - FinishDetector <-> CFinishDetector
+
+final class _CFinishDetector extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CFinishDetectorBasicFunctions on _CFinishDetector {
+  void _releaseIntermediate() {
+    _CFinishDetector_release(_impl);
+  }
+
+  _CFinishDetector _retain() {
+    return _CFinishDetector_retain(_impl);
+  }
+}
+
+extension _CFinishDetectorToDart on _CFinishDetector {
+  FinishDetector _toDart() {
+    return FinishDetector._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCFinishDetector on FinishDetector {
+  _CFinishDetector _copyFromDartTo_CFinishDetector() {
+    return (_CFinishDetectorMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - NavigationManager
 
 /** Корневой публичный интерфейс навигатора. */
@@ -64851,6 +68566,13 @@ class NavigationManager implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  /** Информация о пробках на маршруте. */
+  TrafficJamDetector get trafficJamDetector {
+    _CTrafficJamDetector res = _CNavigationManager_trafficJamDetector(_CNavigationManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
   /** Провайдер, предоставляющий источник маркера геопозиции. */
   MyLocationMapObjectSourceProvider get myLocationMapObjectSourceProvider {
     _CMyLocationMapObjectSourceProvider res = _CNavigationManager_myLocationMapObjectSourceProvider(_CNavigationManagerMakeDefault().._impl=_self);
@@ -64868,6 +68590,20 @@ class NavigationManager implements ffi.Finalizable {
   /** Контроллер перевода навигатора в режим FreeRoam при слишком долгом перестроении маршрута. */
   FreeRoamSelector get freeRoamSelector {
     _CFreeRoamSelector res = _CNavigationManager_freeRoamSelector(_CNavigationManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Контроллер предварительной загрузки тайлов карты вдоль маршрута. */
+  DataPrefetcher get dataPrefetcher {
+    _CDataPrefetcher res = _CNavigationManager_dataPrefetcher(_CNavigationManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Контроллер завершения маршрута */
+  FinishDetector get finishDetector {
+    _CFinishDetector res = _CNavigationManager_finishDetector(_CNavigationManagerMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -65499,233 +69235,6 @@ extension _CArray_CLanesControlImageBasicFunctions on _CArray_CLanesControlImage
   }
 }
 	
-// MARK: - getVoiceManager
-
-/** Получение объекта для управления голосами из контекста. */
-VoiceManager getVoiceManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CVoiceManager res = _CFunction_G_getVoiceManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - VoiceManager
-
-/** Интерфейс для взаимодействия со списком голосовых пакетов навигатора. */
-class VoiceManager implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /**
-   Канал со списком всех известных голосовых пакетов.
-   Обновляется в случае изменения информации о хотя бы об одном из голосов, либо об изменении состава списка.
-   Содержимое канала является подмножеством общего списка пакетов.
-   Во избежание рассинхронизации описаний пакетов, не следует использовать данные, получаемые одновременно
-   из нескольких каналов, содержащих подмножества общего списка пакетов.
-  */
-  StatefulChannel<List<Voice>> get voicesChannel {
-    _CStatefulChannel_CArray_CVoice res = _CVoiceManager_voicesChannel(_CVoiceManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  /**
-   Канал со списком всех известных голосовых пакетов.
-   Обновляется в случае изменения информации о хотя бы об одном из голосов, либо об изменении состава списка.
-   Содержимое канала является подмножеством общего списка пакетов.
-   Во избежание рассинхронизации описаний пакетов, не следует использовать данные, получаемые одновременно
-   из нескольких каналов, содержащих подмножества общего списка пакетов.
-  */
-  List<Voice> get voices {
-    _CArray_CVoice res = _CVoiceManager_voices(_CVoiceManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CVoiceManager_releasePtr);
-
-  VoiceManager._raw(this._self);
-  factory VoiceManager._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = VoiceManager._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is VoiceManager &&
-    other.runtimeType == runtimeType &&
-    _CVoiceManager_cg_objectIdentifier(this._self) == _CVoiceManager_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CVoiceManager_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - VoiceManager <-> CVoiceManager
-
-final class _CVoiceManager extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CVoiceManagerBasicFunctions on _CVoiceManager {
-  void _releaseIntermediate() {
-    _CVoiceManager_release(_impl);
-  }
-
-  _CVoiceManager _retain() {
-    return _CVoiceManager_retain(_impl);
-  }
-}
-
-extension _CVoiceManagerToDart on _CVoiceManager {
-  VoiceManager _toDart() {
-    return VoiceManager._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCVoiceManager on VoiceManager {
-  _CVoiceManager _copyFromDartTo_CVoiceManager() {
-    return (_CVoiceManagerMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - StatefulChannel<List<Voice>> <-> _CStatefulChannel_CArray_CVoice
-
-class _CStatefulChannel_CArray_CVoiceImpl extends StatefulChannel<List<Voice>> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<List<Voice>>>{};
-
-  final _CStatefulChannel_CArray_CVoice _channel;
-
-  _CStatefulChannel_CArray_CVoiceImpl(this._channel);
-
-  @override
-  List<Voice> get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CArray_CVoice cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    cValue._releaseIntermediate();
-  }
-
-  @override
-  StreamSubscription<List<Voice>> listen(void onData(List<Voice> event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CVoice, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<List<Voice>>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CArray_CVoice extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CArray_CVoiceBasicFunctions on _CStatefulChannel_CArray_CVoice {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CArray_CVoice_release(this);
-  }
-
-  _CStatefulChannel_CArray_CVoice _retain() {
-    return _CStatefulChannel_CArray_CVoice_retain(this);
-  }
-
-  List<Voice> _getter() {
-    final cValue = _CStatefulChannel_CArray_CVoiceGetCurrentValue(this);
-    final res = cValue._toDart();
-    cValue._releaseIntermediate();
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CArray_CVoice, ffi.Int64)> callback) {
-    return _CStatefulChannel_CArray_CVoiceConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CArray_CVoiceToDart on _CStatefulChannel_CArray_CVoice {
-  StatefulChannel<List<Voice>> _toDart() {
-    return _CStatefulChannel_CArray_CVoiceImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CArray_CVoice on StatefulChannel<List<Voice>> {
-  _CStatefulChannel_CArray_CVoice _copyFromDartTo_CStatefulChannel_CArray_CVoice() {
-    return _CStatefulChannel_CArray_CVoiceMakeDefault();
-  }
-}
-	
-// MARK: - List<Voice> <-> _CArray_CVoice
-
-final class _CArray_CVoice extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CVoiceToDart on _CArray_CVoice {
-  List<Voice> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CVoice on List<Voice> {
-  _CArray_CVoice _copyFromDartTo_CArray_CVoice() {
-    final cArray = _CArray_CVoicemakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CVoice();
-        _CArray_CVoiceaddElement(cArray, cItem);
-        cItem._releaseIntermediate();
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CVoiceBasicFunctions on _CArray_CVoice {
-  void _releaseIntermediate() {
-    _CArray_CVoice_release(this);
-  }
-
-  static final _listToFill = <Voice>[];
-
-  static void _iterate(_CVoice item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<Voice> _fillFromC() {
-    _forEach_CArray_CVoice(this, ffi.Pointer.fromFunction<ffi.Void Function(_CVoice)>(_iterate));
-    final result = List<Voice>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
 // MARK: - Voice
 
 /** Голосовой пакет с озвучкой навигатора. */
@@ -65911,6 +69420,282 @@ extension _DartTo_CFuture_void on CancelableOperation<void> {
   }
 }
 	
+// MARK: - VoiceManager
+
+/** Интерфейс для взаимодействия со списком голосовых пакетов навигатора. */
+class VoiceManager implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /**
+   Канал со списком всех известных голосовых пакетов.
+   Обновляется в случае изменения информации о хотя бы об одном из голосов, либо об изменении состава списка.
+   Содержимое канала является подмножеством общего списка пакетов.
+   Во избежание рассинхронизации описаний пакетов, не следует использовать данные, получаемые одновременно
+   из нескольких каналов, содержащих подмножества общего списка пакетов.
+  */
+  StatefulChannel<List<Voice>> get voicesChannel {
+    _CStatefulChannel_CArray_CVoice res = _CVoiceManager_voicesChannel(_CVoiceManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /**
+   Канал со списком всех известных голосовых пакетов.
+   Обновляется в случае изменения информации о хотя бы об одном из голосов, либо об изменении состава списка.
+   Содержимое канала является подмножеством общего списка пакетов.
+   Во избежание рассинхронизации описаний пакетов, не следует использовать данные, получаемые одновременно
+   из нескольких каналов, содержащих подмножества общего списка пакетов.
+  */
+  List<Voice> get voices {
+    _CArray_CVoice res = _CVoiceManager_voices(_CVoiceManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /**
+   Получение голоса на основании списка локалей, которые предоставляет платформа.
+  
+   - Returns: Наиболее подходящий для текущего списка локалей голосовой пакет. Если на платформе
+   используется язык (локаль) для которого нет звуковых пакетов, будет возвращен голосовой пакет
+   для английского языка либо null, если голосовой пакет для английского языка отсутствует.
+  */
+  Voice? get defaultVoice {
+    _COptional_CVoice res = _CVoiceManager_getDefaultVoice(_CVoiceManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CVoiceManager_releasePtr);
+
+  VoiceManager._raw(this._self);
+  factory VoiceManager._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = VoiceManager._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is VoiceManager &&
+    other.runtimeType == runtimeType &&
+    _CVoiceManager_cg_objectIdentifier(this._self) == _CVoiceManager_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CVoiceManager_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CVoiceManager: Static Methods
+
+  /** Получение объекта для управления голосами из контекста. */
+  static VoiceManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CVoiceManager res = _CVoiceManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - VoiceManager <-> CVoiceManager
+
+final class _CVoiceManager extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CVoiceManagerBasicFunctions on _CVoiceManager {
+  void _releaseIntermediate() {
+    _CVoiceManager_release(_impl);
+  }
+
+  _CVoiceManager _retain() {
+    return _CVoiceManager_retain(_impl);
+  }
+}
+
+extension _CVoiceManagerToDart on _CVoiceManager {
+  VoiceManager _toDart() {
+    return VoiceManager._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCVoiceManager on VoiceManager {
+  _CVoiceManager _copyFromDartTo_CVoiceManager() {
+    return (_CVoiceManagerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - StatefulChannel<List<Voice>> <-> _CStatefulChannel_CArray_CVoice
+
+class _CStatefulChannel_CArray_CVoiceImpl extends StatefulChannel<List<Voice>> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<List<Voice>>>{};
+
+  final _CStatefulChannel_CArray_CVoice _channel;
+
+  _CStatefulChannel_CArray_CVoiceImpl(this._channel);
+
+  @override
+  List<Voice> get value {
+    return this._channel._getter();
+  }
+
+  static void valueFunction(_CArray_CVoice cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    cValue._releaseIntermediate();
+  }
+
+  @override
+  StreamSubscription<List<Voice>> listen(void onData(List<Voice> event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CVoice, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<List<Voice>>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CStatefulChannel_CArray_CVoice extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStatefulChannel_CArray_CVoiceBasicFunctions on _CStatefulChannel_CArray_CVoice {
+  void _releaseIntermediate() {
+    _CStatefulChannel_CArray_CVoice_release(this);
+  }
+
+  _CStatefulChannel_CArray_CVoice _retain() {
+    return _CStatefulChannel_CArray_CVoice_retain(this);
+  }
+
+  List<Voice> _getter() {
+    final cValue = _CStatefulChannel_CArray_CVoiceGetCurrentValue(this);
+    final res = cValue._toDart();
+    cValue._releaseIntermediate();
+    return res;
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CArray_CVoice, ffi.Int64)> callback) {
+    return _CStatefulChannel_CArray_CVoiceConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CStatefulChannel_CArray_CVoiceToDart on _CStatefulChannel_CArray_CVoice {
+  StatefulChannel<List<Voice>> _toDart() {
+    return _CStatefulChannel_CArray_CVoiceImpl(this._retain());
+  }
+}
+
+extension _DartTo_CStatefulChannel_CArray_CVoice on StatefulChannel<List<Voice>> {
+  _CStatefulChannel_CArray_CVoice _copyFromDartTo_CStatefulChannel_CArray_CVoice() {
+    return _CStatefulChannel_CArray_CVoiceMakeDefault();
+  }
+}
+	
+// MARK: - List<Voice> <-> _CArray_CVoice
+
+final class _CArray_CVoice extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CVoiceToDart on _CArray_CVoice {
+  List<Voice> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CVoice on List<Voice> {
+  _CArray_CVoice _copyFromDartTo_CArray_CVoice() {
+    final cArray = _CArray_CVoicemakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CVoice();
+        _CArray_CVoiceaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CVoiceBasicFunctions on _CArray_CVoice {
+  void _releaseIntermediate() {
+    _CArray_CVoice_release(this);
+  }
+
+  static final _listToFill = <Voice>[];
+
+  static void _iterate(_CVoice item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<Voice> _fillFromC() {
+    _forEach_CArray_CVoice(this, ffi.Pointer.fromFunction<ffi.Void Function(_CVoice)>(_iterate));
+    final result = List<Voice>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - Voice? <-> _COptional_CVoice
+
+final class _COptional_CVoice extends ffi.Struct {
+  
+  external _CVoice value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CVoiceBasicFunctions on _COptional_CVoice {
+  void _releaseIntermediate() {
+    _COptional_CVoice_release(this);
+  }
+}
+
+extension _COptional_CVoiceToDart on _COptional_CVoice {
+  Voice? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CVoice on Voice? {
+  _COptional_CVoice _copyFromDartTo_COptional_CVoice() {
+    final cOptional = _COptional_CVoiceMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CVoice();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - ActivityTracker
 
 class ActivityTracker implements ffi.Finalizable {
@@ -66407,6 +70192,20 @@ class HttpCacheManager implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+  // MARK: CHttpCacheManager: Static Methods
+
+  /** Интерфейс управления HTTP-кешем. Null, если HTTP кэш не используется. */
+  static HttpCacheManager? get(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _COptional_CHttpCacheManager res = _CHttpCacheManager_S_get_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
   // MARK: HttpCacheManager: Methods
 
   /** Очистка содержимого HTTP-кеша. */
@@ -66443,6 +70242,42 @@ extension _CHttpCacheManagerToDart on _CHttpCacheManager {
 extension _DartToCHttpCacheManager on HttpCacheManager {
   _CHttpCacheManager _copyFromDartTo_CHttpCacheManager() {
     return (_CHttpCacheManagerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - HttpCacheManager? <-> _COptional_CHttpCacheManager
+
+final class _COptional_CHttpCacheManager extends ffi.Struct {
+  
+  external _CHttpCacheManager value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CHttpCacheManagerBasicFunctions on _COptional_CHttpCacheManager {
+  void _releaseIntermediate() {
+    _COptional_CHttpCacheManager_release(this);
+  }
+}
+
+extension _COptional_CHttpCacheManagerToDart on _COptional_CHttpCacheManager {
+  HttpCacheManager? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CHttpCacheManager on HttpCacheManager? {
+  _COptional_CHttpCacheManager _copyFromDartTo_COptional_CHttpCacheManager() {
+    final cOptional = _COptional_CHttpCacheManagerMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CHttpCacheManager();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
   }
 }
 // MARK: - LocaleChangeNotifier
@@ -66620,6 +70455,20 @@ class LocaleManager implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CLocaleManager_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CLocaleManager: Static Methods
+
+  /** Интерфейс управления локалями приложения. */
+  static LocaleManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CLocaleManager res = _CLocaleManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   // MARK: LocaleManager: Methods
@@ -67052,68 +70901,63 @@ extension _DartTo_CPlatformLocaleManager on PlatformLocaleManager {
 
 }
 
-// MARK: - getHttpCacheManager
+// MARK: - StorageOptions
 
-/** Интерфейс управления HTTP-кешем. Null, если HTTP кэш не используется. */
-HttpCacheManager? getHttpCacheManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _COptional_CHttpCacheManager res = _CFunction_G_getHttpCacheManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
+/** Опции хранилища оффлайн данных. */
+class StorageOptions {
+  /**
+   Путь к каталогу верхнего уровня для основного хранилища загрузок.
+   Файловое хранилище будет находиться в подкаталоге downloads в данном каталоге.
+   Если путь не указан, будет использоваться директория по умолчанию.
+  */
+  final String? downloadStoragePath;
+
+  const StorageOptions([this.downloadStoragePath = null]);
+
+  StorageOptions copyWith({
+    Optional<String?>? downloadStoragePath
+  }) {
+    return StorageOptions(
+      downloadStoragePath != null ? downloadStoragePath.value : this.downloadStoragePath
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is StorageOptions &&
+    other.runtimeType == runtimeType &&
+    other.downloadStoragePath == downloadStoragePath;
+
+  @override
+  int get hashCode {
+    return downloadStoragePath.hashCode;
+  }
+
+}
+final class _CStorageOptions extends ffi.Struct {
+  external _COptional_CString downloadStoragePath;
+
+}
+// MARK: - StorageOptions <-> _CStorageOptions
+
+extension _CStorageOptionsToDart on _CStorageOptions {
+  StorageOptions _toDart() {
+    return StorageOptions(
+      this.downloadStoragePath._toDart()
+    );
+  }
 }
 
-// MARK: - HttpCacheManager? <-> _COptional_CHttpCacheManager
-
-final class _COptional_CHttpCacheManager extends ffi.Struct {
-  
-  external _CHttpCacheManager value;
-  @ffi.Bool()
-  external bool hasValue;
+extension _DartTo_CStorageOptions on StorageOptions {
+  _CStorageOptions _copyFromDartTo_CStorageOptions() {
+    final res = _CStorageOptionsMakeDefault();
+    res.downloadStoragePath = this.downloadStoragePath._copyFromDartTo_COptional_CString();
+    return res;
+  }
 }
-
-extension _COptional_CHttpCacheManagerBasicFunctions on _COptional_CHttpCacheManager {
+extension _CStorageOptionsRelease on _CStorageOptions {
   void _releaseIntermediate() {
-    _COptional_CHttpCacheManager_release(this);
+    downloadStoragePath._releaseIntermediate();
   }
-}
-
-extension _COptional_CHttpCacheManagerToDart on _COptional_CHttpCacheManager {
-  HttpCacheManager? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CHttpCacheManager on HttpCacheManager? {
-  _COptional_CHttpCacheManager _copyFromDartTo_COptional_CHttpCacheManager() {
-    final cOptional = _COptional_CHttpCacheManagerMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CHttpCacheManager();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - getLocaleManager
-
-/** Интерфейс управления локалями приложения. */
-LocaleManager getLocaleManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CLocaleManager res = _CFunction_G_getLocaleManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
 }
 
 // MARK: - toLocaleManager
@@ -67143,19 +70987,6 @@ extension LocaleToLocalePosix on Locale {
   }
 
 }
-// MARK: - getAudioSettings
-
-AudioSettings? getAudioSettings(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _COptional_CAudioSettings res = _CFunction_G_getAudioSettings_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
 // MARK: - AudioFocusPolicy
 
 /**
@@ -67260,6 +71091,20 @@ class AudioSettings implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CAudioSettings_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CAudioSettings: Static Methods
+
+  /** Настройки аудио. Null, если аудио драйвер недоступен. */
+  static AudioSettings? get(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _COptional_CAudioSettings res = _CAudioSettings_S_get_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
 }
@@ -67579,16 +71424,6 @@ class RoadEventManager implements ffi.Finalizable {
     return classObject;
   }
 
-  /** Получение объекта для создания дорожных событий. */
-  factory RoadEventManager(
-    Context context
-  ) {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CRoadEventManager res = _CRoadEventManager_C_createWith_CContext(_a0);
-    _a0._releaseIntermediate();
-    return RoadEventManager._create(res._impl);
-  }
-
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventManager &&
@@ -67599,6 +71434,20 @@ class RoadEventManager implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CRoadEventManager_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CRoadEventManager: Static Methods
+
+  /** Получение объекта для создания дорожных событий. */
+  static RoadEventManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CRoadEventManager res = _CRoadEventManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   // MARK: RoadEventManager: Methods
@@ -67612,7 +71461,7 @@ class RoadEventManager implements ffi.Finalizable {
   */
   CancelableOperation<AddEventResult> createAccident(
     GeoPoint location,
-    LaneEnumSet lanes,
+    EnumSet<Lane> lanes,
     String description
   )  {
     var _a1 = location._copyFromDartTo_CGeoPoint();
@@ -67691,7 +71540,7 @@ class RoadEventManager implements ffi.Finalizable {
   */
   CancelableOperation<AddEventResult> createOther(
     GeoPoint location,
-    LaneEnumSet lanes,
+    EnumSet<Lane> lanes,
     String description
   )  {
     var _a1 = location._copyFromDartTo_CGeoPoint();
@@ -67713,7 +71562,7 @@ class RoadEventManager implements ffi.Finalizable {
   */
   CancelableOperation<AddEventResult> createRoadWorks(
     GeoPoint location,
-    LaneEnumSet lanes,
+    EnumSet<Lane> lanes,
     String description
   )  {
     var _a1 = location._copyFromDartTo_CGeoPoint();
@@ -68406,6 +72255,276 @@ extension _CArray_CObstacleInfoRouteLongEntryBasicFunctions on _CArray_CObstacle
   }
 }
 	
+// MARK: - TraversalTypeRouteLongAttribute
+
+/**
+ Контейнер, который хранит протяженный атрибут маршрута.
+ Каждый элемент хранится в виде пары, состоящей из точки и значения элемента атрибута.
+ Действие атрибута начинается с данной точки и заканчивается в следущей точке,
+ начиная с которой начинается действие атрибута следующего элемента.
+*/
+class TraversalTypeRouteLongAttribute implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Количество элементов. */
+  int get size {
+    int res = _CTraversalTypeRouteLongAttribute_size(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Элементы отсутствуют. */
+  bool get isEmpty {
+    bool res = _CTraversalTypeRouteLongAttribute_isEmpty(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res;
+  }
+  /** Первый элемент. */
+  TraversalTypeRouteLongEntry? get first {
+    _COptional_CTraversalTypeRouteLongEntry res = _CTraversalTypeRouteLongAttribute_first(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Последний элемент. */
+  TraversalTypeRouteLongEntry? get last {
+    _COptional_CTraversalTypeRouteLongEntry res = _CTraversalTypeRouteLongAttribute_last(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Все элементы. */
+  List<TraversalTypeRouteLongEntry> get entries {
+    _CArray_CTraversalTypeRouteLongEntry res = _CTraversalTypeRouteLongAttribute_entries(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTraversalTypeRouteLongAttribute_releasePtr);
+
+  TraversalTypeRouteLongAttribute._raw(this._self);
+  factory TraversalTypeRouteLongAttribute._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TraversalTypeRouteLongAttribute._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TraversalTypeRouteLongAttribute &&
+    other.runtimeType == runtimeType &&
+    _CTraversalTypeRouteLongAttribute_cg_objectIdentifier(this._self) == _CTraversalTypeRouteLongAttribute_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTraversalTypeRouteLongAttribute_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: TraversalTypeRouteLongAttribute: Methods
+
+  /** Элемент, в который попадает заданная точка. */
+  TraversalTypeRouteLongEntry? entry(
+    RoutePoint point
+  )  {
+    var _a1 = point._copyFromDartTo_CRoutePoint();
+    _COptional_CTraversalTypeRouteLongEntry res = _CTraversalTypeRouteLongAttribute_entry_CRoutePoint(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self, _a1);
+    return res._toDart();
+  }
+
+  /**
+   Элементы, частично или полностью покрываемые отрезком [begin, end].
+  
+   - Throws: Exception если begin > end.
+  */
+  List<TraversalTypeRouteLongEntry> entriesInRange(
+    RoutePoint begin,
+    RoutePoint end
+  )  {
+    var _a1 = begin._copyFromDartTo_CRoutePoint();
+    var _a2 = end._copyFromDartTo_CRoutePoint();
+    _CArray_CTraversalTypeRouteLongEntry res = _CTraversalTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint(_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self, _a1, _a2);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - TraversalTypeRouteLongAttribute <-> CTraversalTypeRouteLongAttribute
+
+final class _CTraversalTypeRouteLongAttribute extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTraversalTypeRouteLongAttributeBasicFunctions on _CTraversalTypeRouteLongAttribute {
+  void _releaseIntermediate() {
+    _CTraversalTypeRouteLongAttribute_release(_impl);
+  }
+
+  _CTraversalTypeRouteLongAttribute _retain() {
+    return _CTraversalTypeRouteLongAttribute_retain(_impl);
+  }
+}
+
+extension _CTraversalTypeRouteLongAttributeToDart on _CTraversalTypeRouteLongAttribute {
+  TraversalTypeRouteLongAttribute _toDart() {
+    return TraversalTypeRouteLongAttribute._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTraversalTypeRouteLongAttribute on TraversalTypeRouteLongAttribute {
+  _CTraversalTypeRouteLongAttribute _copyFromDartTo_CTraversalTypeRouteLongAttribute() {
+    return (_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - TraversalTypeRouteLongEntry
+
+/** Протяженный элемент маршрута - отрезок и значение на нем. */
+class TraversalTypeRouteLongEntry {
+  final RoutePoint point;
+  final RouteDistance length;
+  final TraversalType value;
+
+  const TraversalTypeRouteLongEntry({
+    required this.point,
+    required this.length,
+    required this.value
+  });
+
+  TraversalTypeRouteLongEntry copyWith({
+    RoutePoint? point,
+    RouteDistance? length,
+    TraversalType? value
+  }) {
+    return TraversalTypeRouteLongEntry(
+      point: point ?? this.point,
+      length: length ?? this.length,
+      value: value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TraversalTypeRouteLongEntry &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.length == length &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, length, value);
+  }
+
+}
+final class _CTraversalTypeRouteLongEntry extends ffi.Struct {
+  external _CRoutePoint point;
+
+  external _CRouteDistance length;
+
+  external _CTraversalType value;
+
+}
+// MARK: - TraversalTypeRouteLongEntry <-> _CTraversalTypeRouteLongEntry
+
+extension _CTraversalTypeRouteLongEntryToDart on _CTraversalTypeRouteLongEntry {
+  TraversalTypeRouteLongEntry _toDart() {
+    return TraversalTypeRouteLongEntry(
+      point: this.point._toDart(),
+      length: this.length._toDart(),
+      value: this.value._toDart()
+    );
+  }
+}
+
+extension _DartTo_CTraversalTypeRouteLongEntry on TraversalTypeRouteLongEntry {
+  _CTraversalTypeRouteLongEntry _copyFromDartTo_CTraversalTypeRouteLongEntry() {
+    final res = _CTraversalTypeRouteLongEntryMakeDefault();
+    res.point = this.point._copyFromDartTo_CRoutePoint();
+    res.length = this.length._copyFromDartTo_CRouteDistance();
+    res.value = this.value._copyFromDartTo_CTraversalType();
+    return res;
+  }
+}
+extension _CTraversalTypeRouteLongEntryRelease on _CTraversalTypeRouteLongEntry {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - TraversalTypeRouteLongEntry? <-> _COptional_CTraversalTypeRouteLongEntry
+
+final class _COptional_CTraversalTypeRouteLongEntry extends ffi.Struct {
+  
+  external _CTraversalTypeRouteLongEntry value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTraversalTypeRouteLongEntryBasicFunctions on _COptional_CTraversalTypeRouteLongEntry {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CTraversalTypeRouteLongEntryToDart on _COptional_CTraversalTypeRouteLongEntry {
+  TraversalTypeRouteLongEntry? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTraversalTypeRouteLongEntry on TraversalTypeRouteLongEntry? {
+  _COptional_CTraversalTypeRouteLongEntry _copyFromDartTo_COptional_CTraversalTypeRouteLongEntry() {
+    final cOptional = _COptional_CTraversalTypeRouteLongEntryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTraversalTypeRouteLongEntry();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<TraversalTypeRouteLongEntry> <-> _CArray_CTraversalTypeRouteLongEntry
+
+final class _CArray_CTraversalTypeRouteLongEntry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CTraversalTypeRouteLongEntryToDart on _CArray_CTraversalTypeRouteLongEntry {
+  List<TraversalTypeRouteLongEntry> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CTraversalTypeRouteLongEntry on List<TraversalTypeRouteLongEntry> {
+  _CArray_CTraversalTypeRouteLongEntry _copyFromDartTo_CArray_CTraversalTypeRouteLongEntry() {
+    final cArray = _CArray_CTraversalTypeRouteLongEntrymakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CTraversalTypeRouteLongEntry();
+        _CArray_CTraversalTypeRouteLongEntryaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CTraversalTypeRouteLongEntryBasicFunctions on _CArray_CTraversalTypeRouteLongEntry {
+  void _releaseIntermediate() {
+    _CArray_CTraversalTypeRouteLongEntry_release(this);
+  }
+
+  static final _listToFill = <TraversalTypeRouteLongEntry>[];
+
+  static void _iterate(_CTraversalTypeRouteLongEntry item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<TraversalTypeRouteLongEntry> _fillFromC() {
+    _forEach_CArray_CTraversalTypeRouteLongEntry(this, ffi.Pointer.fromFunction<ffi.Void Function(_CTraversalTypeRouteLongEntry)>(_iterate));
+    final result = List<TraversalTypeRouteLongEntry>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - TerritoriesAlongRouteProvider
 
 /** Интерфейс для поиска маршрута с учетом пробочных данных. */
@@ -68419,6 +72538,20 @@ class TerritoriesAlongRouteProvider implements ffi.Finalizable {
     final classObject = TerritoriesAlongRouteProvider._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  /**
+   Создание объекта для получения списка территорий вдоль маршрута из контекста.
+  
+   - Throws: Exception, если невозможно получить зависимости из контекста
+  */
+  factory TerritoriesAlongRouteProvider(
+    Context context
+  ) {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CTerritoriesAlongRouteProvider res = _CTerritoriesAlongRouteProvider_C_createWith_CContext(_a0);
+    _a0._releaseIntermediate();
+    return TerritoriesAlongRouteProvider._create(res._impl);
   }
 
   @override
@@ -68735,100 +72868,6 @@ bool routeMatchesTruckPassZonePasses(
   return res;
 }
 
-// MARK: - getRoadMacroGraph
-
-/**
- Получение объекта для управления глобальным дорожным графом из контекста.
-
- - Throws: Exception, если невозможно получить зависимости из контекста
-*/
-RoadMacroGraph getRoadMacroGraph(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CRoadMacroGraph res = _CFunction_G_getRoadMacroGraph_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - RoadMacroGraph
-
-/**
- Пакет глобального дорожного графа, используется
- для построения проезда между двумя загруженными offline-территориями.
-*/
-class RoadMacroGraph extends Package implements ffi.Finalizable {
-  static final _finalizer = ffi.NativeFinalizer(_CRoadMacroGraph_releasePtr);
-
-  RoadMacroGraph._raw(ffi.Pointer<ffi.Void> p) : super._raw(p);
-  factory RoadMacroGraph._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = RoadMacroGraph._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RoadMacroGraph &&
-    other.runtimeType == runtimeType &&
-    _CRoadMacroGraph_cg_objectIdentifier(this._self) == _CRoadMacroGraph_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CRoadMacroGraph_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - RoadMacroGraph <-> CRoadMacroGraph
-
-final class _CRoadMacroGraph extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CRoadMacroGraphBasicFunctions on _CRoadMacroGraph {
-  void _releaseIntermediate() {
-    _CRoadMacroGraph_release(_impl);
-  }
-
-  _CRoadMacroGraph _retain() {
-    return _CRoadMacroGraph_retain(_impl);
-  }
-}
-
-extension _CRoadMacroGraphToDart on _CRoadMacroGraph {
-  RoadMacroGraph _toDart() {
-    return RoadMacroGraph._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCRoadMacroGraph on RoadMacroGraph {
-  _CRoadMacroGraph _copyFromDartTo_CRoadMacroGraph() {
-    return (_CRoadMacroGraphMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - getTerritoriesAlongRouteProvider
-
-/**
- Получение объекта для получения списка территорий вдоль маршрута из контекста.
-
- - Throws: Exception, если невозможно получить зависимости из контекста
-*/
-TerritoriesAlongRouteProvider getTerritoriesAlongRouteProvider(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CTerritoriesAlongRouteProvider res = _CFunction_G_getTerritoriesAlongRouteProvider_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
 // MARK: - TrafficCollector
 
 /**
@@ -68862,24 +72901,6 @@ class TrafficCollector implements ffi.Finalizable {
     return classObject;
   }
 
-  /**
-   Функция создания сервиса сбора информации о транспортном трафике.
-   Сервис сбора информации о транспортном трафике анализирует состояние трафика на дороге,
-   по которой движется пользователь и отправляет результаты анализа в анонимизированном виде на сервер.
-  
-   - Parameter context: Контекст - окружение, необходимое для работы SDK.
-   - Returns: Сервис сбора информации о дорожном движении.
-   - Throws: Exception, если невозможно создать сервис сбора информации о дорожном движении.
-  */
-  factory TrafficCollector(
-    Context context
-  ) {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CTrafficCollector res = _CTrafficCollector_C_createWith_CContext(_a0);
-    _a0._releaseIntermediate();
-    return TrafficCollector._create(res._impl);
-  }
-
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TrafficCollector &&
@@ -68890,6 +72911,28 @@ class TrafficCollector implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CTrafficCollector_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CTrafficCollector: Static Methods
+
+  /**
+   Функция получения сервиса сбора информации о транспортном трафике.
+   Сервис сбора информации о транспортном трафике анализирует состояние трафика на дороге,
+   по которой движется пользователь и отправляет результаты анализа в анонимизированном виде на сервер.
+  
+   - Parameter context: Контекст - окружение, необходимое для работы SDK.
+   - Returns: Сервис сбора информации о дорожном движении.
+   - Throws: Exception, если невозможно создать сервис сбора информации о дорожном движении.
+  */
+  static TrafficCollector instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CTrafficCollector res = _CTrafficCollector_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
 }
@@ -69914,9 +73957,29 @@ class Package implements ffi.Finalizable {
     return res;
   }
 
+  /**
+   Запуск операции установки либо обновления пакета.
+  
+   - Parameter fallback: поведение при ошибке.
+  */
+  void installWithFallback(
+    InstallFallback fallback
+  )  {
+    var _a1 = fallback._copyFromDartTo_CInstallFallback();
+    void res = _CPackage_installWithFallback_CInstallFallback(_CPackageMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    return res;
+  }
+
   /** Запуск операции удаления пакета. */
   void uninstall()  {
     void res = _CPackage_uninstall(_CPackageMakeDefault().._impl=_self);
+    return res;
+  }
+
+  /** Постановка операции установки либо обновления пакета на паузу. */
+  void pause()  {
+    void res = _CPackage_pause(_CPackageMakeDefault().._impl=_self);
     return res;
   }
 
@@ -69946,13 +74009,10 @@ extension _CPackageToDart on _CPackage {
         final res = Package._create(_retain()._impl);
         return res;
       case 1:
-        final res = Territory._create(_retain()._impl);
+        final res = (_CTerritoryMakeDefault().._impl=_impl)._toDart();
         return res;
       case 2:
-        final res = RoadMacroGraph._create(_retain()._impl);
-        return res;
-      case 3:
-        final res = Voice._create(_retain()._impl);
+        final res = (_CVoiceMakeDefault().._impl=_impl)._toDart();
         return res;
       default: throw Exception("Unrecognized case index $selector");
     }
@@ -70136,6 +74196,277 @@ extension _DartTo_CStatefulChannel_uint8_t on StatefulChannel<int> {
   }
 }
 	
+// MARK: - _InstallFallbackCpp
+
+/** Поведение при ошибке установки или обновления пакета. */
+class _InstallFallbackCpp extends InstallFallback implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CInstallFallbackCpp_releasePtr);
+
+  _InstallFallbackCpp._raw(this._self);
+  factory _InstallFallbackCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _InstallFallbackCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _InstallFallbackCpp &&
+    other.runtimeType == runtimeType &&
+    _CInstallFallbackCpp_cg_objectIdentifier(this._self) == _CInstallFallbackCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CInstallFallbackCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _InstallFallbackCpp: Methods
+
+  /** - Parameter targetPackage: пакет, при установке которого произошла ошибка. */
+  void process(
+    Package targetPackage
+  )  {
+    var _a1 = targetPackage._copyFromDartTo_CPackage();
+    void res = _CInstallFallbackCpp_process_CPackage(_CInstallFallbackCppMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    return res;
+  }
+
+}
+
+// MARK: - _InstallFallbackCpp <-> CInstallFallbackCpp
+
+final class _CInstallFallbackCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CInstallFallbackCppBasicFunctions on _CInstallFallbackCpp {
+  void _releaseIntermediate() {
+    _CInstallFallbackCpp_release(_impl);
+  }
+
+  _CInstallFallbackCpp _retain() {
+    return _CInstallFallbackCpp_retain(_impl);
+  }
+}
+
+extension _CInstallFallbackCppToDart on _CInstallFallbackCpp {
+  _InstallFallbackCpp _toDart() {
+    return _InstallFallbackCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCInstallFallbackCpp on _InstallFallbackCpp {
+  _CInstallFallbackCpp _copyFromDartTo_CInstallFallbackCpp() {
+    return (_CInstallFallbackCppMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - InstallFallback
+
+/** Поведение при ошибке установки или обновления пакета. */
+abstract class InstallFallback {
+  void process(
+    Package targetPackage
+  );
+}
+
+class _InstallFallback {
+  final InstallFallback object;
+  int refCounter = 1;
+
+  _InstallFallback(this.object);
+}
+
+final class _CInstallFallback extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _value;
+  external ffi.Pointer<ffi.Void> _cppValue;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>, _CPackage)>> _process_CPackage;
+}
+
+extension _CInstallFallbackBasicFunctions on _CInstallFallback {
+  void _releaseIntermediate() {
+    _CInstallFallback_release(this);
+  }
+}
+
+int _CInstallFallbackInstanceCounter = 1;
+final _CInstallFallbackInstanceMap = <int, _InstallFallback>{};
+
+extension _CInstallFallbackToDart on _CInstallFallback {
+  InstallFallback _toDart() {
+    late InstallFallback? result;
+    final platformValue = this._value.cast<ffi.Int64>();
+    if (platformValue.address != 0) {
+      result = _CInstallFallbackInstanceMap[platformValue.address]?.object;
+    } else if (this._cppValue.address != 0) {
+      final cppValue = _CInstallFallbackCppMakeDefault().._impl = this._cppValue;
+      result = cppValue._toDart();
+    }
+    if (result == null) {
+      throw Exception("Invalid intermediate object of type _CInstallFallback");
+    }
+    return result;
+  }
+}
+
+extension _DartTo_CInstallFallback on InstallFallback {
+  static void retainFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    _CInstallFallbackInstanceMap[platformValue.address]?.refCounter += 1;
+  }
+
+  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    final platformObject = _CInstallFallbackInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      return;
+    }
+    platformObject.refCounter -= 1;
+    if (platformObject.refCounter > 0) {
+      return;
+    }
+    _CInstallFallbackInstanceMap.remove(platformValue.address);
+  }
+
+  _CInstallFallback _copyFromDartTo_CInstallFallback() {
+    var res = _CInstallFallbackMakeDefault();
+    if (this is _InstallFallbackCpp) {
+      final cppValue = this as _InstallFallbackCpp;
+      res._cppValue = cppValue._copyFromDartTo_CInstallFallbackCpp()._impl;
+      return res;
+    }
+    final instanceId = _CInstallFallbackInstanceCounter;
+    _CInstallFallbackInstanceCounter += 1;
+    _CInstallFallbackInstanceMap[instanceId] = _InstallFallback(this);
+    res._value = ffi.Pointer.fromAddress(instanceId);
+    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
+    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
+    res._retain = retainFunctionCallable.nativeFunction;
+    //res._release = releaseFunctionCallable.nativeFunction;
+
+    final process_CPackageFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>, _CPackage)>.listener(process_CPackageFunction);
+    res._process_CPackage = process_CPackageFunctionCallable.nativeFunction;
+    return res;
+  }
+
+  static void process_CPackageFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> resultValueCallback, _CPackage targetPackage) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CInstallFallback");
+    }
+    final platformObject = _CInstallFallbackInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CInstallFallback");
+    }
+
+    final targetPackageDart = targetPackage._toDart();
+    platformObject.object.process(targetPackageDart);
+    targetPackage._releaseIntermediate();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+    callbackFunction(context);
+  }
+
+
+}
+
+// MARK: - DefaultInstallFallback
+
+/**
+ Фабрика, производящая предустановленные стратегии поведения при ошибке установки или обновления пакета.
+
+ - see: IInstallFallback
+*/
+class DefaultInstallFallback implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CDefaultInstallFallback_releasePtr);
+
+  DefaultInstallFallback._raw(this._self);
+  factory DefaultInstallFallback._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = DefaultInstallFallback._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DefaultInstallFallback &&
+    other.runtimeType == runtimeType &&
+    _CDefaultInstallFallback_cg_objectIdentifier(this._self) == _CDefaultInstallFallback_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CDefaultInstallFallback_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CDefaultInstallFallback: Static Methods
+
+  /** Создание fallback, который не выполняет никаких операций (no-op). */
+  static InstallFallback noOperation()  {
+    _CInstallFallback res = _CDefaultInstallFallback_S_noOperation();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Создание fallback, вызывающего повторный install при возникновении ошибки загрузки пакета.
+  
+   - Parameter retryCount: количество повторных вызовов install, по достижении которого перестает выполнять операции.
+  */
+  static InstallFallback retryOnError(
+    int retryCount
+  )  {
+    _CInstallFallback res = _CDefaultInstallFallback_S_retryOnError_uint64_t(retryCount);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - DefaultInstallFallback <-> CDefaultInstallFallback
+
+final class _CDefaultInstallFallback extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDefaultInstallFallbackBasicFunctions on _CDefaultInstallFallback {
+  void _releaseIntermediate() {
+    _CDefaultInstallFallback_release(_impl);
+  }
+
+  _CDefaultInstallFallback _retain() {
+    return _CDefaultInstallFallback_retain(_impl);
+  }
+}
+
+extension _CDefaultInstallFallbackToDart on _CDefaultInstallFallback {
+  DefaultInstallFallback _toDart() {
+    return DefaultInstallFallback._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCDefaultInstallFallback on DefaultInstallFallback {
+  _CDefaultInstallFallback _copyFromDartTo_CDefaultInstallFallback() {
+    return (_CDefaultInstallFallbackMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - PackageManager
 
 /**
@@ -70198,6 +74529,20 @@ class PackageManager implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CPackageManager_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CPackageManager: Static Methods
+
+  /** Получение объекта для работы с пакетами из контекста. */
+  static PackageManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CPackageManager res = _CPackageManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   // MARK: PackageManager: Methods
@@ -70367,34 +74712,6 @@ extension _CArray_CPackageBasicFunctions on _CArray_CPackage {
   }
 }
 	
-// MARK: - getPackageManager
-
-/** Получение объекта для работы с пакетами из контекста. */
-PackageManager getPackageManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CPackageManager res = _CFunction_G_getPackageManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
-// MARK: - getTerritoryManager
-
-/** Получение объекта для работы с территориями из контекста. */
-TerritoryManager getTerritoryManager(
-  Context context
-){
-  var _a0 = context._copyFromDartTo_CContext();
-  _CTerritoryManager res = _CFunction_G_getTerritoryManager_With_CContext(_a0);
-  _a0._releaseIntermediate();
-  final t = res._toDart();
-  res._releaseIntermediate();
-  return t;
-}
-
 // MARK: - TerritoryManager
 
 /**
@@ -70453,6 +74770,20 @@ class TerritoryManager implements ffi.Finalizable {
   int get hashCode {
     final identifier = _CTerritoryManager_cg_objectIdentifier(this._self);
     return identifier.hashCode;
+  }
+
+  // MARK: CTerritoryManager: Static Methods
+
+  /** Получение объекта для работы с территориями из контекста. */
+  static TerritoryManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CTerritoryManager res = _CTerritoryManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
   }
 
   // MARK: TerritoryManager: Methods
@@ -70625,12 +74956,32 @@ late final _CBuildingIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBuildingId 
 late final _CBuildingIdMakeDefault = _CBuildingIdMakeDefaultPtr.asFunction<_CBuildingId Function()>();
 
 
+late final _CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CColor Function()>>('CColorMakeDefault');
+late final _CColorMakeDefault = _CColorMakeDefaultPtr.asFunction<_CColor Function()>();
+
+
 late final _CDayTimeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDayTime Function()>>('CDayTimeMakeDefault');
 late final _CDayTimeMakeDefault = _CDayTimeMakeDefaultPtr.asFunction<_CDayTime Function()>();
 
 
 late final _CDgisObjectIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDgisObjectId Function()>>('CDgisObjectIdMakeDefault');
 late final _CDgisObjectIdMakeDefault = _CDgisObjectIdMakeDefaultPtr.asFunction<_CDgisObjectId Function()>();
+
+
+late final _CSystemMemoryManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_cg_objectIdentifier');
+late final _CSystemMemoryManager_cg_objectIdentifier = _CSystemMemoryManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CSystemMemoryManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(_CContext)>>('CSystemMemoryManager_S_instance_CContext');
+late final _CSystemMemoryManager_S_instance_CContext = _CSystemMemoryManager_S_instance_CContextPtr.asFunction<_CSystemMemoryManager Function(_CContext)>();
+late final _CSystemMemoryManager_reduceMemoryUsagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSystemMemoryManager)>>('CSystemMemoryManager_reduceMemoryUsage');
+late final _CSystemMemoryManager_reduceMemoryUsage = _CSystemMemoryManager_reduceMemoryUsagePtr.asFunction<void Function(_CSystemMemoryManager)>();
+
+late final _CSystemMemoryManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_release');
+late final _CSystemMemoryManager_release = _CSystemMemoryManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CSystemMemoryManager_retainPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_retain');
+late final _CSystemMemoryManager_retain = _CSystemMemoryManager_retainPtr.asFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>();
+late final _CSystemMemoryManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function()>>('CSystemMemoryManagerMakeDefault');
+late final _CSystemMemoryManagerMakeDefault = _CSystemMemoryManagerMakeDefaultPtr.asFunction<_CSystemMemoryManager Function()>();
 
 
 late final _CContext_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CContext_cg_objectIdentifier');
@@ -70645,23 +74996,12 @@ late final _CContextMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContext Functi
 late final _CContextMakeDefault = _CContextMakeDefaultPtr.asFunction<_CContext Function()>();
 
 
-late final _CSystemMemoryManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_cg_objectIdentifier');
-late final _CSystemMemoryManager_cg_objectIdentifier = _CSystemMemoryManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CSystemMemoryManager_reduceMemoryUsagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSystemMemoryManager)>>('CSystemMemoryManager_reduceMemoryUsage');
-late final _CSystemMemoryManager_reduceMemoryUsage = _CSystemMemoryManager_reduceMemoryUsagePtr.asFunction<void Function(_CSystemMemoryManager)>();
-
-late final _CSystemMemoryManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_release');
-late final _CSystemMemoryManager_release = _CSystemMemoryManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CSystemMemoryManager_retainPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_retain');
-late final _CSystemMemoryManager_retain = _CSystemMemoryManager_retainPtr.asFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>();
-late final _CSystemMemoryManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function()>>('CSystemMemoryManagerMakeDefault');
-late final _CSystemMemoryManagerMakeDefault = _CSystemMemoryManagerMakeDefaultPtr.asFunction<_CSystemMemoryManager Function()>();
-
-
 late final _CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelId Function()>>('CLevelIdMakeDefault');
 late final _CLevelIdMakeDefault = _CLevelIdMakeDefaultPtr.asFunction<_CLevelId Function()>();
 
+
+late final _COptional_CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CLevelId Function()>>('COptional_CLevelIdMakeDefault');
+late final _COptional_CLevelIdMakeDefault = _COptional_CLevelIdMakeDefaultPtr.asFunction<_COptional_CLevelId Function()>();
 
 late final _CStringCreateWithDataPtr = _lookup<ffi.NativeFunction<_CString Function(ffi.Size size, ffi.Pointer<ffi_package.Utf8>)>>('CString_createWithData');
 late final _CStringCreateWithDataPrivate = _CStringCreateWithDataPtr.asFunction<_CString Function(int, ffi.Pointer<ffi_package.Utf8>)>();
@@ -70671,6 +75011,19 @@ late final _GetDataWith_CStringPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_
 late final _GetDataWith_CString = _GetDataWith_CStringPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CString)>();
 late final _CString_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CString)>>('CString_release');
 late final _CString_release = _CString_releasePtr.asFunction<void Function(_CString)>();
+
+late final _CArray_CLevelIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CLevelId Function()>>('CArray_CLevelId_makeEmpty');
+late final _CArray_CLevelIdmakeEmpty = _CArray_CLevelIdmakeEmptyPtr.asFunction<_CArray_CLevelId Function()>();
+late final _CArray_CLevelIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId, _CLevelId)>>('CArray_CLevelId_addElement');
+late final _CArray_CLevelIdaddElement = _CArray_CLevelIdaddElementPtr.asFunction<void Function(_CArray_CLevelId, _CLevelId)>();
+late final _forEach_CArray_CLevelIdPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)>>)
+>>('CArray_CLevelId_forEachWithFunctionPointer');
+late final _forEach_CArray_CLevelId = _forEach_CArray_CLevelIdPtr.asFunction<
+  void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)
+>>)>();
+late final _CArray_CLevelId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId)>>('CArray_CLevelId_release');
+late final _CArray_CLevelId_release = _CArray_CLevelId_releasePtr.asFunction<void Function(_CArray_CLevelId)>();
 
 late final _CLevelInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelInfo Function()>>('CLevelInfoMakeDefault');
 late final _CLevelInfoMakeDefault = _CLevelInfoMakeDefaultPtr.asFunction<_CLevelInfo Function()>();
@@ -70682,6 +75035,18 @@ late final _CMeterMakeDefault = _CMeterMakeDefaultPtr.asFunction<_CMeter Functio
 
 late final _CPersonalDataCollectionConsentMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPersonalDataCollectionConsent Function()>>('CPersonalDataCollectionConsentMakeDefault');
 late final _CPersonalDataCollectionConsentMakeDefault = _CPersonalDataCollectionConsentMakeDefaultPtr.asFunction<_CPersonalDataCollectionConsent Function()>();
+
+late final _CScreenDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenDistance Function()>>('CScreenDistanceMakeDefault');
+late final _CScreenDistanceMakeDefault = _CScreenDistanceMakeDefaultPtr.asFunction<_CScreenDistance Function()>();
+
+
+late final _CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenPoint Function()>>('CScreenPointMakeDefault');
+late final _CScreenPointMakeDefault = _CScreenPointMakeDefaultPtr.asFunction<_CScreenPoint Function()>();
+
+
+late final _CScreenShiftMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenShift Function()>>('CScreenShiftMakeDefault');
+late final _CScreenShiftMakeDefault = _CScreenShiftMakeDefaultPtr.asFunction<_CScreenShift Function()>();
+
 
 late final _CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenSize Function()>>('CScreenSizeMakeDefault');
 late final _CScreenSizeMakeDefault = _CScreenSizeMakeDefaultPtr.asFunction<_CScreenSize Function()>();
@@ -70697,8 +75062,24 @@ late final _CWeekTimeMakeDefault = _CWeekTimeMakeDefaultPtr.asFunction<_CWeekTim
 late final _CWeekTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekTimeInterval Function()>>('CWeekTimeIntervalMakeDefault');
 late final _CWeekTimeIntervalMakeDefault = _CWeekTimeIntervalMakeDefaultPtr.asFunction<_CWeekTimeInterval Function()>();
 
-late final _CFunction_G_getSystemMemoryManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(_CContext)>>('CFunction_G_getSystemMemoryManager_With_CContext');
-late final _CFunction_G_getSystemMemoryManager_With_CContext = _CFunction_G_getSystemMemoryManager_With_CContextPtr.asFunction<_CSystemMemoryManager Function(_CContext)>();
+
+late final _CFile_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFile_cg_objectIdentifier');
+late final _CFile_cg_objectIdentifier = _CFile_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CFile_S_fromString_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_S_fromString_CString');
+late final _CFile_S_fromString_CString = _CFile_S_fromString_CStringPtr.asFunction<_CFile Function(_CString)>();
+late final _CFile_S_fromAsset_CContext_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CContext, _CString)>>('CFile_S_fromAsset_CContext_CString');
+late final _CFile_S_fromAsset_CContext_CString = _CFile_S_fromAsset_CContext_CStringPtr.asFunction<_CFile Function(_CContext, _CString)>();
+late final _CFile_C_createWith_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_C_createWith_CString');
+late final _CFile_C_createWith_CString = _CFile_C_createWith_CStringPtr.asFunction<_CFile Function(_CString)>();
+
+late final _CFile_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CFile_release');
+late final _CFile_release = _CFile_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CFile_retainPtr = _lookup<ffi.NativeFunction<_CFile Function(ffi.Pointer<ffi.Void>)>>('CFile_retain');
+late final _CFile_retain = _CFile_retainPtr.asFunction<_CFile Function(ffi.Pointer<ffi.Void>)>();
+late final _CFileMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFile Function()>>('CFileMakeDefault');
+late final _CFileMakeDefault = _CFileMakeDefaultPtr.asFunction<_CFile Function()>();
+
 late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
 late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
 
@@ -71001,24 +75382,6 @@ late final _COptional_CHeadingAvailableNotifierMakeDefault = _COptional_CHeading
 late final _COptional_CHeadingAvailableNotifier_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CHeadingAvailableNotifier)>>('COptional_CHeadingAvailableNotifier_release');
 late final _COptional_CHeadingAvailableNotifier_release = _COptional_CHeadingAvailableNotifier_releasePtr.asFunction<void Function(_COptional_CHeadingAvailableNotifier)>();
 
-late final _CFile_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFile_cg_objectIdentifier');
-late final _CFile_cg_objectIdentifier = _CFile_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CFile_S_fromString_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_S_fromString_CString');
-late final _CFile_S_fromString_CString = _CFile_S_fromString_CStringPtr.asFunction<_CFile Function(_CString)>();
-late final _CFile_S_fromAsset_CContext_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CContext, _CString)>>('CFile_S_fromAsset_CContext_CString');
-late final _CFile_S_fromAsset_CContext_CString = _CFile_S_fromAsset_CContext_CStringPtr.asFunction<_CFile Function(_CContext, _CString)>();
-late final _CFile_C_createWith_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_C_createWith_CString');
-late final _CFile_C_createWith_CString = _CFile_C_createWith_CStringPtr.asFunction<_CFile Function(_CString)>();
-
-late final _CFile_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CFile_release');
-late final _CFile_release = _CFile_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CFile_retainPtr = _lookup<ffi.NativeFunction<_CFile Function(ffi.Pointer<ffi.Void>)>>('CFile_retain');
-late final _CFile_retain = _CFile_retainPtr.asFunction<_CFile Function(ffi.Pointer<ffi.Void>)>();
-late final _CFileMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFile Function()>>('CFileMakeDefault');
-late final _CFileMakeDefault = _CFileMakeDefaultPtr.asFunction<_CFile Function()>();
-
-
 late final _CGeoRectMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoRect Function()>>('CGeoRectMakeDefault');
 late final _CGeoRectMakeDefault = _CGeoRectMakeDefaultPtr.asFunction<_CGeoRect Function()>();
 
@@ -71053,6 +75416,10 @@ late final _CAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAttribute Fu
 late final _CAttributeMakeDefault = _CAttributeMakeDefaultPtr.asFunction<_CAttribute Function()>();
 
 
+late final _CBranchesInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBranchesInfo Function()>>('CBranchesInfoMakeDefault');
+late final _CBranchesInfoMakeDefault = _CBranchesInfoMakeDefaultPtr.asFunction<_CBranchesInfo Function()>();
+
+
 late final _CPurposeCodeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPurposeCode Function()>>('CPurposeCodeMakeDefault');
 late final _CPurposeCodeMakeDefault = _CPurposeCodeMakeDefaultPtr.asFunction<_CPurposeCode Function()>();
 
@@ -71074,6 +75441,13 @@ late final _CBuildingLevelsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBuildin
 late final _CBuildingLevelsMakeDefault = _CBuildingLevelsMakeDefaultPtr.asFunction<_CBuildingLevels Function()>();
 
 
+late final _COptional_uint16_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint16_t Function()>>('COptional_uint16_tMakeDefault');
+late final _COptional_uint16_tMakeDefault = _COptional_uint16_tMakeDefaultPtr.asFunction<_COptional_uint16_t Function()>();
+
+late final _CFloorsInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFloorsInfo Function()>>('CFloorsInfoMakeDefault');
+late final _CFloorsInfoMakeDefault = _CFloorsInfoMakeDefaultPtr.asFunction<_CFloorsInfo Function()>();
+
+
 late final _COptional_CPurposeCodeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPurposeCode Function()>>('COptional_CPurposeCodeMakeDefault');
 late final _COptional_CPurposeCodeMakeDefault = _COptional_CPurposeCodeMakeDefaultPtr.asFunction<_COptional_CPurposeCode Function()>();
 
@@ -71083,8 +75457,8 @@ late final _COptional_CBuildingLevelsMakeDefault = _COptional_CBuildingLevelsMak
 late final _COptional_CBuildingLevels_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CBuildingLevels)>>('COptional_CBuildingLevels_release');
 late final _COptional_CBuildingLevels_release = _COptional_CBuildingLevels_releasePtr.asFunction<void Function(_COptional_CBuildingLevels)>();
 
-late final _COptional_CBuildingIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBuildingId Function()>>('COptional_CBuildingIdMakeDefault');
-late final _COptional_CBuildingIdMakeDefault = _COptional_CBuildingIdMakeDefaultPtr.asFunction<_COptional_CBuildingId Function()>();
+late final _COptional_CFloorsInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CFloorsInfo Function()>>('COptional_CFloorsInfoMakeDefault');
+late final _COptional_CFloorsInfoMakeDefault = _COptional_CFloorsInfoMakeDefaultPtr.asFunction<_COptional_CFloorsInfo Function()>();
 
 late final _CBuildingInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBuildingInfo Function()>>('CBuildingInfoMakeDefault');
 late final _CBuildingInfoMakeDefault = _CBuildingInfoMakeDefaultPtr.asFunction<_CBuildingInfo Function()>();
@@ -71390,9 +75764,6 @@ late final _COptional_CParkingTypeMakeDefault = _COptional_CParkingTypeMakeDefau
 late final _COptional_CParkingPavingTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CParkingPavingType Function()>>('COptional_CParkingPavingTypeMakeDefault');
 late final _COptional_CParkingPavingTypeMakeDefault = _COptional_CParkingPavingTypeMakeDefaultPtr.asFunction<_COptional_CParkingPavingType Function()>();
 
-late final _COptional_uint16_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint16_t Function()>>('COptional_uint16_tMakeDefault');
-late final _COptional_uint16_tMakeDefault = _COptional_uint16_tMakeDefaultPtr.asFunction<_COptional_uint16_t Function()>();
-
 late final _COptional_CParkingCapacityMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CParkingCapacity Function()>>('COptional_CParkingCapacityMakeDefault');
 late final _COptional_CParkingCapacityMakeDefault = _COptional_CParkingCapacityMakeDefaultPtr.asFunction<_COptional_CParkingCapacity Function()>();
 
@@ -71409,6 +75780,10 @@ late final _CReviewsMakeDefault = _CReviewsMakeDefaultPtr.asFunction<_CReviews F
 
 late final _CSearchResultTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchResultType Function()>>('CSearchResultTypeMakeDefault');
 late final _CSearchResultTypeMakeDefault = _CSearchResultTypeMakeDefaultPtr.asFunction<_CSearchResultType Function()>();
+
+late final _CSearchSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchSettings Function()>>('CSearchSettingsMakeDefault');
+late final _CSearchSettingsMakeDefault = _CSearchSettingsMakeDefaultPtr.asFunction<_CSearchSettings Function()>();
+
 
 late final _CSortingTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSortingType Function()>>('CSortingTypeMakeDefault');
 late final _CSortingTypeMakeDefault = _CSortingTypeMakeDefaultPtr.asFunction<_CSortingType Function()>();
@@ -71462,8 +75837,8 @@ late final _CPublicTransportRouteGeometryMakeDefaultPtr = _lookup<ffi.NativeFunc
 late final _CPublicTransportRouteGeometryMakeDefault = _CPublicTransportRouteGeometryMakeDefaultPtr.asFunction<_CPublicTransportRouteGeometry Function()>();
 
 
-late final _COptional_uint32_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint32_t Function()>>('COptional_uint32_tMakeDefault');
-late final _COptional_uint32_tMakeDefault = _COptional_uint32_tMakeDefaultPtr.asFunction<_COptional_uint32_t Function()>();
+late final _COptional_CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CColor Function()>>('COptional_CColorMakeDefault');
+late final _COptional_CColorMakeDefault = _COptional_CColorMakeDefaultPtr.asFunction<_COptional_CColor Function()>();
 
 late final _CPublicTransportPlatformTransitionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPlatformTransition Function()>>('CPublicTransportPlatformTransitionMakeDefault');
 late final _CPublicTransportPlatformTransitionMakeDefault = _CPublicTransportPlatformTransitionMakeDefaultPtr.asFunction<_CPublicTransportPlatformTransition Function()>();
@@ -71787,6 +76162,9 @@ late final _forEach_CArray_CAddressComponent = _forEach_CArray_CAddressComponent
 late final _CArray_CAddressComponent_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CAddressComponent)>>('CArray_CAddressComponent_release');
 late final _CArray_CAddressComponent_release = _CArray_CAddressComponent_releasePtr.asFunction<void Function(_CArray_CAddressComponent)>();
 
+late final _COptional_CBuildingIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBuildingId Function()>>('COptional_CBuildingIdMakeDefault');
+late final _COptional_CBuildingIdMakeDefault = _COptional_CBuildingIdMakeDefaultPtr.asFunction<_COptional_CBuildingId Function()>();
+
 late final _CAddressMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAddress Function()>>('CAddressMakeDefault');
 late final _CAddressMakeDefault = _CAddressMakeDefaultPtr.asFunction<_CAddress Function()>();
 
@@ -71824,14 +76202,14 @@ late final _CDirectoryObject_workStatusPtr = _lookup<ffi.NativeFunction<_COption
 late final _CDirectoryObject_workStatus = _CDirectoryObject_workStatusPtr.asFunction<_COptional_CWorkStatus Function(_CDirectoryObject)>();
 late final _CDirectoryObject_levelIdPtr = _lookup<ffi.NativeFunction<_COptional_CLevelId Function(_CDirectoryObject)>>('CDirectoryObject_levelId');
 late final _CDirectoryObject_levelId = _CDirectoryObject_levelIdPtr.asFunction<_COptional_CLevelId Function(_CDirectoryObject)>();
-late final _CDirectoryObject_buildingLevelsPtr = _lookup<ffi.NativeFunction<_COptional_CBuildingLevels Function(_CDirectoryObject)>>('CDirectoryObject_buildingLevels');
-late final _CDirectoryObject_buildingLevels = _CDirectoryObject_buildingLevelsPtr.asFunction<_COptional_CBuildingLevels Function(_CDirectoryObject)>();
 late final _CDirectoryObject_entrancesPtr = _lookup<ffi.NativeFunction<_CArray_CEntranceInfo Function(_CDirectoryObject)>>('CDirectoryObject_entrances');
 late final _CDirectoryObject_entrances = _CDirectoryObject_entrancesPtr.asFunction<_CArray_CEntranceInfo Function(_CDirectoryObject)>();
 late final _CDirectoryObject_tradeLicensePtr = _lookup<ffi.NativeFunction<_COptional_CTradeLicense Function(_CDirectoryObject)>>('CDirectoryObject_tradeLicense');
 late final _CDirectoryObject_tradeLicense = _CDirectoryObject_tradeLicensePtr.asFunction<_COptional_CTradeLicense Function(_CDirectoryObject)>();
-late final _CDirectoryObject_buildingInfoPtr = _lookup<ffi.NativeFunction<_CBuildingInfo Function(_CDirectoryObject)>>('CDirectoryObject_buildingInfo');
-late final _CDirectoryObject_buildingInfo = _CDirectoryObject_buildingInfoPtr.asFunction<_CBuildingInfo Function(_CDirectoryObject)>();
+late final _CDirectoryObject_buildingInfoPtr = _lookup<ffi.NativeFunction<_COptional_CBuildingInfo Function(_CDirectoryObject)>>('CDirectoryObject_buildingInfo');
+late final _CDirectoryObject_buildingInfo = _CDirectoryObject_buildingInfoPtr.asFunction<_COptional_CBuildingInfo Function(_CDirectoryObject)>();
+late final _CDirectoryObject_branchesInfoPtr = _lookup<ffi.NativeFunction<_COptional_CBranchesInfo Function(_CDirectoryObject)>>('CDirectoryObject_branchesInfo');
+late final _CDirectoryObject_branchesInfo = _CDirectoryObject_branchesInfoPtr.asFunction<_COptional_CBranchesInfo Function(_CDirectoryObject)>();
 late final _CDirectoryObject_chargingStationPtr = _lookup<ffi.NativeFunction<_COptional_CChargingStation Function(_CDirectoryObject)>>('CDirectoryObject_chargingStation');
 late final _CDirectoryObject_chargingStation = _CDirectoryObject_chargingStationPtr.asFunction<_COptional_CChargingStation Function(_CDirectoryObject)>();
 late final _CDirectoryObject_rubricIdsPtr = _lookup<ffi.NativeFunction<_CArray_CRubricId Function(_CDirectoryObject)>>('CDirectoryObject_rubricIds');
@@ -71939,9 +76317,6 @@ late final _COptional_CWorkStatusMakeDefault = _COptional_CWorkStatusMakeDefault
 late final _COptional_CWorkStatus_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CWorkStatus)>>('COptional_CWorkStatus_release');
 late final _COptional_CWorkStatus_release = _COptional_CWorkStatus_releasePtr.asFunction<void Function(_COptional_CWorkStatus)>();
 
-late final _COptional_CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CLevelId Function()>>('COptional_CLevelIdMakeDefault');
-late final _COptional_CLevelIdMakeDefault = _COptional_CLevelIdMakeDefaultPtr.asFunction<_COptional_CLevelId Function()>();
-
 late final _CArray_CEntranceInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CEntranceInfo Function()>>('CArray_CEntranceInfo_makeEmpty');
 late final _CArray_CEntranceInfomakeEmpty = _CArray_CEntranceInfomakeEmptyPtr.asFunction<_CArray_CEntranceInfo Function()>();
 late final _CArray_CEntranceInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CEntranceInfo, _CEntranceInfo)>>('CArray_CEntranceInfo_addElement');
@@ -71954,6 +76329,15 @@ late final _forEach_CArray_CEntranceInfo = _forEach_CArray_CEntranceInfoPtr.asFu
 >>)>();
 late final _CArray_CEntranceInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CEntranceInfo)>>('CArray_CEntranceInfo_release');
 late final _CArray_CEntranceInfo_release = _CArray_CEntranceInfo_releasePtr.asFunction<void Function(_CArray_CEntranceInfo)>();
+
+late final _COptional_CBuildingInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBuildingInfo Function()>>('COptional_CBuildingInfoMakeDefault');
+late final _COptional_CBuildingInfoMakeDefault = _COptional_CBuildingInfoMakeDefaultPtr.asFunction<_COptional_CBuildingInfo Function()>();
+
+late final _COptional_CBuildingInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CBuildingInfo)>>('COptional_CBuildingInfo_release');
+late final _COptional_CBuildingInfo_release = _COptional_CBuildingInfo_releasePtr.asFunction<void Function(_COptional_CBuildingInfo)>();
+
+late final _COptional_CBranchesInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CBranchesInfo Function()>>('COptional_CBranchesInfoMakeDefault');
+late final _COptional_CBranchesInfoMakeDefault = _COptional_CBranchesInfoMakeDefaultPtr.asFunction<_COptional_CBranchesInfo Function()>();
 
 late final _COptional_CChargingStationMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CChargingStation Function()>>('COptional_CChargingStationMakeDefault');
 late final _COptional_CChargingStationMakeDefault = _COptional_CChargingStationMakeDefaultPtr.asFunction<_COptional_CChargingStation Function()>();
@@ -72535,6 +76919,8 @@ late final _CPerformSearchHandlerMakeDefault = _CPerformSearchHandlerMakeDefault
 
 late final _CIncompleteTextHandler_queryTextPtr = _lookup<ffi.NativeFunction<_CString Function(_CIncompleteTextHandler)>>('CIncompleteTextHandler_queryText');
 late final _CIncompleteTextHandler_queryText = _CIncompleteTextHandler_queryTextPtr.asFunction<_CString Function(_CIncompleteTextHandler)>();
+late final _CIncompleteTextHandler_searchQueryPtr = _lookup<ffi.NativeFunction<_CSearchQuery Function(_CIncompleteTextHandler)>>('CIncompleteTextHandler_searchQuery');
+late final _CIncompleteTextHandler_searchQuery = _CIncompleteTextHandler_searchQueryPtr.asFunction<_CSearchQuery Function(_CIncompleteTextHandler)>();
 
 late final _CIncompleteTextHandler_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CIncompleteTextHandler_cg_objectIdentifier');
 late final _CIncompleteTextHandler_cg_objectIdentifier = _CIncompleteTextHandler_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -72547,24 +76933,6 @@ late final _CIncompleteTextHandler_retain = _CIncompleteTextHandler_retainPtr.as
 late final _CIncompleteTextHandlerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CIncompleteTextHandler Function()>>('CIncompleteTextHandlerMakeDefault');
 late final _CIncompleteTextHandlerMakeDefault = _CIncompleteTextHandlerMakeDefaultPtr.asFunction<_CIncompleteTextHandler Function()>();
 
-
-late final _COptional_CSuggestObjectHandlerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CSuggestObjectHandler Function()>>('COptional_CSuggestObjectHandlerMakeDefault');
-late final _COptional_CSuggestObjectHandlerMakeDefault = _COptional_CSuggestObjectHandlerMakeDefaultPtr.asFunction<_COptional_CSuggestObjectHandler Function()>();
-
-late final _COptional_CSuggestObjectHandler_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CSuggestObjectHandler)>>('COptional_CSuggestObjectHandler_release');
-late final _COptional_CSuggestObjectHandler_release = _COptional_CSuggestObjectHandler_releasePtr.asFunction<void Function(_COptional_CSuggestObjectHandler)>();
-
-late final _COptional_CPerformSearchHandlerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPerformSearchHandler Function()>>('COptional_CPerformSearchHandlerMakeDefault');
-late final _COptional_CPerformSearchHandlerMakeDefault = _COptional_CPerformSearchHandlerMakeDefaultPtr.asFunction<_COptional_CPerformSearchHandler Function()>();
-
-late final _COptional_CPerformSearchHandler_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPerformSearchHandler)>>('COptional_CPerformSearchHandler_release');
-late final _COptional_CPerformSearchHandler_release = _COptional_CPerformSearchHandler_releasePtr.asFunction<void Function(_COptional_CPerformSearchHandler)>();
-
-late final _COptional_CIncompleteTextHandlerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CIncompleteTextHandler Function()>>('COptional_CIncompleteTextHandlerMakeDefault');
-late final _COptional_CIncompleteTextHandlerMakeDefault = _COptional_CIncompleteTextHandlerMakeDefaultPtr.asFunction<_COptional_CIncompleteTextHandler Function()>();
-
-late final _COptional_CIncompleteTextHandler_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CIncompleteTextHandler)>>('COptional_CIncompleteTextHandler_release');
-late final _COptional_CIncompleteTextHandler_release = _COptional_CIncompleteTextHandler_releasePtr.asFunction<void Function(_COptional_CIncompleteTextHandler)>();
 
 late final _CSuggestHandler_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSuggestHandler)>>('CSuggestHandler_release');
 late final _CSuggestHandler_release = _CSuggestHandler_releasePtr.asFunction<void Function(_CSuggestHandler)>();
@@ -72670,6 +77038,8 @@ late final _CSearchManager_suggest_CSuggestQueryPtr = _lookup<ffi.NativeFunction
 late final _CSearchManager_suggest_CSuggestQuery = _CSearchManager_suggest_CSuggestQueryPtr.asFunction<_CFuture_CSuggestResult Function(_CSearchManager, _CSuggestQuery)>();
 late final _CSearchManager_search_CSearchQueryPtr = _lookup<ffi.NativeFunction<_CFuture_CSearchResult Function(_CSearchManager, _CSearchQuery)>>('CSearchManager_search_CSearchQuery');
 late final _CSearchManager_search_CSearchQuery = _CSearchManager_search_CSearchQueryPtr.asFunction<_CFuture_CSearchResult Function(_CSearchManager, _CSearchQuery)>();
+late final _CSearchManager_searchBySuggest_CSuggest_CSearchSettingsPtr = _lookup<ffi.NativeFunction<_CFuture_CSearchResult Function(_CSearchManager, _CSuggest, _CSearchSettings)>>('CSearchManager_searchBySuggest_CSuggest_CSearchSettings');
+late final _CSearchManager_searchBySuggest_CSuggest_CSearchSettings = _CSearchManager_searchBySuggest_CSuggest_CSearchSettingsPtr.asFunction<_CFuture_CSearchResult Function(_CSearchManager, _CSuggest, _CSearchSettings)>();
 late final _CSearchManager_searchById_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CDirectoryObject Function(_CSearchManager, _CString)>>('CSearchManager_searchById_CString');
 late final _CSearchManager_searchById_CString = _CSearchManager_searchById_CStringPtr.asFunction<_CFuture_COptional_CDirectoryObject Function(_CSearchManager, _CString)>();
 late final _CSearchManager_searchByDirectoryObjectId_CDgisObjectIdPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CDirectoryObject Function(_CSearchManager, _CDgisObjectId)>>('CSearchManager_searchByDirectoryObjectId_CDgisObjectId');
@@ -72806,10 +77176,10 @@ late final _CSearchQueryBuilder_setDirectoryFilter_CDirectoryFilterPtr = _lookup
 late final _CSearchQueryBuilder_setDirectoryFilter_CDirectoryFilter = _CSearchQueryBuilder_setDirectoryFilter_CDirectoryFilterPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CDirectoryFilter)>();
 late final _CSearchQueryBuilder_setSortingType_CSortingTypePtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CSortingType)>>('CSearchQueryBuilder_setSortingType_CSortingType');
 late final _CSearchQueryBuilder_setSortingType_CSortingType = _CSearchQueryBuilder_setSortingType_CSortingTypePtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CSortingType)>();
-late final _CSearchQueryBuilder_setGeoPoint_CGeoPointPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CGeoPoint)>>('CSearchQueryBuilder_setGeoPoint_CGeoPoint');
-late final _CSearchQueryBuilder_setGeoPoint_CGeoPoint = _CSearchQueryBuilder_setGeoPoint_CGeoPointPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CGeoPoint)>();
-late final _CSearchQueryBuilder_setRadius_CMeterPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CMeter)>>('CSearchQueryBuilder_setRadius_CMeter');
-late final _CSearchQueryBuilder_setRadius_CMeter = _CSearchQueryBuilder_setRadius_CMeterPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _CMeter)>();
+late final _CSearchQueryBuilder_setGeoPoint_COptional_CGeoPointPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CGeoPoint)>>('CSearchQueryBuilder_setGeoPoint_COptional_CGeoPoint');
+late final _CSearchQueryBuilder_setGeoPoint_COptional_CGeoPoint = _CSearchQueryBuilder_setGeoPoint_COptional_CGeoPointPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CGeoPoint)>();
+late final _CSearchQueryBuilder_setRadius_COptional_CMeterPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CMeter)>>('CSearchQueryBuilder_setRadius_COptional_CMeter');
+late final _CSearchQueryBuilder_setRadius_COptional_CMeter = _CSearchQueryBuilder_setRadius_COptional_CMeterPtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CMeter)>();
 late final _CSearchQueryBuilder_setLocale_COptional_CLocalePtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CLocale)>>('CSearchQueryBuilder_setLocale_COptional_CLocale');
 late final _CSearchQueryBuilder_setLocale_COptional_CLocale = _CSearchQueryBuilder_setLocale_COptional_CLocalePtr.asFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, _COptional_CLocale)>();
 late final _CSearchQueryBuilder_setSearchNearby_boolPtr = _lookup<ffi.NativeFunction<_CSearchQueryBuilder Function(_CSearchQueryBuilder, ffi.Bool)>>('CSearchQueryBuilder_setSearchNearby_bool');
@@ -72833,6 +77203,9 @@ late final _COptional_CArray_CGeoPoint_release = _COptional_CArray_CGeoPoint_rel
 
 late final _COptional_CGeoRectMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGeoRect Function()>>('COptional_CGeoRectMakeDefault');
 late final _COptional_CGeoRectMakeDefault = _COptional_CGeoRectMakeDefaultPtr.asFunction<_COptional_CGeoRect Function()>();
+
+late final _COptional_CMeterMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CMeter Function()>>('COptional_CMeterMakeDefault');
+late final _COptional_CMeterMakeDefault = _COptional_CMeterMakeDefaultPtr.asFunction<_COptional_CMeter Function()>();
 
 late final _CSuggestQueryBuilder_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSuggestQueryBuilder_cg_objectIdentifier');
 late final _CSuggestQueryBuilder_cg_objectIdentifier = _CSuggestQueryBuilder_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -72908,6 +77281,25 @@ late final _CSearchHistoryItem_releasePtr = _lookup<ffi.NativeFunction<ffi.Void 
 late final _CSearchHistoryItem_release = _CSearchHistoryItem_releasePtr.asFunction<void Function(_CSearchHistoryItem)>();
 late final _CSearchHistoryItemMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchHistoryItem Function()>>('CSearchHistoryItemMakeDefault');
 late final _CSearchHistoryItemMakeDefault = _CSearchHistoryItemMakeDefaultPtr.asFunction<_CSearchHistoryItem Function()>();
+
+late final _CSearchHistoryKeyStrategyCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSearchHistoryKeyStrategyCpp_cg_objectIdentifier');
+late final _CSearchHistoryKeyStrategyCpp_cg_objectIdentifier = _CSearchHistoryKeyStrategyCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CSearchHistoryKeyStrategyCpp_create_CSearchHistoryItemPtr = _lookup<ffi.NativeFunction<_CString Function(_CSearchHistoryKeyStrategyCpp, _CSearchHistoryItem)>>('CSearchHistoryKeyStrategyCpp_create_CSearchHistoryItem');
+late final _CSearchHistoryKeyStrategyCpp_create_CSearchHistoryItem = _CSearchHistoryKeyStrategyCpp_create_CSearchHistoryItemPtr.asFunction<_CString Function(_CSearchHistoryKeyStrategyCpp, _CSearchHistoryItem)>();
+
+late final _CSearchHistoryKeyStrategyCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSearchHistoryKeyStrategyCpp_release');
+late final _CSearchHistoryKeyStrategyCpp_release = _CSearchHistoryKeyStrategyCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CSearchHistoryKeyStrategyCpp_retainPtr = _lookup<ffi.NativeFunction<_CSearchHistoryKeyStrategyCpp Function(ffi.Pointer<ffi.Void>)>>('CSearchHistoryKeyStrategyCpp_retain');
+late final _CSearchHistoryKeyStrategyCpp_retain = _CSearchHistoryKeyStrategyCpp_retainPtr.asFunction<_CSearchHistoryKeyStrategyCpp Function(ffi.Pointer<ffi.Void>)>();
+late final _CSearchHistoryKeyStrategyCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchHistoryKeyStrategyCpp Function()>>('CSearchHistoryKeyStrategyCppMakeDefault');
+late final _CSearchHistoryKeyStrategyCppMakeDefault = _CSearchHistoryKeyStrategyCppMakeDefaultPtr.asFunction<_CSearchHistoryKeyStrategyCpp Function()>();
+
+
+late final _CSearchHistoryKeyStrategyMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchHistoryKeyStrategy Function()>>('CSearchHistoryKeyStrategyMakeDefault');
+late final _CSearchHistoryKeyStrategyMakeDefault = _CSearchHistoryKeyStrategyMakeDefaultPtr.asFunction<_CSearchHistoryKeyStrategy Function()>();
+late final _CSearchHistoryKeyStrategy_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSearchHistoryKeyStrategy)>>('CSearchHistoryKeyStrategy_release');
+late final _CSearchHistoryKeyStrategy_release = _CSearchHistoryKeyStrategy_releasePtr.asFunction<void Function(_CSearchHistoryKeyStrategy)>();
 late final _CSearchHistoryResult_itemsPtr = _lookup<ffi.NativeFunction<_CArray_CSearchHistoryItem Function(_CSearchHistoryResult)>>('CSearchHistoryResult_items');
 late final _CSearchHistoryResult_items = _CSearchHistoryResult_itemsPtr.asFunction<_CArray_CSearchHistoryItem Function(_CSearchHistoryResult)>();
 
@@ -72953,6 +77345,8 @@ late final _CSearchHistory_onHistoryChanged = _CSearchHistory_onHistoryChangedPt
 late final _CSearchHistory_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSearchHistory_cg_objectIdentifier');
 late final _CSearchHistory_cg_objectIdentifier = _CSearchHistory_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CSearchHistory_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CSearchHistory Function(_CContext)>>('CSearchHistory_S_instance_CContext');
+late final _CSearchHistory_S_instance_CContext = _CSearchHistory_S_instance_CContextPtr.asFunction<_CSearchHistory Function(_CContext)>();
 late final _CSearchHistory_items_CSearchHistoryPagePtr = _lookup<ffi.NativeFunction<_CFuture_CSearchHistoryResult Function(_CSearchHistory, _CSearchHistoryPage)>>('CSearchHistory_items_CSearchHistoryPage');
 late final _CSearchHistory_items_CSearchHistoryPage = _CSearchHistory_items_CSearchHistoryPagePtr.asFunction<_CFuture_CSearchHistoryResult Function(_CSearchHistory, _CSearchHistoryPage)>();
 late final _CSearchHistory_addItem_CSearchHistoryItemPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSearchHistory, _CSearchHistoryItem)>>('CSearchHistory_addItem_CSearchHistoryItem');
@@ -72965,8 +77359,8 @@ late final _CSearchHistory_removeItems_CArray_CSearchHistoryItemPtr = _lookup<ff
 late final _CSearchHistory_removeItems_CArray_CSearchHistoryItem = _CSearchHistory_removeItems_CArray_CSearchHistoryItemPtr.asFunction<void Function(_CSearchHistory, _CArray_CSearchHistoryItem)>();
 late final _CSearchHistory_clearPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSearchHistory)>>('CSearchHistory_clear');
 late final _CSearchHistory_clear = _CSearchHistory_clearPtr.asFunction<void Function(_CSearchHistory)>();
-late final _CSearchHistory_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CSearchHistory Function(_CContext)>>('CSearchHistory_C_createWith_CContext');
-late final _CSearchHistory_C_createWith_CContext = _CSearchHistory_C_createWith_CContextPtr.asFunction<_CSearchHistory Function(_CContext)>();
+late final _CSearchHistory_setKeyStrategy_COptional_CSearchHistoryKeyStrategyPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSearchHistory, _COptional_CSearchHistoryKeyStrategy)>>('CSearchHistory_setKeyStrategy_COptional_CSearchHistoryKeyStrategy');
+late final _CSearchHistory_setKeyStrategy_COptional_CSearchHistoryKeyStrategy = _CSearchHistory_setKeyStrategy_COptional_CSearchHistoryKeyStrategyPtr.asFunction<void Function(_CSearchHistory, _COptional_CSearchHistoryKeyStrategy)>();
 
 late final _CSearchHistory_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSearchHistory_release');
 late final _CSearchHistory_release = _CSearchHistory_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -72998,6 +77392,12 @@ late final _CFuture_CSearchHistoryResultReceive = _CFuture_CSearchHistoryResultR
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
   )
 >();
+
+late final _COptional_CSearchHistoryKeyStrategyMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CSearchHistoryKeyStrategy Function()>>('COptional_CSearchHistoryKeyStrategyMakeDefault');
+late final _COptional_CSearchHistoryKeyStrategyMakeDefault = _COptional_CSearchHistoryKeyStrategyMakeDefaultPtr.asFunction<_COptional_CSearchHistoryKeyStrategy Function()>();
+
+late final _COptional_CSearchHistoryKeyStrategy_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CSearchHistoryKeyStrategy)>>('COptional_CSearchHistoryKeyStrategy_release');
+late final _COptional_CSearchHistoryKeyStrategy_release = _COptional_CSearchHistoryKeyStrategy_releasePtr.asFunction<void Function(_COptional_CSearchHistoryKeyStrategy)>();
 
 late final _CChannel_CChangeTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CChangeType Function()>>('CChannel_CChangeTypeMakeDefault');
 late final _CChannel_CChangeTypeMakeDefault = _CChannel_CChangeTypeMakeDefaultPtr.asFunction<_CChannel_CChangeType Function()>();
@@ -73084,9 +77484,6 @@ late final _CData_release = _CData_releasePtr.asFunction<void Function(_CData)>(
 
 late final _COptional_COrgIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_COrgId Function()>>('COptional_COrgIdMakeDefault');
 late final _COptional_COrgIdMakeDefault = _COptional_COrgIdMakeDefaultPtr.asFunction<_COptional_COrgId Function()>();
-
-late final _COptional_CMeterMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CMeter Function()>>('COptional_CMeterMakeDefault');
-late final _COptional_CMeterMakeDefault = _COptional_CMeterMakeDefaultPtr.asFunction<_COptional_CMeter Function()>();
 
 late final _CPointGeometryData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPointGeometryData)>>('CPointGeometryData_release');
 late final _CPointGeometryData_release = _CPointGeometryData_releasePtr.asFunction<void Function(_CPointGeometryData)>();
@@ -73231,6 +77628,16 @@ late final _CCameraAnimationTypeMakeDefault = _CCameraAnimationTypeMakeDefaultPt
 late final _CCameraBehaviourChangeReasonMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraBehaviourChangeReason Function()>>('CCameraBehaviourChangeReasonMakeDefault');
 late final _CCameraBehaviourChangeReasonMakeDefault = _CCameraBehaviourChangeReasonMakeDefaultPtr.asFunction<_CCameraBehaviourChangeReason Function()>();
 
+late final _CCameraChangeReasonMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraChangeReason Function()>>('CCameraChangeReasonMakeDefault');
+late final _CCameraChangeReasonMakeDefault = _CCameraChangeReasonMakeDefaultPtr.asFunction<_CCameraChangeReason Function()>();
+
+late final _COptionSet_CCameraChangeReasonMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CCameraChangeReason Function()>>('COptionSet_CCameraChangeReasonMakeDefault');
+late final _COptionSet_CCameraChangeReasonMakeDefault = _COptionSet_CCameraChangeReasonMakeDefaultPtr.asFunction<_COptionSet_CCameraChangeReason Function()>();
+
+late final _CCameraChangeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraChange Function()>>('CCameraChangeMakeDefault');
+late final _CCameraChangeMakeDefault = _CCameraChangeMakeDefaultPtr.asFunction<_CCameraChange Function()>();
+
+
 late final _CCameraPositionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraPositionPoint Function()>>('CCameraPositionPointMakeDefault');
 late final _CCameraPositionPointMakeDefault = _CCameraPositionPointMakeDefaultPtr.asFunction<_CCameraPositionPoint Function()>();
 
@@ -73240,10 +77647,6 @@ late final _CCameraStateMakeDefault = _CCameraStateMakeDefaultPtr.asFunction<_CC
 
 late final _CCameraViewPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraViewPoint Function()>>('CCameraViewPointMakeDefault');
 late final _CCameraViewPointMakeDefault = _CCameraViewPointMakeDefaultPtr.asFunction<_CCameraViewPoint Function()>();
-
-
-late final _CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CColor Function()>>('CColorMakeDefault');
-late final _CColorMakeDefault = _CColorMakeDefaultPtr.asFunction<_CColor Function()>();
 
 
 late final _CDeviceDensityMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDeviceDensity Function()>>('CDeviceDensityMakeDefault');
@@ -73259,6 +77662,18 @@ late final _CGraphicsPresetMakeDefault = _CGraphicsPresetMakeDefaultPtr.asFuncti
 
 late final _CZIndexMakeDefaultPtr = _lookup<ffi.NativeFunction<_CZIndex Function()>>('CZIndexMakeDefault');
 late final _CZIndexMakeDefault = _CZIndexMakeDefaultPtr.asFunction<_CZIndex Function()>();
+
+
+late final _CCameraTransactionGuard_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CCameraTransactionGuard_cg_objectIdentifier');
+late final _CCameraTransactionGuard_cg_objectIdentifier = _CCameraTransactionGuard_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CCameraTransactionGuard_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CCameraTransactionGuard_release');
+late final _CCameraTransactionGuard_release = _CCameraTransactionGuard_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CCameraTransactionGuard_retainPtr = _lookup<ffi.NativeFunction<_CCameraTransactionGuard Function(ffi.Pointer<ffi.Void>)>>('CCameraTransactionGuard_retain');
+late final _CCameraTransactionGuard_retain = _CCameraTransactionGuard_retainPtr.asFunction<_CCameraTransactionGuard Function(ffi.Pointer<ffi.Void>)>();
+late final _CCameraTransactionGuardMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraTransactionGuard Function()>>('CCameraTransactionGuardMakeDefault');
+late final _CCameraTransactionGuardMakeDefault = _CCameraTransactionGuardMakeDefaultPtr.asFunction<_CCameraTransactionGuard Function()>();
 
 
 late final _CZoomMakeDefaultPtr = _lookup<ffi.NativeFunction<_CZoom Function()>>('CZoomMakeDefault');
@@ -73435,10 +77850,6 @@ late final _CDirectMapControlEndEvent_retain = _CDirectMapControlEndEvent_retain
 late final _CDirectMapControlEndEventMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDirectMapControlEndEvent Function()>>('CDirectMapControlEndEventMakeDefault');
 late final _CDirectMapControlEndEventMakeDefault = _CDirectMapControlEndEventMakeDefaultPtr.asFunction<_CDirectMapControlEndEvent Function()>();
 
-
-late final _CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenPoint Function()>>('CScreenPointMakeDefault');
-late final _CScreenPointMakeDefault = _CScreenPointMakeDefaultPtr.asFunction<_CScreenPoint Function()>();
-
 late final _CDirectMapRotationEvent_bearingDeltaPtr = _lookup<ffi.NativeFunction<_CBearing Function(_CDirectMapRotationEvent)>>('CDirectMapRotationEvent_bearingDelta');
 late final _CDirectMapRotationEvent_bearingDelta = _CDirectMapRotationEvent_bearingDeltaPtr.asFunction<_CBearing Function(_CDirectMapRotationEvent)>();
 late final _CDirectMapRotationEvent_rotationCenterPtr = _lookup<ffi.NativeFunction<_COptional_CScreenPoint Function(_CDirectMapRotationEvent)>>('CDirectMapRotationEvent_rotationCenter');
@@ -73477,10 +77888,6 @@ late final _CDirectMapScalingEvent_retainPtr = _lookup<ffi.NativeFunction<_CDire
 late final _CDirectMapScalingEvent_retain = _CDirectMapScalingEvent_retainPtr.asFunction<_CDirectMapScalingEvent Function(ffi.Pointer<ffi.Void>)>();
 late final _CDirectMapScalingEventMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDirectMapScalingEvent Function()>>('CDirectMapScalingEventMakeDefault');
 late final _CDirectMapScalingEventMakeDefault = _CDirectMapScalingEventMakeDefaultPtr.asFunction<_CDirectMapScalingEvent Function()>();
-
-
-late final _CScreenShiftMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenShift Function()>>('CScreenShiftMakeDefault');
-late final _CScreenShiftMakeDefault = _CScreenShiftMakeDefaultPtr.asFunction<_CScreenShift Function()>();
 
 late final _CDirectMapShiftEvent_screenShiftPtr = _lookup<ffi.NativeFunction<_CScreenShift Function(_CDirectMapShiftEvent)>>('CDirectMapShiftEvent_screenShift');
 late final _CDirectMapShiftEvent_screenShift = _CDirectMapShiftEvent_screenShiftPtr.asFunction<_CScreenShift Function(_CDirectMapShiftEvent)>();
@@ -73933,6 +78340,8 @@ late final _CDgisSource_cg_objectIdentifier = _CDgisSource_cg_objectIdentifierPt
 
 late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>>('CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode');
 late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr.asFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>();
+late final _CDgisSource_S_createImmersiveDgisSource_CContextPtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext)>>('CDgisSource_S_createImmersiveDgisSource_CContext');
+late final _CDgisSource_S_createImmersiveDgisSource_CContext = _CDgisSource_S_createImmersiveDgisSource_CContextPtr.asFunction<_CSource Function(_CContext)>();
 late final _CDgisSource_setHighlighted_CArray_CDgisObjectId_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDgisSource, _CArray_CDgisObjectId, ffi.Bool)>>('CDgisSource_setHighlighted_CArray_CDgisObjectId_bool');
 late final _CDgisSource_setHighlighted_CArray_CDgisObjectId_bool = _CDgisSource_setHighlighted_CArray_CDgisObjectId_boolPtr.asFunction<void Function(_CDgisSource, _CArray_CDgisObjectId, bool)>();
 
@@ -74027,6 +78436,8 @@ late final _CArray_CMapObject_release = _CArray_CMapObject_releasePtr.asFunction
 late final _CImage_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CImage_cg_objectIdentifier');
 late final _CImage_cg_objectIdentifier = _CImage_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CImage_C_createWith_CContext_CImageLoaderPtr = _lookup<ffi.NativeFunction<_CImage Function(_CContext, _CImageLoader)>>('CImage_C_createWith_CContext_CImageLoader');
+late final _CImage_C_createWith_CContext_CImageLoader = _CImage_C_createWith_CContext_CImageLoaderPtr.asFunction<_CImage Function(_CContext, _CImageLoader)>();
 
 late final _CImage_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CImage_release');
 late final _CImage_release = _CImage_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -74034,13 +78445,6 @@ late final _CImage_retainPtr = _lookup<ffi.NativeFunction<_CImage Function(ffi.P
 late final _CImage_retain = _CImage_retainPtr.asFunction<_CImage Function(ffi.Pointer<ffi.Void>)>();
 late final _CImageMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImage Function()>>('CImageMakeDefault');
 late final _CImageMakeDefault = _CImageMakeDefaultPtr.asFunction<_CImage Function()>();
-
-
-late final _CImageFormatMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageFormat Function()>>('CImageFormatMakeDefault');
-late final _CImageFormatMakeDefault = _CImageFormatMakeDefaultPtr.asFunction<_CImageFormat Function()>();
-
-late final _CImageDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageData Function()>>('CImageDataMakeDefault');
-late final _CImageDataMakeDefault = _CImageDataMakeDefaultPtr.asFunction<_CImageData Function()>();
 
 
 late final _CImageLoaderCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CImageLoaderCpp_cg_objectIdentifier');
@@ -74055,6 +78459,13 @@ late final _CImageLoaderCpp_retainPtr = _lookup<ffi.NativeFunction<_CImageLoader
 late final _CImageLoaderCpp_retain = _CImageLoaderCpp_retainPtr.asFunction<_CImageLoaderCpp Function(ffi.Pointer<ffi.Void>)>();
 late final _CImageLoaderCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageLoaderCpp Function()>>('CImageLoaderCppMakeDefault');
 late final _CImageLoaderCppMakeDefault = _CImageLoaderCppMakeDefaultPtr.asFunction<_CImageLoaderCpp Function()>();
+
+
+late final _CImageFormatMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageFormat Function()>>('CImageFormatMakeDefault');
+late final _CImageFormatMakeDefault = _CImageFormatMakeDefaultPtr.asFunction<_CImageFormat Function()>();
+
+late final _CImageDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageData Function()>>('CImageDataMakeDefault');
+late final _CImageDataMakeDefault = _CImageDataMakeDefaultPtr.asFunction<_CImageData Function()>();
 
 
 late final _CImageLoaderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CImageLoader Function()>>('CImageLoaderMakeDefault');
@@ -74103,6 +78514,8 @@ late final _CMyLocationMapObjectMarkerTypeMakeDefault = _CMyLocationMapObjectMar
 late final _CModelData_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CModelData_cg_objectIdentifier');
 late final _CModelData_cg_objectIdentifier = _CModelData_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CModelData_C_createWith_CContext_CModelDataLoaderPtr = _lookup<ffi.NativeFunction<_CModelData Function(_CContext, _CModelDataLoader)>>('CModelData_C_createWith_CContext_CModelDataLoader');
+late final _CModelData_C_createWith_CContext_CModelDataLoader = _CModelData_C_createWith_CContext_CModelDataLoaderPtr.asFunction<_CModelData Function(_CContext, _CModelDataLoader)>();
 
 late final _CModelData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CModelData_release');
 late final _CModelData_release = _CModelData_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -74111,6 +78524,25 @@ late final _CModelData_retain = _CModelData_retainPtr.asFunction<_CModelData Fun
 late final _CModelDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelData Function()>>('CModelDataMakeDefault');
 late final _CModelDataMakeDefault = _CModelDataMakeDefaultPtr.asFunction<_CModelData Function()>();
 
+
+late final _CModelDataLoaderCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_cg_objectIdentifier');
+late final _CModelDataLoaderCpp_cg_objectIdentifier = _CModelDataLoaderCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CModelDataLoaderCpp_loadPtr = _lookup<ffi.NativeFunction<_CData Function(_CModelDataLoaderCpp)>>('CModelDataLoaderCpp_load');
+late final _CModelDataLoaderCpp_load = _CModelDataLoaderCpp_loadPtr.asFunction<_CData Function(_CModelDataLoaderCpp)>();
+
+late final _CModelDataLoaderCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_release');
+late final _CModelDataLoaderCpp_release = _CModelDataLoaderCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CModelDataLoaderCpp_retainPtr = _lookup<ffi.NativeFunction<_CModelDataLoaderCpp Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_retain');
+late final _CModelDataLoaderCpp_retain = _CModelDataLoaderCpp_retainPtr.asFunction<_CModelDataLoaderCpp Function(ffi.Pointer<ffi.Void>)>();
+late final _CModelDataLoaderCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelDataLoaderCpp Function()>>('CModelDataLoaderCppMakeDefault');
+late final _CModelDataLoaderCppMakeDefault = _CModelDataLoaderCppMakeDefaultPtr.asFunction<_CModelDataLoaderCpp Function()>();
+
+
+late final _CModelDataLoaderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelDataLoader Function()>>('CModelDataLoaderMakeDefault');
+late final _CModelDataLoaderMakeDefault = _CModelDataLoaderMakeDefaultPtr.asFunction<_CModelDataLoader Function()>();
+late final _CModelDataLoader_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CModelDataLoader)>>('CModelDataLoader_release');
+late final _CModelDataLoader_release = _CModelDataLoader_releasePtr.asFunction<void Function(_CModelDataLoader)>();
 late final _CMyLocationMapObject_animationSettingsPtr = _lookup<ffi.NativeFunction<_CAnimationSettings Function(_CMyLocationMapObject)>>('CMyLocationMapObject_animationSettings');
 late final _CMyLocationMapObject_animationSettings = _CMyLocationMapObject_animationSettingsPtr.asFunction<_CAnimationSettings Function(_CMyLocationMapObject)>();
 late final _CMyLocationMapObject_objectAttributesPtr = _lookup<ffi.NativeFunction<_CAttributes Function(_CMyLocationMapObject)>>('CMyLocationMapObject_objectAttributes');
@@ -74184,6 +78616,8 @@ late final _CRoadEvent_timestampPtr = _lookup<ffi.NativeFunction<_COptional_CDat
 late final _CRoadEvent_timestamp = _CRoadEvent_timestampPtr.asFunction<_COptional_CDate Function(_CRoadEvent)>();
 late final _CRoadEvent_locationPtr = _lookup<ffi.NativeFunction<_CGeoPoint Function(_CRoadEvent)>>('CRoadEvent_location');
 late final _CRoadEvent_location = _CRoadEvent_locationPtr.asFunction<_CGeoPoint Function(_CRoadEvent)>();
+late final _CRoadEvent_elevationPtr = _lookup<ffi.NativeFunction<_CElevation Function(_CRoadEvent)>>('CRoadEvent_elevation');
+late final _CRoadEvent_elevation = _CRoadEvent_elevationPtr.asFunction<_CElevation Function(_CRoadEvent)>();
 late final _CRoadEvent_descriptionPtr = _lookup<ffi.NativeFunction<_CString Function(_CRoadEvent)>>('CRoadEvent_description');
 late final _CRoadEvent_description = _CRoadEvent_descriptionPtr.asFunction<_CString Function(_CRoadEvent)>();
 late final _CRoadEvent_cameraInfoPtr = _lookup<ffi.NativeFunction<_COptional_CRoadCameraInfo Function(_CRoadEvent)>>('CRoadEvent_cameraInfo');
@@ -74425,6 +78859,9 @@ late final _CStatefulChannel_CRoadEventActionInfoConnect = _CStatefulChannel_CRo
 late final _CRoadEventActionStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventActionState Function()>>('CRoadEventActionStateMakeDefault');
 late final _CRoadEventActionStateMakeDefault = _CRoadEventActionStateMakeDefaultPtr.asFunction<_CRoadEventActionState Function()>();
 
+late final _COptional_uint32_tMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_uint32_t Function()>>('COptional_uint32_tMakeDefault');
+late final _COptional_uint32_tMakeDefault = _COptional_uint32_tMakeDefaultPtr.asFunction<_COptional_uint32_t Function()>();
+
 late final _CRoadEventActionInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventActionInfo Function()>>('CRoadEventActionInfoMakeDefault');
 late final _CRoadEventActionInfoMakeDefault = _CRoadEventActionInfoMakeDefaultPtr.asFunction<_CRoadEventActionInfo Function()>();
 
@@ -74581,10 +79018,6 @@ late final _CRenderedObjectMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRendere
 late final _CRenderedObjectMakeDefault = _CRenderedObjectMakeDefaultPtr.asFunction<_CRenderedObject Function()>();
 
 
-late final _CScreenDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenDistance Function()>>('CScreenDistanceMakeDefault');
-late final _CScreenDistanceMakeDefault = _CScreenDistanceMakeDefaultPtr.asFunction<_CScreenDistance Function()>();
-
-
 late final _CStyleLayerIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStyleLayerId Function()>>('CStyleLayerIdMakeDefault');
 late final _CStyleLayerIdMakeDefault = _CStyleLayerIdMakeDefaultPtr.asFunction<_CStyleLayerId Function()>();
 
@@ -74672,6 +79105,19 @@ late final _CGeometryMapObjectSourceBuilder_retain = _CGeometryMapObjectSourceBu
 late final _CGeometryMapObjectSourceBuilderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeometryMapObjectSourceBuilder Function()>>('CGeometryMapObjectSourceBuilderMakeDefault');
 late final _CGeometryMapObjectSourceBuilderMakeDefault = _CGeometryMapObjectSourceBuilderMakeDefaultPtr.asFunction<_CGeometryMapObjectSourceBuilder Function()>();
 
+
+late final _CActiveLevelModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CActiveLevelMode Function()>>('CActiveLevelModeMakeDefault');
+late final _CActiveLevelModeMakeDefault = _CActiveLevelModeMakeDefaultPtr.asFunction<_CActiveLevelMode Function()>();
+
+
+late final _COverviewModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COverviewMode Function()>>('COverviewModeMakeDefault');
+late final _COverviewModeMakeDefault = _COverviewModeMakeDefaultPtr.asFunction<_COverviewMode Function()>();
+
+
+late final _CIndoorBuildingMode_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CIndoorBuildingMode)>>('CIndoorBuildingMode_release');
+late final _CIndoorBuildingMode_release = _CIndoorBuildingMode_releasePtr.asFunction<void Function(_CIndoorBuildingMode)>();
+late final _CIndoorBuildingModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CIndoorBuildingMode Function()>>('CIndoorBuildingModeMakeDefault');
+late final _CIndoorBuildingModeMakeDefault = _CIndoorBuildingModeMakeDefaultPtr.asFunction<_CIndoorBuildingMode Function()>();
 late final _CIndoorBuilding_idPtr = _lookup<ffi.NativeFunction<_CDgisObjectId Function(_CIndoorBuilding)>>('CIndoorBuilding_id');
 late final _CIndoorBuilding_id = _CIndoorBuilding_idPtr.asFunction<_CDgisObjectId Function(_CIndoorBuilding)>();
 late final _CIndoorBuilding_defaultLevelIndexPtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CIndoorBuilding)>>('CIndoorBuilding_defaultLevelIndex');
@@ -74684,10 +79130,18 @@ late final _CIndoorBuilding_activeLevelIndexPtr = _lookup<ffi.NativeFunction<ffi
 late final _CIndoorBuilding_activeLevelIndex = _CIndoorBuilding_activeLevelIndexPtr.asFunction<int Function(_CIndoorBuilding)>();
 late final _CIndoorBuilding_setActiveLevelIndex_uint64_tPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CIndoorBuilding, ffi.Uint64)>>('CIndoorBuilding_setActiveLevelIndex_uint64_t');
 late final _CIndoorBuilding_setActiveLevelIndex_uint64_t = _CIndoorBuilding_setActiveLevelIndex_uint64_tPtr.asFunction<void Function(_CIndoorBuilding, int)>();
+late final _CIndoorBuilding_modeChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CIndoorBuildingMode Function(_CIndoorBuilding)>>('CIndoorBuilding_modeChannel');
+late final _CIndoorBuilding_modeChannel = _CIndoorBuilding_modeChannelPtr.asFunction<_CStatefulChannel_CIndoorBuildingMode Function(_CIndoorBuilding)>();
+late final _CIndoorBuilding_modePtr = _lookup<ffi.NativeFunction<_CIndoorBuildingMode Function(_CIndoorBuilding)>>('CIndoorBuilding_mode');
+late final _CIndoorBuilding_mode = _CIndoorBuilding_modePtr.asFunction<_CIndoorBuildingMode Function(_CIndoorBuilding)>();
+late final _CIndoorBuilding_setMode_CIndoorBuildingModePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CIndoorBuilding, _CIndoorBuildingMode)>>('CIndoorBuilding_setMode_CIndoorBuildingMode');
+late final _CIndoorBuilding_setMode_CIndoorBuildingMode = _CIndoorBuilding_setMode_CIndoorBuildingModePtr.asFunction<void Function(_CIndoorBuilding, _CIndoorBuildingMode)>();
 
 late final _CIndoorBuilding_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CIndoorBuilding_cg_objectIdentifier');
 late final _CIndoorBuilding_cg_objectIdentifier = _CIndoorBuilding_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CIndoorBuilding_linkedWith_CIndoorBuildingPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CIndoorBuilding, _CIndoorBuilding)>>('CIndoorBuilding_linkedWith_CIndoorBuilding');
+late final _CIndoorBuilding_linkedWith_CIndoorBuilding = _CIndoorBuilding_linkedWith_CIndoorBuildingPtr.asFunction<bool Function(_CIndoorBuilding, _CIndoorBuilding)>();
 
 late final _CIndoorBuilding_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CIndoorBuilding_release');
 late final _CIndoorBuilding_release = _CIndoorBuilding_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -74717,6 +79171,29 @@ late final _CStatefulChannel_uint64_tConnect = _CStatefulChannel_uint64_tConnect
     _CStatefulChannel_uint64_t,
     int,
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Uint64, ffi.Int64)>>
+  )
+>();
+
+late final _CStatefulChannel_CIndoorBuildingModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CIndoorBuildingMode Function()>>('CStatefulChannel_CIndoorBuildingModeMakeDefault');
+late final _CStatefulChannel_CIndoorBuildingModeMakeDefault = _CStatefulChannel_CIndoorBuildingModeMakeDefaultPtr.asFunction<_CStatefulChannel_CIndoorBuildingMode Function()>();
+late final _CStatefulChannel_CIndoorBuildingMode_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CIndoorBuildingMode)>>('CStatefulChannel_CIndoorBuildingMode_release');
+late final _CStatefulChannel_CIndoorBuildingMode_release = _CStatefulChannel_CIndoorBuildingMode_releasePtr.asFunction<void Function(_CStatefulChannel_CIndoorBuildingMode)>();
+late final _CStatefulChannel_CIndoorBuildingMode_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CIndoorBuildingMode Function(_CStatefulChannel_CIndoorBuildingMode)>>('CStatefulChannel_CIndoorBuildingMode_retain');
+late final _CStatefulChannel_CIndoorBuildingMode_retain = _CStatefulChannel_CIndoorBuildingMode_retainPtr.asFunction<_CStatefulChannel_CIndoorBuildingMode Function(_CStatefulChannel_CIndoorBuildingMode)>();
+late final _CStatefulChannel_CIndoorBuildingModeGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CIndoorBuildingMode Function(_CStatefulChannel_CIndoorBuildingMode)>>('CStatefulChannel_CIndoorBuildingMode_getCurrentValue');
+late final _CStatefulChannel_CIndoorBuildingModeGetCurrentValue = _CStatefulChannel_CIndoorBuildingModeGetCurrentValuePtr.asFunction<_CIndoorBuildingMode Function(_CStatefulChannel_CIndoorBuildingMode)>();
+late final _CStatefulChannel_CIndoorBuildingModeConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CIndoorBuildingMode,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CIndoorBuildingMode, ffi.Int64)>>
+  )
+>>('CStatefulChannel_CIndoorBuildingMode_connect');
+late final _CStatefulChannel_CIndoorBuildingModeConnect = _CStatefulChannel_CIndoorBuildingModeConnectPtr.asFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CIndoorBuildingMode,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CIndoorBuildingMode, ffi.Int64)>>
   )
 >();
 
@@ -74946,12 +79423,8 @@ late final _CMap_retain = _CMap_retainPtr.asFunction<_CMap Function(ffi.Pointer<
 late final _CMapMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMap Function()>>('CMapMakeDefault');
 late final _CMapMakeDefault = _CMapMakeDefaultPtr.asFunction<_CMap Function()>();
 
-late final _CCamera_stateChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraState Function(_CCamera)>>('CCamera_stateChannel');
-late final _CCamera_stateChannel = _CCamera_stateChannelPtr.asFunction<_CStatefulChannel_CCameraState Function(_CCamera)>();
 late final _CCamera_statePtr = _lookup<ffi.NativeFunction<_CCameraState Function(_CCamera)>>('CCamera_state');
 late final _CCamera_state = _CCamera_statePtr.asFunction<_CCameraState Function(_CCamera)>();
-late final _CCamera_behaviourChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraBehaviourChange Function(_CCamera)>>('CCamera_behaviourChannel');
-late final _CCamera_behaviourChannel = _CCamera_behaviourChannelPtr.asFunction<_CStatefulChannel_CCameraBehaviourChange Function(_CCamera)>();
 late final _CCamera_behaviourPtr = _lookup<ffi.NativeFunction<_CCameraBehaviourChange Function(_CCamera)>>('CCamera_behaviour');
 late final _CCamera_behaviour = _CCamera_behaviourPtr.asFunction<_CCameraBehaviourChange Function(_CCamera)>();
 
@@ -75005,52 +79478,6 @@ late final _CFuture_CCameraAnimatedMoveResultReceive = _CFuture_CCameraAnimatedM
     int,
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraAnimatedMoveResult, ffi.Int64)>>,
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CCameraStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraState Function()>>('CStatefulChannel_CCameraStateMakeDefault');
-late final _CStatefulChannel_CCameraStateMakeDefault = _CStatefulChannel_CCameraStateMakeDefaultPtr.asFunction<_CStatefulChannel_CCameraState Function()>();
-late final _CStatefulChannel_CCameraState_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CCameraState)>>('CStatefulChannel_CCameraState_release');
-late final _CStatefulChannel_CCameraState_release = _CStatefulChannel_CCameraState_releasePtr.asFunction<void Function(_CStatefulChannel_CCameraState)>();
-late final _CStatefulChannel_CCameraState_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraState Function(_CStatefulChannel_CCameraState)>>('CStatefulChannel_CCameraState_retain');
-late final _CStatefulChannel_CCameraState_retain = _CStatefulChannel_CCameraState_retainPtr.asFunction<_CStatefulChannel_CCameraState Function(_CStatefulChannel_CCameraState)>();
-late final _CStatefulChannel_CCameraStateGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CCameraState Function(_CStatefulChannel_CCameraState)>>('CStatefulChannel_CCameraState_getCurrentValue');
-late final _CStatefulChannel_CCameraStateGetCurrentValue = _CStatefulChannel_CCameraStateGetCurrentValuePtr.asFunction<_CCameraState Function(_CStatefulChannel_CCameraState)>();
-late final _CStatefulChannel_CCameraStateConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraState,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraState, ffi.Int64)>>
-  )
->>('CStatefulChannel_CCameraState_connect');
-late final _CStatefulChannel_CCameraStateConnect = _CStatefulChannel_CCameraStateConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraState,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraState, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CCameraBehaviourChangeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraBehaviourChange Function()>>('CStatefulChannel_CCameraBehaviourChangeMakeDefault');
-late final _CStatefulChannel_CCameraBehaviourChangeMakeDefault = _CStatefulChannel_CCameraBehaviourChangeMakeDefaultPtr.asFunction<_CStatefulChannel_CCameraBehaviourChange Function()>();
-late final _CStatefulChannel_CCameraBehaviourChange_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CCameraBehaviourChange)>>('CStatefulChannel_CCameraBehaviourChange_release');
-late final _CStatefulChannel_CCameraBehaviourChange_release = _CStatefulChannel_CCameraBehaviourChange_releasePtr.asFunction<void Function(_CStatefulChannel_CCameraBehaviourChange)>();
-late final _CStatefulChannel_CCameraBehaviourChange_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraBehaviourChange Function(_CStatefulChannel_CCameraBehaviourChange)>>('CStatefulChannel_CCameraBehaviourChange_retain');
-late final _CStatefulChannel_CCameraBehaviourChange_retain = _CStatefulChannel_CCameraBehaviourChange_retainPtr.asFunction<_CStatefulChannel_CCameraBehaviourChange Function(_CStatefulChannel_CCameraBehaviourChange)>();
-late final _CStatefulChannel_CCameraBehaviourChangeGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CCameraBehaviourChange Function(_CStatefulChannel_CCameraBehaviourChange)>>('CStatefulChannel_CCameraBehaviourChange_getCurrentValue');
-late final _CStatefulChannel_CCameraBehaviourChangeGetCurrentValue = _CStatefulChannel_CCameraBehaviourChangeGetCurrentValuePtr.asFunction<_CCameraBehaviourChange Function(_CStatefulChannel_CCameraBehaviourChange)>();
-late final _CStatefulChannel_CCameraBehaviourChangeConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraBehaviourChange,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraBehaviourChange, ffi.Int64)>>
-  )
->>('CStatefulChannel_CCameraBehaviourChange_connect');
-late final _CStatefulChannel_CCameraBehaviourChangeConnect = _CStatefulChannel_CCameraBehaviourChangeConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraBehaviourChange,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraBehaviourChange, ffi.Int64)>>
   )
 >();
 
@@ -75332,40 +79759,26 @@ late final _COptional_CLogicalPixelMakeDefaultPtr = _lookup<ffi.NativeFunction<_
 late final _COptional_CLogicalPixelMakeDefault = _COptional_CLogicalPixelMakeDefaultPtr.asFunction<_COptional_CLogicalPixel Function()>();
 late final _CBaseCamera_projectionPtr = _lookup<ffi.NativeFunction<_CProjection Function(_CBaseCamera)>>('CBaseCamera_projection');
 late final _CBaseCamera_projection = _CBaseCamera_projectionPtr.asFunction<_CProjection Function(_CBaseCamera)>();
-late final _CBaseCamera_positionChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPosition Function(_CBaseCamera)>>('CBaseCamera_positionChannel');
-late final _CBaseCamera_positionChannel = _CBaseCamera_positionChannelPtr.asFunction<_CStatefulChannel_CCameraPosition Function(_CBaseCamera)>();
 late final _CBaseCamera_positionPtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera)>>('CBaseCamera_position');
 late final _CBaseCamera_position = _CBaseCamera_positionPtr.asFunction<_CCameraPosition Function(_CBaseCamera)>();
 late final _CBaseCamera_setPosition_CCameraPositionPtr = _lookup<ffi.NativeFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraPosition)>>('CBaseCamera_setPosition_CCameraPosition');
 late final _CBaseCamera_setPosition_CCameraPosition = _CBaseCamera_setPosition_CCameraPositionPtr.asFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraPosition)>();
-late final _CBaseCamera_zoomRestrictionsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraZoomRestrictions Function(_CBaseCamera)>>('CBaseCamera_zoomRestrictionsChannel');
-late final _CBaseCamera_zoomRestrictionsChannel = _CBaseCamera_zoomRestrictionsChannelPtr.asFunction<_CStatefulChannel_CCameraZoomRestrictions Function(_CBaseCamera)>();
 late final _CBaseCamera_zoomRestrictionsPtr = _lookup<ffi.NativeFunction<_CCameraZoomRestrictions Function(_CBaseCamera)>>('CBaseCamera_zoomRestrictions');
 late final _CBaseCamera_zoomRestrictions = _CBaseCamera_zoomRestrictionsPtr.asFunction<_CCameraZoomRestrictions Function(_CBaseCamera)>();
 late final _CBaseCamera_setZoomRestrictions_CCameraZoomRestrictionsPtr = _lookup<ffi.NativeFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraZoomRestrictions)>>('CBaseCamera_setZoomRestrictions_CCameraZoomRestrictions');
 late final _CBaseCamera_setZoomRestrictions_CCameraZoomRestrictions = _CBaseCamera_setZoomRestrictions_CCameraZoomRestrictionsPtr.asFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraZoomRestrictions)>();
-late final _CBaseCamera_devicePpiChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDevicePpi Function(_CBaseCamera)>>('CBaseCamera_devicePpiChannel');
-late final _CBaseCamera_devicePpiChannel = _CBaseCamera_devicePpiChannelPtr.asFunction<_CStatefulChannel_CDevicePpi Function(_CBaseCamera)>();
 late final _CBaseCamera_devicePpiPtr = _lookup<ffi.NativeFunction<_CDevicePpi Function(_CBaseCamera)>>('CBaseCamera_devicePpi');
 late final _CBaseCamera_devicePpi = _CBaseCamera_devicePpiPtr.asFunction<_CDevicePpi Function(_CBaseCamera)>();
-late final _CBaseCamera_deviceDensityChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDeviceDensity Function(_CBaseCamera)>>('CBaseCamera_deviceDensityChannel');
-late final _CBaseCamera_deviceDensityChannel = _CBaseCamera_deviceDensityChannelPtr.asFunction<_CStatefulChannel_CDeviceDensity Function(_CBaseCamera)>();
 late final _CBaseCamera_deviceDensityPtr = _lookup<ffi.NativeFunction<_CDeviceDensity Function(_CBaseCamera)>>('CBaseCamera_deviceDensity');
 late final _CBaseCamera_deviceDensity = _CBaseCamera_deviceDensityPtr.asFunction<_CDeviceDensity Function(_CBaseCamera)>();
-late final _CBaseCamera_sizeChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CScreenSize Function(_CBaseCamera)>>('CBaseCamera_sizeChannel');
-late final _CBaseCamera_sizeChannel = _CBaseCamera_sizeChannelPtr.asFunction<_CStatefulChannel_CScreenSize Function(_CBaseCamera)>();
 late final _CBaseCamera_sizePtr = _lookup<ffi.NativeFunction<_CScreenSize Function(_CBaseCamera)>>('CBaseCamera_size');
 late final _CBaseCamera_size = _CBaseCamera_sizePtr.asFunction<_CScreenSize Function(_CBaseCamera)>();
 late final _CBaseCamera_setSize_CScreenSizePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBaseCamera, _CScreenSize)>>('CBaseCamera_setSize_CScreenSize');
 late final _CBaseCamera_setSize_CScreenSize = _CBaseCamera_setSize_CScreenSizePtr.asFunction<void Function(_CBaseCamera, _CScreenSize)>();
-late final _CBaseCamera_paddingChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CPadding Function(_CBaseCamera)>>('CBaseCamera_paddingChannel');
-late final _CBaseCamera_paddingChannel = _CBaseCamera_paddingChannelPtr.asFunction<_CStatefulChannel_CPadding Function(_CBaseCamera)>();
 late final _CBaseCamera_paddingPtr = _lookup<ffi.NativeFunction<_CPadding Function(_CBaseCamera)>>('CBaseCamera_padding');
 late final _CBaseCamera_padding = _CBaseCamera_paddingPtr.asFunction<_CPadding Function(_CBaseCamera)>();
 late final _CBaseCamera_setPadding_CPaddingPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBaseCamera, _CPadding)>>('CBaseCamera_setPadding_CPadding');
 late final _CBaseCamera_setPadding_CPadding = _CBaseCamera_setPadding_CPaddingPtr.asFunction<void Function(_CBaseCamera, _CPadding)>();
-late final _CBaseCamera_positionPointChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPositionPoint Function(_CBaseCamera)>>('CBaseCamera_positionPointChannel');
-late final _CBaseCamera_positionPointChannel = _CBaseCamera_positionPointChannelPtr.asFunction<_CStatefulChannel_CCameraPositionPoint Function(_CBaseCamera)>();
 late final _CBaseCamera_positionPointPtr = _lookup<ffi.NativeFunction<_CCameraPositionPoint Function(_CBaseCamera)>>('CBaseCamera_positionPoint');
 late final _CBaseCamera_positionPoint = _CBaseCamera_positionPointPtr.asFunction<_CCameraPositionPoint Function(_CBaseCamera)>();
 late final _CBaseCamera_setPositionPoint_CCameraPositionPointPtr = _lookup<ffi.NativeFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraPositionPoint)>>('CBaseCamera_setPositionPoint_CCameraPositionPoint');
@@ -75376,22 +79789,18 @@ late final _CBaseCamera_setViewPoint_COptional_CCameraViewPointPtr = _lookup<ffi
 late final _CBaseCamera_setViewPoint_COptional_CCameraViewPoint = _CBaseCamera_setViewPoint_COptional_CCameraViewPointPtr.asFunction<_CResult_CEmpty Function(_CBaseCamera, _COptional_CCameraViewPoint)>();
 late final _CBaseCamera_visibleAreaPtr = _lookup<ffi.NativeFunction<_CGeometry Function(_CBaseCamera)>>('CBaseCamera_visibleArea');
 late final _CBaseCamera_visibleArea = _CBaseCamera_visibleAreaPtr.asFunction<_CGeometry Function(_CBaseCamera)>();
-late final _CBaseCamera_visibleRectChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CGeoRect Function(_CBaseCamera)>>('CBaseCamera_visibleRectChannel');
-late final _CBaseCamera_visibleRectChannel = _CBaseCamera_visibleRectChannelPtr.asFunction<_CStatefulChannel_CGeoRect Function(_CBaseCamera)>();
 late final _CBaseCamera_visibleRectPtr = _lookup<ffi.NativeFunction<_CGeoRect Function(_CBaseCamera)>>('CBaseCamera_visibleRect');
 late final _CBaseCamera_visibleRect = _CBaseCamera_visibleRectPtr.asFunction<_CGeoRect Function(_CBaseCamera)>();
-late final _CBaseCamera_maxTiltRestrictionChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function(_CBaseCamera)>>('CBaseCamera_maxTiltRestrictionChannel');
-late final _CBaseCamera_maxTiltRestrictionChannel = _CBaseCamera_maxTiltRestrictionChannelPtr.asFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function(_CBaseCamera)>();
 late final _CBaseCamera_maxTiltRestrictionPtr = _lookup<ffi.NativeFunction<_COptional_CStyleZoomToTiltRelation Function(_CBaseCamera)>>('CBaseCamera_maxTiltRestriction');
 late final _CBaseCamera_maxTiltRestriction = _CBaseCamera_maxTiltRestrictionPtr.asFunction<_COptional_CStyleZoomToTiltRelation Function(_CBaseCamera)>();
 late final _CBaseCamera_setMaxTiltRestriction_COptional_CStyleZoomToTiltRelationPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBaseCamera, _COptional_CStyleZoomToTiltRelation)>>('CBaseCamera_setMaxTiltRestriction_COptional_CStyleZoomToTiltRelation');
 late final _CBaseCamera_setMaxTiltRestriction_COptional_CStyleZoomToTiltRelation = _CBaseCamera_setMaxTiltRestriction_COptional_CStyleZoomToTiltRelationPtr.asFunction<void Function(_CBaseCamera, _COptional_CStyleZoomToTiltRelation)>();
-late final _CBaseCamera_viewportRestrictionChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CGeoRect Function(_CBaseCamera)>>('CBaseCamera_viewportRestrictionChannel');
-late final _CBaseCamera_viewportRestrictionChannel = _CBaseCamera_viewportRestrictionChannelPtr.asFunction<_CStatefulChannel_COptional_CGeoRect Function(_CBaseCamera)>();
 late final _CBaseCamera_viewportRestrictionPtr = _lookup<ffi.NativeFunction<_COptional_CGeoRect Function(_CBaseCamera)>>('CBaseCamera_viewportRestriction');
 late final _CBaseCamera_viewportRestriction = _CBaseCamera_viewportRestrictionPtr.asFunction<_COptional_CGeoRect Function(_CBaseCamera)>();
 late final _CBaseCamera_setViewportRestriction_COptional_CGeoRectPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBaseCamera, _COptional_CGeoRect)>>('CBaseCamera_setViewportRestriction_COptional_CGeoRect');
 late final _CBaseCamera_setViewportRestriction_COptional_CGeoRect = _CBaseCamera_setViewportRestriction_COptional_CGeoRectPtr.asFunction<void Function(_CBaseCamera, _COptional_CGeoRect)>();
+late final _CBaseCamera_changedPtr = _lookup<ffi.NativeFunction<_CChannel_CCameraChange Function(_CBaseCamera)>>('CBaseCamera_changed');
+late final _CBaseCamera_changed = _CBaseCamera_changedPtr.asFunction<_CChannel_CCameraChange Function(_CBaseCamera)>();
 
 late final _CBaseCamera_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CBaseCamera_cg_objectIdentifier');
 late final _CBaseCamera_cg_objectIdentifier = _CBaseCamera_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -75402,6 +79811,8 @@ late final _CBaseCamera_changePosition_CCameraPositionChangePtr = _lookup<ffi.Na
 late final _CBaseCamera_changePosition_CCameraPositionChange = _CBaseCamera_changePosition_CCameraPositionChangePtr.asFunction<_CResult_CEmpty Function(_CBaseCamera, _CCameraPositionChange)>();
 late final _CBaseCamera_setDevicePpi_CDevicePpi_CDeviceDensityPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CBaseCamera, _CDevicePpi, _CDeviceDensity)>>('CBaseCamera_setDevicePpi_CDevicePpi_CDeviceDensity');
 late final _CBaseCamera_setDevicePpi_CDevicePpi_CDeviceDensity = _CBaseCamera_setDevicePpi_CDevicePpi_CDeviceDensityPtr.asFunction<void Function(_CBaseCamera, _CDevicePpi, _CDeviceDensity)>();
+late final _CBaseCamera_startTransactionPtr = _lookup<ffi.NativeFunction<_CCameraTransactionGuard Function(_CBaseCamera)>>('CBaseCamera_startTransaction');
+late final _CBaseCamera_startTransaction = _CBaseCamera_startTransactionPtr.asFunction<_CCameraTransactionGuard Function(_CBaseCamera)>();
 late final _CBaseCamera_cg_getSelectorPtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CBaseCamera)>>('CBaseCamera_cg_getSelector');
 late final _CBaseCamera_cg_getSelector = _CBaseCamera_cg_getSelectorPtr.asFunction<int Function(_CBaseCamera)>();
 
@@ -75413,215 +79824,8 @@ late final _CBaseCameraMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBaseCamera 
 late final _CBaseCameraMakeDefault = _CBaseCameraMakeDefaultPtr.asFunction<_CBaseCamera Function()>();
 
 
-late final _CStatefulChannel_CCameraPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPosition Function()>>('CStatefulChannel_CCameraPositionMakeDefault');
-late final _CStatefulChannel_CCameraPositionMakeDefault = _CStatefulChannel_CCameraPositionMakeDefaultPtr.asFunction<_CStatefulChannel_CCameraPosition Function()>();
-late final _CStatefulChannel_CCameraPosition_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CCameraPosition)>>('CStatefulChannel_CCameraPosition_release');
-late final _CStatefulChannel_CCameraPosition_release = _CStatefulChannel_CCameraPosition_releasePtr.asFunction<void Function(_CStatefulChannel_CCameraPosition)>();
-late final _CStatefulChannel_CCameraPosition_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPosition Function(_CStatefulChannel_CCameraPosition)>>('CStatefulChannel_CCameraPosition_retain');
-late final _CStatefulChannel_CCameraPosition_retain = _CStatefulChannel_CCameraPosition_retainPtr.asFunction<_CStatefulChannel_CCameraPosition Function(_CStatefulChannel_CCameraPosition)>();
-late final _CStatefulChannel_CCameraPositionGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CStatefulChannel_CCameraPosition)>>('CStatefulChannel_CCameraPosition_getCurrentValue');
-late final _CStatefulChannel_CCameraPositionGetCurrentValue = _CStatefulChannel_CCameraPositionGetCurrentValuePtr.asFunction<_CCameraPosition Function(_CStatefulChannel_CCameraPosition)>();
-late final _CStatefulChannel_CCameraPositionConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraPosition,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraPosition, ffi.Int64)>>
-  )
->>('CStatefulChannel_CCameraPosition_connect');
-late final _CStatefulChannel_CCameraPositionConnect = _CStatefulChannel_CCameraPositionConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraPosition,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraPosition, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CCameraZoomRestrictionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraZoomRestrictions Function()>>('CStatefulChannel_CCameraZoomRestrictionsMakeDefault');
-late final _CStatefulChannel_CCameraZoomRestrictionsMakeDefault = _CStatefulChannel_CCameraZoomRestrictionsMakeDefaultPtr.asFunction<_CStatefulChannel_CCameraZoomRestrictions Function()>();
-late final _CStatefulChannel_CCameraZoomRestrictions_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CCameraZoomRestrictions)>>('CStatefulChannel_CCameraZoomRestrictions_release');
-late final _CStatefulChannel_CCameraZoomRestrictions_release = _CStatefulChannel_CCameraZoomRestrictions_releasePtr.asFunction<void Function(_CStatefulChannel_CCameraZoomRestrictions)>();
-late final _CStatefulChannel_CCameraZoomRestrictions_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraZoomRestrictions Function(_CStatefulChannel_CCameraZoomRestrictions)>>('CStatefulChannel_CCameraZoomRestrictions_retain');
-late final _CStatefulChannel_CCameraZoomRestrictions_retain = _CStatefulChannel_CCameraZoomRestrictions_retainPtr.asFunction<_CStatefulChannel_CCameraZoomRestrictions Function(_CStatefulChannel_CCameraZoomRestrictions)>();
-late final _CStatefulChannel_CCameraZoomRestrictionsGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CCameraZoomRestrictions Function(_CStatefulChannel_CCameraZoomRestrictions)>>('CStatefulChannel_CCameraZoomRestrictions_getCurrentValue');
-late final _CStatefulChannel_CCameraZoomRestrictionsGetCurrentValue = _CStatefulChannel_CCameraZoomRestrictionsGetCurrentValuePtr.asFunction<_CCameraZoomRestrictions Function(_CStatefulChannel_CCameraZoomRestrictions)>();
-late final _CStatefulChannel_CCameraZoomRestrictionsConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraZoomRestrictions,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraZoomRestrictions, ffi.Int64)>>
-  )
->>('CStatefulChannel_CCameraZoomRestrictions_connect');
-late final _CStatefulChannel_CCameraZoomRestrictionsConnect = _CStatefulChannel_CCameraZoomRestrictionsConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraZoomRestrictions,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraZoomRestrictions, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CDevicePpiMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDevicePpi Function()>>('CStatefulChannel_CDevicePpiMakeDefault');
-late final _CStatefulChannel_CDevicePpiMakeDefault = _CStatefulChannel_CDevicePpiMakeDefaultPtr.asFunction<_CStatefulChannel_CDevicePpi Function()>();
-late final _CStatefulChannel_CDevicePpi_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CDevicePpi)>>('CStatefulChannel_CDevicePpi_release');
-late final _CStatefulChannel_CDevicePpi_release = _CStatefulChannel_CDevicePpi_releasePtr.asFunction<void Function(_CStatefulChannel_CDevicePpi)>();
-late final _CStatefulChannel_CDevicePpi_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDevicePpi Function(_CStatefulChannel_CDevicePpi)>>('CStatefulChannel_CDevicePpi_retain');
-late final _CStatefulChannel_CDevicePpi_retain = _CStatefulChannel_CDevicePpi_retainPtr.asFunction<_CStatefulChannel_CDevicePpi Function(_CStatefulChannel_CDevicePpi)>();
-late final _CStatefulChannel_CDevicePpiGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CDevicePpi Function(_CStatefulChannel_CDevicePpi)>>('CStatefulChannel_CDevicePpi_getCurrentValue');
-late final _CStatefulChannel_CDevicePpiGetCurrentValue = _CStatefulChannel_CDevicePpiGetCurrentValuePtr.asFunction<_CDevicePpi Function(_CStatefulChannel_CDevicePpi)>();
-late final _CStatefulChannel_CDevicePpiConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CDevicePpi,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDevicePpi, ffi.Int64)>>
-  )
->>('CStatefulChannel_CDevicePpi_connect');
-late final _CStatefulChannel_CDevicePpiConnect = _CStatefulChannel_CDevicePpiConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CDevicePpi,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDevicePpi, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CDeviceDensityMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDeviceDensity Function()>>('CStatefulChannel_CDeviceDensityMakeDefault');
-late final _CStatefulChannel_CDeviceDensityMakeDefault = _CStatefulChannel_CDeviceDensityMakeDefaultPtr.asFunction<_CStatefulChannel_CDeviceDensity Function()>();
-late final _CStatefulChannel_CDeviceDensity_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CDeviceDensity)>>('CStatefulChannel_CDeviceDensity_release');
-late final _CStatefulChannel_CDeviceDensity_release = _CStatefulChannel_CDeviceDensity_releasePtr.asFunction<void Function(_CStatefulChannel_CDeviceDensity)>();
-late final _CStatefulChannel_CDeviceDensity_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CDeviceDensity Function(_CStatefulChannel_CDeviceDensity)>>('CStatefulChannel_CDeviceDensity_retain');
-late final _CStatefulChannel_CDeviceDensity_retain = _CStatefulChannel_CDeviceDensity_retainPtr.asFunction<_CStatefulChannel_CDeviceDensity Function(_CStatefulChannel_CDeviceDensity)>();
-late final _CStatefulChannel_CDeviceDensityGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CDeviceDensity Function(_CStatefulChannel_CDeviceDensity)>>('CStatefulChannel_CDeviceDensity_getCurrentValue');
-late final _CStatefulChannel_CDeviceDensityGetCurrentValue = _CStatefulChannel_CDeviceDensityGetCurrentValuePtr.asFunction<_CDeviceDensity Function(_CStatefulChannel_CDeviceDensity)>();
-late final _CStatefulChannel_CDeviceDensityConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CDeviceDensity,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDeviceDensity, ffi.Int64)>>
-  )
->>('CStatefulChannel_CDeviceDensity_connect');
-late final _CStatefulChannel_CDeviceDensityConnect = _CStatefulChannel_CDeviceDensityConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CDeviceDensity,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDeviceDensity, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CScreenSize Function()>>('CStatefulChannel_CScreenSizeMakeDefault');
-late final _CStatefulChannel_CScreenSizeMakeDefault = _CStatefulChannel_CScreenSizeMakeDefaultPtr.asFunction<_CStatefulChannel_CScreenSize Function()>();
-late final _CStatefulChannel_CScreenSize_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CScreenSize)>>('CStatefulChannel_CScreenSize_release');
-late final _CStatefulChannel_CScreenSize_release = _CStatefulChannel_CScreenSize_releasePtr.asFunction<void Function(_CStatefulChannel_CScreenSize)>();
-late final _CStatefulChannel_CScreenSize_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CScreenSize Function(_CStatefulChannel_CScreenSize)>>('CStatefulChannel_CScreenSize_retain');
-late final _CStatefulChannel_CScreenSize_retain = _CStatefulChannel_CScreenSize_retainPtr.asFunction<_CStatefulChannel_CScreenSize Function(_CStatefulChannel_CScreenSize)>();
-late final _CStatefulChannel_CScreenSizeGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CScreenSize Function(_CStatefulChannel_CScreenSize)>>('CStatefulChannel_CScreenSize_getCurrentValue');
-late final _CStatefulChannel_CScreenSizeGetCurrentValue = _CStatefulChannel_CScreenSizeGetCurrentValuePtr.asFunction<_CScreenSize Function(_CStatefulChannel_CScreenSize)>();
-late final _CStatefulChannel_CScreenSizeConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CScreenSize,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenSize, ffi.Int64)>>
-  )
->>('CStatefulChannel_CScreenSize_connect');
-late final _CStatefulChannel_CScreenSizeConnect = _CStatefulChannel_CScreenSizeConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CScreenSize,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenSize, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CPaddingMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CPadding Function()>>('CStatefulChannel_CPaddingMakeDefault');
-late final _CStatefulChannel_CPaddingMakeDefault = _CStatefulChannel_CPaddingMakeDefaultPtr.asFunction<_CStatefulChannel_CPadding Function()>();
-late final _CStatefulChannel_CPadding_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CPadding)>>('CStatefulChannel_CPadding_release');
-late final _CStatefulChannel_CPadding_release = _CStatefulChannel_CPadding_releasePtr.asFunction<void Function(_CStatefulChannel_CPadding)>();
-late final _CStatefulChannel_CPadding_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CPadding Function(_CStatefulChannel_CPadding)>>('CStatefulChannel_CPadding_retain');
-late final _CStatefulChannel_CPadding_retain = _CStatefulChannel_CPadding_retainPtr.asFunction<_CStatefulChannel_CPadding Function(_CStatefulChannel_CPadding)>();
-late final _CStatefulChannel_CPaddingGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CPadding Function(_CStatefulChannel_CPadding)>>('CStatefulChannel_CPadding_getCurrentValue');
-late final _CStatefulChannel_CPaddingGetCurrentValue = _CStatefulChannel_CPaddingGetCurrentValuePtr.asFunction<_CPadding Function(_CStatefulChannel_CPadding)>();
-late final _CStatefulChannel_CPaddingConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CPadding,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPadding, ffi.Int64)>>
-  )
->>('CStatefulChannel_CPadding_connect');
-late final _CStatefulChannel_CPaddingConnect = _CStatefulChannel_CPaddingConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CPadding,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPadding, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_CCameraPositionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPositionPoint Function()>>('CStatefulChannel_CCameraPositionPointMakeDefault');
-late final _CStatefulChannel_CCameraPositionPointMakeDefault = _CStatefulChannel_CCameraPositionPointMakeDefaultPtr.asFunction<_CStatefulChannel_CCameraPositionPoint Function()>();
-late final _CStatefulChannel_CCameraPositionPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CCameraPositionPoint)>>('CStatefulChannel_CCameraPositionPoint_release');
-late final _CStatefulChannel_CCameraPositionPoint_release = _CStatefulChannel_CCameraPositionPoint_releasePtr.asFunction<void Function(_CStatefulChannel_CCameraPositionPoint)>();
-late final _CStatefulChannel_CCameraPositionPoint_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CCameraPositionPoint Function(_CStatefulChannel_CCameraPositionPoint)>>('CStatefulChannel_CCameraPositionPoint_retain');
-late final _CStatefulChannel_CCameraPositionPoint_retain = _CStatefulChannel_CCameraPositionPoint_retainPtr.asFunction<_CStatefulChannel_CCameraPositionPoint Function(_CStatefulChannel_CCameraPositionPoint)>();
-late final _CStatefulChannel_CCameraPositionPointGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CCameraPositionPoint Function(_CStatefulChannel_CCameraPositionPoint)>>('CStatefulChannel_CCameraPositionPoint_getCurrentValue');
-late final _CStatefulChannel_CCameraPositionPointGetCurrentValue = _CStatefulChannel_CCameraPositionPointGetCurrentValuePtr.asFunction<_CCameraPositionPoint Function(_CStatefulChannel_CCameraPositionPoint)>();
-late final _CStatefulChannel_CCameraPositionPointConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraPositionPoint,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraPositionPoint, ffi.Int64)>>
-  )
->>('CStatefulChannel_CCameraPositionPoint_connect');
-late final _CStatefulChannel_CCameraPositionPointConnect = _CStatefulChannel_CCameraPositionPointConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CCameraPositionPoint,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraPositionPoint, ffi.Int64)>>
-  )
->();
-
 late final _COptional_CCameraViewPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CCameraViewPoint Function()>>('COptional_CCameraViewPointMakeDefault');
 late final _COptional_CCameraViewPointMakeDefault = _COptional_CCameraViewPointMakeDefaultPtr.asFunction<_COptional_CCameraViewPoint Function()>();
-
-late final _CStatefulChannel_CGeoRectMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CGeoRect Function()>>('CStatefulChannel_CGeoRectMakeDefault');
-late final _CStatefulChannel_CGeoRectMakeDefault = _CStatefulChannel_CGeoRectMakeDefaultPtr.asFunction<_CStatefulChannel_CGeoRect Function()>();
-late final _CStatefulChannel_CGeoRect_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CGeoRect)>>('CStatefulChannel_CGeoRect_release');
-late final _CStatefulChannel_CGeoRect_release = _CStatefulChannel_CGeoRect_releasePtr.asFunction<void Function(_CStatefulChannel_CGeoRect)>();
-late final _CStatefulChannel_CGeoRect_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CGeoRect Function(_CStatefulChannel_CGeoRect)>>('CStatefulChannel_CGeoRect_retain');
-late final _CStatefulChannel_CGeoRect_retain = _CStatefulChannel_CGeoRect_retainPtr.asFunction<_CStatefulChannel_CGeoRect Function(_CStatefulChannel_CGeoRect)>();
-late final _CStatefulChannel_CGeoRectGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CGeoRect Function(_CStatefulChannel_CGeoRect)>>('CStatefulChannel_CGeoRect_getCurrentValue');
-late final _CStatefulChannel_CGeoRectGetCurrentValue = _CStatefulChannel_CGeoRectGetCurrentValuePtr.asFunction<_CGeoRect Function(_CStatefulChannel_CGeoRect)>();
-late final _CStatefulChannel_CGeoRectConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CGeoRect,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoRect, ffi.Int64)>>
-  )
->>('CStatefulChannel_CGeoRect_connect');
-late final _CStatefulChannel_CGeoRectConnect = _CStatefulChannel_CGeoRectConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CGeoRect,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoRect, ffi.Int64)>>
-  )
->();
-
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function()>>('CStatefulChannel_COptional_CStyleZoomToTiltRelationMakeDefault');
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationMakeDefault = _CStatefulChannel_COptional_CStyleZoomToTiltRelationMakeDefaultPtr.asFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function()>();
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelation_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>>('CStatefulChannel_COptional_CStyleZoomToTiltRelation_release');
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelation_release = _CStatefulChannel_COptional_CStyleZoomToTiltRelation_releasePtr.asFunction<void Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>();
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelation_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>>('CStatefulChannel_COptional_CStyleZoomToTiltRelation_retain');
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelation_retain = _CStatefulChannel_COptional_CStyleZoomToTiltRelation_retainPtr.asFunction<_CStatefulChannel_COptional_CStyleZoomToTiltRelation Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>();
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationGetCurrentValuePtr = _lookup<ffi.NativeFunction<_COptional_CStyleZoomToTiltRelation Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>>('CStatefulChannel_COptional_CStyleZoomToTiltRelation_getCurrentValue');
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationGetCurrentValue = _CStatefulChannel_COptional_CStyleZoomToTiltRelationGetCurrentValuePtr.asFunction<_COptional_CStyleZoomToTiltRelation Function(_CStatefulChannel_COptional_CStyleZoomToTiltRelation)>();
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_COptional_CStyleZoomToTiltRelation,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CStyleZoomToTiltRelation, ffi.Int64)>>
-  )
->>('CStatefulChannel_COptional_CStyleZoomToTiltRelation_connect');
-late final _CStatefulChannel_COptional_CStyleZoomToTiltRelationConnect = _CStatefulChannel_COptional_CStyleZoomToTiltRelationConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_COptional_CStyleZoomToTiltRelation,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CStyleZoomToTiltRelation, ffi.Int64)>>
-  )
->();
 
 late final _COptional_CStyleZoomToTiltRelationMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CStyleZoomToTiltRelation Function()>>('COptional_CStyleZoomToTiltRelationMakeDefault');
 late final _COptional_CStyleZoomToTiltRelationMakeDefault = _COptional_CStyleZoomToTiltRelationMakeDefaultPtr.asFunction<_COptional_CStyleZoomToTiltRelation Function()>();
@@ -75629,26 +79833,24 @@ late final _COptional_CStyleZoomToTiltRelationMakeDefault = _COptional_CStyleZoo
 late final _COptional_CStyleZoomToTiltRelation_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CStyleZoomToTiltRelation)>>('COptional_CStyleZoomToTiltRelation_release');
 late final _COptional_CStyleZoomToTiltRelation_release = _COptional_CStyleZoomToTiltRelation_releasePtr.asFunction<void Function(_COptional_CStyleZoomToTiltRelation)>();
 
-late final _CStatefulChannel_COptional_CGeoRectMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CGeoRect Function()>>('CStatefulChannel_COptional_CGeoRectMakeDefault');
-late final _CStatefulChannel_COptional_CGeoRectMakeDefault = _CStatefulChannel_COptional_CGeoRectMakeDefaultPtr.asFunction<_CStatefulChannel_COptional_CGeoRect Function()>();
-late final _CStatefulChannel_COptional_CGeoRect_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_COptional_CGeoRect)>>('CStatefulChannel_COptional_CGeoRect_release');
-late final _CStatefulChannel_COptional_CGeoRect_release = _CStatefulChannel_COptional_CGeoRect_releasePtr.asFunction<void Function(_CStatefulChannel_COptional_CGeoRect)>();
-late final _CStatefulChannel_COptional_CGeoRect_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CGeoRect Function(_CStatefulChannel_COptional_CGeoRect)>>('CStatefulChannel_COptional_CGeoRect_retain');
-late final _CStatefulChannel_COptional_CGeoRect_retain = _CStatefulChannel_COptional_CGeoRect_retainPtr.asFunction<_CStatefulChannel_COptional_CGeoRect Function(_CStatefulChannel_COptional_CGeoRect)>();
-late final _CStatefulChannel_COptional_CGeoRectGetCurrentValuePtr = _lookup<ffi.NativeFunction<_COptional_CGeoRect Function(_CStatefulChannel_COptional_CGeoRect)>>('CStatefulChannel_COptional_CGeoRect_getCurrentValue');
-late final _CStatefulChannel_COptional_CGeoRectGetCurrentValue = _CStatefulChannel_COptional_CGeoRectGetCurrentValuePtr.asFunction<_COptional_CGeoRect Function(_CStatefulChannel_COptional_CGeoRect)>();
-late final _CStatefulChannel_COptional_CGeoRectConnectPtr = _lookup<ffi.NativeFunction<
+late final _CChannel_CCameraChangeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CCameraChange Function()>>('CChannel_CCameraChangeMakeDefault');
+late final _CChannel_CCameraChangeMakeDefault = _CChannel_CCameraChangeMakeDefaultPtr.asFunction<_CChannel_CCameraChange Function()>();
+late final _CChannel_CCameraChange_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CChannel_CCameraChange)>>('CChannel_CCameraChange_release');
+late final _CChannel_CCameraChange_release = _CChannel_CCameraChange_releasePtr.asFunction<void Function(_CChannel_CCameraChange)>();
+late final _CChannel_CCameraChange_retainPtr = _lookup<ffi.NativeFunction<_CChannel_CCameraChange Function(_CChannel_CCameraChange)>>('CChannel_CCameraChange_retain');
+late final _CChannel_CCameraChange_retain = _CChannel_CCameraChange_retainPtr.asFunction<_CChannel_CCameraChange Function(_CChannel_CCameraChange)>();
+late final _CChannel_CCameraChangeConnectPtr = _lookup<ffi.NativeFunction<
   _CCancellable Function(
-    _CStatefulChannel_COptional_CGeoRect,
+    _CChannel_CCameraChange,
     ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CGeoRect, ffi.Int64)>>
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraChange, ffi.Int64)>>
   )
->>('CStatefulChannel_COptional_CGeoRect_connect');
-late final _CStatefulChannel_COptional_CGeoRectConnect = _CStatefulChannel_COptional_CGeoRectConnectPtr.asFunction<
+>>('CChannel_CCameraChange_connect');
+late final _CChannel_CCameraChangeConnect = _CChannel_CCameraChangeConnectPtr.asFunction<
   _CCancellable Function(
-    _CStatefulChannel_COptional_CGeoRect,
+    _CChannel_CCameraChange,
     int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CGeoRect, ffi.Int64)>>
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraChange, ffi.Int64)>>
   )
 >();
 late final _CSimpleMapObject_isVisiblePtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CSimpleMapObject)>>('CSimpleMapObject_isVisible');
@@ -75884,25 +80086,6 @@ late final _CMarkerOptionsMakeDefault = _CMarkerOptionsMakeDefaultPtr.asFunction
 late final _CResult_CMarker_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CMarker)>>('CResult_CMarker_release');
 late final _CResult_CMarker_release = _CResult_CMarker_releasePtr.asFunction<void Function(_CResult_CMarker)>();
 
-late final _CModelDataLoaderCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_cg_objectIdentifier');
-late final _CModelDataLoaderCpp_cg_objectIdentifier = _CModelDataLoaderCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CModelDataLoaderCpp_loadPtr = _lookup<ffi.NativeFunction<_CData Function(_CModelDataLoaderCpp)>>('CModelDataLoaderCpp_load');
-late final _CModelDataLoaderCpp_load = _CModelDataLoaderCpp_loadPtr.asFunction<_CData Function(_CModelDataLoaderCpp)>();
-
-late final _CModelDataLoaderCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_release');
-late final _CModelDataLoaderCpp_release = _CModelDataLoaderCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CModelDataLoaderCpp_retainPtr = _lookup<ffi.NativeFunction<_CModelDataLoaderCpp Function(ffi.Pointer<ffi.Void>)>>('CModelDataLoaderCpp_retain');
-late final _CModelDataLoaderCpp_retain = _CModelDataLoaderCpp_retainPtr.asFunction<_CModelDataLoaderCpp Function(ffi.Pointer<ffi.Void>)>();
-late final _CModelDataLoaderCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelDataLoaderCpp Function()>>('CModelDataLoaderCppMakeDefault');
-late final _CModelDataLoaderCppMakeDefault = _CModelDataLoaderCppMakeDefaultPtr.asFunction<_CModelDataLoaderCpp Function()>();
-
-
-late final _CModelDataLoaderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelDataLoader Function()>>('CModelDataLoaderMakeDefault');
-late final _CModelDataLoaderMakeDefault = _CModelDataLoaderMakeDefaultPtr.asFunction<_CModelDataLoader Function()>();
-late final _CModelDataLoader_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CModelDataLoader)>>('CModelDataLoader_release');
-late final _CModelDataLoader_release = _CModelDataLoader_releasePtr.asFunction<void Function(_CModelDataLoader)>();
-
 late final _CModelSize_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CModelSize)>>('CModelSize_release');
 late final _CModelSize_release = _CModelSize_releasePtr.asFunction<void Function(_CModelSize)>();
 late final _CModelSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CModelSize Function()>>('CModelSizeMakeDefault');
@@ -75950,125 +80133,6 @@ late final _CModelMapObjectMakeDefault = _CModelMapObjectMakeDefaultPtr.asFuncti
 
 late final _CResult_CModelMapObject_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CModelMapObject)>>('CResult_CModelMapObject_release');
 late final _CResult_CModelMapObject_release = _CResult_CModelMapObject_releasePtr.asFunction<void Function(_CResult_CModelMapObject)>();
-late final _CFunction_G_createModelData_With_CContext_CModelDataLoaderPtr = _lookup<ffi.NativeFunction<_CModelData Function(_CContext, _CModelDataLoader)>>('CFunction_G_createModelData_With_CContext_CModelDataLoader');
-late final _CFunction_G_createModelData_With_CContext_CModelDataLoader = _CFunction_G_createModelData_With_CContext_CModelDataLoaderPtr.asFunction<_CModelData Function(_CContext, _CModelDataLoader)>();
-late final _CFunction_G_parseGeoJsonFile_With_CStringPtr = _lookup<ffi.NativeFunction<_CArray_CGeometryMapObject Function(_CString)>>('CFunction_G_parseGeoJsonFile_With_CString');
-late final _CFunction_G_parseGeoJsonFile_With_CString = _CFunction_G_parseGeoJsonFile_With_CStringPtr.asFunction<_CArray_CGeometryMapObject Function(_CString)>();
-late final _CFunction_G_parseGeoJson_With_CStringPtr = _lookup<ffi.NativeFunction<_CArray_CGeometryMapObject Function(_CString)>>('CFunction_G_parseGeoJson_With_CString');
-late final _CFunction_G_parseGeoJson_With_CString = _CFunction_G_parseGeoJson_With_CStringPtr.asFunction<_CArray_CGeometryMapObject Function(_CString)>();
-late final _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>>('CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize');
-late final _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize = _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>();
-
-late final _COptional_CPaddingMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPadding Function()>>('COptional_CPaddingMakeDefault');
-late final _COptional_CPaddingMakeDefault = _COptional_CPaddingMakeDefaultPtr.asFunction<_COptional_CPadding Function()>();
-
-late final _COptional_CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CScreenSize Function()>>('COptional_CScreenSizeMakeDefault');
-late final _COptional_CScreenSizeMakeDefault = _COptional_CScreenSizeMakeDefaultPtr.asFunction<_COptional_CScreenSize Function()>();
-late final _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>>('CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize');
-late final _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize = _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>();
-late final _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>>('CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize');
-late final _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize = _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>();
-late final _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>>('CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize');
-late final _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize = _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>();
-late final _CFunction_G_createImage_With_CContext_CImageLoaderPtr = _lookup<ffi.NativeFunction<_CImage Function(_CContext, _CImageLoader)>>('CFunction_G_createImage_With_CContext_CImageLoader');
-late final _CFunction_G_createImage_With_CContext_CImageLoader = _CFunction_G_createImage_With_CContext_CImageLoaderPtr.asFunction<_CImage Function(_CContext, _CImageLoader)>();
-late final _CFunction_G_createDefaultMaxTiltRestrictionPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function()>>('CFunction_G_createDefaultMaxTiltRestriction');
-late final _CFunction_G_createDefaultMaxTiltRestriction = _CFunction_G_createDefaultMaxTiltRestrictionPtr.asFunction<_CStyleZoomToTiltRelation Function()>();
-late final _CFunction_G_createDefaultStyleZoomToTiltRelationPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function()>>('CFunction_G_createDefaultStyleZoomToTiltRelation');
-late final _CFunction_G_createDefaultStyleZoomToTiltRelation = _CFunction_G_createDefaultStyleZoomToTiltRelationPtr.asFunction<_CStyleZoomToTiltRelation Function()>();
-late final _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTiltPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function(_CDictionary_CStyleZoom_CTilt)>>('CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt');
-late final _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt = _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTiltPtr.asFunction<_CStyleZoomToTiltRelation Function(_CDictionary_CStyleZoom_CTilt)>();
-
-late final _CDictionary_CStyleZoom_CTiltmakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CStyleZoom_CTilt Function()>>('CDictionary_CStyleZoom_CTilt_makeEmpty');
-late final _CDictionary_CStyleZoom_CTiltmakeEmpty = _CDictionary_CStyleZoom_CTiltmakeEmptyPtr.asFunction<_CDictionary_CStyleZoom_CTilt Function()>();
-late final _CDictionary_CStyleZoom_CTiltaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CStyleZoom_CTilt, _CStyleZoom, _CTilt)>>('CDictionary_CStyleZoom_CTilt_addElement');
-late final _CDictionary_CStyleZoom_CTiltaddElement = _CDictionary_CStyleZoom_CTiltaddElementPtr.asFunction<void Function(_CDictionary_CStyleZoom_CTilt, _CStyleZoom, _CTilt)>();
-late final _forEach_CDictionary_CStyleZoom_CTiltPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CDictionary_CStyleZoom_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStyleZoom, _CTilt)>>)
->>('CDictionary_CStyleZoom_CTilt_forEachKeyValueWithFunctionPointer');
-late final _forEach_CDictionary_CStyleZoom_CTilt = _forEach_CDictionary_CStyleZoom_CTiltPtr.asFunction<
-  void Function(_CDictionary_CStyleZoom_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStyleZoom, _CTilt)
->>)>();
-late final _CDictionary_CStyleZoom_CTilt_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CStyleZoom_CTilt)>>('CDictionary_CStyleZoom_CTilt_release');
-late final _CDictionary_CStyleZoom_CTilt_release = _CDictionary_CStyleZoom_CTilt_releasePtr.asFunction<void Function(_CDictionary_CStyleZoom_CTilt)>();
-late final _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitudePtr = _lookup<ffi.NativeFunction<_CStyleZoom Function(_CZoom, _CLatitude)>>('CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude');
-late final _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude = _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitudePtr.asFunction<_CStyleZoom Function(_CZoom, _CLatitude)>();
-late final _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitudePtr = _lookup<ffi.NativeFunction<_CZoom Function(_CStyleZoom, _CLatitude)>>('CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude');
-late final _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude = _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitudePtr.asFunction<_CZoom Function(_CStyleZoom, _CLatitude)>();
-late final _CFunction_G_toMapGeometry_With_CGeoPointRouteAttributePtr = _lookup<ffi.NativeFunction<_CGeometry Function(_CGeoPointRouteAttribute)>>('CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute');
-late final _CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute = _CFunction_G_toMapGeometry_With_CGeoPointRouteAttributePtr.asFunction<_CGeometry Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_size');
-late final _CGeoPointRouteAttribute_size = _CGeoPointRouteAttribute_sizePtr.asFunction<int Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_isEmpty');
-late final _CGeoPointRouteAttribute_isEmpty = _CGeoPointRouteAttribute_isEmptyPtr.asFunction<bool Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_first');
-late final _CGeoPointRouteAttribute_first = _CGeoPointRouteAttribute_firstPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_last');
-late final _CGeoPointRouteAttribute_last = _CGeoPointRouteAttribute_lastPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_entries');
-late final _CGeoPointRouteAttribute_entries = _CGeoPointRouteAttribute_entriesPtr.asFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
-late final _CGeoPointRouteAttribute_lengthPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_length');
-late final _CGeoPointRouteAttribute_length = _CGeoPointRouteAttribute_lengthPtr.asFunction<_CRouteDistance Function(_CGeoPointRouteAttribute)>();
-
-late final _CGeoPointRouteAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_cg_objectIdentifier');
-late final _CGeoPointRouteAttribute_cg_objectIdentifier = _CGeoPointRouteAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint, _CRoutePoint)>>('CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint');
-late final _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint, _CRoutePoint)>();
-late final _CGeoPointRouteAttribute_findNearBackward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_findNearBackward_CRoutePoint');
-late final _CGeoPointRouteAttribute_findNearBackward_CRoutePoint = _CGeoPointRouteAttribute_findNearBackward_CRoutePointPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
-late final _CGeoPointRouteAttribute_findNearForward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_findNearForward_CRoutePoint');
-late final _CGeoPointRouteAttribute_findNearForward_CRoutePoint = _CGeoPointRouteAttribute_findNearForward_CRoutePointPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
-late final _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CSegmentGeoPoint Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint');
-late final _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint = _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePointPtr.asFunction<_COptional_CSegmentGeoPoint Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
-late final _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPointPtr = _lookup<ffi.NativeFunction<_COptional_CRoutePoint Function(_CGeoPointRouteAttribute, _CGeoPoint)>>('CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint');
-late final _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint = _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPointPtr.asFunction<_COptional_CRoutePoint Function(_CGeoPointRouteAttribute, _CGeoPoint)>();
-
-late final _CGeoPointRouteAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_release');
-late final _CGeoPointRouteAttribute_release = _CGeoPointRouteAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CGeoPointRouteAttribute_retainPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteAttribute Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_retain');
-late final _CGeoPointRouteAttribute_retain = _CGeoPointRouteAttribute_retainPtr.asFunction<_CGeoPointRouteAttribute Function(ffi.Pointer<ffi.Void>)>();
-late final _CGeoPointRouteAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteAttribute Function()>>('CGeoPointRouteAttributeMakeDefault');
-late final _CGeoPointRouteAttributeMakeDefault = _CGeoPointRouteAttributeMakeDefaultPtr.asFunction<_CGeoPointRouteAttribute Function()>();
-
-
-late final _CRouteDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function()>>('CRouteDistanceMakeDefault');
-late final _CRouteDistanceMakeDefault = _CRouteDistanceMakeDefaultPtr.asFunction<_CRouteDistance Function()>();
-
-
-late final _CRoutePointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoutePoint Function()>>('CRoutePointMakeDefault');
-late final _CRoutePointMakeDefault = _CRoutePointMakeDefaultPtr.asFunction<_CRoutePoint Function()>();
-
-
-late final _CGeoPointRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteEntry Function()>>('CGeoPointRouteEntryMakeDefault');
-late final _CGeoPointRouteEntryMakeDefault = _CGeoPointRouteEntryMakeDefaultPtr.asFunction<_CGeoPointRouteEntry Function()>();
-
-
-late final _COptional_CGeoPointRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function()>>('COptional_CGeoPointRouteEntryMakeDefault');
-late final _COptional_CGeoPointRouteEntryMakeDefault = _COptional_CGeoPointRouteEntryMakeDefaultPtr.asFunction<_COptional_CGeoPointRouteEntry Function()>();
-
-late final _CArray_CGeoPointRouteEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function()>>('CArray_CGeoPointRouteEntry_makeEmpty');
-late final _CArray_CGeoPointRouteEntrymakeEmpty = _CArray_CGeoPointRouteEntrymakeEmptyPtr.asFunction<_CArray_CGeoPointRouteEntry Function()>();
-late final _CArray_CGeoPointRouteEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CGeoPointRouteEntry, _CGeoPointRouteEntry)>>('CArray_CGeoPointRouteEntry_addElement');
-late final _CArray_CGeoPointRouteEntryaddElement = _CArray_CGeoPointRouteEntryaddElementPtr.asFunction<void Function(_CArray_CGeoPointRouteEntry, _CGeoPointRouteEntry)>();
-late final _forEach_CArray_CGeoPointRouteEntryPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CGeoPointRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoPointRouteEntry)>>)
->>('CArray_CGeoPointRouteEntry_forEachWithFunctionPointer');
-late final _forEach_CArray_CGeoPointRouteEntry = _forEach_CArray_CGeoPointRouteEntryPtr.asFunction<
-  void Function(_CArray_CGeoPointRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoPointRouteEntry)
->>)>();
-late final _CArray_CGeoPointRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CGeoPointRouteEntry)>>('CArray_CGeoPointRouteEntry_release');
-late final _CArray_CGeoPointRouteEntry_release = _CArray_CGeoPointRouteEntry_releasePtr.asFunction<void Function(_CArray_CGeoPointRouteEntry)>();
-
-late final _CSegmentGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSegmentGeoPoint Function()>>('CSegmentGeoPointMakeDefault');
-late final _CSegmentGeoPointMakeDefault = _CSegmentGeoPointMakeDefaultPtr.asFunction<_CSegmentGeoPoint Function()>();
-
-
-late final _COptional_CSegmentGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CSegmentGeoPoint Function()>>('COptional_CSegmentGeoPointMakeDefault');
-late final _COptional_CSegmentGeoPointMakeDefault = _COptional_CSegmentGeoPointMakeDefaultPtr.asFunction<_COptional_CSegmentGeoPoint Function()>();
-
-late final _COptional_CRoutePointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRoutePoint Function()>>('COptional_CRoutePointMakeDefault');
-late final _COptional_CRoutePointMakeDefault = _COptional_CRoutePointMakeDefaultPtr.asFunction<_COptional_CRoutePoint Function()>();
 
 late final _CDashedStrokeCircleOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDashedStrokeCircleOptions Function()>>('CDashedStrokeCircleOptionsMakeDefault');
 late final _CDashedStrokeCircleOptionsMakeDefault = _CDashedStrokeCircleOptionsMakeDefaultPtr.asFunction<_CDashedStrokeCircleOptions Function()>();
@@ -76347,6 +80411,121 @@ late final _CZoomControlModel_retain = _CZoomControlModel_retainPtr.asFunction<_
 late final _CZoomControlModelMakeDefaultPtr = _lookup<ffi.NativeFunction<_CZoomControlModel Function()>>('CZoomControlModelMakeDefault');
 late final _CZoomControlModelMakeDefault = _CZoomControlModelMakeDefaultPtr.asFunction<_CZoomControlModel Function()>();
 
+late final _CFunction_G_parseGeoJsonFile_With_CStringPtr = _lookup<ffi.NativeFunction<_CArray_CGeometryMapObject Function(_CString)>>('CFunction_G_parseGeoJsonFile_With_CString');
+late final _CFunction_G_parseGeoJsonFile_With_CString = _CFunction_G_parseGeoJsonFile_With_CStringPtr.asFunction<_CArray_CGeometryMapObject Function(_CString)>();
+late final _CFunction_G_parseGeoJson_With_CStringPtr = _lookup<ffi.NativeFunction<_CArray_CGeometryMapObject Function(_CString)>>('CFunction_G_parseGeoJson_With_CString');
+late final _CFunction_G_parseGeoJson_With_CString = _CFunction_G_parseGeoJson_With_CStringPtr.asFunction<_CArray_CGeometryMapObject Function(_CString)>();
+late final _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>>('CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize');
+late final _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize = _CFunction_G_calcPositionForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>();
+
+late final _COptional_CPaddingMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPadding Function()>>('COptional_CPaddingMakeDefault');
+late final _COptional_CPaddingMakeDefault = _COptional_CPaddingMakeDefaultPtr.asFunction<_COptional_CPadding Function()>();
+
+late final _COptional_CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CScreenSize Function()>>('COptional_CScreenSizeMakeDefault');
+late final _COptional_CScreenSizeMakeDefault = _COptional_CScreenSizeMakeDefaultPtr.asFunction<_COptional_CScreenSize Function()>();
+late final _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>>('CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize');
+late final _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSize = _CFunction_G_calcPositionForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CPadding_COptional_CTilt_COptional_CBearing_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CPadding, _COptional_CTilt, _COptional_CBearing, _COptional_CScreenSize)>();
+late final _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>>('CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize');
+late final _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize = _CFunction_G_zoomOutToFitForGeometry_With_CBaseCamera_CGeometry_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CGeometry, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>();
+late final _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr = _lookup<ffi.NativeFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>>('CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize');
+late final _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSize = _CFunction_G_zoomOutToFitForObjects_With_CBaseCamera_CArray_CSimpleMapObject_COptional_CStyleZoomToTiltRelation_COptional_CScreenSizePtr.asFunction<_CCameraPosition Function(_CBaseCamera, _CArray_CSimpleMapObject, _COptional_CStyleZoomToTiltRelation, _COptional_CScreenSize)>();
+late final _CFunction_G_createDefaultMaxTiltRestrictionPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function()>>('CFunction_G_createDefaultMaxTiltRestriction');
+late final _CFunction_G_createDefaultMaxTiltRestriction = _CFunction_G_createDefaultMaxTiltRestrictionPtr.asFunction<_CStyleZoomToTiltRelation Function()>();
+late final _CFunction_G_createDefaultStyleZoomToTiltRelationPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function()>>('CFunction_G_createDefaultStyleZoomToTiltRelation');
+late final _CFunction_G_createDefaultStyleZoomToTiltRelation = _CFunction_G_createDefaultStyleZoomToTiltRelationPtr.asFunction<_CStyleZoomToTiltRelation Function()>();
+late final _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTiltPtr = _lookup<ffi.NativeFunction<_CStyleZoomToTiltRelation Function(_CDictionary_CStyleZoom_CTilt)>>('CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt');
+late final _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTilt = _CFunction_G_createStyleZoomToTiltRelation_With_CDictionary_CStyleZoom_CTiltPtr.asFunction<_CStyleZoomToTiltRelation Function(_CDictionary_CStyleZoom_CTilt)>();
+
+late final _CDictionary_CStyleZoom_CTiltmakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CStyleZoom_CTilt Function()>>('CDictionary_CStyleZoom_CTilt_makeEmpty');
+late final _CDictionary_CStyleZoom_CTiltmakeEmpty = _CDictionary_CStyleZoom_CTiltmakeEmptyPtr.asFunction<_CDictionary_CStyleZoom_CTilt Function()>();
+late final _CDictionary_CStyleZoom_CTiltaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CStyleZoom_CTilt, _CStyleZoom, _CTilt)>>('CDictionary_CStyleZoom_CTilt_addElement');
+late final _CDictionary_CStyleZoom_CTiltaddElement = _CDictionary_CStyleZoom_CTiltaddElementPtr.asFunction<void Function(_CDictionary_CStyleZoom_CTilt, _CStyleZoom, _CTilt)>();
+late final _forEach_CDictionary_CStyleZoom_CTiltPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CStyleZoom_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStyleZoom, _CTilt)>>)
+>>('CDictionary_CStyleZoom_CTilt_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CStyleZoom_CTilt = _forEach_CDictionary_CStyleZoom_CTiltPtr.asFunction<
+  void Function(_CDictionary_CStyleZoom_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStyleZoom, _CTilt)
+>>)>();
+late final _CDictionary_CStyleZoom_CTilt_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CStyleZoom_CTilt)>>('CDictionary_CStyleZoom_CTilt_release');
+late final _CDictionary_CStyleZoom_CTilt_release = _CDictionary_CStyleZoom_CTilt_releasePtr.asFunction<void Function(_CDictionary_CStyleZoom_CTilt)>();
+late final _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitudePtr = _lookup<ffi.NativeFunction<_CStyleZoom Function(_CZoom, _CLatitude)>>('CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude');
+late final _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitude = _CFunction_G_projectionZToStyleZ_With_CZoom_CLatitudePtr.asFunction<_CStyleZoom Function(_CZoom, _CLatitude)>();
+late final _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitudePtr = _lookup<ffi.NativeFunction<_CZoom Function(_CStyleZoom, _CLatitude)>>('CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude');
+late final _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitude = _CFunction_G_styleZToProjectionZ_With_CStyleZoom_CLatitudePtr.asFunction<_CZoom Function(_CStyleZoom, _CLatitude)>();
+late final _CFunction_G_toMapGeometry_With_CGeoPointRouteAttributePtr = _lookup<ffi.NativeFunction<_CGeometry Function(_CGeoPointRouteAttribute)>>('CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute');
+late final _CFunction_G_toMapGeometry_With_CGeoPointRouteAttribute = _CFunction_G_toMapGeometry_With_CGeoPointRouteAttributePtr.asFunction<_CGeometry Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_size');
+late final _CGeoPointRouteAttribute_size = _CGeoPointRouteAttribute_sizePtr.asFunction<int Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_isEmpty');
+late final _CGeoPointRouteAttribute_isEmpty = _CGeoPointRouteAttribute_isEmptyPtr.asFunction<bool Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_first');
+late final _CGeoPointRouteAttribute_first = _CGeoPointRouteAttribute_firstPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_last');
+late final _CGeoPointRouteAttribute_last = _CGeoPointRouteAttribute_lastPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_entries');
+late final _CGeoPointRouteAttribute_entries = _CGeoPointRouteAttribute_entriesPtr.asFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute)>();
+late final _CGeoPointRouteAttribute_lengthPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CGeoPointRouteAttribute)>>('CGeoPointRouteAttribute_length');
+late final _CGeoPointRouteAttribute_length = _CGeoPointRouteAttribute_lengthPtr.asFunction<_CRouteDistance Function(_CGeoPointRouteAttribute)>();
+
+late final _CGeoPointRouteAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_cg_objectIdentifier');
+late final _CGeoPointRouteAttribute_cg_objectIdentifier = _CGeoPointRouteAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint, _CRoutePoint)>>('CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CGeoPointRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint, _CRoutePoint)>();
+late final _CGeoPointRouteAttribute_findNearBackward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_findNearBackward_CRoutePoint');
+late final _CGeoPointRouteAttribute_findNearBackward_CRoutePoint = _CGeoPointRouteAttribute_findNearBackward_CRoutePointPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
+late final _CGeoPointRouteAttribute_findNearForward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_findNearForward_CRoutePoint');
+late final _CGeoPointRouteAttribute_findNearForward_CRoutePoint = _CGeoPointRouteAttribute_findNearForward_CRoutePointPtr.asFunction<_COptional_CGeoPointRouteEntry Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
+late final _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CSegmentGeoPoint Function(_CGeoPointRouteAttribute, _CRoutePoint)>>('CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint');
+late final _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePoint = _CGeoPointRouteAttribute_calculateGeoPoint_CRoutePointPtr.asFunction<_COptional_CSegmentGeoPoint Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
+late final _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPointPtr = _lookup<ffi.NativeFunction<_COptional_CRoutePoint Function(_CGeoPointRouteAttribute, _CGeoPoint)>>('CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint');
+late final _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPoint = _CGeoPointRouteAttribute_calculateClosestPoint_CGeoPointPtr.asFunction<_COptional_CRoutePoint Function(_CGeoPointRouteAttribute, _CGeoPoint)>();
+
+late final _CGeoPointRouteAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_release');
+late final _CGeoPointRouteAttribute_release = _CGeoPointRouteAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CGeoPointRouteAttribute_retainPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteAttribute Function(ffi.Pointer<ffi.Void>)>>('CGeoPointRouteAttribute_retain');
+late final _CGeoPointRouteAttribute_retain = _CGeoPointRouteAttribute_retainPtr.asFunction<_CGeoPointRouteAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CGeoPointRouteAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteAttribute Function()>>('CGeoPointRouteAttributeMakeDefault');
+late final _CGeoPointRouteAttributeMakeDefault = _CGeoPointRouteAttributeMakeDefaultPtr.asFunction<_CGeoPointRouteAttribute Function()>();
+
+
+late final _CRouteDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function()>>('CRouteDistanceMakeDefault');
+late final _CRouteDistanceMakeDefault = _CRouteDistanceMakeDefaultPtr.asFunction<_CRouteDistance Function()>();
+
+
+late final _CRoutePointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoutePoint Function()>>('CRoutePointMakeDefault');
+late final _CRoutePointMakeDefault = _CRoutePointMakeDefaultPtr.asFunction<_CRoutePoint Function()>();
+
+
+late final _CGeoPointRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoPointRouteEntry Function()>>('CGeoPointRouteEntryMakeDefault');
+late final _CGeoPointRouteEntryMakeDefault = _CGeoPointRouteEntryMakeDefaultPtr.asFunction<_CGeoPointRouteEntry Function()>();
+
+
+late final _COptional_CGeoPointRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGeoPointRouteEntry Function()>>('COptional_CGeoPointRouteEntryMakeDefault');
+late final _COptional_CGeoPointRouteEntryMakeDefault = _COptional_CGeoPointRouteEntryMakeDefaultPtr.asFunction<_COptional_CGeoPointRouteEntry Function()>();
+
+late final _CArray_CGeoPointRouteEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CGeoPointRouteEntry Function()>>('CArray_CGeoPointRouteEntry_makeEmpty');
+late final _CArray_CGeoPointRouteEntrymakeEmpty = _CArray_CGeoPointRouteEntrymakeEmptyPtr.asFunction<_CArray_CGeoPointRouteEntry Function()>();
+late final _CArray_CGeoPointRouteEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CGeoPointRouteEntry, _CGeoPointRouteEntry)>>('CArray_CGeoPointRouteEntry_addElement');
+late final _CArray_CGeoPointRouteEntryaddElement = _CArray_CGeoPointRouteEntryaddElementPtr.asFunction<void Function(_CArray_CGeoPointRouteEntry, _CGeoPointRouteEntry)>();
+late final _forEach_CArray_CGeoPointRouteEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CGeoPointRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoPointRouteEntry)>>)
+>>('CArray_CGeoPointRouteEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CGeoPointRouteEntry = _forEach_CArray_CGeoPointRouteEntryPtr.asFunction<
+  void Function(_CArray_CGeoPointRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoPointRouteEntry)
+>>)>();
+late final _CArray_CGeoPointRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CGeoPointRouteEntry)>>('CArray_CGeoPointRouteEntry_release');
+late final _CArray_CGeoPointRouteEntry_release = _CArray_CGeoPointRouteEntry_releasePtr.asFunction<void Function(_CArray_CGeoPointRouteEntry)>();
+
+late final _CSegmentGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSegmentGeoPoint Function()>>('CSegmentGeoPointMakeDefault');
+late final _CSegmentGeoPointMakeDefault = _CSegmentGeoPointMakeDefaultPtr.asFunction<_CSegmentGeoPoint Function()>();
+
+
+late final _COptional_CSegmentGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CSegmentGeoPoint Function()>>('COptional_CSegmentGeoPointMakeDefault');
+late final _COptional_CSegmentGeoPointMakeDefault = _COptional_CSegmentGeoPointMakeDefaultPtr.asFunction<_COptional_CSegmentGeoPoint Function()>();
+
+late final _COptional_CRoutePointMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRoutePoint Function()>>('COptional_CRoutePointMakeDefault');
+late final _COptional_CRoutePointMakeDefault = _COptional_CRoutePointMakeDefaultPtr.asFunction<_COptional_CRoutePoint Function()>();
 
 late final _CDefaultRasterUrlTemplateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDefaultRasterUrlTemplate Function()>>('CDefaultRasterUrlTemplateMakeDefault');
 late final _CDefaultRasterUrlTemplateMakeDefault = _CDefaultRasterUrlTemplateMakeDefaultPtr.asFunction<_CDefaultRasterUrlTemplate Function()>();
@@ -76438,10 +80617,6 @@ late final _CCalloutMapPositionMakeDefault = _CCalloutMapPositionMakeDefaultPtr.
 
 late final _CCalloutVisualizationModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCalloutVisualizationMode Function()>>('CCalloutVisualizationModeMakeDefault');
 late final _CCalloutVisualizationModeMakeDefault = _CCalloutVisualizationModeMakeDefaultPtr.asFunction<_CCalloutVisualizationMode Function()>();
-
-late final _CLanesCalloutMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLanesCalloutMapPosition Function()>>('CLanesCalloutMapPositionMakeDefault');
-late final _CLanesCalloutMapPositionMakeDefault = _CLanesCalloutMapPositionMakeDefaultPtr.asFunction<_CLanesCalloutMapPosition Function()>();
-
 late final _CIndoorRouteLevelsGetter_levelIdsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CSet_CLevelId Function(_CIndoorRouteLevelsGetter)>>('CIndoorRouteLevelsGetter_levelIdsChannel');
 late final _CIndoorRouteLevelsGetter_levelIdsChannel = _CIndoorRouteLevelsGetter_levelIdsChannelPtr.asFunction<_CStatefulChannel_CSet_CLevelId Function(_CIndoorRouteLevelsGetter)>();
 late final _CIndoorRouteLevelsGetter_levelIdsPtr = _lookup<ffi.NativeFunction<_CSet_CLevelId Function(_CIndoorRouteLevelsGetter)>>('CIndoorRouteLevelsGetter_levelIds');
@@ -76548,10 +80723,6 @@ late final _CRouteMapObject_calloutLabelDisplayModePtr = _lookup<ffi.NativeFunct
 late final _CRouteMapObject_calloutLabelDisplayMode = _CRouteMapObject_calloutLabelDisplayModePtr.asFunction<_CRouteMapObjectCalloutLabelDisplayMode Function(_CRouteMapObject)>();
 late final _CRouteMapObject_setCalloutLabelDisplayMode_CRouteMapObjectCalloutLabelDisplayModePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRouteMapObject, _CRouteMapObjectCalloutLabelDisplayMode)>>('CRouteMapObject_setCalloutLabelDisplayMode_CRouteMapObjectCalloutLabelDisplayMode');
 late final _CRouteMapObject_setCalloutLabelDisplayMode_CRouteMapObjectCalloutLabelDisplayMode = _CRouteMapObject_setCalloutLabelDisplayMode_CRouteMapObjectCalloutLabelDisplayModePtr.asFunction<void Function(_CRouteMapObject, _CRouteMapObjectCalloutLabelDisplayMode)>();
-late final _CRouteMapObject_lanesCalloutPositionsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function(_CRouteMapObject)>>('CRouteMapObject_lanesCalloutPositionsChannel');
-late final _CRouteMapObject_lanesCalloutPositionsChannel = _CRouteMapObject_lanesCalloutPositionsChannelPtr.asFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function(_CRouteMapObject)>();
-late final _CRouteMapObject_lanesCalloutPositionsPtr = _lookup<ffi.NativeFunction<_CArray_CLanesCalloutMapPosition Function(_CRouteMapObject)>>('CRouteMapObject_lanesCalloutPositions');
-late final _CRouteMapObject_lanesCalloutPositions = _CRouteMapObject_lanesCalloutPositionsPtr.asFunction<_CArray_CLanesCalloutMapPosition Function(_CRouteMapObject)>();
 late final _CRouteMapObject_roadEventObjectsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CRoadEventMapObjectRouteAttribute Function(_CRouteMapObject)>>('CRouteMapObject_roadEventObjectsChannel');
 late final _CRouteMapObject_roadEventObjectsChannel = _CRouteMapObject_roadEventObjectsChannelPtr.asFunction<_CStatefulChannel_CRoadEventMapObjectRouteAttribute Function(_CRouteMapObject)>();
 late final _CRouteMapObject_roadEventObjectsPtr = _lookup<ffi.NativeFunction<_CRoadEventMapObjectRouteAttribute Function(_CRouteMapObject)>>('CRouteMapObject_roadEventObjects');
@@ -76666,10 +80837,14 @@ late final _CRoute_settlementsPtr = _lookup<ffi.NativeFunction<_CSettlementRoute
 late final _CRoute_settlements = _CRoute_settlementsPtr.asFunction<_CSettlementRouteLongAttribute Function(_CRoute)>();
 late final _CRoute_transportTypesPtr = _lookup<ffi.NativeFunction<_CTransportTypeRouteLongAttribute Function(_CRoute)>>('CRoute_transportTypes');
 late final _CRoute_transportTypes = _CRoute_transportTypesPtr.asFunction<_CTransportTypeRouteLongAttribute Function(_CRoute)>();
+late final _CRoute_crossingTypesPtr = _lookup<ffi.NativeFunction<_CCrossingTypeRouteLongAttribute Function(_CRoute)>>('CRoute_crossingTypes');
+late final _CRoute_crossingTypes = _CRoute_crossingTypesPtr.asFunction<_CCrossingTypeRouteLongAttribute Function(_CRoute)>();
+late final _CRoute_tollPaymentPointInfosPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointInfoRouteAttribute Function(_CRoute)>>('CRoute_tollPaymentPointInfos');
+late final _CRoute_tollPaymentPointInfos = _CRoute_tollPaymentPointInfosPtr.asFunction<_CRouteTollPaymentPointInfoRouteAttribute Function(_CRoute)>();
 late final _CRoute_camerasPtr = _lookup<ffi.NativeFunction<_CCameraRouteAttribute Function(_CRoute)>>('CRoute_cameras');
 late final _CRoute_cameras = _CRoute_camerasPtr.asFunction<_CCameraRouteAttribute Function(_CRoute)>();
-late final _CRoute_carriagewaysWidthPtr = _lookup<ffi.NativeFunction<_CUIntRouteLongAttribute Function(_CRoute)>>('CRoute_carriagewaysWidth');
-late final _CRoute_carriagewaysWidth = _CRoute_carriagewaysWidthPtr.asFunction<_CUIntRouteLongAttribute Function(_CRoute)>();
+late final _CRoute_carriagewaysWidthPtr = _lookup<ffi.NativeFunction<_CDoubleRouteLongAttribute Function(_CRoute)>>('CRoute_carriagewaysWidth');
+late final _CRoute_carriagewaysWidth = _CRoute_carriagewaysWidthPtr.asFunction<_CDoubleRouteLongAttribute Function(_CRoute)>();
 late final _CRoute_exitSignsPtr = _lookup<ffi.NativeFunction<_CRouteExitSignRouteAttribute Function(_CRoute)>>('CRoute_exitSigns');
 late final _CRoute_exitSigns = _CRoute_exitSignsPtr.asFunction<_CRouteExitSignRouteAttribute Function(_CRoute)>();
 late final _CRoute_humpsPtr = _lookup<ffi.NativeFunction<_CVoidRouteAttribute Function(_CRoute)>>('CRoute_humps');
@@ -76700,8 +80875,8 @@ late final _CRoute_vehicleRestrictedAreasPtr = _lookup<ffi.NativeFunction<_CBool
 late final _CRoute_vehicleRestrictedAreas = _CRoute_vehicleRestrictedAreasPtr.asFunction<_CBoolRouteLongAttribute Function(_CRoute)>();
 late final _CRoute_bicycleLanesPtr = _lookup<ffi.NativeFunction<_CBoolRouteLongAttribute Function(_CRoute)>>('CRoute_bicycleLanes');
 late final _CRoute_bicycleLanes = _CRoute_bicycleLanesPtr.asFunction<_CBoolRouteLongAttribute Function(_CRoute)>();
-late final _CRoute_trafficLightsPtr = _lookup<ffi.NativeFunction<_CVoidRouteAttribute Function(_CRoute)>>('CRoute_trafficLights');
-late final _CRoute_trafficLights = _CRoute_trafficLightsPtr.asFunction<_CVoidRouteAttribute Function(_CRoute)>();
+late final _CRoute_trafficLightsPtr = _lookup<ffi.NativeFunction<_CStringRouteAttribute Function(_CRoute)>>('CRoute_trafficLights');
+late final _CRoute_trafficLights = _CRoute_trafficLightsPtr.asFunction<_CStringRouteAttribute Function(_CRoute)>();
 late final _CRoute_immersiveDataPtr = _lookup<ffi.NativeFunction<_CBoolRouteLongAttribute Function(_CRoute)>>('CRoute_immersiveData');
 late final _CRoute_immersiveData = _CRoute_immersiveDataPtr.asFunction<_CBoolRouteLongAttribute Function(_CRoute)>();
 late final _CRoute_publicTransportTransfersPtr = _lookup<ffi.NativeFunction<_CPublicTransportTransferRouteLongAttribute Function(_CRoute)>>('CRoute_publicTransportTransfers');
@@ -77226,6 +81401,117 @@ late final _forEach_CArray_CTransportTypeRouteLongEntry = _forEach_CArray_CTrans
 >>)>();
 late final _CArray_CTransportTypeRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTransportTypeRouteLongEntry)>>('CArray_CTransportTypeRouteLongEntry_release');
 late final _CArray_CTransportTypeRouteLongEntry_release = _CArray_CTransportTypeRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CTransportTypeRouteLongEntry)>();
+late final _CCrossingTypeRouteLongAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CCrossingTypeRouteLongAttribute)>>('CCrossingTypeRouteLongAttribute_size');
+late final _CCrossingTypeRouteLongAttribute_size = _CCrossingTypeRouteLongAttribute_sizePtr.asFunction<int Function(_CCrossingTypeRouteLongAttribute)>();
+late final _CCrossingTypeRouteLongAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CCrossingTypeRouteLongAttribute)>>('CCrossingTypeRouteLongAttribute_isEmpty');
+late final _CCrossingTypeRouteLongAttribute_isEmpty = _CCrossingTypeRouteLongAttribute_isEmptyPtr.asFunction<bool Function(_CCrossingTypeRouteLongAttribute)>();
+late final _CCrossingTypeRouteLongAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>>('CCrossingTypeRouteLongAttribute_first');
+late final _CCrossingTypeRouteLongAttribute_first = _CCrossingTypeRouteLongAttribute_firstPtr.asFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>();
+late final _CCrossingTypeRouteLongAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>>('CCrossingTypeRouteLongAttribute_last');
+late final _CCrossingTypeRouteLongAttribute_last = _CCrossingTypeRouteLongAttribute_lastPtr.asFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>();
+late final _CCrossingTypeRouteLongAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>>('CCrossingTypeRouteLongAttribute_entries');
+late final _CCrossingTypeRouteLongAttribute_entries = _CCrossingTypeRouteLongAttribute_entriesPtr.asFunction<_CArray_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute)>();
+
+late final _CCrossingTypeRouteLongAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CCrossingTypeRouteLongAttribute_cg_objectIdentifier');
+late final _CCrossingTypeRouteLongAttribute_cg_objectIdentifier = _CCrossingTypeRouteLongAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CCrossingTypeRouteLongAttribute_entry_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute, _CRoutePoint)>>('CCrossingTypeRouteLongAttribute_entry_CRoutePoint');
+late final _CCrossingTypeRouteLongAttribute_entry_CRoutePoint = _CCrossingTypeRouteLongAttribute_entry_CRoutePointPtr.asFunction<_COptional_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute, _CRoutePoint)>();
+late final _CCrossingTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute, _CRoutePoint, _CRoutePoint)>>('CCrossingTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CCrossingTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CCrossingTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CCrossingTypeRouteLongEntry Function(_CCrossingTypeRouteLongAttribute, _CRoutePoint, _CRoutePoint)>();
+
+late final _CCrossingTypeRouteLongAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CCrossingTypeRouteLongAttribute_release');
+late final _CCrossingTypeRouteLongAttribute_release = _CCrossingTypeRouteLongAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CCrossingTypeRouteLongAttribute_retainPtr = _lookup<ffi.NativeFunction<_CCrossingTypeRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>>('CCrossingTypeRouteLongAttribute_retain');
+late final _CCrossingTypeRouteLongAttribute_retain = _CCrossingTypeRouteLongAttribute_retainPtr.asFunction<_CCrossingTypeRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CCrossingTypeRouteLongAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCrossingTypeRouteLongAttribute Function()>>('CCrossingTypeRouteLongAttributeMakeDefault');
+late final _CCrossingTypeRouteLongAttributeMakeDefault = _CCrossingTypeRouteLongAttributeMakeDefaultPtr.asFunction<_CCrossingTypeRouteLongAttribute Function()>();
+
+
+late final _CCrossingTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCrossingType Function()>>('CCrossingTypeMakeDefault');
+late final _CCrossingTypeMakeDefault = _CCrossingTypeMakeDefaultPtr.asFunction<_CCrossingType Function()>();
+
+late final _CCrossingTypeRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCrossingTypeRouteLongEntry Function()>>('CCrossingTypeRouteLongEntryMakeDefault');
+late final _CCrossingTypeRouteLongEntryMakeDefault = _CCrossingTypeRouteLongEntryMakeDefaultPtr.asFunction<_CCrossingTypeRouteLongEntry Function()>();
+
+
+late final _COptional_CCrossingTypeRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CCrossingTypeRouteLongEntry Function()>>('COptional_CCrossingTypeRouteLongEntryMakeDefault');
+late final _COptional_CCrossingTypeRouteLongEntryMakeDefault = _COptional_CCrossingTypeRouteLongEntryMakeDefaultPtr.asFunction<_COptional_CCrossingTypeRouteLongEntry Function()>();
+
+late final _CArray_CCrossingTypeRouteLongEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CCrossingTypeRouteLongEntry Function()>>('CArray_CCrossingTypeRouteLongEntry_makeEmpty');
+late final _CArray_CCrossingTypeRouteLongEntrymakeEmpty = _CArray_CCrossingTypeRouteLongEntrymakeEmptyPtr.asFunction<_CArray_CCrossingTypeRouteLongEntry Function()>();
+late final _CArray_CCrossingTypeRouteLongEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CCrossingTypeRouteLongEntry, _CCrossingTypeRouteLongEntry)>>('CArray_CCrossingTypeRouteLongEntry_addElement');
+late final _CArray_CCrossingTypeRouteLongEntryaddElement = _CArray_CCrossingTypeRouteLongEntryaddElementPtr.asFunction<void Function(_CArray_CCrossingTypeRouteLongEntry, _CCrossingTypeRouteLongEntry)>();
+late final _forEach_CArray_CCrossingTypeRouteLongEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CCrossingTypeRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCrossingTypeRouteLongEntry)>>)
+>>('CArray_CCrossingTypeRouteLongEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CCrossingTypeRouteLongEntry = _forEach_CArray_CCrossingTypeRouteLongEntryPtr.asFunction<
+  void Function(_CArray_CCrossingTypeRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCrossingTypeRouteLongEntry)
+>>)>();
+late final _CArray_CCrossingTypeRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CCrossingTypeRouteLongEntry)>>('CArray_CCrossingTypeRouteLongEntry_release');
+late final _CArray_CCrossingTypeRouteLongEntry_release = _CArray_CCrossingTypeRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CCrossingTypeRouteLongEntry)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CRouteTollPaymentPointInfoRouteAttribute)>>('CRouteTollPaymentPointInfoRouteAttribute_size');
+late final _CRouteTollPaymentPointInfoRouteAttribute_size = _CRouteTollPaymentPointInfoRouteAttribute_sizePtr.asFunction<int Function(_CRouteTollPaymentPointInfoRouteAttribute)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CRouteTollPaymentPointInfoRouteAttribute)>>('CRouteTollPaymentPointInfoRouteAttribute_isEmpty');
+late final _CRouteTollPaymentPointInfoRouteAttribute_isEmpty = _CRouteTollPaymentPointInfoRouteAttribute_isEmptyPtr.asFunction<bool Function(_CRouteTollPaymentPointInfoRouteAttribute)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>>('CRouteTollPaymentPointInfoRouteAttribute_first');
+late final _CRouteTollPaymentPointInfoRouteAttribute_first = _CRouteTollPaymentPointInfoRouteAttribute_firstPtr.asFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>>('CRouteTollPaymentPointInfoRouteAttribute_last');
+late final _CRouteTollPaymentPointInfoRouteAttribute_last = _CRouteTollPaymentPointInfoRouteAttribute_lastPtr.asFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>>('CRouteTollPaymentPointInfoRouteAttribute_entries');
+late final _CRouteTollPaymentPointInfoRouteAttribute_entries = _CRouteTollPaymentPointInfoRouteAttribute_entriesPtr.asFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute)>();
+
+late final _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifier');
+late final _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifier = _CRouteTollPaymentPointInfoRouteAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CRouteTollPaymentPointInfoRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint, _CRoutePoint)>>('CRouteTollPaymentPointInfoRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CRouteTollPaymentPointInfoRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CRouteTollPaymentPointInfoRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint, _CRoutePoint)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_findNearBackward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint)>>('CRouteTollPaymentPointInfoRouteAttribute_findNearBackward_CRoutePoint');
+late final _CRouteTollPaymentPointInfoRouteAttribute_findNearBackward_CRoutePoint = _CRouteTollPaymentPointInfoRouteAttribute_findNearBackward_CRoutePointPtr.asFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_findNearForward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint)>>('CRouteTollPaymentPointInfoRouteAttribute_findNearForward_CRoutePoint');
+late final _CRouteTollPaymentPointInfoRouteAttribute_findNearForward_CRoutePoint = _CRouteTollPaymentPointInfoRouteAttribute_findNearForward_CRoutePointPtr.asFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function(_CRouteTollPaymentPointInfoRouteAttribute, _CRoutePoint)>();
+
+late final _CRouteTollPaymentPointInfoRouteAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRouteTollPaymentPointInfoRouteAttribute_release');
+late final _CRouteTollPaymentPointInfoRouteAttribute_release = _CRouteTollPaymentPointInfoRouteAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CRouteTollPaymentPointInfoRouteAttribute_retainPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointInfoRouteAttribute Function(ffi.Pointer<ffi.Void>)>>('CRouteTollPaymentPointInfoRouteAttribute_retain');
+late final _CRouteTollPaymentPointInfoRouteAttribute_retain = _CRouteTollPaymentPointInfoRouteAttribute_retainPtr.asFunction<_CRouteTollPaymentPointInfoRouteAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CRouteTollPaymentPointInfoRouteAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointInfoRouteAttribute Function()>>('CRouteTollPaymentPointInfoRouteAttributeMakeDefault');
+late final _CRouteTollPaymentPointInfoRouteAttributeMakeDefault = _CRouteTollPaymentPointInfoRouteAttributeMakeDefaultPtr.asFunction<_CRouteTollPaymentPointInfoRouteAttribute Function()>();
+
+
+late final _CRouteTollPaymentPointTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointType Function()>>('CRouteTollPaymentPointTypeMakeDefault');
+late final _CRouteTollPaymentPointTypeMakeDefault = _CRouteTollPaymentPointTypeMakeDefaultPtr.asFunction<_CRouteTollPaymentPointType Function()>();
+
+late final _CRouteTollPaymentInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentInfo Function()>>('CRouteTollPaymentInfoMakeDefault');
+late final _CRouteTollPaymentInfoMakeDefault = _CRouteTollPaymentInfoMakeDefaultPtr.asFunction<_CRouteTollPaymentInfo Function()>();
+
+
+late final _CRouteTollPaymentPointInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointInfo Function()>>('CRouteTollPaymentPointInfoMakeDefault');
+late final _CRouteTollPaymentPointInfoMakeDefault = _CRouteTollPaymentPointInfoMakeDefaultPtr.asFunction<_CRouteTollPaymentPointInfo Function()>();
+
+
+late final _CRouteTollPaymentPointInfoRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentPointInfoRouteEntry Function()>>('CRouteTollPaymentPointInfoRouteEntryMakeDefault');
+late final _CRouteTollPaymentPointInfoRouteEntryMakeDefault = _CRouteTollPaymentPointInfoRouteEntryMakeDefaultPtr.asFunction<_CRouteTollPaymentPointInfoRouteEntry Function()>();
+
+
+late final _COptional_CRouteTollPaymentPointInfoRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function()>>('COptional_CRouteTollPaymentPointInfoRouteEntryMakeDefault');
+late final _COptional_CRouteTollPaymentPointInfoRouteEntryMakeDefault = _COptional_CRouteTollPaymentPointInfoRouteEntryMakeDefaultPtr.asFunction<_COptional_CRouteTollPaymentPointInfoRouteEntry Function()>();
+
+late final _COptional_CRouteTollPaymentPointInfoRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CRouteTollPaymentPointInfoRouteEntry)>>('COptional_CRouteTollPaymentPointInfoRouteEntry_release');
+late final _COptional_CRouteTollPaymentPointInfoRouteEntry_release = _COptional_CRouteTollPaymentPointInfoRouteEntry_releasePtr.asFunction<void Function(_COptional_CRouteTollPaymentPointInfoRouteEntry)>();
+
+late final _CArray_CRouteTollPaymentPointInfoRouteEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function()>>('CArray_CRouteTollPaymentPointInfoRouteEntry_makeEmpty');
+late final _CArray_CRouteTollPaymentPointInfoRouteEntrymakeEmpty = _CArray_CRouteTollPaymentPointInfoRouteEntrymakeEmptyPtr.asFunction<_CArray_CRouteTollPaymentPointInfoRouteEntry Function()>();
+late final _CArray_CRouteTollPaymentPointInfoRouteEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry, _CRouteTollPaymentPointInfoRouteEntry)>>('CArray_CRouteTollPaymentPointInfoRouteEntry_addElement');
+late final _CArray_CRouteTollPaymentPointInfoRouteEntryaddElement = _CArray_CRouteTollPaymentPointInfoRouteEntryaddElementPtr.asFunction<void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry, _CRouteTollPaymentPointInfoRouteEntry)>();
+late final _forEach_CArray_CRouteTollPaymentPointInfoRouteEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRouteTollPaymentPointInfoRouteEntry)>>)
+>>('CArray_CRouteTollPaymentPointInfoRouteEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CRouteTollPaymentPointInfoRouteEntry = _forEach_CArray_CRouteTollPaymentPointInfoRouteEntryPtr.asFunction<
+  void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRouteTollPaymentPointInfoRouteEntry)
+>>)>();
+late final _CArray_CRouteTollPaymentPointInfoRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry)>>('CArray_CRouteTollPaymentPointInfoRouteEntry_release');
+late final _CArray_CRouteTollPaymentPointInfoRouteEntry_release = _CArray_CRouteTollPaymentPointInfoRouteEntry_releasePtr.asFunction<void Function(_CArray_CRouteTollPaymentPointInfoRouteEntry)>();
 late final _CCameraRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CCameraRouteAttribute)>>('CCameraRouteAttribute_size');
 late final _CCameraRouteAttribute_size = _CCameraRouteAttribute_sizePtr.asFunction<int Function(_CCameraRouteAttribute)>();
 late final _CCameraRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CCameraRouteAttribute)>>('CCameraRouteAttribute_isEmpty');
@@ -77287,52 +81573,52 @@ late final _forEach_CArray_CCameraRouteEntry = _forEach_CArray_CCameraRouteEntry
 >>)>();
 late final _CArray_CCameraRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CCameraRouteEntry)>>('CArray_CCameraRouteEntry_release');
 late final _CArray_CCameraRouteEntry_release = _CArray_CCameraRouteEntry_releasePtr.asFunction<void Function(_CArray_CCameraRouteEntry)>();
-late final _CUIntRouteLongAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CUIntRouteLongAttribute)>>('CUIntRouteLongAttribute_size');
-late final _CUIntRouteLongAttribute_size = _CUIntRouteLongAttribute_sizePtr.asFunction<int Function(_CUIntRouteLongAttribute)>();
-late final _CUIntRouteLongAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CUIntRouteLongAttribute)>>('CUIntRouteLongAttribute_isEmpty');
-late final _CUIntRouteLongAttribute_isEmpty = _CUIntRouteLongAttribute_isEmptyPtr.asFunction<bool Function(_CUIntRouteLongAttribute)>();
-late final _CUIntRouteLongAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>>('CUIntRouteLongAttribute_first');
-late final _CUIntRouteLongAttribute_first = _CUIntRouteLongAttribute_firstPtr.asFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>();
-late final _CUIntRouteLongAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>>('CUIntRouteLongAttribute_last');
-late final _CUIntRouteLongAttribute_last = _CUIntRouteLongAttribute_lastPtr.asFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>();
-late final _CUIntRouteLongAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>>('CUIntRouteLongAttribute_entries');
-late final _CUIntRouteLongAttribute_entries = _CUIntRouteLongAttribute_entriesPtr.asFunction<_CArray_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute)>();
+late final _CDoubleRouteLongAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CDoubleRouteLongAttribute)>>('CDoubleRouteLongAttribute_size');
+late final _CDoubleRouteLongAttribute_size = _CDoubleRouteLongAttribute_sizePtr.asFunction<int Function(_CDoubleRouteLongAttribute)>();
+late final _CDoubleRouteLongAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CDoubleRouteLongAttribute)>>('CDoubleRouteLongAttribute_isEmpty');
+late final _CDoubleRouteLongAttribute_isEmpty = _CDoubleRouteLongAttribute_isEmptyPtr.asFunction<bool Function(_CDoubleRouteLongAttribute)>();
+late final _CDoubleRouteLongAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>>('CDoubleRouteLongAttribute_first');
+late final _CDoubleRouteLongAttribute_first = _CDoubleRouteLongAttribute_firstPtr.asFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>();
+late final _CDoubleRouteLongAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>>('CDoubleRouteLongAttribute_last');
+late final _CDoubleRouteLongAttribute_last = _CDoubleRouteLongAttribute_lastPtr.asFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>();
+late final _CDoubleRouteLongAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>>('CDoubleRouteLongAttribute_entries');
+late final _CDoubleRouteLongAttribute_entries = _CDoubleRouteLongAttribute_entriesPtr.asFunction<_CArray_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute)>();
 
-late final _CUIntRouteLongAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CUIntRouteLongAttribute_cg_objectIdentifier');
-late final _CUIntRouteLongAttribute_cg_objectIdentifier = _CUIntRouteLongAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+late final _CDoubleRouteLongAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDoubleRouteLongAttribute_cg_objectIdentifier');
+late final _CDoubleRouteLongAttribute_cg_objectIdentifier = _CDoubleRouteLongAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
-late final _CUIntRouteLongAttribute_entry_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute, _CRoutePoint)>>('CUIntRouteLongAttribute_entry_CRoutePoint');
-late final _CUIntRouteLongAttribute_entry_CRoutePoint = _CUIntRouteLongAttribute_entry_CRoutePointPtr.asFunction<_COptional_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute, _CRoutePoint)>();
-late final _CUIntRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute, _CRoutePoint, _CRoutePoint)>>('CUIntRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint');
-late final _CUIntRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CUIntRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CUIntRouteLongEntry Function(_CUIntRouteLongAttribute, _CRoutePoint, _CRoutePoint)>();
+late final _CDoubleRouteLongAttribute_entry_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute, _CRoutePoint)>>('CDoubleRouteLongAttribute_entry_CRoutePoint');
+late final _CDoubleRouteLongAttribute_entry_CRoutePoint = _CDoubleRouteLongAttribute_entry_CRoutePointPtr.asFunction<_COptional_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute, _CRoutePoint)>();
+late final _CDoubleRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute, _CRoutePoint, _CRoutePoint)>>('CDoubleRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CDoubleRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CDoubleRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CDoubleRouteLongEntry Function(_CDoubleRouteLongAttribute, _CRoutePoint, _CRoutePoint)>();
 
-late final _CUIntRouteLongAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CUIntRouteLongAttribute_release');
-late final _CUIntRouteLongAttribute_release = _CUIntRouteLongAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CUIntRouteLongAttribute_retainPtr = _lookup<ffi.NativeFunction<_CUIntRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>>('CUIntRouteLongAttribute_retain');
-late final _CUIntRouteLongAttribute_retain = _CUIntRouteLongAttribute_retainPtr.asFunction<_CUIntRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>();
-late final _CUIntRouteLongAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CUIntRouteLongAttribute Function()>>('CUIntRouteLongAttributeMakeDefault');
-late final _CUIntRouteLongAttributeMakeDefault = _CUIntRouteLongAttributeMakeDefaultPtr.asFunction<_CUIntRouteLongAttribute Function()>();
-
-
-late final _CUIntRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CUIntRouteLongEntry Function()>>('CUIntRouteLongEntryMakeDefault');
-late final _CUIntRouteLongEntryMakeDefault = _CUIntRouteLongEntryMakeDefaultPtr.asFunction<_CUIntRouteLongEntry Function()>();
+late final _CDoubleRouteLongAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CDoubleRouteLongAttribute_release');
+late final _CDoubleRouteLongAttribute_release = _CDoubleRouteLongAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CDoubleRouteLongAttribute_retainPtr = _lookup<ffi.NativeFunction<_CDoubleRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>>('CDoubleRouteLongAttribute_retain');
+late final _CDoubleRouteLongAttribute_retain = _CDoubleRouteLongAttribute_retainPtr.asFunction<_CDoubleRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CDoubleRouteLongAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDoubleRouteLongAttribute Function()>>('CDoubleRouteLongAttributeMakeDefault');
+late final _CDoubleRouteLongAttributeMakeDefault = _CDoubleRouteLongAttributeMakeDefaultPtr.asFunction<_CDoubleRouteLongAttribute Function()>();
 
 
-late final _COptional_CUIntRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CUIntRouteLongEntry Function()>>('COptional_CUIntRouteLongEntryMakeDefault');
-late final _COptional_CUIntRouteLongEntryMakeDefault = _COptional_CUIntRouteLongEntryMakeDefaultPtr.asFunction<_COptional_CUIntRouteLongEntry Function()>();
+late final _CDoubleRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDoubleRouteLongEntry Function()>>('CDoubleRouteLongEntryMakeDefault');
+late final _CDoubleRouteLongEntryMakeDefault = _CDoubleRouteLongEntryMakeDefaultPtr.asFunction<_CDoubleRouteLongEntry Function()>();
 
-late final _CArray_CUIntRouteLongEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CUIntRouteLongEntry Function()>>('CArray_CUIntRouteLongEntry_makeEmpty');
-late final _CArray_CUIntRouteLongEntrymakeEmpty = _CArray_CUIntRouteLongEntrymakeEmptyPtr.asFunction<_CArray_CUIntRouteLongEntry Function()>();
-late final _CArray_CUIntRouteLongEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CUIntRouteLongEntry, _CUIntRouteLongEntry)>>('CArray_CUIntRouteLongEntry_addElement');
-late final _CArray_CUIntRouteLongEntryaddElement = _CArray_CUIntRouteLongEntryaddElementPtr.asFunction<void Function(_CArray_CUIntRouteLongEntry, _CUIntRouteLongEntry)>();
-late final _forEach_CArray_CUIntRouteLongEntryPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CUIntRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CUIntRouteLongEntry)>>)
->>('CArray_CUIntRouteLongEntry_forEachWithFunctionPointer');
-late final _forEach_CArray_CUIntRouteLongEntry = _forEach_CArray_CUIntRouteLongEntryPtr.asFunction<
-  void Function(_CArray_CUIntRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CUIntRouteLongEntry)
+
+late final _COptional_CDoubleRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CDoubleRouteLongEntry Function()>>('COptional_CDoubleRouteLongEntryMakeDefault');
+late final _COptional_CDoubleRouteLongEntryMakeDefault = _COptional_CDoubleRouteLongEntryMakeDefaultPtr.asFunction<_COptional_CDoubleRouteLongEntry Function()>();
+
+late final _CArray_CDoubleRouteLongEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CDoubleRouteLongEntry Function()>>('CArray_CDoubleRouteLongEntry_makeEmpty');
+late final _CArray_CDoubleRouteLongEntrymakeEmpty = _CArray_CDoubleRouteLongEntrymakeEmptyPtr.asFunction<_CArray_CDoubleRouteLongEntry Function()>();
+late final _CArray_CDoubleRouteLongEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDoubleRouteLongEntry, _CDoubleRouteLongEntry)>>('CArray_CDoubleRouteLongEntry_addElement');
+late final _CArray_CDoubleRouteLongEntryaddElement = _CArray_CDoubleRouteLongEntryaddElementPtr.asFunction<void Function(_CArray_CDoubleRouteLongEntry, _CDoubleRouteLongEntry)>();
+late final _forEach_CArray_CDoubleRouteLongEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CDoubleRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDoubleRouteLongEntry)>>)
+>>('CArray_CDoubleRouteLongEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CDoubleRouteLongEntry = _forEach_CArray_CDoubleRouteLongEntryPtr.asFunction<
+  void Function(_CArray_CDoubleRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDoubleRouteLongEntry)
 >>)>();
-late final _CArray_CUIntRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CUIntRouteLongEntry)>>('CArray_CUIntRouteLongEntry_release');
-late final _CArray_CUIntRouteLongEntry_release = _CArray_CUIntRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CUIntRouteLongEntry)>();
+late final _CArray_CDoubleRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDoubleRouteLongEntry)>>('CArray_CDoubleRouteLongEntry_release');
+late final _CArray_CDoubleRouteLongEntry_release = _CArray_CDoubleRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CDoubleRouteLongEntry)>();
 late final _CRouteExitSignRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CRouteExitSignRouteAttribute)>>('CRouteExitSignRouteAttribute_size');
 late final _CRouteExitSignRouteAttribute_size = _CRouteExitSignRouteAttribute_sizePtr.asFunction<int Function(_CRouteExitSignRouteAttribute)>();
 late final _CRouteExitSignRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CRouteExitSignRouteAttribute)>>('CRouteExitSignRouteAttribute_isEmpty');
@@ -77866,6 +82152,57 @@ late final _forEach_CArray_CTruckPassZoneIdRouteLongEntry = _forEach_CArray_CTru
 >>)>();
 late final _CArray_CTruckPassZoneIdRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTruckPassZoneIdRouteLongEntry)>>('CArray_CTruckPassZoneIdRouteLongEntry_release');
 late final _CArray_CTruckPassZoneIdRouteLongEntry_release = _CArray_CTruckPassZoneIdRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CTruckPassZoneIdRouteLongEntry)>();
+late final _CStringRouteAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CStringRouteAttribute)>>('CStringRouteAttribute_size');
+late final _CStringRouteAttribute_size = _CStringRouteAttribute_sizePtr.asFunction<int Function(_CStringRouteAttribute)>();
+late final _CStringRouteAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CStringRouteAttribute)>>('CStringRouteAttribute_isEmpty');
+late final _CStringRouteAttribute_isEmpty = _CStringRouteAttribute_isEmptyPtr.asFunction<bool Function(_CStringRouteAttribute)>();
+late final _CStringRouteAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute)>>('CStringRouteAttribute_first');
+late final _CStringRouteAttribute_first = _CStringRouteAttribute_firstPtr.asFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute)>();
+late final _CStringRouteAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute)>>('CStringRouteAttribute_last');
+late final _CStringRouteAttribute_last = _CStringRouteAttribute_lastPtr.asFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute)>();
+late final _CStringRouteAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CStringRouteEntry Function(_CStringRouteAttribute)>>('CStringRouteAttribute_entries');
+late final _CStringRouteAttribute_entries = _CStringRouteAttribute_entriesPtr.asFunction<_CArray_CStringRouteEntry Function(_CStringRouteAttribute)>();
+
+late final _CStringRouteAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CStringRouteAttribute_cg_objectIdentifier');
+late final _CStringRouteAttribute_cg_objectIdentifier = _CStringRouteAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CStringRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint, _CRoutePoint)>>('CStringRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CStringRouteAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CStringRouteAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint, _CRoutePoint)>();
+late final _CStringRouteAttribute_findNearBackward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint)>>('CStringRouteAttribute_findNearBackward_CRoutePoint');
+late final _CStringRouteAttribute_findNearBackward_CRoutePoint = _CStringRouteAttribute_findNearBackward_CRoutePointPtr.asFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint)>();
+late final _CStringRouteAttribute_findNearForward_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint)>>('CStringRouteAttribute_findNearForward_CRoutePoint');
+late final _CStringRouteAttribute_findNearForward_CRoutePoint = _CStringRouteAttribute_findNearForward_CRoutePointPtr.asFunction<_COptional_CStringRouteEntry Function(_CStringRouteAttribute, _CRoutePoint)>();
+
+late final _CStringRouteAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CStringRouteAttribute_release');
+late final _CStringRouteAttribute_release = _CStringRouteAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CStringRouteAttribute_retainPtr = _lookup<ffi.NativeFunction<_CStringRouteAttribute Function(ffi.Pointer<ffi.Void>)>>('CStringRouteAttribute_retain');
+late final _CStringRouteAttribute_retain = _CStringRouteAttribute_retainPtr.asFunction<_CStringRouteAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CStringRouteAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStringRouteAttribute Function()>>('CStringRouteAttributeMakeDefault');
+late final _CStringRouteAttributeMakeDefault = _CStringRouteAttributeMakeDefaultPtr.asFunction<_CStringRouteAttribute Function()>();
+
+
+late final _CStringRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStringRouteEntry Function()>>('CStringRouteEntryMakeDefault');
+late final _CStringRouteEntryMakeDefault = _CStringRouteEntryMakeDefaultPtr.asFunction<_CStringRouteEntry Function()>();
+
+
+late final _COptional_CStringRouteEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CStringRouteEntry Function()>>('COptional_CStringRouteEntryMakeDefault');
+late final _COptional_CStringRouteEntryMakeDefault = _COptional_CStringRouteEntryMakeDefaultPtr.asFunction<_COptional_CStringRouteEntry Function()>();
+
+late final _COptional_CStringRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CStringRouteEntry)>>('COptional_CStringRouteEntry_release');
+late final _COptional_CStringRouteEntry_release = _COptional_CStringRouteEntry_releasePtr.asFunction<void Function(_COptional_CStringRouteEntry)>();
+
+late final _CArray_CStringRouteEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CStringRouteEntry Function()>>('CArray_CStringRouteEntry_makeEmpty');
+late final _CArray_CStringRouteEntrymakeEmpty = _CArray_CStringRouteEntrymakeEmptyPtr.asFunction<_CArray_CStringRouteEntry Function()>();
+late final _CArray_CStringRouteEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CStringRouteEntry, _CStringRouteEntry)>>('CArray_CStringRouteEntry_addElement');
+late final _CArray_CStringRouteEntryaddElement = _CArray_CStringRouteEntryaddElementPtr.asFunction<void Function(_CArray_CStringRouteEntry, _CStringRouteEntry)>();
+late final _forEach_CArray_CStringRouteEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CStringRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStringRouteEntry)>>)
+>>('CArray_CStringRouteEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CStringRouteEntry = _forEach_CArray_CStringRouteEntryPtr.asFunction<
+  void Function(_CArray_CStringRouteEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CStringRouteEntry)
+>>)>();
+late final _CArray_CStringRouteEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CStringRouteEntry)>>('CArray_CStringRouteEntry_release');
+late final _CArray_CStringRouteEntry_release = _CArray_CStringRouteEntry_releasePtr.asFunction<void Function(_CArray_CStringRouteEntry)>();
 late final _CPublicTransportTransferRouteLongAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CPublicTransportTransferRouteLongAttribute)>>('CPublicTransportTransferRouteLongAttribute_size');
 late final _CPublicTransportTransferRouteLongAttribute_size = _CPublicTransportTransferRouteLongAttribute_sizePtr.asFunction<int Function(_CPublicTransportTransferRouteLongAttribute)>();
 late final _CPublicTransportTransferRouteLongAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CPublicTransportTransferRouteLongAttribute)>>('CPublicTransportTransferRouteLongAttribute_isEmpty');
@@ -77966,8 +82303,41 @@ late final _forEach_CArray_uint32_t = _forEach_CArray_uint32_tPtr.asFunction<
 late final _CArray_uint32_t_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_uint32_t)>>('CArray_uint32_t_release');
 late final _CArray_uint32_t_release = _CArray_uint32_t_releasePtr.asFunction<void Function(_CArray_uint32_t)>();
 
+late final _CArray_CPublicTransportRouteInfomakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportRouteInfo Function()>>('CArray_CPublicTransportRouteInfo_makeEmpty');
+late final _CArray_CPublicTransportRouteInfomakeEmpty = _CArray_CPublicTransportRouteInfomakeEmptyPtr.asFunction<_CArray_CPublicTransportRouteInfo Function()>();
+late final _CArray_CPublicTransportRouteInfoaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteInfo, _CPublicTransportRouteInfo)>>('CArray_CPublicTransportRouteInfo_addElement');
+late final _CArray_CPublicTransportRouteInfoaddElement = _CArray_CPublicTransportRouteInfoaddElementPtr.asFunction<void Function(_CArray_CPublicTransportRouteInfo, _CPublicTransportRouteInfo)>();
+late final _forEach_CArray_CPublicTransportRouteInfoPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteInfo)>>)
+>>('CArray_CPublicTransportRouteInfo_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportRouteInfo = _forEach_CArray_CPublicTransportRouteInfoPtr.asFunction<
+  void Function(_CArray_CPublicTransportRouteInfo, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteInfo)
+>>)>();
+late final _CArray_CPublicTransportRouteInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteInfo)>>('CArray_CPublicTransportRouteInfo_release');
+late final _CArray_CPublicTransportRouteInfo_release = _CArray_CPublicTransportRouteInfo_releasePtr.asFunction<void Function(_CArray_CPublicTransportRouteInfo)>();
+
 late final _CPublicTransportInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportInfo Function()>>('CPublicTransportInfoMakeDefault');
 late final _CPublicTransportInfoMakeDefault = _CPublicTransportInfoMakeDefaultPtr.asFunction<_CPublicTransportInfo Function()>();
+
+
+late final _CPublicTransportCostInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportCostInfo Function()>>('CPublicTransportCostInfoMakeDefault');
+late final _CPublicTransportCostInfoMakeDefault = _CPublicTransportCostInfoMakeDefaultPtr.asFunction<_CPublicTransportCostInfo Function()>();
+
+
+late final _COptional_CPublicTransportCostInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CPublicTransportCostInfo Function()>>('COptional_CPublicTransportCostInfoMakeDefault');
+late final _COptional_CPublicTransportCostInfoMakeDefault = _COptional_CPublicTransportCostInfoMakeDefaultPtr.asFunction<_COptional_CPublicTransportCostInfo Function()>();
+
+late final _COptional_CPublicTransportCostInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CPublicTransportCostInfo)>>('COptional_CPublicTransportCostInfo_release');
+late final _COptional_CPublicTransportCostInfo_release = _COptional_CPublicTransportCostInfo_releasePtr.asFunction<void Function(_COptional_CPublicTransportCostInfo)>();
+
+late final _CTraversalTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTraversalType Function()>>('CTraversalTypeMakeDefault');
+late final _CTraversalTypeMakeDefault = _CTraversalTypeMakeDefaultPtr.asFunction<_CTraversalType Function()>();
+
+late final _COptional_CTraversalTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTraversalType Function()>>('COptional_CTraversalTypeMakeDefault');
+late final _COptional_CTraversalTypeMakeDefault = _COptional_CTraversalTypeMakeDefaultPtr.asFunction<_COptional_CTraversalType Function()>();
+
+late final _CPublicTransportRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteInfo Function()>>('CPublicTransportRouteInfoMakeDefault');
+late final _CPublicTransportRouteInfoMakeDefault = _CPublicTransportRouteInfoMakeDefaultPtr.asFunction<_CPublicTransportRouteInfo Function()>();
 
 
 late final _CPublicTransportStopMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportStop Function()>>('CPublicTransportStopMakeDefault');
@@ -78119,10 +82489,6 @@ late final _forEach_CArray_CRouteTollPaymentInfo = _forEach_CArray_CRouteTollPay
 late final _CArray_CRouteTollPaymentInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteTollPaymentInfo)>>('CArray_CRouteTollPaymentInfo_release');
 late final _CArray_CRouteTollPaymentInfo_release = _CArray_CRouteTollPaymentInfo_releasePtr.asFunction<void Function(_CArray_CRouteTollPaymentInfo)>();
 
-late final _CRouteTollPaymentInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouteTollPaymentInfo Function()>>('CRouteTollPaymentInfoMakeDefault');
-late final _CRouteTollPaymentInfoMakeDefault = _CRouteTollPaymentInfoMakeDefaultPtr.asFunction<_CRouteTollPaymentInfo Function()>();
-
-
 late final _CStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CState Function()>>('CStateMakeDefault');
 late final _CStateMakeDefault = _CStateMakeDefaultPtr.asFunction<_CState Function()>();
 late final _CPackedNavigationState_trafficRoutePtr = _lookup<ffi.NativeFunction<_CTrafficRoute Function(_CPackedNavigationState)>>('CPackedNavigationState_trafficRoute');
@@ -78188,6 +82554,10 @@ late final _CRouteSearchTypeMakeDefault = _CRouteSearchTypeMakeDefaultPtr.asFunc
 
 late final _CCarRouteSearchOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarRouteSearchOptions Function()>>('CCarRouteSearchOptionsMakeDefault');
 late final _CCarRouteSearchOptionsMakeDefault = _CCarRouteSearchOptionsMakeDefaultPtr.asFunction<_CCarRouteSearchOptions Function()>();
+
+
+late final _CMotorcycleRouteSearchOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMotorcycleRouteSearchOptions Function()>>('CMotorcycleRouteSearchOptionsMakeDefault');
+late final _CMotorcycleRouteSearchOptionsMakeDefault = _CMotorcycleRouteSearchOptionsMakeDefaultPtr.asFunction<_CMotorcycleRouteSearchOptions Function()>();
 
 
 late final _CPedestrianRouteSearchOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPedestrianRouteSearchOptions Function()>>('CPedestrianRouteSearchOptionsMakeDefault');
@@ -78666,42 +83036,6 @@ late final _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayModeConnect = _CS
   )
 >();
 
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function()>>('CStatefulChannel_CArray_CLanesCalloutMapPositionMakeDefault');
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionMakeDefault = _CStatefulChannel_CArray_CLanesCalloutMapPositionMakeDefaultPtr.asFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function()>();
-late final _CStatefulChannel_CArray_CLanesCalloutMapPosition_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>>('CStatefulChannel_CArray_CLanesCalloutMapPosition_release');
-late final _CStatefulChannel_CArray_CLanesCalloutMapPosition_release = _CStatefulChannel_CArray_CLanesCalloutMapPosition_releasePtr.asFunction<void Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>();
-late final _CStatefulChannel_CArray_CLanesCalloutMapPosition_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>>('CStatefulChannel_CArray_CLanesCalloutMapPosition_retain');
-late final _CStatefulChannel_CArray_CLanesCalloutMapPosition_retain = _CStatefulChannel_CArray_CLanesCalloutMapPosition_retainPtr.asFunction<_CStatefulChannel_CArray_CLanesCalloutMapPosition Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>();
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CArray_CLanesCalloutMapPosition Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>>('CStatefulChannel_CArray_CLanesCalloutMapPosition_getCurrentValue');
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionGetCurrentValue = _CStatefulChannel_CArray_CLanesCalloutMapPositionGetCurrentValuePtr.asFunction<_CArray_CLanesCalloutMapPosition Function(_CStatefulChannel_CArray_CLanesCalloutMapPosition)>();
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CArray_CLanesCalloutMapPosition,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CLanesCalloutMapPosition, ffi.Int64)>>
-  )
->>('CStatefulChannel_CArray_CLanesCalloutMapPosition_connect');
-late final _CStatefulChannel_CArray_CLanesCalloutMapPositionConnect = _CStatefulChannel_CArray_CLanesCalloutMapPositionConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CArray_CLanesCalloutMapPosition,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CLanesCalloutMapPosition, ffi.Int64)>>
-  )
->();
-
-late final _CArray_CLanesCalloutMapPositionmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CLanesCalloutMapPosition Function()>>('CArray_CLanesCalloutMapPosition_makeEmpty');
-late final _CArray_CLanesCalloutMapPositionmakeEmpty = _CArray_CLanesCalloutMapPositionmakeEmptyPtr.asFunction<_CArray_CLanesCalloutMapPosition Function()>();
-late final _CArray_CLanesCalloutMapPositionaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLanesCalloutMapPosition, _CLanesCalloutMapPosition)>>('CArray_CLanesCalloutMapPosition_addElement');
-late final _CArray_CLanesCalloutMapPositionaddElement = _CArray_CLanesCalloutMapPositionaddElementPtr.asFunction<void Function(_CArray_CLanesCalloutMapPosition, _CLanesCalloutMapPosition)>();
-late final _forEach_CArray_CLanesCalloutMapPositionPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CLanesCalloutMapPosition, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLanesCalloutMapPosition)>>)
->>('CArray_CLanesCalloutMapPosition_forEachWithFunctionPointer');
-late final _forEach_CArray_CLanesCalloutMapPosition = _forEach_CArray_CLanesCalloutMapPositionPtr.asFunction<
-  void Function(_CArray_CLanesCalloutMapPosition, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLanesCalloutMapPosition)
->>)>();
-late final _CArray_CLanesCalloutMapPosition_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLanesCalloutMapPosition)>>('CArray_CLanesCalloutMapPosition_release');
-late final _CArray_CLanesCalloutMapPosition_release = _CArray_CLanesCalloutMapPosition_releasePtr.asFunction<void Function(_CArray_CLanesCalloutMapPosition)>();
-
 late final _CStatefulChannel_CRoadEventMapObjectRouteAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CRoadEventMapObjectRouteAttribute Function()>>('CStatefulChannel_CRoadEventMapObjectRouteAttributeMakeDefault');
 late final _CStatefulChannel_CRoadEventMapObjectRouteAttributeMakeDefault = _CStatefulChannel_CRoadEventMapObjectRouteAttributeMakeDefaultPtr.asFunction<_CStatefulChannel_CRoadEventMapObjectRouteAttribute Function()>();
 late final _CStatefulChannel_CRoadEventMapObjectRouteAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CRoadEventMapObjectRouteAttribute)>>('CStatefulChannel_CRoadEventMapObjectRouteAttribute_release');
@@ -79144,6 +83478,13 @@ late final _CCarBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCarB
 late final _CCarBriefRouteInfoMakeDefault = _CCarBriefRouteInfoMakeDefaultPtr.asFunction<_CCarBriefRouteInfo Function()>();
 
 
+late final _CMotorcycleBriefRouteInfoTrafficSpeedMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMotorcycleBriefRouteInfoTrafficSpeed Function()>>('CMotorcycleBriefRouteInfoTrafficSpeedMakeDefault');
+late final _CMotorcycleBriefRouteInfoTrafficSpeedMakeDefault = _CMotorcycleBriefRouteInfoTrafficSpeedMakeDefaultPtr.asFunction<_CMotorcycleBriefRouteInfoTrafficSpeed Function()>();
+
+late final _CMotorcycleBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMotorcycleBriefRouteInfo Function()>>('CMotorcycleBriefRouteInfoMakeDefault');
+late final _CMotorcycleBriefRouteInfoMakeDefault = _CMotorcycleBriefRouteInfoMakeDefaultPtr.asFunction<_CMotorcycleBriefRouteInfo Function()>();
+
+
 late final _CPedestrianBriefRouteInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPedestrianBriefRouteInfo Function()>>('CPedestrianBriefRouteInfoMakeDefault');
 late final _CPedestrianBriefRouteInfoMakeDefault = _CPedestrianBriefRouteInfoMakeDefaultPtr.asFunction<_CPedestrianBriefRouteInfo Function()>();
 
@@ -79554,74 +83895,145 @@ late final _CFuture_CStyleReceive = _CFuture_CStyleReceivePtr.asFunction<
   )
 >();
 
-late final _CRotationCenterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationCenter Function()>>('CRotationCenterMakeDefault');
-late final _CRotationCenterMakeDefault = _CRotationCenterMakeDefaultPtr.asFunction<_CRotationCenter Function()>();
-
-late final _CScalingCenterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingCenter Function()>>('CScalingCenterMakeDefault');
-late final _CScalingCenterMakeDefault = _CScalingCenterMakeDefaultPtr.asFunction<_CScalingCenter Function()>();
-
-late final _CEventsProcessingSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CEventsProcessingSettings Function()>>('CEventsProcessingSettingsMakeDefault');
-late final _CEventsProcessingSettingsMakeDefault = _CEventsProcessingSettingsMakeDefaultPtr.asFunction<_CEventsProcessingSettings Function()>();
-
-
 late final _CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDragBeginData Function()>>('CDragBeginDataMakeDefault');
 late final _CDragBeginDataMakeDefault = _CDragBeginDataMakeDefaultPtr.asFunction<_CDragBeginData Function()>();
 
 
-late final _CGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGesture Function()>>('CGestureMakeDefault');
-late final _CGestureMakeDefault = _CGestureMakeDefaultPtr.asFunction<_CGesture Function()>();
+late final _CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTransformGesture Function()>>('CTransformGestureMakeDefault');
+late final _CTransformGestureMakeDefault = _CTransformGestureMakeDefaultPtr.asFunction<_CTransformGesture Function()>();
 
-late final _CScalingSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingSettings Function()>>('CScalingSettingsMakeDefault');
-late final _CScalingSettingsMakeDefault = _CScalingSettingsMakeDefaultPtr.asFunction<_CScalingSettings Function()>();
-
-
-late final _CRotationSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationSettings Function()>>('CRotationSettingsMakeDefault');
-late final _CRotationSettingsMakeDefault = _CRotationSettingsMakeDefaultPtr.asFunction<_CRotationSettings Function()>();
+late final _CScalingRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function()>>('CScalingRecognizeSettingsMakeDefault');
+late final _CScalingRecognizeSettingsMakeDefault = _CScalingRecognizeSettingsMakeDefaultPtr.asFunction<_CScalingRecognizeSettings Function()>();
 
 
-late final _CMultiTouchShiftSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchShiftSettings Function()>>('CMultiTouchShiftSettingsMakeDefault');
-late final _CMultiTouchShiftSettingsMakeDefault = _CMultiTouchShiftSettingsMakeDefaultPtr.asFunction<_CMultiTouchShiftSettings Function()>();
+late final _CGestureActionEventCenterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionEventCenter Function()>>('CGestureActionEventCenterMakeDefault');
+late final _CGestureActionEventCenterMakeDefault = _CGestureActionEventCenterMakeDefaultPtr.asFunction<_CGestureActionEventCenter Function()>();
 
 
-late final _CTiltSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltSettings Function()>>('CTiltSettingsMakeDefault');
-late final _CTiltSettingsMakeDefault = _CTiltSettingsMakeDefaultPtr.asFunction<_CTiltSettings Function()>();
+late final _CGestureActionMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionMapPosition Function()>>('CGestureActionMapPositionMakeDefault');
+late final _CGestureActionMapPositionMakeDefault = _CGestureActionMapPositionMakeDefaultPtr.asFunction<_CGestureActionMapPosition Function()>();
 
-late final _CGestureManager_enabledGesturesPtr = _lookup<ffi.NativeFunction<_COptionSet_CGesture Function(_CGestureManager)>>('CGestureManager_enabledGestures');
-late final _CGestureManager_enabledGestures = _CGestureManager_enabledGesturesPtr.asFunction<_COptionSet_CGesture Function(_CGestureManager)>();
-late final _CGestureManager_setEnabledGestures_COptionSet_CGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _COptionSet_CGesture)>>('CGestureManager_setEnabledGestures_COptionSet_CGesture');
-late final _CGestureManager_setEnabledGestures_COptionSet_CGesture = _CGestureManager_setEnabledGestures_COptionSet_CGesturePtr.asFunction<void Function(_CGestureManager, _COptionSet_CGesture)>();
-late final _CGestureManager_scalingSettingsPtr = _lookup<ffi.NativeFunction<_CScalingSettings Function(_CGestureManager)>>('CGestureManager_scalingSettings');
-late final _CGestureManager_scalingSettings = _CGestureManager_scalingSettingsPtr.asFunction<_CScalingSettings Function(_CGestureManager)>();
-late final _CGestureManager_setScalingSettings_CScalingSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CScalingSettings)>>('CGestureManager_setScalingSettings_CScalingSettings');
-late final _CGestureManager_setScalingSettings_CScalingSettings = _CGestureManager_setScalingSettings_CScalingSettingsPtr.asFunction<void Function(_CGestureManager, _CScalingSettings)>();
-late final _CGestureManager_rotationSettingsPtr = _lookup<ffi.NativeFunction<_CRotationSettings Function(_CGestureManager)>>('CGestureManager_rotationSettings');
-late final _CGestureManager_rotationSettings = _CGestureManager_rotationSettingsPtr.asFunction<_CRotationSettings Function(_CGestureManager)>();
-late final _CGestureManager_setRotationSettings_CRotationSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CRotationSettings)>>('CGestureManager_setRotationSettings_CRotationSettings');
-late final _CGestureManager_setRotationSettings_CRotationSettings = _CGestureManager_setRotationSettings_CRotationSettingsPtr.asFunction<void Function(_CGestureManager, _CRotationSettings)>();
-late final _CGestureManager_multitouchShiftSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchShiftSettings Function(_CGestureManager)>>('CGestureManager_multitouchShiftSettings');
-late final _CGestureManager_multitouchShiftSettings = _CGestureManager_multitouchShiftSettingsPtr.asFunction<_CMultiTouchShiftSettings Function(_CGestureManager)>();
-late final _CGestureManager_setMultitouchShiftSettings_CMultiTouchShiftSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CMultiTouchShiftSettings)>>('CGestureManager_setMultitouchShiftSettings_CMultiTouchShiftSettings');
-late final _CGestureManager_setMultitouchShiftSettings_CMultiTouchShiftSettings = _CGestureManager_setMultitouchShiftSettings_CMultiTouchShiftSettingsPtr.asFunction<void Function(_CGestureManager, _CMultiTouchShiftSettings)>();
-late final _CGestureManager_tiltSettingsPtr = _lookup<ffi.NativeFunction<_CTiltSettings Function(_CGestureManager)>>('CGestureManager_tiltSettings');
-late final _CGestureManager_tiltSettings = _CGestureManager_tiltSettingsPtr.asFunction<_CTiltSettings Function(_CGestureManager)>();
-late final _CGestureManager_setTiltSettings_CTiltSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTiltSettings)>>('CGestureManager_setTiltSettings_CTiltSettings');
-late final _CGestureManager_setTiltSettings_CTiltSettings = _CGestureManager_setTiltSettings_CTiltSettingsPtr.asFunction<void Function(_CGestureManager, _CTiltSettings)>();
+
+late final _CGestureActionTargetGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionTargetGeoPoint Function()>>('CGestureActionTargetGeoPointMakeDefault');
+late final _CGestureActionTargetGeoPointMakeDefault = _CGestureActionTargetGeoPointMakeDefaultPtr.asFunction<_CGestureActionTargetGeoPoint Function()>();
+
+
+late final _CGestureActionPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureActionPoint)>>('CGestureActionPoint_release');
+late final _CGestureActionPoint_release = _CGestureActionPoint_releasePtr.asFunction<void Function(_CGestureActionPoint)>();
+late final _CGestureActionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function()>>('CGestureActionPointMakeDefault');
+late final _CGestureActionPointMakeDefault = _CGestureActionPointMakeDefaultPtr.asFunction<_CGestureActionPoint Function()>();
+late final _CScalingGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_recognizeSettings');
+late final _CScalingGestureSettings_recognizeSettings = _CScalingGestureSettings_recognizeSettingsPtr.asFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>>('CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings');
+late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>();
+late final _CScalingGestureSettings_scalingCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>>('CScalingGestureSettings_scalingCenter');
+late final _CScalingGestureSettings_scalingCenter = _CScalingGestureSettings_scalingCenterPtr.asFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CGestureActionPoint)>>('CScalingGestureSettings_setScalingCenter_CGestureActionPoint');
+late final _CScalingGestureSettings_setScalingCenter_CGestureActionPoint = _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr.asFunction<void Function(_CScalingGestureSettings, _CGestureActionPoint)>();
+
+late final _CScalingGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_cg_objectIdentifier');
+late final _CScalingGestureSettings_cg_objectIdentifier = _CScalingGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CScalingGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_release');
+late final _CScalingGestureSettings_release = _CScalingGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CScalingGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_retain');
+late final _CScalingGestureSettings_retain = _CScalingGestureSettings_retainPtr.asFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CScalingGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function()>>('CScalingGestureSettingsMakeDefault');
+late final _CScalingGestureSettingsMakeDefault = _CScalingGestureSettingsMakeDefaultPtr.asFunction<_CScalingGestureSettings Function()>();
+
+
+late final _CRotationRecognizeThresholdsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeThresholds Function()>>('CRotationRecognizeThresholdsMakeDefault');
+late final _CRotationRecognizeThresholdsMakeDefault = _CRotationRecognizeThresholdsMakeDefaultPtr.asFunction<_CRotationRecognizeThresholds Function()>();
+
+
+late final _CRotationRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function()>>('CRotationRecognizeSettingsMakeDefault');
+late final _CRotationRecognizeSettingsMakeDefault = _CRotationRecognizeSettingsMakeDefaultPtr.asFunction<_CRotationRecognizeSettings Function()>();
+
+late final _CRotationGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_recognizeSettings');
+late final _CRotationGestureSettings_recognizeSettings = _CRotationGestureSettings_recognizeSettingsPtr.asFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>>('CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings');
+late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>();
+late final _CRotationGestureSettings_rotationCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>>('CRotationGestureSettings_rotationCenter');
+late final _CRotationGestureSettings_rotationCenter = _CRotationGestureSettings_rotationCenterPtr.asFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CGestureActionPoint)>>('CRotationGestureSettings_setRotationCenter_CGestureActionPoint');
+late final _CRotationGestureSettings_setRotationCenter_CGestureActionPoint = _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr.asFunction<void Function(_CRotationGestureSettings, _CGestureActionPoint)>();
+
+late final _CRotationGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_cg_objectIdentifier');
+late final _CRotationGestureSettings_cg_objectIdentifier = _CRotationGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CRotationGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_release');
+late final _CRotationGestureSettings_release = _CRotationGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CRotationGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_retain');
+late final _CRotationGestureSettings_retain = _CRotationGestureSettings_retainPtr.asFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CRotationGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function()>>('CRotationGestureSettingsMakeDefault');
+late final _CRotationGestureSettingsMakeDefault = _CRotationGestureSettingsMakeDefaultPtr.asFunction<_CRotationGestureSettings Function()>();
+
+
+late final _CMultiTouchRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function()>>('CMultiTouchRecognizeSettingsMakeDefault');
+late final _CMultiTouchRecognizeSettingsMakeDefault = _CMultiTouchRecognizeSettingsMakeDefaultPtr.asFunction<_CMultiTouchRecognizeSettings Function()>();
+
+late final _CMultiTouchGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>>('CMultiTouchGestureSettings_recognizeSettings');
+late final _CMultiTouchGestureSettings_recognizeSettings = _CMultiTouchGestureSettings_recognizeSettingsPtr.asFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>();
+late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>>('CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings');
+late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr.asFunction<void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>();
+
+late final _CMultiTouchGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_cg_objectIdentifier');
+late final _CMultiTouchGestureSettings_cg_objectIdentifier = _CMultiTouchGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CMultiTouchGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_release');
+late final _CMultiTouchGestureSettings_release = _CMultiTouchGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMultiTouchGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_retain');
+late final _CMultiTouchGestureSettings_retain = _CMultiTouchGestureSettings_retainPtr.asFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CMultiTouchGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function()>>('CMultiTouchGestureSettingsMakeDefault');
+late final _CMultiTouchGestureSettingsMakeDefault = _CMultiTouchGestureSettingsMakeDefaultPtr.asFunction<_CMultiTouchGestureSettings Function()>();
+
+
+late final _CTiltRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function()>>('CTiltRecognizeSettingsMakeDefault');
+late final _CTiltRecognizeSettingsMakeDefault = _CTiltRecognizeSettingsMakeDefaultPtr.asFunction<_CTiltRecognizeSettings Function()>();
+
+late final _CTiltGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_recognizeSettings');
+late final _CTiltGestureSettings_recognizeSettings = _CTiltGestureSettings_recognizeSettingsPtr.asFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>();
+late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>>('CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings');
+late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>();
+
+late final _CTiltGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_cg_objectIdentifier');
+late final _CTiltGestureSettings_cg_objectIdentifier = _CTiltGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CTiltGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_release');
+late final _CTiltGestureSettings_release = _CTiltGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTiltGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_retain');
+late final _CTiltGestureSettings_retain = _CTiltGestureSettings_retainPtr.asFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CTiltGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function()>>('CTiltGestureSettingsMakeDefault');
+late final _CTiltGestureSettingsMakeDefault = _CTiltGestureSettingsMakeDefaultPtr.asFunction<_CTiltGestureSettings Function()>();
+
+late final _CGestureManager_enabledGesturesPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>>('CGestureManager_enabledGestures');
+late final _CGestureManager_enabledGestures = _CGestureManager_enabledGesturesPtr.asFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>();
+late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _COptionSet_CTransformGesture)>>('CGestureManager_setEnabledGestures_COptionSet_CTransformGesture');
+late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _COptionSet_CTransformGesture)>();
+late final _CGestureManager_scalingSettingsPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(_CGestureManager)>>('CGestureManager_scalingSettings');
+late final _CGestureManager_scalingSettings = _CGestureManager_scalingSettingsPtr.asFunction<_CScalingGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_rotationSettingsPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(_CGestureManager)>>('CGestureManager_rotationSettings');
+late final _CGestureManager_rotationSettings = _CGestureManager_rotationSettingsPtr.asFunction<_CRotationGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_multitouchShiftSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>>('CGestureManager_multitouchShiftSettings');
+late final _CGestureManager_multitouchShiftSettings = _CGestureManager_multitouchShiftSettingsPtr.asFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_tiltSettingsPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(_CGestureManager)>>('CGestureManager_tiltSettings');
+late final _CGestureManager_tiltSettings = _CGestureManager_tiltSettingsPtr.asFunction<_CTiltGestureSettings Function(_CGestureManager)>();
 
 late final _CGestureManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_cg_objectIdentifier');
 late final _CGestureManager_cg_objectIdentifier = _CGestureManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
-late final _CGestureManager_enableGesture_CGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CGesture)>>('CGestureManager_enableGesture_CGesture');
-late final _CGestureManager_enableGesture_CGesture = _CGestureManager_enableGesture_CGesturePtr.asFunction<void Function(_CGestureManager, _CGesture)>();
-late final _CGestureManager_disableGesture_CGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CGesture)>>('CGestureManager_disableGesture_CGesture');
-late final _CGestureManager_disableGesture_CGesture = _CGestureManager_disableGesture_CGesturePtr.asFunction<void Function(_CGestureManager, _CGesture)>();
-late final _CGestureManager_gestureEnabled_CGesturePtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGestureManager, _CGesture)>>('CGestureManager_gestureEnabled_CGesture');
-late final _CGestureManager_gestureEnabled_CGesture = _CGestureManager_gestureEnabled_CGesturePtr.asFunction<bool Function(_CGestureManager, _CGesture)>();
-late final _CGestureManager_setSettingsAboutMapPositionPoint_CEventsProcessingSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CEventsProcessingSettings)>>('CGestureManager_setSettingsAboutMapPositionPoint_CEventsProcessingSettings');
-late final _CGestureManager_setSettingsAboutMapPositionPoint_CEventsProcessingSettings = _CGestureManager_setSettingsAboutMapPositionPoint_CEventsProcessingSettingsPtr.asFunction<void Function(_CGestureManager, _CEventsProcessingSettings)>();
-late final _CGestureManager_setTargetGeoPoint_COptional_CGeoPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _COptional_CGeoPoint)>>('CGestureManager_setTargetGeoPoint_COptional_CGeoPoint');
-late final _CGestureManager_setTargetGeoPoint_COptional_CGeoPoint = _CGestureManager_setTargetGeoPoint_COptional_CGeoPointPtr.asFunction<void Function(_CGestureManager, _COptional_CGeoPoint)>();
-late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CArray_COptionSet_CGesture)>>('CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CGesture');
-late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CGesture = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CGesturePtr.asFunction<void Function(_CGestureManager, _CArray_COptionSet_CGesture)>();
+late final _CGestureManager_enableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_enableGesture_CTransformGesture');
+late final _CGestureManager_enableGesture_CTransformGesture = _CGestureManager_enableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_disableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_disableGesture_CTransformGesture');
+late final _CGestureManager_disableGesture_CTransformGesture = _CGestureManager_disableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_gestureEnabled_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_gestureEnabled_CTransformGesture');
+late final _CGestureManager_gestureEnabled_CTransformGesture = _CGestureManager_gestureEnabled_CTransformGesturePtr.asFunction<bool Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>>('CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture');
+late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>();
 
 late final _CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_release');
 late final _CGestureManager_release = _CGestureManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -79631,21 +84043,21 @@ late final _CGestureManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGesture
 late final _CGestureManagerMakeDefault = _CGestureManagerMakeDefaultPtr.asFunction<_CGestureManager Function()>();
 
 
-late final _COptionSet_CGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CGesture Function()>>('COptionSet_CGestureMakeDefault');
-late final _COptionSet_CGestureMakeDefault = _COptionSet_CGestureMakeDefaultPtr.asFunction<_COptionSet_CGesture Function()>();
+late final _COptionSet_CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function()>>('COptionSet_CTransformGestureMakeDefault');
+late final _COptionSet_CTransformGestureMakeDefault = _COptionSet_CTransformGestureMakeDefaultPtr.asFunction<_COptionSet_CTransformGesture Function()>();
 
-late final _CArray_COptionSet_CGesturemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptionSet_CGesture Function()>>('CArray_COptionSet_CGesture_makeEmpty');
-late final _CArray_COptionSet_CGesturemakeEmpty = _CArray_COptionSet_CGesturemakeEmptyPtr.asFunction<_CArray_COptionSet_CGesture Function()>();
-late final _CArray_COptionSet_CGestureaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CGesture, _COptionSet_CGesture)>>('CArray_COptionSet_CGesture_addElement');
-late final _CArray_COptionSet_CGestureaddElement = _CArray_COptionSet_CGestureaddElementPtr.asFunction<void Function(_CArray_COptionSet_CGesture, _COptionSet_CGesture)>();
-late final _forEach_CArray_COptionSet_CGesturePtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_COptionSet_CGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CGesture)>>)
->>('CArray_COptionSet_CGesture_forEachWithFunctionPointer');
-late final _forEach_CArray_COptionSet_CGesture = _forEach_CArray_COptionSet_CGesturePtr.asFunction<
-  void Function(_CArray_COptionSet_CGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CGesture)
+late final _CArray_COptionSet_CTransformGesturemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptionSet_CTransformGesture Function()>>('CArray_COptionSet_CTransformGesture_makeEmpty');
+late final _CArray_COptionSet_CTransformGesturemakeEmpty = _CArray_COptionSet_CTransformGesturemakeEmptyPtr.asFunction<_CArray_COptionSet_CTransformGesture Function()>();
+late final _CArray_COptionSet_CTransformGestureaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_addElement');
+late final _CArray_COptionSet_CTransformGestureaddElement = _CArray_COptionSet_CTransformGestureaddElementPtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>();
+late final _forEach_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)>>)
+>>('CArray_COptionSet_CTransformGesture_forEachWithFunctionPointer');
+late final _forEach_CArray_COptionSet_CTransformGesture = _forEach_CArray_COptionSet_CTransformGesturePtr.asFunction<
+  void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)
 >>)>();
-late final _CArray_COptionSet_CGesture_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CGesture)>>('CArray_COptionSet_CGesture_release');
-late final _CArray_COptionSet_CGesture_release = _CArray_COptionSet_CGesture_releasePtr.asFunction<void Function(_CArray_COptionSet_CGesture)>();
+late final _CArray_COptionSet_CTransformGesture_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_release');
+late final _CArray_COptionSet_CTransformGesture_release = _CArray_COptionSet_CTransformGesture_releasePtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture)>();
 
 late final _CTouchPointStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTouchPointState Function()>>('CTouchPointStateMakeDefault');
 late final _CTouchPointStateMakeDefault = _CTouchPointStateMakeDefaultPtr.asFunction<_CTouchPointState Function()>();
@@ -79773,6 +84185,10 @@ late final _CMapLocationController_mapToNorthOrientationPtr = _lookup<ffi.Native
 late final _CMapLocationController_mapToNorthOrientation = _CMapLocationController_mapToNorthOrientationPtr.asFunction<bool Function(_CMapLocationController)>();
 late final _CMapLocationController_setMapToNorthOrientation_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapLocationController, ffi.Bool)>>('CMapLocationController_setMapToNorthOrientation_bool');
 late final _CMapLocationController_setMapToNorthOrientation_bool = _CMapLocationController_setMapToNorthOrientation_boolPtr.asFunction<void Function(_CMapLocationController, bool)>();
+late final _CMapLocationController_userControlOverMapPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CMapLocationController)>>('CMapLocationController_userControlOverMap');
+late final _CMapLocationController_userControlOverMap = _CMapLocationController_userControlOverMapPtr.asFunction<bool Function(_CMapLocationController)>();
+late final _CMapLocationController_setUserControlOverMap_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapLocationController, ffi.Bool)>>('CMapLocationController_setUserControlOverMap_bool');
+late final _CMapLocationController_setUserControlOverMap_bool = _CMapLocationController_setUserControlOverMap_boolPtr.asFunction<void Function(_CMapLocationController, bool)>();
 
 late final _CMapLocationController_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapLocationController_cg_objectIdentifier');
 late final _CMapLocationController_cg_objectIdentifier = _CMapLocationController_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -79805,6 +84221,32 @@ late final _CMapManagerMakeDefault = _CMapManagerMakeDefaultPtr.asFunction<_CMap
 late final _CSpeedRangeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSpeedRange Function()>>('CSpeedRangeMakeDefault');
 late final _CSpeedRangeMakeDefault = _CSpeedRangeMakeDefaultPtr.asFunction<_CSpeedRange Function()>();
 
+
+late final _CDictionary_CRoadType_CStyleZoommakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CRoadType_CStyleZoom Function()>>('CDictionary_CRoadType_CStyleZoom_makeEmpty');
+late final _CDictionary_CRoadType_CStyleZoommakeEmpty = _CDictionary_CRoadType_CStyleZoommakeEmptyPtr.asFunction<_CDictionary_CRoadType_CStyleZoom Function()>();
+late final _CDictionary_CRoadType_CStyleZoomaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CRoadType_CStyleZoom, _CRoadType, _CStyleZoom)>>('CDictionary_CRoadType_CStyleZoom_addElement');
+late final _CDictionary_CRoadType_CStyleZoomaddElement = _CDictionary_CRoadType_CStyleZoomaddElementPtr.asFunction<void Function(_CDictionary_CRoadType_CStyleZoom, _CRoadType, _CStyleZoom)>();
+late final _forEach_CDictionary_CRoadType_CStyleZoomPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CRoadType_CStyleZoom, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRoadType, _CStyleZoom)>>)
+>>('CDictionary_CRoadType_CStyleZoom_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CRoadType_CStyleZoom = _forEach_CDictionary_CRoadType_CStyleZoomPtr.asFunction<
+  void Function(_CDictionary_CRoadType_CStyleZoom, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRoadType, _CStyleZoom)
+>>)>();
+late final _CDictionary_CRoadType_CStyleZoom_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CRoadType_CStyleZoom)>>('CDictionary_CRoadType_CStyleZoom_release');
+late final _CDictionary_CRoadType_CStyleZoom_release = _CDictionary_CRoadType_CStyleZoom_releasePtr.asFunction<void Function(_CDictionary_CRoadType_CStyleZoom)>();
+
+late final _CDictionary_CRoadType_CTiltmakeEmptyPtr = _lookup<ffi.NativeFunction<_CDictionary_CRoadType_CTilt Function()>>('CDictionary_CRoadType_CTilt_makeEmpty');
+late final _CDictionary_CRoadType_CTiltmakeEmpty = _CDictionary_CRoadType_CTiltmakeEmptyPtr.asFunction<_CDictionary_CRoadType_CTilt Function()>();
+late final _CDictionary_CRoadType_CTiltaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CRoadType_CTilt, _CRoadType, _CTilt)>>('CDictionary_CRoadType_CTilt_addElement');
+late final _CDictionary_CRoadType_CTiltaddElement = _CDictionary_CRoadType_CTiltaddElementPtr.asFunction<void Function(_CDictionary_CRoadType_CTilt, _CRoadType, _CTilt)>();
+late final _forEach_CDictionary_CRoadType_CTiltPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CDictionary_CRoadType_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRoadType, _CTilt)>>)
+>>('CDictionary_CRoadType_CTilt_forEachKeyValueWithFunctionPointer');
+late final _forEach_CDictionary_CRoadType_CTilt = _forEach_CDictionary_CRoadType_CTiltPtr.asFunction<
+  void Function(_CDictionary_CRoadType_CTilt, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CRoadType, _CTilt)
+>>)>();
+late final _CDictionary_CRoadType_CTilt_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDictionary_CRoadType_CTilt)>>('CDictionary_CRoadType_CTilt_release');
+late final _CDictionary_CRoadType_CTilt_release = _CDictionary_CRoadType_CTilt_releasePtr.asFunction<void Function(_CDictionary_CRoadType_CTilt)>();
 
 late final _CSpeedRangeToStyleZoomMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSpeedRangeToStyleZoom Function()>>('CSpeedRangeToStyleZoomMakeDefault');
 late final _CSpeedRangeToStyleZoomMakeDefault = _CSpeedRangeToStyleZoomMakeDefaultPtr.asFunction<_CSpeedRangeToStyleZoom Function()>();
@@ -80132,6 +84574,52 @@ late final _CAlternativeRouteSelector_retain = _CAlternativeRouteSelector_retain
 late final _CAlternativeRouteSelectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAlternativeRouteSelector Function()>>('CAlternativeRouteSelectorMakeDefault');
 late final _CAlternativeRouteSelectorMakeDefault = _CAlternativeRouteSelectorMakeDefaultPtr.asFunction<_CAlternativeRouteSelector Function()>();
 
+
+late final _CTrafficJamInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficJamInfo Function()>>('CTrafficJamInfoMakeDefault');
+late final _CTrafficJamInfoMakeDefault = _CTrafficJamInfoMakeDefaultPtr.asFunction<_CTrafficJamInfo Function()>();
+
+late final _CTrafficJamDetector_trafficJamInfoChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function(_CTrafficJamDetector)>>('CTrafficJamDetector_trafficJamInfoChannel');
+late final _CTrafficJamDetector_trafficJamInfoChannel = _CTrafficJamDetector_trafficJamInfoChannelPtr.asFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function(_CTrafficJamDetector)>();
+late final _CTrafficJamDetector_trafficJamInfoPtr = _lookup<ffi.NativeFunction<_COptional_CTrafficJamInfo Function(_CTrafficJamDetector)>>('CTrafficJamDetector_trafficJamInfo');
+late final _CTrafficJamDetector_trafficJamInfo = _CTrafficJamDetector_trafficJamInfoPtr.asFunction<_COptional_CTrafficJamInfo Function(_CTrafficJamDetector)>();
+
+late final _CTrafficJamDetector_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficJamDetector_cg_objectIdentifier');
+late final _CTrafficJamDetector_cg_objectIdentifier = _CTrafficJamDetector_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CTrafficJamDetector_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficJamDetector_release');
+late final _CTrafficJamDetector_release = _CTrafficJamDetector_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficJamDetector_retainPtr = _lookup<ffi.NativeFunction<_CTrafficJamDetector Function(ffi.Pointer<ffi.Void>)>>('CTrafficJamDetector_retain');
+late final _CTrafficJamDetector_retain = _CTrafficJamDetector_retainPtr.asFunction<_CTrafficJamDetector Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficJamDetectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficJamDetector Function()>>('CTrafficJamDetectorMakeDefault');
+late final _CTrafficJamDetectorMakeDefault = _CTrafficJamDetectorMakeDefaultPtr.asFunction<_CTrafficJamDetector Function()>();
+
+
+late final _CStatefulChannel_COptional_CTrafficJamInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function()>>('CStatefulChannel_COptional_CTrafficJamInfoMakeDefault');
+late final _CStatefulChannel_COptional_CTrafficJamInfoMakeDefault = _CStatefulChannel_COptional_CTrafficJamInfoMakeDefaultPtr.asFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function()>();
+late final _CStatefulChannel_COptional_CTrafficJamInfo_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_COptional_CTrafficJamInfo)>>('CStatefulChannel_COptional_CTrafficJamInfo_release');
+late final _CStatefulChannel_COptional_CTrafficJamInfo_release = _CStatefulChannel_COptional_CTrafficJamInfo_releasePtr.asFunction<void Function(_CStatefulChannel_COptional_CTrafficJamInfo)>();
+late final _CStatefulChannel_COptional_CTrafficJamInfo_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function(_CStatefulChannel_COptional_CTrafficJamInfo)>>('CStatefulChannel_COptional_CTrafficJamInfo_retain');
+late final _CStatefulChannel_COptional_CTrafficJamInfo_retain = _CStatefulChannel_COptional_CTrafficJamInfo_retainPtr.asFunction<_CStatefulChannel_COptional_CTrafficJamInfo Function(_CStatefulChannel_COptional_CTrafficJamInfo)>();
+late final _CStatefulChannel_COptional_CTrafficJamInfoGetCurrentValuePtr = _lookup<ffi.NativeFunction<_COptional_CTrafficJamInfo Function(_CStatefulChannel_COptional_CTrafficJamInfo)>>('CStatefulChannel_COptional_CTrafficJamInfo_getCurrentValue');
+late final _CStatefulChannel_COptional_CTrafficJamInfoGetCurrentValue = _CStatefulChannel_COptional_CTrafficJamInfoGetCurrentValuePtr.asFunction<_COptional_CTrafficJamInfo Function(_CStatefulChannel_COptional_CTrafficJamInfo)>();
+late final _CStatefulChannel_COptional_CTrafficJamInfoConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CStatefulChannel_COptional_CTrafficJamInfo,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CTrafficJamInfo, ffi.Int64)>>
+  )
+>>('CStatefulChannel_COptional_CTrafficJamInfo_connect');
+late final _CStatefulChannel_COptional_CTrafficJamInfoConnect = _CStatefulChannel_COptional_CTrafficJamInfoConnectPtr.asFunction<
+  _CCancellable Function(
+    _CStatefulChannel_COptional_CTrafficJamInfo,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptional_CTrafficJamInfo, ffi.Int64)>>
+  )
+>();
+
+late final _COptional_CTrafficJamInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTrafficJamInfo Function()>>('COptional_CTrafficJamInfoMakeDefault');
+late final _COptional_CTrafficJamInfoMakeDefault = _COptional_CTrafficJamInfoMakeDefaultPtr.asFunction<_COptional_CTrafficJamInfo Function()>();
 late final _CMyLocationMapObjectSourceProvider_myLocationMapObjectSourcePtr = _lookup<ffi.NativeFunction<_CMyLocationMapObjectSource Function(_CMyLocationMapObjectSourceProvider)>>('CMyLocationMapObjectSourceProvider_myLocationMapObjectSource');
 late final _CMyLocationMapObjectSourceProvider_myLocationMapObjectSource = _CMyLocationMapObjectSourceProvider_myLocationMapObjectSourcePtr.asFunction<_CMyLocationMapObjectSource Function(_CMyLocationMapObjectSourceProvider)>();
 
@@ -80178,6 +84666,74 @@ late final _CFreeRoamSelector_retain = _CFreeRoamSelector_retainPtr.asFunction<_
 late final _CFreeRoamSelectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFreeRoamSelector Function()>>('CFreeRoamSelectorMakeDefault');
 late final _CFreeRoamSelectorMakeDefault = _CFreeRoamSelectorMakeDefaultPtr.asFunction<_CFreeRoamSelector Function()>();
 
+late final _CDataPrefetcher_enabledPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CDataPrefetcher)>>('CDataPrefetcher_enabled');
+late final _CDataPrefetcher_enabled = _CDataPrefetcher_enabledPtr.asFunction<bool Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setEnabled_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, ffi.Bool)>>('CDataPrefetcher_setEnabled_bool');
+late final _CDataPrefetcher_setEnabled_bool = _CDataPrefetcher_setEnabled_boolPtr.asFunction<void Function(_CDataPrefetcher, bool)>();
+late final _CDataPrefetcher_minZoomPtr = _lookup<ffi.NativeFunction<_CZoom Function(_CDataPrefetcher)>>('CDataPrefetcher_minZoom');
+late final _CDataPrefetcher_minZoom = _CDataPrefetcher_minZoomPtr.asFunction<_CZoom Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setMinZoom_CZoomPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, _CZoom)>>('CDataPrefetcher_setMinZoom_CZoom');
+late final _CDataPrefetcher_setMinZoom_CZoom = _CDataPrefetcher_setMinZoom_CZoomPtr.asFunction<void Function(_CDataPrefetcher, _CZoom)>();
+late final _CDataPrefetcher_maxZoomPtr = _lookup<ffi.NativeFunction<_CZoom Function(_CDataPrefetcher)>>('CDataPrefetcher_maxZoom');
+late final _CDataPrefetcher_maxZoom = _CDataPrefetcher_maxZoomPtr.asFunction<_CZoom Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setMaxZoom_CZoomPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, _CZoom)>>('CDataPrefetcher_setMaxZoom_CZoom');
+late final _CDataPrefetcher_setMaxZoom_CZoom = _CDataPrefetcher_setMaxZoom_CZoomPtr.asFunction<void Function(_CDataPrefetcher, _CZoom)>();
+late final _CDataPrefetcher_radiusPtr = _lookup<ffi.NativeFunction<_CLogicalPixel Function(_CDataPrefetcher)>>('CDataPrefetcher_radius');
+late final _CDataPrefetcher_radius = _CDataPrefetcher_radiusPtr.asFunction<_CLogicalPixel Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setRadius_CLogicalPixelPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, _CLogicalPixel)>>('CDataPrefetcher_setRadius_CLogicalPixel');
+late final _CDataPrefetcher_setRadius_CLogicalPixel = _CDataPrefetcher_setRadius_CLogicalPixelPtr.asFunction<void Function(_CDataPrefetcher, _CLogicalPixel)>();
+late final _CDataPrefetcher_segmentSizePtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CDataPrefetcher)>>('CDataPrefetcher_segmentSize');
+late final _CDataPrefetcher_segmentSize = _CDataPrefetcher_segmentSizePtr.asFunction<_CRouteDistance Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setSegmentSize_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, _CRouteDistance)>>('CDataPrefetcher_setSegmentSize_CRouteDistance');
+late final _CDataPrefetcher_setSegmentSize_CRouteDistance = _CDataPrefetcher_setSegmentSize_CRouteDistancePtr.asFunction<void Function(_CDataPrefetcher, _CRouteDistance)>();
+late final _CDataPrefetcher_maxPrefetchDistancePtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CDataPrefetcher)>>('CDataPrefetcher_maxPrefetchDistance');
+late final _CDataPrefetcher_maxPrefetchDistance = _CDataPrefetcher_maxPrefetchDistancePtr.asFunction<_CRouteDistance Function(_CDataPrefetcher)>();
+late final _CDataPrefetcher_setMaxPrefetchDistance_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDataPrefetcher, _CRouteDistance)>>('CDataPrefetcher_setMaxPrefetchDistance_CRouteDistance');
+late final _CDataPrefetcher_setMaxPrefetchDistance_CRouteDistance = _CDataPrefetcher_setMaxPrefetchDistance_CRouteDistancePtr.asFunction<void Function(_CDataPrefetcher, _CRouteDistance)>();
+
+late final _CDataPrefetcher_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDataPrefetcher_cg_objectIdentifier');
+late final _CDataPrefetcher_cg_objectIdentifier = _CDataPrefetcher_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CDataPrefetcher_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CDataPrefetcher_release');
+late final _CDataPrefetcher_release = _CDataPrefetcher_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CDataPrefetcher_retainPtr = _lookup<ffi.NativeFunction<_CDataPrefetcher Function(ffi.Pointer<ffi.Void>)>>('CDataPrefetcher_retain');
+late final _CDataPrefetcher_retain = _CDataPrefetcher_retainPtr.asFunction<_CDataPrefetcher Function(ffi.Pointer<ffi.Void>)>();
+late final _CDataPrefetcherMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDataPrefetcher Function()>>('CDataPrefetcherMakeDefault');
+late final _CDataPrefetcherMakeDefault = _CDataPrefetcherMakeDefaultPtr.asFunction<_CDataPrefetcher Function()>();
+
+late final _CFinishDetector_softLimitMetersPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CFinishDetector)>>('CFinishDetector_softLimitMeters');
+late final _CFinishDetector_softLimitMeters = _CFinishDetector_softLimitMetersPtr.asFunction<_CRouteDistance Function(_CFinishDetector)>();
+late final _CFinishDetector_setSoftLimitMeters_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFinishDetector, _CRouteDistance)>>('CFinishDetector_setSoftLimitMeters_CRouteDistance');
+late final _CFinishDetector_setSoftLimitMeters_CRouteDistance = _CFinishDetector_setSoftLimitMeters_CRouteDistancePtr.asFunction<void Function(_CFinishDetector, _CRouteDistance)>();
+late final _CFinishDetector_hardLimitMetersPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CFinishDetector)>>('CFinishDetector_hardLimitMeters');
+late final _CFinishDetector_hardLimitMeters = _CFinishDetector_hardLimitMetersPtr.asFunction<_CRouteDistance Function(_CFinishDetector)>();
+late final _CFinishDetector_setHardLimitMeters_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFinishDetector, _CRouteDistance)>>('CFinishDetector_setHardLimitMeters_CRouteDistance');
+late final _CFinishDetector_setHardLimitMeters_CRouteDistance = _CFinishDetector_setHardLimitMeters_CRouteDistancePtr.asFunction<void Function(_CFinishDetector, _CRouteDistance)>();
+late final _CFinishDetector_vehicleSoftLimitMetersPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CFinishDetector)>>('CFinishDetector_vehicleSoftLimitMeters');
+late final _CFinishDetector_vehicleSoftLimitMeters = _CFinishDetector_vehicleSoftLimitMetersPtr.asFunction<_CRouteDistance Function(_CFinishDetector)>();
+late final _CFinishDetector_setVehicleSoftLimitMeters_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFinishDetector, _CRouteDistance)>>('CFinishDetector_setVehicleSoftLimitMeters_CRouteDistance');
+late final _CFinishDetector_setVehicleSoftLimitMeters_CRouteDistance = _CFinishDetector_setVehicleSoftLimitMeters_CRouteDistancePtr.asFunction<void Function(_CFinishDetector, _CRouteDistance)>();
+late final _CFinishDetector_vehicleHardLimitMetersPtr = _lookup<ffi.NativeFunction<_CRouteDistance Function(_CFinishDetector)>>('CFinishDetector_vehicleHardLimitMeters');
+late final _CFinishDetector_vehicleHardLimitMeters = _CFinishDetector_vehicleHardLimitMetersPtr.asFunction<_CRouteDistance Function(_CFinishDetector)>();
+late final _CFinishDetector_setVehicleHardLimitMeters_CRouteDistancePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFinishDetector, _CRouteDistance)>>('CFinishDetector_setVehicleHardLimitMeters_CRouteDistance');
+late final _CFinishDetector_setVehicleHardLimitMeters_CRouteDistance = _CFinishDetector_setVehicleHardLimitMeters_CRouteDistancePtr.asFunction<void Function(_CFinishDetector, _CRouteDistance)>();
+late final _CFinishDetector_distanceToFinishInStraightLineLimitMetersPtr = _lookup<ffi.NativeFunction<ffi.Double Function(_CFinishDetector)>>('CFinishDetector_distanceToFinishInStraightLineLimitMeters');
+late final _CFinishDetector_distanceToFinishInStraightLineLimitMeters = _CFinishDetector_distanceToFinishInStraightLineLimitMetersPtr.asFunction<double Function(_CFinishDetector)>();
+late final _CFinishDetector_setDistanceToFinishInStraightLineLimitMeters_doublePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFinishDetector, ffi.Double)>>('CFinishDetector_setDistanceToFinishInStraightLineLimitMeters_double');
+late final _CFinishDetector_setDistanceToFinishInStraightLineLimitMeters_double = _CFinishDetector_setDistanceToFinishInStraightLineLimitMeters_doublePtr.asFunction<void Function(_CFinishDetector, double)>();
+
+late final _CFinishDetector_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFinishDetector_cg_objectIdentifier');
+late final _CFinishDetector_cg_objectIdentifier = _CFinishDetector_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CFinishDetector_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CFinishDetector_release');
+late final _CFinishDetector_release = _CFinishDetector_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CFinishDetector_retainPtr = _lookup<ffi.NativeFunction<_CFinishDetector Function(ffi.Pointer<ffi.Void>)>>('CFinishDetector_retain');
+late final _CFinishDetector_retain = _CFinishDetector_retainPtr.asFunction<_CFinishDetector Function(ffi.Pointer<ffi.Void>)>();
+late final _CFinishDetectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFinishDetector Function()>>('CFinishDetectorMakeDefault');
+late final _CFinishDetectorMakeDefault = _CFinishDetectorMakeDefaultPtr.asFunction<_CFinishDetector Function()>();
+
 late final _CNavigationManager_uiModelPtr = _lookup<ffi.NativeFunction<_CModel Function(_CNavigationManager)>>('CNavigationManager_uiModel');
 late final _CNavigationManager_uiModel = _CNavigationManager_uiModelPtr.asFunction<_CModel Function(_CNavigationManager)>();
 late final _CNavigationManager_indoorDetectorPtr = _lookup<ffi.NativeFunction<_CIndoorDetector Function(_CNavigationManager)>>('CNavigationManager_indoorDetector');
@@ -80212,12 +84768,18 @@ late final _CNavigationManager_alternativeRoutesProviderSettingsPtr = _lookup<ff
 late final _CNavigationManager_alternativeRoutesProviderSettings = _CNavigationManager_alternativeRoutesProviderSettingsPtr.asFunction<_CAlternativeRoutesProviderSettings Function(_CNavigationManager)>();
 late final _CNavigationManager_alternativeRouteSelectorPtr = _lookup<ffi.NativeFunction<_CAlternativeRouteSelector Function(_CNavigationManager)>>('CNavigationManager_alternativeRouteSelector');
 late final _CNavigationManager_alternativeRouteSelector = _CNavigationManager_alternativeRouteSelectorPtr.asFunction<_CAlternativeRouteSelector Function(_CNavigationManager)>();
+late final _CNavigationManager_trafficJamDetectorPtr = _lookup<ffi.NativeFunction<_CTrafficJamDetector Function(_CNavigationManager)>>('CNavigationManager_trafficJamDetector');
+late final _CNavigationManager_trafficJamDetector = _CNavigationManager_trafficJamDetectorPtr.asFunction<_CTrafficJamDetector Function(_CNavigationManager)>();
 late final _CNavigationManager_myLocationMapObjectSourceProviderPtr = _lookup<ffi.NativeFunction<_CMyLocationMapObjectSourceProvider Function(_CNavigationManager)>>('CNavigationManager_myLocationMapObjectSourceProvider');
 late final _CNavigationManager_myLocationMapObjectSourceProvider = _CNavigationManager_myLocationMapObjectSourceProviderPtr.asFunction<_CMyLocationMapObjectSourceProvider Function(_CNavigationManager)>();
 late final _CNavigationManager_routeRebuilderPtr = _lookup<ffi.NativeFunction<_CRouteRebuilder Function(_CNavigationManager)>>('CNavigationManager_routeRebuilder');
 late final _CNavigationManager_routeRebuilder = _CNavigationManager_routeRebuilderPtr.asFunction<_CRouteRebuilder Function(_CNavigationManager)>();
 late final _CNavigationManager_freeRoamSelectorPtr = _lookup<ffi.NativeFunction<_CFreeRoamSelector Function(_CNavigationManager)>>('CNavigationManager_freeRoamSelector');
 late final _CNavigationManager_freeRoamSelector = _CNavigationManager_freeRoamSelectorPtr.asFunction<_CFreeRoamSelector Function(_CNavigationManager)>();
+late final _CNavigationManager_dataPrefetcherPtr = _lookup<ffi.NativeFunction<_CDataPrefetcher Function(_CNavigationManager)>>('CNavigationManager_dataPrefetcher');
+late final _CNavigationManager_dataPrefetcher = _CNavigationManager_dataPrefetcherPtr.asFunction<_CDataPrefetcher Function(_CNavigationManager)>();
+late final _CNavigationManager_finishDetectorPtr = _lookup<ffi.NativeFunction<_CFinishDetector Function(_CNavigationManager)>>('CNavigationManager_finishDetector');
+late final _CNavigationManager_finishDetector = _CNavigationManager_finishDetectorPtr.asFunction<_CFinishDetector Function(_CNavigationManager)>();
 
 late final _CNavigationManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CNavigationManager_cg_objectIdentifier');
 late final _CNavigationManager_cg_objectIdentifier = _CNavigationManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -80272,16 +84834,59 @@ late final _forEach_CArray_CLanesControlImage = _forEach_CArray_CLanesControlIma
 >>)>();
 late final _CArray_CLanesControlImage_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLanesControlImage)>>('CArray_CLanesControlImage_release');
 late final _CArray_CLanesControlImage_release = _CArray_CLanesControlImage_releasePtr.asFunction<void Function(_CArray_CLanesControlImage)>();
-late final _CFunction_G_getVoiceManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CVoiceManager Function(_CContext)>>('CFunction_G_getVoiceManager_With_CContext');
-late final _CFunction_G_getVoiceManager_With_CContext = _CFunction_G_getVoiceManager_With_CContextPtr.asFunction<_CVoiceManager Function(_CContext)>();
+late final _CVoice_navigationVoicePtr = _lookup<ffi.NativeFunction<_CNavigationVoice Function(_CVoice)>>('CVoice_navigationVoice');
+late final _CVoice_navigationVoice = _CVoice_navigationVoicePtr.asFunction<_CNavigationVoice Function(_CVoice)>();
+late final _CVoice_languagePtr = _lookup<ffi.NativeFunction<_CString Function(_CVoice)>>('CVoice_language');
+late final _CVoice_language = _CVoice_languagePtr.asFunction<_CString Function(_CVoice)>();
+
+late final _CVoice_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CVoice_cg_objectIdentifier');
+late final _CVoice_cg_objectIdentifier = _CVoice_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CVoice_playWelcomePtr = _lookup<ffi.NativeFunction<_CFuture_void Function(_CVoice)>>('CVoice_playWelcome');
+late final _CVoice_playWelcome = _CVoice_playWelcomePtr.asFunction<_CFuture_void Function(_CVoice)>();
+
+late final _CVoice_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CVoice_release');
+late final _CVoice_release = _CVoice_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CVoice_retainPtr = _lookup<ffi.NativeFunction<_CVoice Function(ffi.Pointer<ffi.Void>)>>('CVoice_retain');
+late final _CVoice_retain = _CVoice_retainPtr.asFunction<_CVoice Function(ffi.Pointer<ffi.Void>)>();
+late final _CVoiceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CVoice Function()>>('CVoiceMakeDefault');
+late final _CVoiceMakeDefault = _CVoiceMakeDefaultPtr.asFunction<_CVoice Function()>();
+
+
+late final _CFuture_voidMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_void Function()>>('CFuture_voidMakeDefault');
+late final _CFuture_voidMakeDefault = _CFuture_voidMakeDefaultPtr.asFunction<_CFuture_void Function()>();
+late final _CFuture_void_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_void)>>('CFuture_void_release');
+late final _CFuture_void_release = _CFuture_void_releasePtr.asFunction<void Function(_CFuture_void)>();
+late final _CFuture_void_retainPtr = _lookup<ffi.NativeFunction<_CFuture_void Function(_CFuture_void)>>('CFuture_void_retain');
+late final _CFuture_void_retain = _CFuture_void_retainPtr.asFunction<_CFuture_void Function(_CFuture_void)>();
+late final _CFuture_voidReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_void,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_void_receive');
+late final _CFuture_voidReceive = _CFuture_voidReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_void,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
 late final _CVoiceManager_voicesChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CVoice Function(_CVoiceManager)>>('CVoiceManager_voicesChannel');
 late final _CVoiceManager_voicesChannel = _CVoiceManager_voicesChannelPtr.asFunction<_CStatefulChannel_CArray_CVoice Function(_CVoiceManager)>();
 late final _CVoiceManager_voicesPtr = _lookup<ffi.NativeFunction<_CArray_CVoice Function(_CVoiceManager)>>('CVoiceManager_voices');
 late final _CVoiceManager_voices = _CVoiceManager_voicesPtr.asFunction<_CArray_CVoice Function(_CVoiceManager)>();
+late final _CVoiceManager_getDefaultVoicePtr = _lookup<ffi.NativeFunction<_COptional_CVoice Function(_CVoiceManager)>>('CVoiceManager_getDefaultVoice');
+late final _CVoiceManager_getDefaultVoice = _CVoiceManager_getDefaultVoicePtr.asFunction<_COptional_CVoice Function(_CVoiceManager)>();
 
 late final _CVoiceManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CVoiceManager_cg_objectIdentifier');
 late final _CVoiceManager_cg_objectIdentifier = _CVoiceManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CVoiceManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CVoiceManager Function(_CContext)>>('CVoiceManager_S_instance_CContext');
+late final _CVoiceManager_S_instance_CContext = _CVoiceManager_S_instance_CContextPtr.asFunction<_CVoiceManager Function(_CContext)>();
 
 late final _CVoiceManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CVoiceManager_release');
 late final _CVoiceManager_release = _CVoiceManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -80326,47 +84931,12 @@ late final _forEach_CArray_CVoice = _forEach_CArray_CVoicePtr.asFunction<
 >>)>();
 late final _CArray_CVoice_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CVoice)>>('CArray_CVoice_release');
 late final _CArray_CVoice_release = _CArray_CVoice_releasePtr.asFunction<void Function(_CArray_CVoice)>();
-late final _CVoice_navigationVoicePtr = _lookup<ffi.NativeFunction<_CNavigationVoice Function(_CVoice)>>('CVoice_navigationVoice');
-late final _CVoice_navigationVoice = _CVoice_navigationVoicePtr.asFunction<_CNavigationVoice Function(_CVoice)>();
-late final _CVoice_languagePtr = _lookup<ffi.NativeFunction<_CString Function(_CVoice)>>('CVoice_language');
-late final _CVoice_language = _CVoice_languagePtr.asFunction<_CString Function(_CVoice)>();
 
-late final _CVoice_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CVoice_cg_objectIdentifier');
-late final _CVoice_cg_objectIdentifier = _CVoice_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+late final _COptional_CVoiceMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CVoice Function()>>('COptional_CVoiceMakeDefault');
+late final _COptional_CVoiceMakeDefault = _COptional_CVoiceMakeDefaultPtr.asFunction<_COptional_CVoice Function()>();
 
-late final _CVoice_playWelcomePtr = _lookup<ffi.NativeFunction<_CFuture_void Function(_CVoice)>>('CVoice_playWelcome');
-late final _CVoice_playWelcome = _CVoice_playWelcomePtr.asFunction<_CFuture_void Function(_CVoice)>();
-
-late final _CVoice_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CVoice_release');
-late final _CVoice_release = _CVoice_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CVoice_retainPtr = _lookup<ffi.NativeFunction<_CVoice Function(ffi.Pointer<ffi.Void>)>>('CVoice_retain');
-late final _CVoice_retain = _CVoice_retainPtr.asFunction<_CVoice Function(ffi.Pointer<ffi.Void>)>();
-late final _CVoiceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CVoice Function()>>('CVoiceMakeDefault');
-late final _CVoiceMakeDefault = _CVoiceMakeDefaultPtr.asFunction<_CVoice Function()>();
-
-
-late final _CFuture_voidMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_void Function()>>('CFuture_voidMakeDefault');
-late final _CFuture_voidMakeDefault = _CFuture_voidMakeDefaultPtr.asFunction<_CFuture_void Function()>();
-late final _CFuture_void_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_void)>>('CFuture_void_release');
-late final _CFuture_void_release = _CFuture_void_releasePtr.asFunction<void Function(_CFuture_void)>();
-late final _CFuture_void_retainPtr = _lookup<ffi.NativeFunction<_CFuture_void Function(_CFuture_void)>>('CFuture_void_retain');
-late final _CFuture_void_retain = _CFuture_void_retainPtr.asFunction<_CFuture_void Function(_CFuture_void)>();
-late final _CFuture_voidReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_void,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_void_receive');
-late final _CFuture_voidReceive = _CFuture_voidReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_void,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
+late final _COptional_CVoice_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CVoice)>>('COptional_CVoice_release');
+late final _COptional_CVoice_release = _COptional_CVoice_releasePtr.asFunction<void Function(_COptional_CVoice)>();
 late final _CActivityTracker_stopChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_bool Function(_CActivityTracker)>>('CActivityTracker_stopChannel');
 late final _CActivityTracker_stopChannel = _CActivityTracker_stopChannelPtr.asFunction<_CStatefulChannel_bool Function(_CActivityTracker)>();
 late final _CActivityTracker_stopPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CActivityTracker)>>('CActivityTracker_stop');
@@ -80446,6 +85016,8 @@ late final _CHttpCacheManager_setMaxSize_uint64_t = _CHttpCacheManager_setMaxSiz
 late final _CHttpCacheManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CHttpCacheManager_cg_objectIdentifier');
 late final _CHttpCacheManager_cg_objectIdentifier = _CHttpCacheManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CHttpCacheManager_S_get_CContextPtr = _lookup<ffi.NativeFunction<_COptional_CHttpCacheManager Function(_CContext)>>('CHttpCacheManager_S_get_CContext');
+late final _CHttpCacheManager_S_get_CContext = _CHttpCacheManager_S_get_CContextPtr.asFunction<_COptional_CHttpCacheManager Function(_CContext)>();
 late final _CHttpCacheManager_clearPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CHttpCacheManager)>>('CHttpCacheManager_clear');
 late final _CHttpCacheManager_clear = _CHttpCacheManager_clearPtr.asFunction<void Function(_CHttpCacheManager)>();
 
@@ -80456,6 +85028,12 @@ late final _CHttpCacheManager_retain = _CHttpCacheManager_retainPtr.asFunction<_
 late final _CHttpCacheManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CHttpCacheManager Function()>>('CHttpCacheManagerMakeDefault');
 late final _CHttpCacheManagerMakeDefault = _CHttpCacheManagerMakeDefaultPtr.asFunction<_CHttpCacheManager Function()>();
 
+
+late final _COptional_CHttpCacheManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CHttpCacheManager Function()>>('COptional_CHttpCacheManagerMakeDefault');
+late final _COptional_CHttpCacheManagerMakeDefault = _COptional_CHttpCacheManagerMakeDefaultPtr.asFunction<_COptional_CHttpCacheManager Function()>();
+
+late final _COptional_CHttpCacheManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CHttpCacheManager)>>('COptional_CHttpCacheManager_release');
+late final _COptional_CHttpCacheManager_release = _COptional_CHttpCacheManager_releasePtr.asFunction<void Function(_COptional_CHttpCacheManager)>();
 
 late final _CLocaleChangeNotifier_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CLocaleChangeNotifier_cg_objectIdentifier');
 late final _CLocaleChangeNotifier_cg_objectIdentifier = _CLocaleChangeNotifier_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -80495,6 +85073,8 @@ late final _CLocaleManager_systemLocales = _CLocaleManager_systemLocalesPtr.asFu
 late final _CLocaleManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CLocaleManager_cg_objectIdentifier');
 late final _CLocaleManager_cg_objectIdentifier = _CLocaleManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CLocaleManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CLocaleManager Function(_CContext)>>('CLocaleManager_S_instance_CContext');
+late final _CLocaleManager_S_instance_CContext = _CLocaleManager_S_instance_CContextPtr.asFunction<_CLocaleManager Function(_CContext)>();
 late final _CLocaleManager_overrideLocales_CArray_CLocalePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CLocaleManager, _CArray_CLocale)>>('CLocaleManager_overrideLocales_CArray_CLocale');
 late final _CLocaleManager_overrideLocales_CArray_CLocale = _CLocaleManager_overrideLocales_CArray_CLocalePtr.asFunction<void Function(_CLocaleManager, _CArray_CLocale)>();
 
@@ -80555,22 +85135,14 @@ late final _CPlatformLocaleManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_C
 late final _CPlatformLocaleManagerMakeDefault = _CPlatformLocaleManagerMakeDefaultPtr.asFunction<_CPlatformLocaleManager Function()>();
 late final _CPlatformLocaleManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPlatformLocaleManager)>>('CPlatformLocaleManager_release');
 late final _CPlatformLocaleManager_release = _CPlatformLocaleManager_releasePtr.asFunction<void Function(_CPlatformLocaleManager)>();
-late final _CFunction_G_getHttpCacheManager_With_CContextPtr = _lookup<ffi.NativeFunction<_COptional_CHttpCacheManager Function(_CContext)>>('CFunction_G_getHttpCacheManager_With_CContext');
-late final _CFunction_G_getHttpCacheManager_With_CContext = _CFunction_G_getHttpCacheManager_With_CContextPtr.asFunction<_COptional_CHttpCacheManager Function(_CContext)>();
 
-late final _COptional_CHttpCacheManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CHttpCacheManager Function()>>('COptional_CHttpCacheManagerMakeDefault');
-late final _COptional_CHttpCacheManagerMakeDefault = _COptional_CHttpCacheManagerMakeDefaultPtr.asFunction<_COptional_CHttpCacheManager Function()>();
+late final _CStorageOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStorageOptions Function()>>('CStorageOptionsMakeDefault');
+late final _CStorageOptionsMakeDefault = _CStorageOptionsMakeDefaultPtr.asFunction<_CStorageOptions Function()>();
 
-late final _COptional_CHttpCacheManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CHttpCacheManager)>>('COptional_CHttpCacheManager_release');
-late final _COptional_CHttpCacheManager_release = _COptional_CHttpCacheManager_releasePtr.asFunction<void Function(_COptional_CHttpCacheManager)>();
-late final _CFunction_G_getLocaleManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CLocaleManager Function(_CContext)>>('CFunction_G_getLocaleManager_With_CContext');
-late final _CFunction_G_getLocaleManager_With_CContext = _CFunction_G_getLocaleManager_With_CContextPtr.asFunction<_CLocaleManager Function(_CContext)>();
 late final _CFunction_G_toLocaleManager_With_CPlatformLocaleManagerPtr = _lookup<ffi.NativeFunction<_CLocaleManager Function(_CPlatformLocaleManager)>>('CFunction_G_toLocaleManager_With_CPlatformLocaleManager');
 late final _CFunction_G_toLocaleManager_With_CPlatformLocaleManager = _CFunction_G_toLocaleManager_With_CPlatformLocaleManagerPtr.asFunction<_CLocaleManager Function(_CPlatformLocaleManager)>();
 late final _CFunction_G_toLocalePosix_With_CLocalePtr = _lookup<ffi.NativeFunction<_CString Function(_CLocale)>>('CFunction_G_toLocalePosix_With_CLocale');
 late final _CFunction_G_toLocalePosix_With_CLocale = _CFunction_G_toLocalePosix_With_CLocalePtr.asFunction<_CString Function(_CLocale)>();
-late final _CFunction_G_getAudioSettings_With_CContextPtr = _lookup<ffi.NativeFunction<_COptional_CAudioSettings Function(_CContext)>>('CFunction_G_getAudioSettings_With_CContext');
-late final _CFunction_G_getAudioSettings_With_CContext = _CFunction_G_getAudioSettings_With_CContextPtr.asFunction<_COptional_CAudioSettings Function(_CContext)>();
 
 late final _CAudioFocusPolicyMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAudioFocusPolicy Function()>>('CAudioFocusPolicyMakeDefault');
 late final _CAudioFocusPolicyMakeDefault = _CAudioFocusPolicyMakeDefaultPtr.asFunction<_CAudioFocusPolicy Function()>();
@@ -80590,6 +85162,8 @@ late final _CAudioSettings_setAudioFocusPolicy_CAudioFocusPolicy = _CAudioSettin
 late final _CAudioSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CAudioSettings_cg_objectIdentifier');
 late final _CAudioSettings_cg_objectIdentifier = _CAudioSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CAudioSettings_S_get_CContextPtr = _lookup<ffi.NativeFunction<_COptional_CAudioSettings Function(_CContext)>>('CAudioSettings_S_get_CContext');
+late final _CAudioSettings_S_get_CContext = _CAudioSettings_S_get_CContextPtr.asFunction<_COptional_CAudioSettings Function(_CContext)>();
 
 late final _CAudioSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CAudioSettings_release');
 late final _CAudioSettings_release = _CAudioSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -80634,6 +85208,8 @@ late final _CAddEventResultMakeDefault = _CAddEventResultMakeDefaultPtr.asFuncti
 late final _CRoadEventManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRoadEventManager_cg_objectIdentifier');
 late final _CRoadEventManager_cg_objectIdentifier = _CRoadEventManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CRoadEventManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CRoadEventManager Function(_CContext)>>('CRoadEventManager_S_instance_CContext');
+late final _CRoadEventManager_S_instance_CContext = _CRoadEventManager_S_instance_CContextPtr.asFunction<_CRoadEventManager Function(_CContext)>();
 late final _CRoadEventManager_createAccident_CGeoPoint_COptionSet_CLane_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _COptionSet_CLane, _CString)>>('CRoadEventManager_createAccident_CGeoPoint_COptionSet_CLane_CString');
 late final _CRoadEventManager_createAccident_CGeoPoint_COptionSet_CLane_CString = _CRoadEventManager_createAccident_CGeoPoint_COptionSet_CLane_CStringPtr.asFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _COptionSet_CLane, _CString)>();
 late final _CRoadEventManager_createCamera_CGeoPoint_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _CString)>>('CRoadEventManager_createCamera_CGeoPoint_CString');
@@ -80646,8 +85222,6 @@ late final _CRoadEventManager_createOther_CGeoPoint_COptionSet_CLane_CStringPtr 
 late final _CRoadEventManager_createOther_CGeoPoint_COptionSet_CLane_CString = _CRoadEventManager_createOther_CGeoPoint_COptionSet_CLane_CStringPtr.asFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _COptionSet_CLane, _CString)>();
 late final _CRoadEventManager_createRoadWorks_CGeoPoint_COptionSet_CLane_CStringPtr = _lookup<ffi.NativeFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _COptionSet_CLane, _CString)>>('CRoadEventManager_createRoadWorks_CGeoPoint_COptionSet_CLane_CString');
 late final _CRoadEventManager_createRoadWorks_CGeoPoint_COptionSet_CLane_CString = _CRoadEventManager_createRoadWorks_CGeoPoint_COptionSet_CLane_CStringPtr.asFunction<_CFuture_CAddEventResult Function(_CRoadEventManager, _CGeoPoint, _COptionSet_CLane, _CString)>();
-late final _CRoadEventManager_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CRoadEventManager Function(_CContext)>>('CRoadEventManager_C_createWith_CContext');
-late final _CRoadEventManager_C_createWith_CContext = _CRoadEventManager_C_createWith_CContextPtr.asFunction<_CRoadEventManager Function(_CContext)>();
 
 late final _CRoadEventManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRoadEventManager_release');
 late final _CRoadEventManager_release = _CRoadEventManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -80773,12 +85347,60 @@ late final _forEach_CArray_CObstacleInfoRouteLongEntry = _forEach_CArray_CObstac
 >>)>();
 late final _CArray_CObstacleInfoRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CObstacleInfoRouteLongEntry)>>('CArray_CObstacleInfoRouteLongEntry_release');
 late final _CArray_CObstacleInfoRouteLongEntry_release = _CArray_CObstacleInfoRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CObstacleInfoRouteLongEntry)>();
+late final _CTraversalTypeRouteLongAttribute_sizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CTraversalTypeRouteLongAttribute)>>('CTraversalTypeRouteLongAttribute_size');
+late final _CTraversalTypeRouteLongAttribute_size = _CTraversalTypeRouteLongAttribute_sizePtr.asFunction<int Function(_CTraversalTypeRouteLongAttribute)>();
+late final _CTraversalTypeRouteLongAttribute_isEmptyPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CTraversalTypeRouteLongAttribute)>>('CTraversalTypeRouteLongAttribute_isEmpty');
+late final _CTraversalTypeRouteLongAttribute_isEmpty = _CTraversalTypeRouteLongAttribute_isEmptyPtr.asFunction<bool Function(_CTraversalTypeRouteLongAttribute)>();
+late final _CTraversalTypeRouteLongAttribute_firstPtr = _lookup<ffi.NativeFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>>('CTraversalTypeRouteLongAttribute_first');
+late final _CTraversalTypeRouteLongAttribute_first = _CTraversalTypeRouteLongAttribute_firstPtr.asFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>();
+late final _CTraversalTypeRouteLongAttribute_lastPtr = _lookup<ffi.NativeFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>>('CTraversalTypeRouteLongAttribute_last');
+late final _CTraversalTypeRouteLongAttribute_last = _CTraversalTypeRouteLongAttribute_lastPtr.asFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>();
+late final _CTraversalTypeRouteLongAttribute_entriesPtr = _lookup<ffi.NativeFunction<_CArray_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>>('CTraversalTypeRouteLongAttribute_entries');
+late final _CTraversalTypeRouteLongAttribute_entries = _CTraversalTypeRouteLongAttribute_entriesPtr.asFunction<_CArray_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute)>();
+
+late final _CTraversalTypeRouteLongAttribute_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTraversalTypeRouteLongAttribute_cg_objectIdentifier');
+late final _CTraversalTypeRouteLongAttribute_cg_objectIdentifier = _CTraversalTypeRouteLongAttribute_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CTraversalTypeRouteLongAttribute_entry_CRoutePointPtr = _lookup<ffi.NativeFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute, _CRoutePoint)>>('CTraversalTypeRouteLongAttribute_entry_CRoutePoint');
+late final _CTraversalTypeRouteLongAttribute_entry_CRoutePoint = _CTraversalTypeRouteLongAttribute_entry_CRoutePointPtr.asFunction<_COptional_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute, _CRoutePoint)>();
+late final _CTraversalTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr = _lookup<ffi.NativeFunction<_CArray_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute, _CRoutePoint, _CRoutePoint)>>('CTraversalTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint');
+late final _CTraversalTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePoint = _CTraversalTypeRouteLongAttribute_entriesInRange_CRoutePoint_CRoutePointPtr.asFunction<_CArray_CTraversalTypeRouteLongEntry Function(_CTraversalTypeRouteLongAttribute, _CRoutePoint, _CRoutePoint)>();
+
+late final _CTraversalTypeRouteLongAttribute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTraversalTypeRouteLongAttribute_release');
+late final _CTraversalTypeRouteLongAttribute_release = _CTraversalTypeRouteLongAttribute_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTraversalTypeRouteLongAttribute_retainPtr = _lookup<ffi.NativeFunction<_CTraversalTypeRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>>('CTraversalTypeRouteLongAttribute_retain');
+late final _CTraversalTypeRouteLongAttribute_retain = _CTraversalTypeRouteLongAttribute_retainPtr.asFunction<_CTraversalTypeRouteLongAttribute Function(ffi.Pointer<ffi.Void>)>();
+late final _CTraversalTypeRouteLongAttributeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTraversalTypeRouteLongAttribute Function()>>('CTraversalTypeRouteLongAttributeMakeDefault');
+late final _CTraversalTypeRouteLongAttributeMakeDefault = _CTraversalTypeRouteLongAttributeMakeDefaultPtr.asFunction<_CTraversalTypeRouteLongAttribute Function()>();
+
+
+late final _CTraversalTypeRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTraversalTypeRouteLongEntry Function()>>('CTraversalTypeRouteLongEntryMakeDefault');
+late final _CTraversalTypeRouteLongEntryMakeDefault = _CTraversalTypeRouteLongEntryMakeDefaultPtr.asFunction<_CTraversalTypeRouteLongEntry Function()>();
+
+
+late final _COptional_CTraversalTypeRouteLongEntryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTraversalTypeRouteLongEntry Function()>>('COptional_CTraversalTypeRouteLongEntryMakeDefault');
+late final _COptional_CTraversalTypeRouteLongEntryMakeDefault = _COptional_CTraversalTypeRouteLongEntryMakeDefaultPtr.asFunction<_COptional_CTraversalTypeRouteLongEntry Function()>();
+
+late final _CArray_CTraversalTypeRouteLongEntrymakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CTraversalTypeRouteLongEntry Function()>>('CArray_CTraversalTypeRouteLongEntry_makeEmpty');
+late final _CArray_CTraversalTypeRouteLongEntrymakeEmpty = _CArray_CTraversalTypeRouteLongEntrymakeEmptyPtr.asFunction<_CArray_CTraversalTypeRouteLongEntry Function()>();
+late final _CArray_CTraversalTypeRouteLongEntryaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTraversalTypeRouteLongEntry, _CTraversalTypeRouteLongEntry)>>('CArray_CTraversalTypeRouteLongEntry_addElement');
+late final _CArray_CTraversalTypeRouteLongEntryaddElement = _CArray_CTraversalTypeRouteLongEntryaddElementPtr.asFunction<void Function(_CArray_CTraversalTypeRouteLongEntry, _CTraversalTypeRouteLongEntry)>();
+late final _forEach_CArray_CTraversalTypeRouteLongEntryPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CTraversalTypeRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTraversalTypeRouteLongEntry)>>)
+>>('CArray_CTraversalTypeRouteLongEntry_forEachWithFunctionPointer');
+late final _forEach_CArray_CTraversalTypeRouteLongEntry = _forEach_CArray_CTraversalTypeRouteLongEntryPtr.asFunction<
+  void Function(_CArray_CTraversalTypeRouteLongEntry, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTraversalTypeRouteLongEntry)
+>>)>();
+late final _CArray_CTraversalTypeRouteLongEntry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTraversalTypeRouteLongEntry)>>('CArray_CTraversalTypeRouteLongEntry_release');
+late final _CArray_CTraversalTypeRouteLongEntry_release = _CArray_CTraversalTypeRouteLongEntry_releasePtr.asFunction<void Function(_CArray_CTraversalTypeRouteLongEntry)>();
 
 late final _CTerritoriesAlongRouteProvider_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTerritoriesAlongRouteProvider_cg_objectIdentifier');
 late final _CTerritoriesAlongRouteProvider_cg_objectIdentifier = _CTerritoriesAlongRouteProvider_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
 late final _CTerritoriesAlongRouteProvider_getTerritories_CRoutePtr = _lookup<ffi.NativeFunction<_CFuture_CArray_CTerritory Function(_CTerritoriesAlongRouteProvider, _CRoute)>>('CTerritoriesAlongRouteProvider_getTerritories_CRoute');
 late final _CTerritoriesAlongRouteProvider_getTerritories_CRoute = _CTerritoriesAlongRouteProvider_getTerritories_CRoutePtr.asFunction<_CFuture_CArray_CTerritory Function(_CTerritoriesAlongRouteProvider, _CRoute)>();
+late final _CTerritoriesAlongRouteProvider_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CTerritoriesAlongRouteProvider Function(_CContext)>>('CTerritoriesAlongRouteProvider_C_createWith_CContext');
+late final _CTerritoriesAlongRouteProvider_C_createWith_CContext = _CTerritoriesAlongRouteProvider_C_createWith_CContextPtr.asFunction<_CTerritoriesAlongRouteProvider Function(_CContext)>();
 
 late final _CTerritoriesAlongRouteProvider_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTerritoriesAlongRouteProvider_release');
 late final _CTerritoriesAlongRouteProvider_release = _CTerritoriesAlongRouteProvider_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -80839,22 +85461,6 @@ late final _CFunction_G_remainingRouteGeometry_With_CGeoPointRouteAttribute_CRou
 late final _CFunction_G_remainingRouteGeometry_With_CGeoPointRouteAttribute_CRoutePoint = _CFunction_G_remainingRouteGeometry_With_CGeoPointRouteAttribute_CRoutePointPtr.asFunction<_CGeoPointRouteAttribute Function(_CGeoPointRouteAttribute, _CRoutePoint)>();
 late final _CFunction_G_routeMatchesTruckPassZonePasses_With_CTruckPassZoneIdRouteLongAttribute_CArray_CTruckPassZonePassPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CTruckPassZoneIdRouteLongAttribute, _CArray_CTruckPassZonePass)>>('CFunction_G_routeMatchesTruckPassZonePasses_With_CTruckPassZoneIdRouteLongAttribute_CArray_CTruckPassZonePass');
 late final _CFunction_G_routeMatchesTruckPassZonePasses_With_CTruckPassZoneIdRouteLongAttribute_CArray_CTruckPassZonePass = _CFunction_G_routeMatchesTruckPassZonePasses_With_CTruckPassZoneIdRouteLongAttribute_CArray_CTruckPassZonePassPtr.asFunction<bool Function(_CTruckPassZoneIdRouteLongAttribute, _CArray_CTruckPassZonePass)>();
-late final _CFunction_G_getRoadMacroGraph_With_CContextPtr = _lookup<ffi.NativeFunction<_CRoadMacroGraph Function(_CContext)>>('CFunction_G_getRoadMacroGraph_With_CContext');
-late final _CFunction_G_getRoadMacroGraph_With_CContext = _CFunction_G_getRoadMacroGraph_With_CContextPtr.asFunction<_CRoadMacroGraph Function(_CContext)>();
-
-late final _CRoadMacroGraph_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRoadMacroGraph_cg_objectIdentifier');
-late final _CRoadMacroGraph_cg_objectIdentifier = _CRoadMacroGraph_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CRoadMacroGraph_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRoadMacroGraph_release');
-late final _CRoadMacroGraph_release = _CRoadMacroGraph_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CRoadMacroGraph_retainPtr = _lookup<ffi.NativeFunction<_CRoadMacroGraph Function(ffi.Pointer<ffi.Void>)>>('CRoadMacroGraph_retain');
-late final _CRoadMacroGraph_retain = _CRoadMacroGraph_retainPtr.asFunction<_CRoadMacroGraph Function(ffi.Pointer<ffi.Void>)>();
-late final _CRoadMacroGraphMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadMacroGraph Function()>>('CRoadMacroGraphMakeDefault');
-late final _CRoadMacroGraphMakeDefault = _CRoadMacroGraphMakeDefaultPtr.asFunction<_CRoadMacroGraph Function()>();
-
-late final _CFunction_G_getTerritoriesAlongRouteProvider_With_CContextPtr = _lookup<ffi.NativeFunction<_CTerritoriesAlongRouteProvider Function(_CContext)>>('CFunction_G_getTerritoriesAlongRouteProvider_With_CContext');
-late final _CFunction_G_getTerritoriesAlongRouteProvider_With_CContext = _CFunction_G_getTerritoriesAlongRouteProvider_With_CContextPtr.asFunction<_CTerritoriesAlongRouteProvider Function(_CContext)>();
 late final _CTrafficCollector_trafficCollectingAllowedPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CTrafficCollector)>>('CTrafficCollector_trafficCollectingAllowed');
 late final _CTrafficCollector_trafficCollectingAllowed = _CTrafficCollector_trafficCollectingAllowedPtr.asFunction<bool Function(_CTrafficCollector)>();
 late final _CTrafficCollector_setTrafficCollectingAllowed_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTrafficCollector, ffi.Bool)>>('CTrafficCollector_setTrafficCollectingAllowed_bool');
@@ -80863,8 +85469,8 @@ late final _CTrafficCollector_setTrafficCollectingAllowed_bool = _CTrafficCollec
 late final _CTrafficCollector_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_cg_objectIdentifier');
 late final _CTrafficCollector_cg_objectIdentifier = _CTrafficCollector_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
-late final _CTrafficCollector_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(_CContext)>>('CTrafficCollector_C_createWith_CContext');
-late final _CTrafficCollector_C_createWith_CContext = _CTrafficCollector_C_createWith_CContextPtr.asFunction<_CTrafficCollector Function(_CContext)>();
+late final _CTrafficCollector_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(_CContext)>>('CTrafficCollector_S_instance_CContext');
+late final _CTrafficCollector_S_instance_CContext = _CTrafficCollector_S_instance_CContextPtr.asFunction<_CTrafficCollector Function(_CContext)>();
 
 late final _CTrafficCollector_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_release');
 late final _CTrafficCollector_release = _CTrafficCollector_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -81002,8 +85608,12 @@ late final _CPackage_cg_objectIdentifier = _CPackage_cg_objectIdentifierPtr.asFu
 
 late final _CPackage_installPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackage)>>('CPackage_install');
 late final _CPackage_install = _CPackage_installPtr.asFunction<void Function(_CPackage)>();
+late final _CPackage_installWithFallback_CInstallFallbackPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackage, _CInstallFallback)>>('CPackage_installWithFallback_CInstallFallback');
+late final _CPackage_installWithFallback_CInstallFallback = _CPackage_installWithFallback_CInstallFallbackPtr.asFunction<void Function(_CPackage, _CInstallFallback)>();
 late final _CPackage_uninstallPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackage)>>('CPackage_uninstall');
 late final _CPackage_uninstall = _CPackage_uninstallPtr.asFunction<void Function(_CPackage)>();
+late final _CPackage_pausePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackage)>>('CPackage_pause');
+late final _CPackage_pause = _CPackage_pausePtr.asFunction<void Function(_CPackage)>();
 late final _CPackage_cg_getSelectorPtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CPackage)>>('CPackage_cg_getSelector');
 late final _CPackage_cg_getSelector = _CPackage_cg_getSelectorPtr.asFunction<int Function(_CPackage)>();
 
@@ -81060,6 +85670,41 @@ late final _CStatefulChannel_uint8_tConnect = _CStatefulChannel_uint8_tConnectPt
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Uint8, ffi.Int64)>>
   )
 >();
+
+late final _CInstallFallbackCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CInstallFallbackCpp_cg_objectIdentifier');
+late final _CInstallFallbackCpp_cg_objectIdentifier = _CInstallFallbackCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CInstallFallbackCpp_process_CPackagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CInstallFallbackCpp, _CPackage)>>('CInstallFallbackCpp_process_CPackage');
+late final _CInstallFallbackCpp_process_CPackage = _CInstallFallbackCpp_process_CPackagePtr.asFunction<void Function(_CInstallFallbackCpp, _CPackage)>();
+
+late final _CInstallFallbackCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CInstallFallbackCpp_release');
+late final _CInstallFallbackCpp_release = _CInstallFallbackCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CInstallFallbackCpp_retainPtr = _lookup<ffi.NativeFunction<_CInstallFallbackCpp Function(ffi.Pointer<ffi.Void>)>>('CInstallFallbackCpp_retain');
+late final _CInstallFallbackCpp_retain = _CInstallFallbackCpp_retainPtr.asFunction<_CInstallFallbackCpp Function(ffi.Pointer<ffi.Void>)>();
+late final _CInstallFallbackCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CInstallFallbackCpp Function()>>('CInstallFallbackCppMakeDefault');
+late final _CInstallFallbackCppMakeDefault = _CInstallFallbackCppMakeDefaultPtr.asFunction<_CInstallFallbackCpp Function()>();
+
+
+late final _CInstallFallbackMakeDefaultPtr = _lookup<ffi.NativeFunction<_CInstallFallback Function()>>('CInstallFallbackMakeDefault');
+late final _CInstallFallbackMakeDefault = _CInstallFallbackMakeDefaultPtr.asFunction<_CInstallFallback Function()>();
+late final _CInstallFallback_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CInstallFallback)>>('CInstallFallback_release');
+late final _CInstallFallback_release = _CInstallFallback_releasePtr.asFunction<void Function(_CInstallFallback)>();
+
+late final _CDefaultInstallFallback_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDefaultInstallFallback_cg_objectIdentifier');
+late final _CDefaultInstallFallback_cg_objectIdentifier = _CDefaultInstallFallback_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CDefaultInstallFallback_S_noOperationPtr = _lookup<ffi.NativeFunction<_CInstallFallback Function()>>('CDefaultInstallFallback_S_noOperation');
+late final _CDefaultInstallFallback_S_noOperation = _CDefaultInstallFallback_S_noOperationPtr.asFunction<_CInstallFallback Function()>();
+late final _CDefaultInstallFallback_S_retryOnError_uint64_tPtr = _lookup<ffi.NativeFunction<_CInstallFallback Function(ffi.Uint64)>>('CDefaultInstallFallback_S_retryOnError_uint64_t');
+late final _CDefaultInstallFallback_S_retryOnError_uint64_t = _CDefaultInstallFallback_S_retryOnError_uint64_tPtr.asFunction<_CInstallFallback Function(int)>();
+
+late final _CDefaultInstallFallback_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CDefaultInstallFallback_release');
+late final _CDefaultInstallFallback_release = _CDefaultInstallFallback_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CDefaultInstallFallback_retainPtr = _lookup<ffi.NativeFunction<_CDefaultInstallFallback Function(ffi.Pointer<ffi.Void>)>>('CDefaultInstallFallback_retain');
+late final _CDefaultInstallFallback_retain = _CDefaultInstallFallback_retainPtr.asFunction<_CDefaultInstallFallback Function(ffi.Pointer<ffi.Void>)>();
+late final _CDefaultInstallFallbackMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDefaultInstallFallback Function()>>('CDefaultInstallFallbackMakeDefault');
+late final _CDefaultInstallFallbackMakeDefault = _CDefaultInstallFallbackMakeDefaultPtr.asFunction<_CDefaultInstallFallback Function()>();
+
 late final _CPackageManager_autoupdateEnabledPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CPackageManager)>>('CPackageManager_autoupdateEnabled');
 late final _CPackageManager_autoupdateEnabled = _CPackageManager_autoupdateEnabledPtr.asFunction<bool Function(_CPackageManager)>();
 late final _CPackageManager_setAutoupdateEnabled_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackageManager, ffi.Bool)>>('CPackageManager_setAutoupdateEnabled_bool');
@@ -81072,6 +85717,8 @@ late final _CPackageManager_packages = _CPackageManager_packagesPtr.asFunction<_
 late final _CPackageManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CPackageManager_cg_objectIdentifier');
 late final _CPackageManager_cg_objectIdentifier = _CPackageManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CPackageManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CPackageManager Function(_CContext)>>('CPackageManager_S_instance_CContext');
+late final _CPackageManager_S_instance_CContext = _CPackageManager_S_instance_CContextPtr.asFunction<_CPackageManager Function(_CContext)>();
 late final _CPackageManager_checkForUpdatesPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPackageManager)>>('CPackageManager_checkForUpdates');
 late final _CPackageManager_checkForUpdates = _CPackageManager_checkForUpdatesPtr.asFunction<void Function(_CPackageManager)>();
 
@@ -81118,10 +85765,6 @@ late final _forEach_CArray_CPackage = _forEach_CArray_CPackagePtr.asFunction<
 >>)>();
 late final _CArray_CPackage_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPackage)>>('CArray_CPackage_release');
 late final _CArray_CPackage_release = _CArray_CPackage_releasePtr.asFunction<void Function(_CArray_CPackage)>();
-late final _CFunction_G_getPackageManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CPackageManager Function(_CContext)>>('CFunction_G_getPackageManager_With_CContext');
-late final _CFunction_G_getPackageManager_With_CContext = _CFunction_G_getPackageManager_With_CContextPtr.asFunction<_CPackageManager Function(_CContext)>();
-late final _CFunction_G_getTerritoryManager_With_CContextPtr = _lookup<ffi.NativeFunction<_CTerritoryManager Function(_CContext)>>('CFunction_G_getTerritoryManager_With_CContext');
-late final _CFunction_G_getTerritoryManager_With_CContext = _CFunction_G_getTerritoryManager_With_CContextPtr.asFunction<_CTerritoryManager Function(_CContext)>();
 late final _CTerritoryManager_territoriesChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CTerritory Function(_CTerritoryManager)>>('CTerritoryManager_territoriesChannel');
 late final _CTerritoryManager_territoriesChannel = _CTerritoryManager_territoriesChannelPtr.asFunction<_CStatefulChannel_CArray_CTerritory Function(_CTerritoryManager)>();
 late final _CTerritoryManager_territoriesPtr = _lookup<ffi.NativeFunction<_CArray_CTerritory Function(_CTerritoryManager)>>('CTerritoryManager_territories');
@@ -81130,6 +85773,8 @@ late final _CTerritoryManager_territories = _CTerritoryManager_territoriesPtr.as
 late final _CTerritoryManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTerritoryManager_cg_objectIdentifier');
 late final _CTerritoryManager_cg_objectIdentifier = _CTerritoryManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
+late final _CTerritoryManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CTerritoryManager Function(_CContext)>>('CTerritoryManager_S_instance_CContext');
+late final _CTerritoryManager_S_instance_CContext = _CTerritoryManager_S_instance_CContextPtr.asFunction<_CTerritoryManager Function(_CContext)>();
 late final _CTerritoryManager_findByPoint_CGeoPointPtr = _lookup<ffi.NativeFunction<_CArray_CTerritory Function(_CTerritoryManager, _CGeoPoint)>>('CTerritoryManager_findByPoint_CGeoPoint');
 late final _CTerritoryManager_findByPoint_CGeoPoint = _CTerritoryManager_findByPoint_CGeoPointPtr.asFunction<_CArray_CTerritory Function(_CTerritoryManager, _CGeoPoint)>();
 late final _CTerritoryManager_findByRect_CGeoRectPtr = _lookup<ffi.NativeFunction<_CArray_CTerritory Function(_CTerritoryManager, _CGeoRect)>>('CTerritoryManager_findByRect_CGeoRect');
@@ -81170,4 +85815,4 @@ late final _CStatefulChannel_CArray_CTerritoryConnect = _CStatefulChannel_CArray
   )
 >();
 
-//ApplicationState, BaseCameraInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, calculateBearing, calculateDistance, createImage, createModelData, downloadData, makeSystemContext, move, toLocaleManager
+//ApplicationState, BaseCameraInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, toLocaleManager

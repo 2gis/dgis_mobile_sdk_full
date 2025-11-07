@@ -135,6 +135,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
       ),
     );
 
+    // Set overlay callback for controller
+    widget.controller.setOverlayCallback(_closeOverlay);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _measureWithConsistency(
@@ -150,6 +153,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
   }
 
   void _toggleOverlay() {
+    // Don't allow overlay toggle when in route view mode
+    if (widget.controller.isRouteViewMode) return;
+
     setState(() {
       if (_overlayController.isShowing) {
         _animationController.reverse().then((_) {
@@ -160,6 +166,14 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
         _animationController.forward();
       }
     });
+  }
+
+  void _closeOverlay() {
+    if (_overlayController.isShowing) {
+      _animationController.reverse().then((_) {
+        _overlayController.hide();
+      });
+    }
   }
 
   @override
@@ -232,68 +246,75 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
     final arrivalTime = widget.controller.formatArrivalTime(_dateFormat);
 
     return GestureDetector(
-      onVerticalDragStart: (details) {
-        _isDragging = true;
-        _dragStartY = details.globalPosition.dy;
-      },
-      onVerticalDragUpdate: (details) {
-        if (!_isDragging) return;
+      onVerticalDragStart: widget.controller.isRouteViewMode
+          ? null
+          : (details) {
+              _isDragging = true;
+              _dragStartY = details.globalPosition.dy;
+            },
+      onVerticalDragUpdate: widget.controller.isRouteViewMode
+          ? null
+          : (details) {
+              if (!_isDragging) return;
 
-        final delta = _dragStartY - details.globalPosition.dy;
-        final screenHeight = MediaQuery.of(context).size.height * 0.35;
+              final delta = _dragStartY - details.globalPosition.dy;
+              final screenHeight = MediaQuery.of(context).size.height * 0.35;
 
-        final dragPercent = (delta / screenHeight).clamp(-1.0, 1.0);
+              final dragPercent = (delta / screenHeight).clamp(-1.0, 1.0);
 
-        if (_overlayController.isShowing) {
-          if (dragPercent < 0) {
-            _animationController.value = 1.0 + dragPercent;
-          }
-        } else {
-          if (dragPercent > 0) {
-            _animationController.value = dragPercent;
-          }
-          if (dragPercent > 0.3) {
-            final velocity = details.primaryDelta?.abs() ?? 0;
-            final duration =
-                velocity > 0 ? (2000 / velocity).clamp(30, 1000).toInt() : 300;
-            _isDragging = false;
-            _overlayController.show();
-            _animationController.animateTo(
-              1,
-              duration: Duration(milliseconds: duration),
-              curve: Curves.easeOut,
-            );
-          }
-        }
-      },
-      onVerticalDragEnd: (details) {
-        _isDragging = false;
+              if (_overlayController.isShowing) {
+                if (dragPercent < 0) {
+                  _animationController.value = 1.0 + dragPercent;
+                }
+              } else {
+                if (dragPercent > 0) {
+                  _animationController.value = dragPercent;
+                }
+                if (dragPercent > 0.3) {
+                  final velocity = details.primaryDelta?.abs() ?? 0;
+                  final duration = velocity > 0
+                      ? (2000 / velocity).clamp(30, 1000).toInt()
+                      : 300;
+                  _isDragging = false;
+                  _overlayController.show();
+                  _animationController.animateTo(
+                    1,
+                    duration: Duration(milliseconds: duration),
+                    curve: Curves.easeOut,
+                  );
+                }
+              }
+            },
+      onVerticalDragEnd: widget.controller.isRouteViewMode
+          ? null
+          : (details) {
+              _isDragging = false;
 
-        final velocity = details.primaryVelocity ?? 0;
-        const velocityThreshold = 300.0;
+              final velocity = details.primaryVelocity ?? 0;
+              const velocityThreshold = 300.0;
 
-        setState(() {
-          if (velocity.abs() > velocityThreshold) {
-            if (velocity > 0) {
-              _animationController.reverse().then((_) {
-                _overlayController.hide();
+              setState(() {
+                if (velocity.abs() > velocityThreshold) {
+                  if (velocity > 0) {
+                    _animationController.reverse().then((_) {
+                      _overlayController.hide();
+                    });
+                  } else {
+                    _overlayController.show();
+                    _animationController.forward();
+                  }
+                } else {
+                  if (_animationController.value > 0.5) {
+                    _overlayController.show();
+                    _animationController.forward();
+                  } else {
+                    _animationController.reverse().then((_) {
+                      _overlayController.hide();
+                    });
+                  }
+                }
               });
-            } else {
-              _overlayController.show();
-              _animationController.forward();
-            }
-          } else {
-            if (_animationController.value > 0.5) {
-              _overlayController.show();
-              _animationController.forward();
-            } else {
-              _animationController.reverse().then((_) {
-                _overlayController.hide();
-              });
-            }
-          }
-        });
-      },
+            },
       child: Container(
         height: _headerSize,
         key: key,
@@ -362,7 +383,7 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
             ),
             const Spacer(),
             GestureDetector(
-              onTap: _toggleOverlay,
+              onTap: widget.controller.isRouteViewMode ? null : _toggleOverlay,
               child: Container(
                 width: colorScheme.buttonSize,
                 height: colorScheme.buttonSize,
@@ -555,6 +576,65 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
     );
   }
 
+  Widget _buildRouteViewMode(
+    BuildContext context,
+    DgisLocalizations localizations,
+    Key key,
+    DashboardModel model,
+  ) {
+    final distance = widget.controller.formatDistance(localizations);
+    final duration = widget.controller.formatDuration(localizations);
+
+    return GestureDetector(
+      onTap: widget.controller.returnToNavigation,
+      child: Container(
+        key: key,
+        height: _headerSize,
+        decoration: BoxDecoration(
+          color: colorScheme.acceptButtonColor,
+          boxShadow: colorScheme.shadows,
+          borderRadius: BorderRadius.circular(colorScheme.borderRadius),
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 10,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              localizations.dgis_navi_continue_the_trip,
+              textAlign: TextAlign.center,
+              style: colorScheme.routeOverviewHeaderTextStyle,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${duration.value} ${duration.unit}',
+                  style: colorScheme.routeOverviewContentTextStyle,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colorScheme.routeOverviewContentTextStyle.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  '${distance.value} ${distance.unit}',
+                  style: colorScheme.routeOverviewContentTextStyle,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations =
@@ -562,6 +642,10 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
     return OverlayPortal(
       controller: _overlayController,
       overlayChildBuilder: (context) {
+        if (widget.controller.isRouteViewMode) {
+          return const SizedBox.shrink();
+        }
+
         var globalPosition = Offset.zero;
         var size = Size.zero;
 
@@ -628,13 +712,22 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
           child: ValueListenableBuilder(
             valueListenable: widget.controller.state,
             builder: (context, value, _) {
-              return _buildHeader(
-                context,
-                BorderRadius.all(Radius.circular(colorScheme.borderRadius)),
-                localizations,
-                headerGlobalKey,
-                value,
-              );
+              if (value.isRouteViewMode) {
+                return _buildRouteViewMode(
+                  context,
+                  localizations,
+                  headerGlobalKey,
+                  value,
+                );
+              } else {
+                return _buildHeader(
+                  context,
+                  BorderRadius.all(Radius.circular(colorScheme.borderRadius)),
+                  localizations,
+                  headerGlobalKey,
+                  value,
+                );
+              }
             },
           ),
         ),
