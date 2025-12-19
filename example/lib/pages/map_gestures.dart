@@ -21,8 +21,7 @@ class _MapGesturesState extends State<MapGesturesPage> {
   final formKey = GlobalKey<FormState>();
   sdk.GestureManager? gestureManager;
   sdk.TouchEventsObserver? touchEventsObserver;
-  sdk.MutableEnumSet<sdk.TransformGesture> enabledGestures =
-      sdk.MutableTransformGestureEnumSet.all();
+  sdk.GestureEnumSet enabledGestures = sdk.GestureEnumSet.all();
 
   @override
   void initState() {
@@ -114,31 +113,31 @@ class _MapGesturesState extends State<MapGesturesPage> {
                   child: Column(
                     children: <Widget>[
                       _buildGestureCheckbox(
-                        sdk.TransformGesture.shift,
+                        sdk.Gesture.shift,
                         'Shift',
                         setState,
                       ),
                       const Divider(height: 0),
                       _buildGestureCheckbox(
-                        sdk.TransformGesture.scaling,
+                        sdk.Gesture.scaling,
                         'Scaling',
                         setState,
                       ),
                       const Divider(height: 0),
                       _buildGestureCheckbox(
-                        sdk.TransformGesture.rotation,
+                        sdk.Gesture.rotation,
                         'Rotation',
                         setState,
                       ),
                       const Divider(height: 0),
                       _buildGestureCheckbox(
-                        sdk.TransformGesture.multiTouchShift,
+                        sdk.Gesture.multiTouchShift,
                         'MultiTouchShift',
                         setState,
                       ),
                       const Divider(height: 0),
                       _buildGestureCheckbox(
-                        sdk.TransformGesture.tilt,
+                        sdk.Gesture.tilt,
                         'Tilt',
                         setState,
                       ),
@@ -150,8 +149,7 @@ class _MapGesturesState extends State<MapGesturesPage> {
                 TextButton(
                   onPressed: () {
                     if (gestureManager != null) {
-                      enabledGestures =
-                          gestureManager!.enabledGestures.toMutableEnumSet();
+                      enabledGestures = gestureManager!.enabledGestures;
                     }
                     Navigator.of(context).pop();
                   },
@@ -160,8 +158,7 @@ class _MapGesturesState extends State<MapGesturesPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      gestureManager?.enabledGestures =
-                          enabledGestures.toEnumSet();
+                      gestureManager?.enabledGestures = enabledGestures;
                       Navigator.of(context).pop();
                     }
                   },
@@ -176,7 +173,7 @@ class _MapGesturesState extends State<MapGesturesPage> {
   }
 
   CheckboxListTile _buildGestureCheckbox(
-    sdk.TransformGesture gesture,
+    sdk.Gesture gesture,
     String gestureName,
     Function(void Function()) setState,
   ) {

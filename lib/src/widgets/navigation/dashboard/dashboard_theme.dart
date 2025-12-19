@@ -26,8 +26,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
   final TextStyle menuButtonTextStyle;
   final TextStyle menuButtonSubTextStyle;
   final TextStyle finishButtonTextStyle;
-  final TextStyle routeOverviewHeaderTextStyle;
-  final TextStyle routeOverviewContentTextStyle;
 
   const DashboardWidgetTheme({
     required this.expandedShadowColor,
@@ -48,8 +46,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     required this.menuButtonSubTextStyle,
     required this.finishButtonTextStyle,
     required this.soundIconColor,
-    required this.routeOverviewHeaderTextStyle,
-    required this.routeOverviewContentTextStyle,
   });
 
   /// Widget color scheme for default light mode.
@@ -94,18 +90,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     finishButtonTextStyle: TextStyle(
       color: DgisColorScheme.textColorOnRed,
       fontWeight: FontWeight.w600,
-      fontSize: 16,
-      height: 1.25,
-    ),
-    routeOverviewHeaderTextStyle: TextStyle(
-      color: DgisColorScheme.textColorOnRed,
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-      height: 1.25,
-    ),
-    routeOverviewContentTextStyle: TextStyle(
-      color: DgisColorScheme.textColorOnRed,
-      fontWeight: FontWeight.normal,
       fontSize: 16,
       height: 1.25,
     ),
@@ -156,18 +140,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
       fontSize: 16,
       height: 1.25,
     ),
-    routeOverviewHeaderTextStyle: TextStyle(
-      color: DgisColorScheme.textColorOnRed,
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-      height: 1.25,
-    ),
-    routeOverviewContentTextStyle: TextStyle(
-      color: DgisColorScheme.textColorOnRed,
-      fontWeight: FontWeight.normal,
-      fontSize: 16,
-      height: 1.25,
-    ),
   );
 
   @override
@@ -190,8 +162,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
     TextStyle? menuButtonTextStyle,
     TextStyle? menuButtonSubTextStyle,
     TextStyle? finishButtonTextStyle,
-    TextStyle? routeOverviewHeaderTextStyle,
-    TextStyle? routeOverviewContentTextStyle,
   }) {
     return DashboardWidgetTheme(
       expandedShadowColor: expandedShadowColor ?? this.expandedShadowColor,
@@ -216,10 +186,6 @@ class DashboardWidgetTheme extends MapWidgetColorScheme {
       finishButtonTextStyle:
           finishButtonTextStyle ?? this.finishButtonTextStyle,
       soundIconColor: soundIconColor ?? this.soundIconColor,
-      routeOverviewHeaderTextStyle:
-          routeOverviewHeaderTextStyle ?? this.routeOverviewHeaderTextStyle,
-      routeOverviewContentTextStyle:
-          routeOverviewContentTextStyle ?? this.routeOverviewContentTextStyle,
     );
   }
 }

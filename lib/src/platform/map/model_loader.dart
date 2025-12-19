@@ -32,7 +32,7 @@ class ModelLoader {
 
   sdk.ModelData _makeModelData(ByteData data) {
     final loader = _ModelDataLoader(data);
-    return sdk.ModelData(_sdkContext, loader);
+    return sdk.createModelData(_sdkContext, loader);
   }
 }
 

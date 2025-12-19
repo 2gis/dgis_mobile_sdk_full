@@ -110,9 +110,8 @@ class _SamplePageState extends State<ClusteringPage> {
 
   Future<void> _waitNotNullMapSize() async {
     final completer = Completer<void>();
-    final subscription = camera.changed.listen((changes) {
-      if (changes.changeReasons.contains(sdk.CameraChangeReason.size) &&
-          camera.size.height > 0) {
+    final subscription = camera.sizeChannel.listen((size) {
+      if (size.height > 0) {
         completer.complete();
       }
     });

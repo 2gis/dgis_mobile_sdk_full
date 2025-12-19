@@ -150,11 +150,9 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
   }
 
   void _performSearchFromText(String query) {
-    if (query.isNotEmpty) {
-      _performSearch(
-        sdk.SearchQueryBuilder.fromQueryText(query).build(),
-      );
-    }
+    _performSearch(
+      sdk.SearchQueryBuilder.fromQueryText(query).build(),
+    );
   }
 
   Future<void> _performSearch(sdk.SearchQuery query) async {
@@ -273,7 +271,6 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      shrinkWrap: true,
       controller: _scrollController,
       slivers: [
         SliverToBoxAdapter(
