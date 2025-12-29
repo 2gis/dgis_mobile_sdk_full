@@ -500,6 +500,43 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                   horizontal: 8,
                 ),
                 child: GestureDetector(
+                  onTap: widget.controller.toggleMinimapVisibility,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.buttonSurfaceColor,
+                      borderRadius: BorderRadius.circular(
+                        colorScheme.buttonBorderRadius,
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          localizations.dgis_navi_show_minimap,
+                          style: colorScheme.menuButtonTextStyle,
+                        ),
+                        const Spacer(),
+                        Switch(
+                          value: model.isMinimapVisible,
+                          onChanged: (_) =>
+                              widget.controller.toggleMinimapVisibility(),
+                          activeColor: Colors.white,
+                          activeTrackColor:
+                              colorScheme.buttonPositiveSurfaceColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                ),
+                child: GestureDetector(
                   onTap: widget.controller.showRoute,
                   child: Container(
                     decoration: BoxDecoration(

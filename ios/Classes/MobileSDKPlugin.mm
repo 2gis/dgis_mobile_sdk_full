@@ -106,6 +106,14 @@ NSInteger const kDefaultSize = 100;
 			NSNumber * textureId = arguments[@"textureId"];
 			if (textureId)
 			{
+				FlutterMetalTexture * texture = self.renders[textureId];
+				if (texture)
+				{
+					[texture.lock lock];
+					texture.flutterTextureId = NSNotFound;
+					[texture.lock unlock];
+				}
+
 				[self.renders removeObjectForKey:textureId];
 				[self.flutterTextureRegistry unregisterTexture:[textureId unsignedIntegerValue]];
 			}

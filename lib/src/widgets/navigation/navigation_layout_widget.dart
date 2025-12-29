@@ -12,11 +12,14 @@ import './better_route_prompt/better_route_prompt_widget.dart';
 import './compass/compass_controller.dart';
 import './compass/compass_widget.dart';
 import './dashboard/dashboard_controller.dart';
+import './dashboard/dashboard_model.dart';
 import './dashboard/dashboard_widget.dart';
 import './finish_route/finish_route_controller.dart';
 import './finish_route/finish_route_widget.dart';
 import './maneuvers/maneuver_controller.dart';
 import './maneuvers/maneuver_widget.dart';
+import './minimap/navigation_minimap_controller.dart';
+import './minimap/navigation_minimap_widget.dart';
 import './my_location/my_location_controller.dart';
 import './my_location/my_location_widget.dart';
 import './parking/parking_controller.dart';
@@ -60,6 +63,10 @@ class NavigationLayoutWidget extends StatefulWidget {
     BetterRoutePromptController,
     Duration,
   )? _betterRoutePromptWidgetBuilder;
+  final NavigationMiniMapWidget Function(
+    NavigationMiniMapController,
+    DashboardController,
+  )? _navigationMiniMapWidgetBuilder;
 
   const NavigationLayoutWidget({
     required this.navigationManager,
@@ -86,6 +93,10 @@ class NavigationLayoutWidget extends StatefulWidget {
       BetterRoutePromptController,
       Duration,
     )? betterRoutePromptWidgetBuilder,
+    NavigationMiniMapWidget Function(
+      NavigationMiniMapController,
+      DashboardController,
+    )? navigationMiniMapWidgetBuilder,
     super.key,
   })  : _dashboardWidgetBuilder = dashboardWidgetBuilder,
         _speedLimitWidgetBuilder = speedLimitWidgetBuilder,
@@ -97,7 +108,8 @@ class NavigationLayoutWidget extends StatefulWidget {
         _zoomWidgetBuilder = zoomWidgetBuilder,
         _myLocationwidgetBuilder = myLocationWidgetBuilder,
         _compassWidgetBuilder = compassWidgetbuilder,
-        _betterRoutePromptWidgetBuilder = betterRoutePromptWidgetBuilder;
+        _betterRoutePromptWidgetBuilder = betterRoutePromptWidgetBuilder,
+        _navigationMiniMapWidgetBuilder = navigationMiniMapWidgetBuilder;
 
   const NavigationLayoutWidget.defaultLayout({
     required this.navigationManager,
@@ -113,7 +125,8 @@ class NavigationLayoutWidget extends StatefulWidget {
         _myLocationwidgetBuilder = NavigationMyLocationWidget.defaultBuilder,
         _compassWidgetBuilder = NavigationCompassWidget.defaultBuilder,
         _betterRoutePromptWidgetBuilder =
-            BetterRoutePromptWidget.defaultBuilder;
+            BetterRoutePromptWidget.defaultBuilder,
+        _navigationMiniMapWidgetBuilder = null;
 
   @override
   BaseMapWidgetState<NavigationLayoutWidget> createState() =>
@@ -125,6 +138,7 @@ class _NavigationLayoutWidgetState
   final overlayController = OverlayPortalController();
 
   final isMapControlsVisible = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> isMinimapVisible = ValueNotifier<bool>(false);
   Timer? hideMapControlsTimer;
   final hideControlsTimerDuration = const Duration(seconds: 20);
   final betterRoutePromptDuration = const Duration(seconds: 30);
@@ -146,8 +160,10 @@ class _NavigationLayoutWidgetState
   late TrafficLineController trafficLineController;
   late TrafficController trafficController;
   late BetterRoutePromptController betterRoutePromptController;
+  late NavigationMiniMapController miniMapController;
 
   final ValueNotifier<Offset?> dashboardSize = ValueNotifier(null);
+
   void startHideTimer() {
     hideMapControlsTimer?.cancel();
     hideMapControlsTimer = Timer(hideControlsTimerDuration, () {
@@ -180,6 +196,7 @@ class _NavigationLayoutWidgetState
   void dispose() {
     hideMapControlsTimer?.cancel();
     isMapControlsVisible.dispose();
+    isMinimapVisible.dispose();
     navigationStateSubscription?.cancel();
     super.dispose();
   }
@@ -280,9 +297,7 @@ class _NavigationLayoutWidgetState
                       if (widget._trafficLineWidgetBuilder != null)
                         ValueListenableBuilder(
                           valueListenable: dashboardSize,
-                          child: widget._trafficLineWidgetBuilder!
-                              .call(trafficLineController, dashboardController),
-                          builder: (context, size, child) {
+                          builder: (context, size, _) {
                             return Positioned(
                               left: 0,
                               bottom: _calculateBottomInset(size),
@@ -291,7 +306,35 @@ class _NavigationLayoutWidgetState
                                   top: 16,
                                   bottom: 4,
                                 ),
-                                child: child,
+                                child: ValueListenableBuilder<DashboardModel>(
+                                  valueListenable: dashboardController.state,
+                                  builder: (context, model, _) {
+                                    if (model.isRouteViewMode) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    return ValueListenableBuilder<bool>(
+                                      valueListenable: isMinimapVisible,
+                                      builder: (context, visible, _) {
+                                        if (visible &&
+                                            widget._navigationMiniMapWidgetBuilder !=
+                                                null) {
+                                          return widget
+                                              ._navigationMiniMapWidgetBuilder!
+                                              .call(
+                                            miniMapController,
+                                            dashboardController,
+                                          );
+                                        }
+                                        return widget._trafficLineWidgetBuilder!
+                                            .call(
+                                          trafficLineController,
+                                          dashboardController,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                             );
                           },
@@ -392,8 +435,9 @@ class _NavigationLayoutWidgetState
                           if (widget._maneuverWidgetBuilder != null)
                             Align(
                               alignment: AlignmentDirectional.topStart,
-                              child: widget._maneuverWidgetBuilder!
-                                  .call(maneuverController),
+                              child: widget._maneuverWidgetBuilder!(
+                                maneuverController,
+                              ),
                             ),
                           Expanded(
                             flex: 20,
@@ -667,6 +711,14 @@ class _NavigationLayoutWidgetState
         setState(() {});
       },
     );
+    miniMapController = NavigationMiniMapController(
+      navigationManager: widget.navigationManager,
+    );
+
+    dashboardController.state.addListener(() {
+      final model = dashboardController.state.value;
+      isMinimapVisible.value = model.isMinimapVisible;
+    });
   }
 
   @override
@@ -682,5 +734,6 @@ class _NavigationLayoutWidgetState
     trafficLineController.dispose();
     trafficController.dispose();
     betterRoutePromptController.dispose();
+    miniMapController.dispose();
   }
 }

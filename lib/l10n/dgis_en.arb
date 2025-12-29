@@ -98,6 +98,9 @@
    "dgis_route_start": "Route start",
    "dgis_route_finish": "Route finish",
    "dgis_direct_route": "Direct route",
+   "dgis_no_routes_found": "No routes found",
+   "dgis_best_route": "Best route",
+   "dgis_route_editor_start": "Go!",
    "dgis_get_off_after": "Get off after: {after}",
    "@dgis_get_off_after": {
       "placeholders": {

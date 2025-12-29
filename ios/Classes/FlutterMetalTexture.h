@@ -6,6 +6,7 @@
 @interface FlutterMetalTexture : NSObject <FlutterTexture>
 
 @property(nonatomic, assign) NSInteger flutterTextureId;
+@property(nonatomic, strong) NSLock * lock;
 
 - (instancetype)initWithDevice:(id<MTLDevice>)device
 				  textureCache:(CVMetalTextureCacheRef)textureCache

@@ -6,12 +6,14 @@ class DashboardModel {
   final int duration;
   final bool soundsEnabled;
   final bool isRouteViewMode;
+  final bool isMinimapVisible;
 
   const DashboardModel({
     required this.distance,
     required this.duration,
     required this.soundsEnabled,
     this.isRouteViewMode = false,
+    this.isMinimapVisible = false,
   });
 
   DashboardModel copyWith({
@@ -19,12 +21,14 @@ class DashboardModel {
     int? duration,
     bool? soundsEnabled,
     bool? isRouteViewMode,
+    bool? isMinimapVisible,
   }) {
     return DashboardModel(
       distance: distance ?? this.distance,
       duration: duration ?? this.duration,
       soundsEnabled: soundsEnabled ?? this.soundsEnabled,
       isRouteViewMode: isRouteViewMode ?? this.isRouteViewMode,
+      isMinimapVisible: isMinimapVisible ?? this.isMinimapVisible,
     );
   }
 
@@ -36,7 +40,8 @@ class DashboardModel {
         other.distance == distance &&
         other.duration == duration &&
         other.soundsEnabled == soundsEnabled &&
-        other.isRouteViewMode == isRouteViewMode;
+        other.isRouteViewMode == isRouteViewMode &&
+        other.isMinimapVisible == isMinimapVisible;
   }
 
   @override
@@ -45,6 +50,7 @@ class DashboardModel {
         duration,
         soundsEnabled,
         isRouteViewMode,
+        isMinimapVisible,
       );
 
   @override
@@ -52,6 +58,7 @@ class DashboardModel {
       'distance: $distance, '
       'duration: $duration, '
       'soundsEnabled: $soundsEnabled, '
-      'isRouteViewMode: $isRouteViewMode'
+      'isRouteViewMode: $isRouteViewMode, '
+      'isMinimapVisible: $isMinimapVisible'
       ')';
 }

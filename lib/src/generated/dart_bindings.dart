@@ -7013,6 +7013,437 @@ extension _CGroupItemRelease on _CGroupItem {
   }
 }
 
+// MARK: - NearestPlatformTransitionType
+
+/** Тип перехода. */
+enum NearestPlatformTransitionType {
+  /** Прямая доступность, с одной станции сразу попадаешь на другую. */
+  direct(0),
+  /** Подземный переход. */
+  underground(1),
+  /** Наземный переход. */
+  ground(2),
+  ;
+
+  const NearestPlatformTransitionType(this.rawValue);
+  final int rawValue;
+
+  static NearestPlatformTransitionType getByValue(int value) {
+    return NearestPlatformTransitionType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CNearestPlatformTransitionType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CNearestPlatformTransitionTypeBasicFunctions on _CNearestPlatformTransitionType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CNearestPlatformTransitionTypeToDart on _CNearestPlatformTransitionType {
+  NearestPlatformTransitionType _toDart() {
+    return NearestPlatformTransitionType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CNearestPlatformTransitionType on NearestPlatformTransitionType {
+  _CNearestPlatformTransitionType _copyFromDartTo_CNearestPlatformTransitionType() {
+    return _CNearestPlatformTransitionTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - Color? <-> _COptional_CColor
+
+final class _COptional_CColor extends ffi.Struct {
+  
+  external _CColor value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CColorBasicFunctions on _COptional_CColor {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CColorToDart on _COptional_CColor {
+  Color? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CColor on Color? {
+  _COptional_CColor _copyFromDartTo_COptional_CColor() {
+    final cOptional = _COptional_CColorMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CColor();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - NearestPlatformTransitionType? <-> _COptional_CNearestPlatformTransitionType
+
+final class _COptional_CNearestPlatformTransitionType extends ffi.Struct {
+  
+  external _CNearestPlatformTransitionType value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CNearestPlatformTransitionTypeBasicFunctions on _COptional_CNearestPlatformTransitionType {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CNearestPlatformTransitionTypeToDart on _COptional_CNearestPlatformTransitionType {
+  NearestPlatformTransitionType? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CNearestPlatformTransitionType on NearestPlatformTransitionType? {
+  _COptional_CNearestPlatformTransitionType _copyFromDartTo_COptional_CNearestPlatformTransitionType() {
+    final cOptional = _COptional_CNearestPlatformTransitionTypeMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CNearestPlatformTransitionType();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - NearestPlatform
+
+/** Информация о платформе. */
+class NearestPlatform {
+  /** Уникальный идентификатор остановочной платформы. */
+  final DgisObjectId id;
+  /** Название остановки. */
+  final String name;
+  /** Описание направления остановочной платформы. */
+  final String? headingTo;
+  /** Цветовое кодирование маршрута. */
+  final Color? color;
+  /** Тип перехода. */
+  final NearestPlatformTransitionType? transitionType;
+
+  const NearestPlatform({
+    required this.id,
+    required this.name,
+    required this.headingTo,
+    required this.color,
+    required this.transitionType
+  });
+
+  NearestPlatform copyWith({
+    DgisObjectId? id,
+    String? name,
+    Optional<String?>? headingTo,
+    Optional<Color?>? color,
+    Optional<NearestPlatformTransitionType?>? transitionType
+  }) {
+    return NearestPlatform(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      headingTo: headingTo != null ? headingTo.value : this.headingTo,
+      color: color != null ? color.value : this.color,
+      transitionType: transitionType != null ? transitionType.value : this.transitionType
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is NearestPlatform &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.name == name &&
+    other.headingTo == headingTo &&
+    other.color == color &&
+    other.transitionType == transitionType;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, name, headingTo, color, transitionType);
+  }
+
+}
+final class _CNearestPlatform extends ffi.Struct {
+  external _CDgisObjectId id;
+
+  external _CString name;
+
+  external _COptional_CString headingTo;
+
+  external _COptional_CColor color;
+
+  external _COptional_CNearestPlatformTransitionType transitionType;
+
+}
+// MARK: - NearestPlatform <-> _CNearestPlatform
+
+extension _CNearestPlatformToDart on _CNearestPlatform {
+  NearestPlatform _toDart() {
+    return NearestPlatform(
+      id: this.id._toDart(),
+      name: this.name._toDart(),
+      headingTo: this.headingTo._toDart(),
+      color: this.color._toDart(),
+      transitionType: this.transitionType._toDart()
+    );
+  }
+}
+
+extension _DartTo_CNearestPlatform on NearestPlatform {
+  _CNearestPlatform _copyFromDartTo_CNearestPlatform() {
+    final res = _CNearestPlatformMakeDefault();
+    res.id = this.id._copyFromDartTo_CDgisObjectId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.headingTo = this.headingTo._copyFromDartTo_COptional_CString();
+    res.color = this.color._copyFromDartTo_COptional_CColor();
+    res.transitionType = this.transitionType._copyFromDartTo_COptional_CNearestPlatformTransitionType();
+    return res;
+  }
+}
+extension _CNearestPlatformRelease on _CNearestPlatform {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    headingTo._releaseIntermediate();
+  }
+}
+
+// MARK: - PublicTransportRouteType
+
+/** Тип маршрута общественного транспорта. */
+enum PublicTransportRouteType {
+  /** Автобус. */
+  bus(0),
+  /** Троллейбус. */
+  trolleybus(1),
+  /** Трамвай. */
+  tram(2),
+  /** Маршрутное такси. */
+  shuttleBus(3),
+  /** Метро. */
+  metro(4),
+  /** Электропоезд. */
+  suburbanTrain(5),
+  /** Фуникулёр. */
+  funicularRailway(6),
+  /** Монорельс. */
+  monorail(7),
+  /** Водный транспорт. */
+  riverTransport(8),
+  /** Канатная дорога. */
+  cableCar(9),
+  /** Скоростной трамвай. */
+  lightRail(10),
+  /** Метротрамвай. */
+  premetro(11),
+  /** Лёгкое метро. */
+  lightMetro(12),
+  /** Аэроэкспресс. */
+  aeroexpress(13),
+  ;
+
+  const PublicTransportRouteType(this.rawValue);
+  final int rawValue;
+
+  static PublicTransportRouteType getByValue(int value) {
+    return PublicTransportRouteType.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CPublicTransportRouteType extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CPublicTransportRouteTypeBasicFunctions on _CPublicTransportRouteType {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CPublicTransportRouteTypeToDart on _CPublicTransportRouteType {
+  PublicTransportRouteType _toDart() {
+    return PublicTransportRouteType.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CPublicTransportRouteType on PublicTransportRouteType {
+  _CPublicTransportRouteType _copyFromDartTo_CPublicTransportRouteType() {
+    return _CPublicTransportRouteTypeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - List<PublicTransportRouteType> <-> _CArray_CPublicTransportRouteType
+
+final class _CArray_CPublicTransportRouteType extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CPublicTransportRouteTypeToDart on _CArray_CPublicTransportRouteType {
+  List<PublicTransportRouteType> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CPublicTransportRouteType on List<PublicTransportRouteType> {
+  _CArray_CPublicTransportRouteType _copyFromDartTo_CArray_CPublicTransportRouteType() {
+    final cArray = _CArray_CPublicTransportRouteTypemakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CPublicTransportRouteType();
+        _CArray_CPublicTransportRouteTypeaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CPublicTransportRouteTypeBasicFunctions on _CArray_CPublicTransportRouteType {
+  void _releaseIntermediate() {
+    _CArray_CPublicTransportRouteType_release(this);
+  }
+
+  static final _listToFill = <PublicTransportRouteType>[];
+
+  static void _iterate(_CPublicTransportRouteType item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<PublicTransportRouteType> _fillFromC() {
+    _forEach_CArray_CPublicTransportRouteType(this, ffi.Pointer.fromFunction<ffi.Void Function(_CPublicTransportRouteType)>(_iterate));
+    final result = List<PublicTransportRouteType>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - NearestStation
+
+/** Информация о станции. */
+class NearestStation {
+  /** Уникальный идентификатор остановки. */
+  final DgisObjectId id;
+  /** Название остановки. */
+  final String name;
+  /** Расстояние от описываемого объекта до ближайшей остановочной платформы данной остановки в метрах. */
+  final int distance;
+  /** Типы транспорта, проходящие через эту остановку. */
+  final List<PublicTransportRouteType> routeTypes;
+  /** Существует ли внутренний переход на эту станцию из описываемого объекта. */
+  final bool internalTransition;
+  /** Цветовое кодирование маршрута. */
+  final Color? color;
+
+  const NearestStation({
+    required this.id,
+    required this.name,
+    this.distance = 0,
+    required this.routeTypes,
+    this.internalTransition = false,
+    required this.color
+  });
+
+  NearestStation copyWith({
+    DgisObjectId? id,
+    String? name,
+    int? distance,
+    List<PublicTransportRouteType>? routeTypes,
+    bool? internalTransition,
+    Optional<Color?>? color
+  }) {
+    return NearestStation(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      distance: distance ?? this.distance,
+      routeTypes: routeTypes ?? this.routeTypes,
+      internalTransition: internalTransition ?? this.internalTransition,
+      color: color != null ? color.value : this.color
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is NearestStation &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.name == name &&
+    other.distance == distance &&
+    other.routeTypes == routeTypes &&
+    other.internalTransition == internalTransition &&
+    other.color == color;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, name, distance, routeTypes, internalTransition, color);
+  }
+
+}
+final class _CNearestStation extends ffi.Struct {
+  external _CDgisObjectId id;
+
+  external _CString name;
+
+  @ffi.Uint32()
+  external int distance;
+
+  external _CArray_CPublicTransportRouteType routeTypes;
+
+  @ffi.Bool()
+  external bool internalTransition;
+
+  external _COptional_CColor color;
+
+}
+// MARK: - NearestStation <-> _CNearestStation
+
+extension _CNearestStationToDart on _CNearestStation {
+  NearestStation _toDart() {
+    return NearestStation(
+      id: this.id._toDart(),
+      name: this.name._toDart(),
+      distance: this.distance,
+      routeTypes: this.routeTypes._toDart(),
+      internalTransition: this.internalTransition,
+      color: this.color._toDart()
+    );
+  }
+}
+
+extension _DartTo_CNearestStation on NearestStation {
+  _CNearestStation _copyFromDartTo_CNearestStation() {
+    final res = _CNearestStationMakeDefault();
+    res.id = this.id._copyFromDartTo_CDgisObjectId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.distance = this.distance;
+    res.routeTypes = this.routeTypes._copyFromDartTo_CArray_CPublicTransportRouteType();
+    res.internalTransition = this.internalTransition;
+    res.color = this.color._copyFromDartTo_COptional_CColor();
+    return res;
+  }
+}
+extension _CNearestStationRelease on _CNearestStation {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    routeTypes._releaseIntermediate();
+  }
+}
+
 // MARK: - Aggregate
 
 /** Обобщенное описание станции зарядки автомобилей. */
@@ -9314,71 +9745,6 @@ extension _CPublicTransportDirectoryRouteDirectionNamesInfoRelease on _CPublicTr
   }
 }
 
-// MARK: - PublicTransportRouteType
-
-/** Тип маршрута общественного транспорта. */
-enum PublicTransportRouteType {
-  /** Автобус. */
-  bus(0),
-  /** Троллейбус. */
-  trolleybus(1),
-  /** Трамвай. */
-  tram(2),
-  /** Маршрутное такси. */
-  shuttleBus(3),
-  /** Метро. */
-  metro(4),
-  /** Электропоезд. */
-  suburbanTrain(5),
-  /** Фуникулёр. */
-  funicularRailway(6),
-  /** Монорельс. */
-  monorail(7),
-  /** Водный транспорт. */
-  riverTransport(8),
-  /** Канатная дорога. */
-  cableCar(9),
-  /** Скоростной трамвай. */
-  lightRail(10),
-  /** Метротрамвай. */
-  premetro(11),
-  /** Лёгкое метро. */
-  lightMetro(12),
-  /** Аэроэкспресс. */
-  aeroexpress(13),
-  ;
-
-  const PublicTransportRouteType(this.rawValue);
-  final int rawValue;
-
-  static PublicTransportRouteType getByValue(int value) {
-    return PublicTransportRouteType.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CPublicTransportRouteType extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CPublicTransportRouteTypeBasicFunctions on _CPublicTransportRouteType {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CPublicTransportRouteTypeToDart on _CPublicTransportRouteType {
-  PublicTransportRouteType _toDart() {
-    return PublicTransportRouteType.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CPublicTransportRouteType on PublicTransportRouteType {
-  _CPublicTransportRouteType _copyFromDartTo_CPublicTransportRouteType() {
-    return _CPublicTransportRouteTypeMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - PublicTransportRouteDirectionId
 
 /** Идентификатор направления маршрута общественного транспорта. */
@@ -9654,42 +10020,6 @@ extension _CPublicTransportRouteGeometryRelease on _CPublicTransportRouteGeometr
   }
 }
 
-// MARK: - Color? <-> _COptional_CColor
-
-final class _COptional_CColor extends ffi.Struct {
-  
-  external _CColor value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CColorBasicFunctions on _COptional_CColor {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CColorToDart on _COptional_CColor {
-  Color? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CColor on Color? {
-  _COptional_CColor _copyFromDartTo_COptional_CColor() {
-    final cOptional = _COptional_CColorMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CColor();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - PublicTransportPlatformTransition
 
 /** Справочная информация о маршруте общественного транспорта, на который можно пересесть на остановочной платформе. */
@@ -12475,6 +12805,27 @@ class DirectoryObject implements ffi.Finalizable {
     res._releaseIntermediate();
     return t;
   }
+  /** Ближайшие парковки. */
+  List<DgisObjectId> get nearestParkingIds {
+    _CArray_CDgisObjectId res = _CDirectoryObject_nearestParkingIds(_CDirectoryObjectMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Ближайшие остановки. */
+  List<NearestStation> get nearestStations {
+    _CArray_CNearestStation res = _CDirectoryObject_nearestStations(_CDirectoryObjectMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Ближайшие остановочные платформы. */
+  List<NearestPlatform> get nearestPlatforms {
+    _CArray_CNearestPlatform res = _CDirectoryObject_nearestPlatforms(_CDirectoryObjectMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CDirectoryObject_releasePtr);
 
@@ -13282,6 +13633,92 @@ extension _CArray_CDgisObjectIdBasicFunctions on _CArray_CDgisObjectId {
   List<DgisObjectId> _fillFromC() {
     _forEach_CArray_CDgisObjectId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CDgisObjectId)>(_iterate));
     final result = List<DgisObjectId>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - List<NearestStation> <-> _CArray_CNearestStation
+
+final class _CArray_CNearestStation extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CNearestStationToDart on _CArray_CNearestStation {
+  List<NearestStation> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CNearestStation on List<NearestStation> {
+  _CArray_CNearestStation _copyFromDartTo_CArray_CNearestStation() {
+    final cArray = _CArray_CNearestStationmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CNearestStation();
+        _CArray_CNearestStationaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CNearestStationBasicFunctions on _CArray_CNearestStation {
+  void _releaseIntermediate() {
+    _CArray_CNearestStation_release(this);
+  }
+
+  static final _listToFill = <NearestStation>[];
+
+  static void _iterate(_CNearestStation item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<NearestStation> _fillFromC() {
+    _forEach_CArray_CNearestStation(this, ffi.Pointer.fromFunction<ffi.Void Function(_CNearestStation)>(_iterate));
+    final result = List<NearestStation>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - List<NearestPlatform> <-> _CArray_CNearestPlatform
+
+final class _CArray_CNearestPlatform extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CNearestPlatformToDart on _CArray_CNearestPlatform {
+  List<NearestPlatform> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CNearestPlatform on List<NearestPlatform> {
+  _CArray_CNearestPlatform _copyFromDartTo_CArray_CNearestPlatform() {
+    final cArray = _CArray_CNearestPlatformmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CNearestPlatform();
+        _CArray_CNearestPlatformaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CNearestPlatformBasicFunctions on _CArray_CNearestPlatform {
+  void _releaseIntermediate() {
+    _CArray_CNearestPlatform_release(this);
+  }
+
+  static final _listToFill = <NearestPlatform>[];
+
+  static void _iterate(_CNearestPlatform item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<NearestPlatform> _fillFromC() {
+    _forEach_CArray_CNearestPlatform(this, ffi.Pointer.fromFunction<ffi.Void Function(_CNearestPlatform)>(_iterate));
+    final result = List<NearestPlatform>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -21323,6 +21760,60 @@ extension _DartTo_CGraphicsPreset on GraphicsPreset {
   }
 }
 	
+// MARK: - LabelingPriority
+
+/** Приоритет лейблинга. */
+class LabelingPriority {
+  final int value;
+
+  const LabelingPriority([this.value = 0]);
+
+  LabelingPriority copyWith({
+    int? value
+  }) {
+    return LabelingPriority(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is LabelingPriority &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CLabelingPriority extends ffi.Struct {
+  @ffi.Uint8()
+  external int value;
+
+}
+// MARK: - LabelingPriority <-> _CLabelingPriority
+
+extension _CLabelingPriorityToDart on _CLabelingPriority {
+  LabelingPriority _toDart() {
+    return LabelingPriority(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CLabelingPriority on LabelingPriority {
+  _CLabelingPriority _copyFromDartTo_CLabelingPriority() {
+    final res = _CLabelingPriorityMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CLabelingPriorityRelease on _CLabelingPriority {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - ZIndex
 
 /** Индекс, задающий порядок отрисовки объектов в рамках слоя. */
@@ -25739,7 +26230,10 @@ class DgisSource extends Source implements ffi.Finalizable {
     return t;
   }
 
-  /** Создание источника, получающего реалистичные данные с серверов 2ГИС. */
+  /**
+   Создание источника, получающего реалистичные данные с серверов 2ГИС.
+   Источник всегда работает в режиме DgisSourceWorkingMode::Online.
+  */
   static Source createImmersiveDgisSource(
     Context context
   )  {
@@ -31065,6 +31559,8 @@ class TextStyle {
   final TextPlacement textPlacement;
   final LogicalPixel textOffset;
   final String? fontName;
+  /** Приоритет лейблинга текста. */
+  final LabelingPriority labelingPriority;
   /** Скрывать ли текст при наложении с другими объектами (маркеры, подписи других объектов). */
   final bool suppressOnOverlap;
 
@@ -31077,6 +31573,7 @@ class TextStyle {
     this.textPlacement = TextPlacement.bottomCenter,
     this.textOffset = const LogicalPixel(0),
     this.fontName = null,
+    this.labelingPriority = const LabelingPriority(0),
     this.suppressOnOverlap = true
   });
 
@@ -31089,6 +31586,7 @@ class TextStyle {
     TextPlacement? textPlacement,
     LogicalPixel? textOffset,
     Optional<String?>? fontName,
+    LabelingPriority? labelingPriority,
     bool? suppressOnOverlap
   }) {
     return TextStyle(
@@ -31100,6 +31598,7 @@ class TextStyle {
       textPlacement: textPlacement ?? this.textPlacement,
       textOffset: textOffset ?? this.textOffset,
       fontName: fontName != null ? fontName.value : this.fontName,
+      labelingPriority: labelingPriority ?? this.labelingPriority,
       suppressOnOverlap: suppressOnOverlap ?? this.suppressOnOverlap
     );
   }
@@ -31115,11 +31614,12 @@ class TextStyle {
     other.textPlacement == textPlacement &&
     other.textOffset == textOffset &&
     other.fontName == fontName &&
+    other.labelingPriority == labelingPriority &&
     other.suppressOnOverlap == suppressOnOverlap;
 
   @override
   int get hashCode {
-    return Object.hash(fontSize, color, strokeWidth, strokeColor, textHorizontalAlignment, textPlacement, textOffset, fontName, suppressOnOverlap);
+    return Object.hash(fontSize, color, strokeWidth, strokeColor, textHorizontalAlignment, textPlacement, textOffset, fontName, labelingPriority, suppressOnOverlap);
   }
 
 }
@@ -31140,6 +31640,8 @@ final class _CTextStyle extends ffi.Struct {
 
   external _COptional_CString fontName;
 
+  external _CLabelingPriority labelingPriority;
+
   @ffi.Bool()
   external bool suppressOnOverlap;
 
@@ -31157,6 +31659,7 @@ extension _CTextStyleToDart on _CTextStyle {
       textPlacement: this.textPlacement._toDart(),
       textOffset: this.textOffset._toDart(),
       fontName: this.fontName._toDart(),
+      labelingPriority: this.labelingPriority._toDart(),
       suppressOnOverlap: this.suppressOnOverlap
     );
   }
@@ -31173,6 +31676,7 @@ extension _DartTo_CTextStyle on TextStyle {
     res.textPlacement = this.textPlacement._copyFromDartTo_CTextPlacement();
     res.textOffset = this.textOffset._copyFromDartTo_CLogicalPixel();
     res.fontName = this.fontName._copyFromDartTo_COptional_CString();
+    res.labelingPriority = this.labelingPriority._copyFromDartTo_CLabelingPriority();
     res.suppressOnOverlap = this.suppressOnOverlap;
     return res;
   }
@@ -35964,6 +36468,8 @@ class SimpleClusterOptions {
   final Object? userData;
   /** Уровень отрисовки объекта. */
   final ZIndex zIndex;
+  /** Приоритет лейблинга иконки маркера. */
+  final LabelingPriority labelingPriority;
   /** Анимировать ли появление. */
   final bool animatedAppearance;
   /** Режим анимации. */
@@ -35979,6 +36485,7 @@ class SimpleClusterOptions {
     this.iconWidth = const LogicalPixel(0),
     this.userData = const {},
     this.zIndex = const ZIndex(0),
+    this.labelingPriority = const LabelingPriority(0),
     this.animatedAppearance = true,
     this.iconAnimationMode = AnimationMode.normal
   });
@@ -35993,6 +36500,7 @@ class SimpleClusterOptions {
     LogicalPixel? iconWidth,
     Optional<Object?>? userData,
     ZIndex? zIndex,
+    LabelingPriority? labelingPriority,
     bool? animatedAppearance,
     AnimationMode? iconAnimationMode
   }) {
@@ -36006,6 +36514,7 @@ class SimpleClusterOptions {
       iconWidth: iconWidth ?? this.iconWidth,
       userData: userData != null ? userData.value : this.userData,
       zIndex: zIndex ?? this.zIndex,
+      labelingPriority: labelingPriority ?? this.labelingPriority,
       animatedAppearance: animatedAppearance ?? this.animatedAppearance,
       iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode
     );
@@ -36023,12 +36532,13 @@ class SimpleClusterOptions {
     other.iconWidth == iconWidth &&
     other.userData == userData &&
     other.zIndex == zIndex &&
+    other.labelingPriority == labelingPriority &&
     other.animatedAppearance == animatedAppearance &&
     other.iconAnimationMode == iconAnimationMode;
 
   @override
   int get hashCode {
-    return Object.hash(icon, iconMapDirection, anchor, text, textStyle, iconOpacity, iconWidth, userData, zIndex, animatedAppearance, iconAnimationMode);
+    return Object.hash(icon, iconMapDirection, anchor, text, textStyle, iconOpacity, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, iconAnimationMode);
   }
 
 }
@@ -36051,6 +36561,8 @@ final class _CSimpleClusterOptions extends ffi.Struct {
 
   external _CZIndex zIndex;
 
+  external _CLabelingPriority labelingPriority;
+
   @ffi.Bool()
   external bool animatedAppearance;
 
@@ -36071,6 +36583,7 @@ extension _CSimpleClusterOptionsToDart on _CSimpleClusterOptions {
       iconWidth: this.iconWidth._toDart(),
       userData: this.userData._toDart(),
       zIndex: this.zIndex._toDart(),
+      labelingPriority: this.labelingPriority._toDart(),
       animatedAppearance: this.animatedAppearance,
       iconAnimationMode: this.iconAnimationMode._toDart()
     );
@@ -36089,6 +36602,7 @@ extension _DartTo_CSimpleClusterOptions on SimpleClusterOptions {
     res.iconWidth = this.iconWidth._copyFromDartTo_CLogicalPixel();
     res.userData = this.userData._copyFromDartTo_CAny();
     res.zIndex = this.zIndex._copyFromDartTo_CZIndex();
+    res.labelingPriority = this.labelingPriority._copyFromDartTo_CLabelingPriority();
     res.animatedAppearance = this.animatedAppearance;
     res.iconAnimationMode = this.iconAnimationMode._copyFromDartTo_CAnimationMode();
     return res;
@@ -36511,6 +37025,16 @@ class Marker extends SimpleMapObject implements ffi.Finalizable {
     void res = _CMarker_setIconAnimationMode_CAnimationMode(_CMarkerMakeDefault().._impl=_self, _a1);
     return res;
   }
+  /** Получение приоритета лейблинга маркера. */
+  LabelingPriority get labelingPriority {
+    _CLabelingPriority res = _CMarker_labelingPriority(_CMarkerMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set labelingPriority(LabelingPriority labelingPriority) {
+    var _a1 = labelingPriority._copyFromDartTo_CLabelingPriority();
+    void res = _CMarker_setLabelingPriority_CLabelingPriority(_CMarkerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CMarker_releasePtr);
 
@@ -36590,6 +37114,8 @@ class MarkerOptions {
   final Object? userData;
   /** Уровень отрисовки объекта. */
   final ZIndex zIndex;
+  /** Приоритет лейблинга иконки маркера. */
+  final LabelingPriority labelingPriority;
   /** Анимировать ли появление. */
   final bool animatedAppearance;
   /** Привязка к поэтажному плану здания. */
@@ -36610,6 +37136,7 @@ class MarkerOptions {
     this.iconWidth = const LogicalPixel(0),
     this.userData = const {},
     this.zIndex = const ZIndex(0),
+    this.labelingPriority = const LabelingPriority(0),
     this.animatedAppearance = true,
     this.levelId = null,
     this.iconAnimationMode = AnimationMode.normal
@@ -36628,6 +37155,7 @@ class MarkerOptions {
     LogicalPixel? iconWidth,
     Optional<Object?>? userData,
     ZIndex? zIndex,
+    LabelingPriority? labelingPriority,
     bool? animatedAppearance,
     Optional<LevelId?>? levelId,
     AnimationMode? iconAnimationMode
@@ -36645,6 +37173,7 @@ class MarkerOptions {
       iconWidth: iconWidth ?? this.iconWidth,
       userData: userData != null ? userData.value : this.userData,
       zIndex: zIndex ?? this.zIndex,
+      labelingPriority: labelingPriority ?? this.labelingPriority,
       animatedAppearance: animatedAppearance ?? this.animatedAppearance,
       levelId: levelId != null ? levelId.value : this.levelId,
       iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode
@@ -36666,13 +37195,14 @@ class MarkerOptions {
     other.iconWidth == iconWidth &&
     other.userData == userData &&
     other.zIndex == zIndex &&
+    other.labelingPriority == labelingPriority &&
     other.animatedAppearance == animatedAppearance &&
     other.levelId == levelId &&
     other.iconAnimationMode == iconAnimationMode;
 
   @override
   int get hashCode {
-    return Object.hash(position, icon, iconMapDirection, anchor, text, textStyle, iconOpacity, visible, draggable, iconWidth, userData, zIndex, animatedAppearance, levelId, iconAnimationMode);
+    return Object.hash(position, icon, iconMapDirection, anchor, text, textStyle, iconOpacity, visible, draggable, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, levelId, iconAnimationMode);
   }
 
 }
@@ -36703,6 +37233,8 @@ final class _CMarkerOptions extends ffi.Struct {
 
   external _CZIndex zIndex;
 
+  external _CLabelingPriority labelingPriority;
+
   @ffi.Bool()
   external bool animatedAppearance;
 
@@ -36728,6 +37260,7 @@ extension _CMarkerOptionsToDart on _CMarkerOptions {
       iconWidth: this.iconWidth._toDart(),
       userData: this.userData._toDart(),
       zIndex: this.zIndex._toDart(),
+      labelingPriority: this.labelingPriority._toDart(),
       animatedAppearance: this.animatedAppearance,
       levelId: this.levelId._toDart(),
       iconAnimationMode: this.iconAnimationMode._toDart()
@@ -36750,6 +37283,7 @@ extension _DartTo_CMarkerOptions on MarkerOptions {
     res.iconWidth = this.iconWidth._copyFromDartTo_CLogicalPixel();
     res.userData = this.userData._copyFromDartTo_CAny();
     res.zIndex = this.zIndex._copyFromDartTo_CZIndex();
+    res.labelingPriority = this.labelingPriority._copyFromDartTo_CLabelingPriority();
     res.animatedAppearance = this.animatedAppearance;
     res.levelId = this.levelId._copyFromDartTo_COptional_CLevelId();
     res.iconAnimationMode = this.iconAnimationMode._copyFromDartTo_CAnimationMode();
@@ -59787,6 +60321,210 @@ extension _CArray_CTrafficRouteBasicFunctions on _CArray_CTrafficRoute {
   }
 }
 	
+// MARK: - RouterErrorSource
+
+/** Источник ошибки поиска маршрута. */
+enum RouterErrorSource {
+  /** Ошибка произошла в онлайн-поисковике маршрута. */
+  onlineRouter(0),
+  /** Ошибка произошла в оффлайн-поисковике маршрута. */
+  offlineRouter(1),
+  /**
+   Ошибка произошла в гибридном поисковике маршрута, выполняющем онлайн поиск маршрута
+   с фоллбеком на оффлайн в случае ошибки.
+  */
+  hybridRouter(2),
+  ;
+
+  const RouterErrorSource(this.rawValue);
+  final int rawValue;
+
+  static RouterErrorSource getByValue(int value) {
+    return RouterErrorSource.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CRouterErrorSource extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CRouterErrorSourceBasicFunctions on _CRouterErrorSource {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CRouterErrorSourceToDart on _CRouterErrorSource {
+  RouterErrorSource _toDart() {
+    return RouterErrorSource.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CRouterErrorSource on RouterErrorSource {
+  _CRouterErrorSource _copyFromDartTo_CRouterErrorSource() {
+    return _CRouterErrorSourceMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - RouterErrorCode
+
+/** Категории ошибок поисковиков маршрута. */
+enum RouterErrorCode {
+  /** Ошибка пользователя - неправильный аргумент. */
+  invalidArgument(1),
+  /** Отсутствуют региональные данные для оффлайнового поисковика или макрограф. */
+  noData(2),
+  /** Точки старта и финиша находятся слишком далеко друг от друга, построение маршрута невозможно. */
+  startAndFinishTooFar(3),
+  /** Точки старта и финиша находятся слишком близко друг к другу, построение маршрута невозможно. */
+  startAndFinishTooClose(4),
+  /** Поиск между регионами не поддерживается (для оффлайнового поисковика в случае отсутствия макрографа). */
+  searchBetweenRegionsUnsupported(5),
+  /**
+   Поиск не поддерживается для выбранного типа транспорта (либо оффлайн, либо поиск маршрута на общественном
+   транспорте в глобальном проекте онлайн).
+  */
+  searchForRoutingTypeUnsupported(6),
+  /** Внутренняя ошибка поисковика маршрута. */
+  internalError(7),
+  /** Проблема подключения к интернету для онлайн-поисковика. */
+  networkError(8),
+  ;
+
+  const RouterErrorCode(this.rawValue);
+  final int rawValue;
+
+  static RouterErrorCode getByValue(int value) {
+    return RouterErrorCode.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CRouterErrorCode extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CRouterErrorCodeBasicFunctions on _CRouterErrorCode {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CRouterErrorCodeToDart on _CRouterErrorCode {
+  RouterErrorCode _toDart() {
+    return RouterErrorCode.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CRouterErrorCode on RouterErrorCode {
+  _CRouterErrorCode _copyFromDartTo_CRouterErrorCode() {
+    return _CRouterErrorCodeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - RouterErrorInfo
+
+/** Информация об ошибке поисковика маршрута. */
+class RouterErrorInfo {
+  /** Информация об источнике ошибки. */
+  final RouterErrorSource source;
+  /** Код ошибки. */
+  final RouterErrorCode code;
+
+  const RouterErrorInfo({
+    this.source = RouterErrorSource.hybridRouter,
+    this.code = RouterErrorCode.internalError
+  });
+
+  RouterErrorInfo copyWith({
+    RouterErrorSource? source,
+    RouterErrorCode? code
+  }) {
+    return RouterErrorInfo(
+      source: source ?? this.source,
+      code: code ?? this.code
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RouterErrorInfo &&
+    other.runtimeType == runtimeType &&
+    other.source == source &&
+    other.code == code;
+
+  @override
+  int get hashCode {
+    return Object.hash(source, code);
+  }
+
+}
+final class _CRouterErrorInfo extends ffi.Struct {
+  external _CRouterErrorSource source;
+
+  external _CRouterErrorCode code;
+
+}
+// MARK: - RouterErrorInfo <-> _CRouterErrorInfo
+
+extension _CRouterErrorInfoToDart on _CRouterErrorInfo {
+  RouterErrorInfo _toDart() {
+    return RouterErrorInfo(
+      source: this.source._toDart(),
+      code: this.code._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRouterErrorInfo on RouterErrorInfo {
+  _CRouterErrorInfo _copyFromDartTo_CRouterErrorInfo() {
+    final res = _CRouterErrorInfoMakeDefault();
+    res.source = this.source._copyFromDartTo_CRouterErrorSource();
+    res.code = this.code._copyFromDartTo_CRouterErrorCode();
+    return res;
+  }
+}
+extension _CRouterErrorInfoRelease on _CRouterErrorInfo {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - RouterErrorInfo? <-> _COptional_CRouterErrorInfo
+
+final class _COptional_CRouterErrorInfo extends ffi.Struct {
+  
+  external _CRouterErrorInfo value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CRouterErrorInfoBasicFunctions on _COptional_CRouterErrorInfo {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CRouterErrorInfoToDart on _COptional_CRouterErrorInfo {
+  RouterErrorInfo? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CRouterErrorInfo on RouterErrorInfo? {
+  _COptional_CRouterErrorInfo _copyFromDartTo_COptional_CRouterErrorInfo() {
+    final cOptional = _COptional_CRouterErrorInfoMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CRouterErrorInfo();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - List<RouteSearchPoint> <-> _CArray_CRouteSearchPoint
 
 final class _CArray_CRouteSearchPoint extends ffi.Struct {
@@ -59923,6 +60661,8 @@ class RouteEditorRoutesInfo {
    если список маршрутов непустой.
   */
   final List<TrafficRoute> routes;
+  /** Информация об ошибке поиска, если поиск маршрута завершается с ошибкой. */
+  final RouterErrorInfo? error;
   /**
    Параметры маршрута, для которых выполнялся поиск. Могут отличаться
    от параметров, переданных редактору, если маршруты были найдены уже
@@ -59932,15 +60672,18 @@ class RouteEditorRoutesInfo {
 
   const RouteEditorRoutesInfo({
     required this.routes,
+    required this.error,
     required this.routeParams
   });
 
   RouteEditorRoutesInfo copyWith({
     List<TrafficRoute>? routes,
+    Optional<RouterErrorInfo?>? error,
     RouteEditorRouteParams? routeParams
   }) {
     return RouteEditorRoutesInfo(
       routes: routes ?? this.routes,
+      error: error != null ? error.value : this.error,
       routeParams: routeParams ?? this.routeParams
     );
   }
@@ -59949,16 +60692,19 @@ class RouteEditorRoutesInfo {
     identical(this, other) || other is RouteEditorRoutesInfo &&
     other.runtimeType == runtimeType &&
     other.routes == routes &&
+    other.error == error &&
     other.routeParams == routeParams;
 
   @override
   int get hashCode {
-    return Object.hash(routes, routeParams);
+    return Object.hash(routes, error, routeParams);
   }
 
 }
 final class _CRouteEditorRoutesInfo extends ffi.Struct {
   external _CArray_CTrafficRoute routes;
+
+  external _COptional_CRouterErrorInfo error;
 
   external _CRouteEditorRouteParams routeParams;
 
@@ -59969,6 +60715,7 @@ extension _CRouteEditorRoutesInfoToDart on _CRouteEditorRoutesInfo {
   RouteEditorRoutesInfo _toDart() {
     return RouteEditorRoutesInfo(
       routes: this.routes._toDart(),
+      error: this.error._toDart(),
       routeParams: this.routeParams._toDart()
     );
   }
@@ -59978,6 +60725,7 @@ extension _DartTo_CRouteEditorRoutesInfo on RouteEditorRoutesInfo {
   _CRouteEditorRoutesInfo _copyFromDartTo_CRouteEditorRoutesInfo() {
     final res = _CRouteEditorRoutesInfoMakeDefault();
     res.routes = this.routes._copyFromDartTo_CArray_CTrafficRoute();
+    res.error = this.error._copyFromDartTo_COptional_CRouterErrorInfo();
     res.routeParams = this.routeParams._copyFromDartTo_CRouteEditorRouteParams();
     return res;
   }
@@ -64036,6 +64784,105 @@ extension _DartTo_CGestureActionPoint on GestureActionPoint {
   }
 }
 
+// MARK: - ScalingKinematicSettings
+
+class ScalingKinematicSettings {
+  /**
+   Включает или отключает кинематику масштабирования.
+   Если установлено в false, масштабирование мгновенно останавливается после окончания жеста,
+   и все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания масштабирования после окончания жеста.
+   Чем выше значение, тем быстрее замедляется масштабирование.
+  */
+  final double decelerationCoefficient;
+  /** Максимальная начальная скорость после окончания жеста (dgis::map::Zoom в секунду). */
+  final double maxInitialForwardZoomSpeed;
+  /**
+   Порог отклонения dgis::map::Zoom, при превышении которого карта продолжает масштабирование
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double zoomThreshold;
+
+  const ScalingKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 8,
+    this.maxInitialForwardZoomSpeed = 30,
+    this.zoomThreshold = 0.20000000298023224
+  });
+
+  ScalingKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? maxInitialForwardZoomSpeed,
+    double? zoomThreshold
+  }) {
+    return ScalingKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      maxInitialForwardZoomSpeed: maxInitialForwardZoomSpeed ?? this.maxInitialForwardZoomSpeed,
+      zoomThreshold: zoomThreshold ?? this.zoomThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScalingKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.maxInitialForwardZoomSpeed == maxInitialForwardZoomSpeed &&
+    other.zoomThreshold == zoomThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardZoomSpeed, zoomThreshold);
+  }
+
+}
+final class _CScalingKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double maxInitialForwardZoomSpeed;
+
+  @ffi.Float()
+  external double zoomThreshold;
+
+}
+// MARK: - ScalingKinematicSettings <-> _CScalingKinematicSettings
+
+extension _CScalingKinematicSettingsToDart on _CScalingKinematicSettings {
+  ScalingKinematicSettings _toDart() {
+    return ScalingKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      maxInitialForwardZoomSpeed: this.maxInitialForwardZoomSpeed,
+      zoomThreshold: this.zoomThreshold
+    );
+  }
+}
+
+extension _DartTo_CScalingKinematicSettings on ScalingKinematicSettings {
+  _CScalingKinematicSettings _copyFromDartTo_CScalingKinematicSettings() {
+    final res = _CScalingKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.maxInitialForwardZoomSpeed = this.maxInitialForwardZoomSpeed;
+    res.zoomThreshold = this.zoomThreshold;
+    return res;
+  }
+}
+extension _CScalingKinematicSettingsRelease on _CScalingKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - ScalingGestureSettings
 
 /** Настройки жеста масштабирования. */
@@ -64060,6 +64907,16 @@ class ScalingGestureSettings implements ffi.Finalizable {
   set scalingCenter(GestureActionPoint actionPoint) {
     var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
     void res = _CScalingGestureSettings_setScalingCenter_CGestureActionPoint(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики масштабирования. */
+  ScalingKinematicSettings get kinematicSettings {
+    _CScalingKinematicSettings res = _CScalingGestureSettings_kinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(ScalingKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CScalingKinematicSettings();
+    void res = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
     return res;
   }
 
@@ -64247,6 +65104,116 @@ extension _CRotationRecognizeSettingsRelease on _CRotationRecognizeSettings {
   }
 }
 
+// MARK: - RotationKinematicSettings
+
+class RotationKinematicSettings {
+  /**
+   Включает или отключает кинематику вращения.
+   Если установлено в false, вращение мгновенно останавливается после окончания жеста,
+   все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания вращения после окончания жеста.
+   Чем выше значение, тем быстрее замедляется вращение.
+  */
+  final double decelerationCoefficient;
+  /** Максимальная начальная угловая скорость после окончания жеста (в радианах в секунду). */
+  final double maxInitialForwardAngularSpeed;
+  /** Начальная угловая скорость возврата карты в исходное положение (в радианах в секунду). */
+  final double initialBackwardAngularSpeed;
+  /**
+   Порог углового отклонения (в радианах), при превышении которого карта продолжает вращение
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double angleThreshold;
+
+  const RotationKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 4,
+    this.maxInitialForwardAngularSpeed = 10,
+    this.initialBackwardAngularSpeed = 0.33000001311302185,
+    this.angleThreshold = 0.20000000298023224
+  });
+
+  RotationKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? maxInitialForwardAngularSpeed,
+    double? initialBackwardAngularSpeed,
+    double? angleThreshold
+  }) {
+    return RotationKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
+      initialBackwardAngularSpeed: initialBackwardAngularSpeed ?? this.initialBackwardAngularSpeed,
+      angleThreshold: angleThreshold ?? this.angleThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
+    other.initialBackwardAngularSpeed == initialBackwardAngularSpeed &&
+    other.angleThreshold == angleThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardAngularSpeed, initialBackwardAngularSpeed, angleThreshold);
+  }
+
+}
+final class _CRotationKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double maxInitialForwardAngularSpeed;
+
+  @ffi.Float()
+  external double initialBackwardAngularSpeed;
+
+  @ffi.Float()
+  external double angleThreshold;
+
+}
+// MARK: - RotationKinematicSettings <-> _CRotationKinematicSettings
+
+extension _CRotationKinematicSettingsToDart on _CRotationKinematicSettings {
+  RotationKinematicSettings _toDart() {
+    return RotationKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
+      initialBackwardAngularSpeed: this.initialBackwardAngularSpeed,
+      angleThreshold: this.angleThreshold
+    );
+  }
+}
+
+extension _DartTo_CRotationKinematicSettings on RotationKinematicSettings {
+  _CRotationKinematicSettings _copyFromDartTo_CRotationKinematicSettings() {
+    final res = _CRotationKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
+    res.initialBackwardAngularSpeed = this.initialBackwardAngularSpeed;
+    res.angleThreshold = this.angleThreshold;
+    return res;
+  }
+}
+extension _CRotationKinematicSettingsRelease on _CRotationKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - RotationGestureSettings
 
 /** Настройки жеста вращения. */
@@ -64271,6 +65238,16 @@ class RotationGestureSettings implements ffi.Finalizable {
   set rotationCenter(GestureActionPoint actionPoint) {
     var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
     void res = _CRotationGestureSettings_setRotationCenter_CGestureActionPoint(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики вращения. */
+  RotationKinematicSettings get kinematicSettings {
+    _CRotationKinematicSettings res = _CRotationGestureSettings_kinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(RotationKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CRotationKinematicSettings();
+    void res = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
     return res;
   }
 
@@ -64562,6 +65539,138 @@ extension _CTiltRecognizeSettingsRelease on _CTiltRecognizeSettings {
   }
 }
 
+// MARK: - TiltKinematicSettings
+
+class TiltKinematicSettings {
+  /**
+   Включает или отключает кинематику наклона.
+   Если установлено в false, наклон мгновенно останавливается после окончания жеста,
+   все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания наклона после окончания жеста.
+   Чем выше значение, тем быстрее замедляется наклон.
+  */
+  final double decelerationCoefficient;
+  /** Множитель начальной скорости наклона. */
+  final double initialForwardSpeedMultiplier;
+  /**
+   Максимальная начальная угловая скорость наклона после окончания жеста (в радианах в секунду).
+   При вычисоении скорости сначала производится умножение на initial_forward_speed_multiplier, а затем применяется
+   ограничение.
+  */
+  final double maxInitialForwardAngularSpeed;
+  final Tilt minTiltAdditionalBorder;
+  final Tilt maxTiltAdditionalBorder;
+  /**
+   Порог углового отклонения (в радианах), при превышении которого карта продолжает наклоняться
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double tiltThreshold;
+
+  const TiltKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 7,
+    this.initialForwardSpeedMultiplier = 0.699999988079071,
+    this.maxInitialForwardAngularSpeed = 3,
+    this.minTiltAdditionalBorder = const Tilt(10),
+    this.maxTiltAdditionalBorder = const Tilt(10),
+    this.tiltThreshold = 0.08500000089406967
+  });
+
+  TiltKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? initialForwardSpeedMultiplier,
+    double? maxInitialForwardAngularSpeed,
+    Tilt? minTiltAdditionalBorder,
+    Tilt? maxTiltAdditionalBorder,
+    double? tiltThreshold
+  }) {
+    return TiltKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      initialForwardSpeedMultiplier: initialForwardSpeedMultiplier ?? this.initialForwardSpeedMultiplier,
+      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
+      minTiltAdditionalBorder: minTiltAdditionalBorder ?? this.minTiltAdditionalBorder,
+      maxTiltAdditionalBorder: maxTiltAdditionalBorder ?? this.maxTiltAdditionalBorder,
+      tiltThreshold: tiltThreshold ?? this.tiltThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TiltKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.initialForwardSpeedMultiplier == initialForwardSpeedMultiplier &&
+    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
+    other.minTiltAdditionalBorder == minTiltAdditionalBorder &&
+    other.maxTiltAdditionalBorder == maxTiltAdditionalBorder &&
+    other.tiltThreshold == tiltThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, initialForwardSpeedMultiplier, maxInitialForwardAngularSpeed, minTiltAdditionalBorder, maxTiltAdditionalBorder, tiltThreshold);
+  }
+
+}
+final class _CTiltKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double initialForwardSpeedMultiplier;
+
+  @ffi.Float()
+  external double maxInitialForwardAngularSpeed;
+
+  external _CTilt minTiltAdditionalBorder;
+
+  external _CTilt maxTiltAdditionalBorder;
+
+  @ffi.Float()
+  external double tiltThreshold;
+
+}
+// MARK: - TiltKinematicSettings <-> _CTiltKinematicSettings
+
+extension _CTiltKinematicSettingsToDart on _CTiltKinematicSettings {
+  TiltKinematicSettings _toDart() {
+    return TiltKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      initialForwardSpeedMultiplier: this.initialForwardSpeedMultiplier,
+      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
+      minTiltAdditionalBorder: this.minTiltAdditionalBorder._toDart(),
+      maxTiltAdditionalBorder: this.maxTiltAdditionalBorder._toDart(),
+      tiltThreshold: this.tiltThreshold
+    );
+  }
+}
+
+extension _DartTo_CTiltKinematicSettings on TiltKinematicSettings {
+  _CTiltKinematicSettings _copyFromDartTo_CTiltKinematicSettings() {
+    final res = _CTiltKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.initialForwardSpeedMultiplier = this.initialForwardSpeedMultiplier;
+    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
+    res.minTiltAdditionalBorder = this.minTiltAdditionalBorder._copyFromDartTo_CTilt();
+    res.maxTiltAdditionalBorder = this.maxTiltAdditionalBorder._copyFromDartTo_CTilt();
+    res.tiltThreshold = this.tiltThreshold;
+    return res;
+  }
+}
+extension _CTiltKinematicSettingsRelease on _CTiltKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - TiltGestureSettings
 
 /** Настройки жеста наклона. */
@@ -64576,6 +65685,16 @@ class TiltGestureSettings implements ffi.Finalizable {
   set recognizeSettings(TiltRecognizeSettings settings) {
     var _a1 = settings._copyFromDartTo_CTiltRecognizeSettings();
     void res = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики наклона. */
+  TiltKinematicSettings get kinematicSettings {
+    _CTiltKinematicSettings res = _CTiltGestureSettings_kinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(TiltKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CTiltKinematicSettings();
+    void res = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
     return res;
   }
 
@@ -64630,6 +65749,130 @@ extension _DartToCTiltGestureSettings on TiltGestureSettings {
     return (_CTiltGestureSettingsMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - CommonRecognizeSettings
+
+/** Общие настройки распознавания жестов. */
+class CommonRecognizeSettings {
+  /**
+   Таймаут между распознаваемыми жестами.
+   Используется для предотвращения ложных срабатываний в конце жеста.
+  */
+  final Duration interGestureTimeout;
+
+  const CommonRecognizeSettings([this.interGestureTimeout = const Duration(milliseconds: 50)]);
+
+  CommonRecognizeSettings copyWith({
+    Duration? interGestureTimeout
+  }) {
+    return CommonRecognizeSettings(
+      interGestureTimeout ?? this.interGestureTimeout
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CommonRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.interGestureTimeout == interGestureTimeout;
+
+  @override
+  int get hashCode {
+    return interGestureTimeout.hashCode;
+  }
+
+}
+final class _CCommonRecognizeSettings extends ffi.Struct {
+  external _CTimeInterval interGestureTimeout;
+
+}
+// MARK: - CommonRecognizeSettings <-> _CCommonRecognizeSettings
+
+extension _CCommonRecognizeSettingsToDart on _CCommonRecognizeSettings {
+  CommonRecognizeSettings _toDart() {
+    return CommonRecognizeSettings(
+      this.interGestureTimeout._toDart()
+    );
+  }
+}
+
+extension _DartTo_CCommonRecognizeSettings on CommonRecognizeSettings {
+  _CCommonRecognizeSettings _copyFromDartTo_CCommonRecognizeSettings() {
+    final res = _CCommonRecognizeSettingsMakeDefault();
+    res.interGestureTimeout = this.interGestureTimeout._copyFromDartTo_CTimeInterval();
+    return res;
+  }
+}
+extension _CCommonRecognizeSettingsRelease on _CCommonRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - CommonGestureSettings
+
+class CommonGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Общие настройки распознования жестов. */
+  CommonRecognizeSettings get recognizeSettings {
+    _CCommonRecognizeSettings res = _CCommonGestureSettings_recognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(CommonRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CCommonRecognizeSettings();
+    void res = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CCommonGestureSettings_releasePtr);
+
+  CommonGestureSettings._raw(this._self);
+  factory CommonGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = CommonGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CommonGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CCommonGestureSettings_cg_objectIdentifier(this._self) == _CCommonGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CCommonGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - CommonGestureSettings <-> CCommonGestureSettings
+
+final class _CCommonGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CCommonGestureSettingsBasicFunctions on _CCommonGestureSettings {
+  void _releaseIntermediate() {
+    _CCommonGestureSettings_release(_impl);
+  }
+
+  _CCommonGestureSettings _retain() {
+    return _CCommonGestureSettings_retain(_impl);
+  }
+}
+
+extension _CCommonGestureSettingsToDart on _CCommonGestureSettings {
+  CommonGestureSettings _toDart() {
+    return CommonGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCCommonGestureSettings on CommonGestureSettings {
+  _CCommonGestureSettings _copyFromDartTo_CCommonGestureSettings() {
+    return (_CCommonGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - GestureManager
 
 /** Класс для управления обработкой жестов. */
@@ -64665,6 +65908,12 @@ class GestureManager implements ffi.Finalizable {
   }
   TiltGestureSettings get tiltSettings {
     _CTiltGestureSettings res = _CGestureManager_tiltSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  CommonGestureSettings get commonSettings {
+    _CCommonGestureSettings res = _CGestureManager_commonSettings(_CGestureManagerMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
@@ -70092,6 +71341,120 @@ extension _DartTo_COptional_CCameraProgressInfo on CameraProgressInfo? {
     return cOptional;
   }
 }
+// MARK: - MiniMapControlModel
+
+/**
+ Интерфейс модели контрола миникарты.
+ Предназначен для управления позицией маркера на экране, зумом и прочим положением камеры так,
+ чтобы маршрут было лучше видно на миникарте.
+*/
+class MiniMapControlModel implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CMiniMapControlModel_releasePtr);
+
+  MiniMapControlModel._raw(this._self);
+  factory MiniMapControlModel._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MiniMapControlModel._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory MiniMapControlModel(
+    Context context,
+    Model model,
+    Map map
+  ) {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = model._copyFromDartTo_CModel();
+    var _a2 = map._copyFromDartTo_CMap();
+    _CResult_CMiniMapControlModel res = _CMiniMapControlModel_C_createWith_CContext_CModel_CMap(_a0, _a1, _a2);
+    _a2._releaseIntermediate();
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    return MiniMapControlModel._create(res._toCDart()._impl);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MiniMapControlModel &&
+    other.runtimeType == runtimeType &&
+    _CMiniMapControlModel_cg_objectIdentifier(this._self) == _CMiniMapControlModel_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMiniMapControlModel_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - MiniMapControlModel <-> CMiniMapControlModel
+
+final class _CMiniMapControlModel extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMiniMapControlModelBasicFunctions on _CMiniMapControlModel {
+  void _releaseIntermediate() {
+    _CMiniMapControlModel_release(_impl);
+  }
+
+  _CMiniMapControlModel _retain() {
+    return _CMiniMapControlModel_retain(_impl);
+  }
+}
+
+extension _CMiniMapControlModelToDart on _CMiniMapControlModel {
+  MiniMapControlModel _toDart() {
+    return MiniMapControlModel._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMiniMapControlModel on MiniMapControlModel {
+  _CMiniMapControlModel _copyFromDartTo_CMiniMapControlModel() {
+    return (_CMiniMapControlModelMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - MiniMapControlModel <-> _CResult_CMiniMapControlModel
+
+final class _CResult_CMiniMapControlModelImpl extends ffi.Union {
+  
+  external _CMiniMapControlModel _value;
+  external _CError _error;
+}
+
+final class _CResult_CMiniMapControlModel extends ffi.Struct {
+  external _CResult_CMiniMapControlModelImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CResult_CMiniMapControlModelBasicFunctions on _CResult_CMiniMapControlModel {
+  void _releaseIntermediate() {
+    _CResult_CMiniMapControlModel_release(this);
+  }
+}
+
+extension _CResult_CMiniMapControlModelToDart on _CResult_CMiniMapControlModel {
+  MiniMapControlModel _toDart() {
+    if (this._index == 0) {
+      return this._impl._value._toDart();
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+
+  _CMiniMapControlModel _toCDart() {
+    if (this._index == 0) {
+      return this._impl._value;
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+}
+	
 // MARK: - ApplicationState
 
 /** Состояние приложения, использующего SDK */
@@ -70899,65 +72262,6 @@ extension _DartTo_CPlatformLocaleManager on PlatformLocaleManager {
   }
 
 
-}
-
-// MARK: - StorageOptions
-
-/** Опции хранилища оффлайн данных. */
-class StorageOptions {
-  /**
-   Путь к каталогу верхнего уровня для основного хранилища загрузок.
-   Файловое хранилище будет находиться в подкаталоге downloads в данном каталоге.
-   Если путь не указан, будет использоваться директория по умолчанию.
-  */
-  final String? downloadStoragePath;
-
-  const StorageOptions([this.downloadStoragePath = null]);
-
-  StorageOptions copyWith({
-    Optional<String?>? downloadStoragePath
-  }) {
-    return StorageOptions(
-      downloadStoragePath != null ? downloadStoragePath.value : this.downloadStoragePath
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is StorageOptions &&
-    other.runtimeType == runtimeType &&
-    other.downloadStoragePath == downloadStoragePath;
-
-  @override
-  int get hashCode {
-    return downloadStoragePath.hashCode;
-  }
-
-}
-final class _CStorageOptions extends ffi.Struct {
-  external _COptional_CString downloadStoragePath;
-
-}
-// MARK: - StorageOptions <-> _CStorageOptions
-
-extension _CStorageOptionsToDart on _CStorageOptions {
-  StorageOptions _toDart() {
-    return StorageOptions(
-      this.downloadStoragePath._toDart()
-    );
-  }
-}
-
-extension _DartTo_CStorageOptions on StorageOptions {
-  _CStorageOptions _copyFromDartTo_CStorageOptions() {
-    final res = _CStorageOptionsMakeDefault();
-    res.downloadStoragePath = this.downloadStoragePath._copyFromDartTo_COptional_CString();
-    return res;
-  }
-}
-extension _CStorageOptionsRelease on _CStorageOptions {
-  void _releaseIntermediate() {
-    downloadStoragePath._releaseIntermediate();
-  }
 }
 
 // MARK: - toLocaleManager
@@ -75591,6 +76895,39 @@ late final _CGroupItemMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGroupItem Fu
 late final _CGroupItemMakeDefault = _CGroupItemMakeDefaultPtr.asFunction<_CGroupItem Function()>();
 
 
+late final _CNearestPlatformTransitionTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CNearestPlatformTransitionType Function()>>('CNearestPlatformTransitionTypeMakeDefault');
+late final _CNearestPlatformTransitionTypeMakeDefault = _CNearestPlatformTransitionTypeMakeDefaultPtr.asFunction<_CNearestPlatformTransitionType Function()>();
+
+late final _COptional_CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CColor Function()>>('COptional_CColorMakeDefault');
+late final _COptional_CColorMakeDefault = _COptional_CColorMakeDefaultPtr.asFunction<_COptional_CColor Function()>();
+
+late final _COptional_CNearestPlatformTransitionTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CNearestPlatformTransitionType Function()>>('COptional_CNearestPlatformTransitionTypeMakeDefault');
+late final _COptional_CNearestPlatformTransitionTypeMakeDefault = _COptional_CNearestPlatformTransitionTypeMakeDefaultPtr.asFunction<_COptional_CNearestPlatformTransitionType Function()>();
+
+late final _CNearestPlatformMakeDefaultPtr = _lookup<ffi.NativeFunction<_CNearestPlatform Function()>>('CNearestPlatformMakeDefault');
+late final _CNearestPlatformMakeDefault = _CNearestPlatformMakeDefaultPtr.asFunction<_CNearestPlatform Function()>();
+
+
+late final _CPublicTransportRouteTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteType Function()>>('CPublicTransportRouteTypeMakeDefault');
+late final _CPublicTransportRouteTypeMakeDefault = _CPublicTransportRouteTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteType Function()>();
+
+late final _CArray_CPublicTransportRouteTypemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CPublicTransportRouteType Function()>>('CArray_CPublicTransportRouteType_makeEmpty');
+late final _CArray_CPublicTransportRouteTypemakeEmpty = _CArray_CPublicTransportRouteTypemakeEmptyPtr.asFunction<_CArray_CPublicTransportRouteType Function()>();
+late final _CArray_CPublicTransportRouteTypeaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteType, _CPublicTransportRouteType)>>('CArray_CPublicTransportRouteType_addElement');
+late final _CArray_CPublicTransportRouteTypeaddElement = _CArray_CPublicTransportRouteTypeaddElementPtr.asFunction<void Function(_CArray_CPublicTransportRouteType, _CPublicTransportRouteType)>();
+late final _forEach_CArray_CPublicTransportRouteTypePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CPublicTransportRouteType, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteType)>>)
+>>('CArray_CPublicTransportRouteType_forEachWithFunctionPointer');
+late final _forEach_CArray_CPublicTransportRouteType = _forEach_CArray_CPublicTransportRouteTypePtr.asFunction<
+  void Function(_CArray_CPublicTransportRouteType, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CPublicTransportRouteType)
+>>)>();
+late final _CArray_CPublicTransportRouteType_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CPublicTransportRouteType)>>('CArray_CPublicTransportRouteType_release');
+late final _CArray_CPublicTransportRouteType_release = _CArray_CPublicTransportRouteType_releasePtr.asFunction<void Function(_CArray_CPublicTransportRouteType)>();
+
+late final _CNearestStationMakeDefaultPtr = _lookup<ffi.NativeFunction<_CNearestStation Function()>>('CNearestStationMakeDefault');
+late final _CNearestStationMakeDefault = _CNearestStationMakeDefaultPtr.asFunction<_CNearestStation Function()>();
+
+
 late final _CAggregateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAggregate Function()>>('CAggregateMakeDefault');
 late final _CAggregateMakeDefault = _CAggregateMakeDefaultPtr.asFunction<_CAggregate Function()>();
 
@@ -75804,9 +77141,6 @@ late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr = _lo
 late final _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefault = _CPublicTransportDirectoryRouteDirectionNamesInfoMakeDefaultPtr.asFunction<_CPublicTransportDirectoryRouteDirectionNamesInfo Function()>();
 
 
-late final _CPublicTransportRouteTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteType Function()>>('CPublicTransportRouteTypeMakeDefault');
-late final _CPublicTransportRouteTypeMakeDefault = _CPublicTransportRouteTypeMakeDefaultPtr.asFunction<_CPublicTransportRouteType Function()>();
-
 late final _CPublicTransportRouteDirectionIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteDirectionId Function()>>('CPublicTransportRouteDirectionIdMakeDefault');
 late final _CPublicTransportRouteDirectionIdMakeDefault = _CPublicTransportRouteDirectionIdMakeDefaultPtr.asFunction<_CPublicTransportRouteDirectionId Function()>();
 
@@ -75836,9 +77170,6 @@ late final _COptional_CGeoPointMakeDefault = _COptional_CGeoPointMakeDefaultPtr.
 late final _CPublicTransportRouteGeometryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportRouteGeometry Function()>>('CPublicTransportRouteGeometryMakeDefault');
 late final _CPublicTransportRouteGeometryMakeDefault = _CPublicTransportRouteGeometryMakeDefaultPtr.asFunction<_CPublicTransportRouteGeometry Function()>();
 
-
-late final _COptional_CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CColor Function()>>('COptional_CColorMakeDefault');
-late final _COptional_CColorMakeDefault = _COptional_CColorMakeDefaultPtr.asFunction<_COptional_CColor Function()>();
 
 late final _CPublicTransportPlatformTransitionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPublicTransportPlatformTransition Function()>>('CPublicTransportPlatformTransitionMakeDefault');
 late final _CPublicTransportPlatformTransitionMakeDefault = _CPublicTransportPlatformTransitionMakeDefaultPtr.asFunction<_CPublicTransportPlatformTransition Function()>();
@@ -76222,6 +77553,12 @@ late final _CDirectoryObject_routeInfosPtr = _lookup<ffi.NativeFunction<_CArray_
 late final _CDirectoryObject_routeInfos = _CDirectoryObject_routeInfosPtr.asFunction<_CArray_CPublicTransportDirectoryRouteInfo Function(_CDirectoryObject)>();
 late final _CDirectoryObject_platformIdsPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>>('CDirectoryObject_platformIds');
 late final _CDirectoryObject_platformIds = _CDirectoryObject_platformIdsPtr.asFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>();
+late final _CDirectoryObject_nearestParkingIdsPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>>('CDirectoryObject_nearestParkingIds');
+late final _CDirectoryObject_nearestParkingIds = _CDirectoryObject_nearestParkingIdsPtr.asFunction<_CArray_CDgisObjectId Function(_CDirectoryObject)>();
+late final _CDirectoryObject_nearestStationsPtr = _lookup<ffi.NativeFunction<_CArray_CNearestStation Function(_CDirectoryObject)>>('CDirectoryObject_nearestStations');
+late final _CDirectoryObject_nearestStations = _CDirectoryObject_nearestStationsPtr.asFunction<_CArray_CNearestStation Function(_CDirectoryObject)>();
+late final _CDirectoryObject_nearestPlatformsPtr = _lookup<ffi.NativeFunction<_CArray_CNearestPlatform Function(_CDirectoryObject)>>('CDirectoryObject_nearestPlatforms');
+late final _CDirectoryObject_nearestPlatforms = _CDirectoryObject_nearestPlatformsPtr.asFunction<_CArray_CNearestPlatform Function(_CDirectoryObject)>();
 
 late final _CDirectoryObject_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDirectoryObject_cg_objectIdentifier');
 late final _CDirectoryObject_cg_objectIdentifier = _CDirectoryObject_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -76389,6 +77726,32 @@ late final _forEach_CArray_CDgisObjectId = _forEach_CArray_CDgisObjectIdPtr.asFu
 >>)>();
 late final _CArray_CDgisObjectId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CDgisObjectId)>>('CArray_CDgisObjectId_release');
 late final _CArray_CDgisObjectId_release = _CArray_CDgisObjectId_releasePtr.asFunction<void Function(_CArray_CDgisObjectId)>();
+
+late final _CArray_CNearestStationmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CNearestStation Function()>>('CArray_CNearestStation_makeEmpty');
+late final _CArray_CNearestStationmakeEmpty = _CArray_CNearestStationmakeEmptyPtr.asFunction<_CArray_CNearestStation Function()>();
+late final _CArray_CNearestStationaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CNearestStation, _CNearestStation)>>('CArray_CNearestStation_addElement');
+late final _CArray_CNearestStationaddElement = _CArray_CNearestStationaddElementPtr.asFunction<void Function(_CArray_CNearestStation, _CNearestStation)>();
+late final _forEach_CArray_CNearestStationPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CNearestStation, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CNearestStation)>>)
+>>('CArray_CNearestStation_forEachWithFunctionPointer');
+late final _forEach_CArray_CNearestStation = _forEach_CArray_CNearestStationPtr.asFunction<
+  void Function(_CArray_CNearestStation, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CNearestStation)
+>>)>();
+late final _CArray_CNearestStation_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CNearestStation)>>('CArray_CNearestStation_release');
+late final _CArray_CNearestStation_release = _CArray_CNearestStation_releasePtr.asFunction<void Function(_CArray_CNearestStation)>();
+
+late final _CArray_CNearestPlatformmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CNearestPlatform Function()>>('CArray_CNearestPlatform_makeEmpty');
+late final _CArray_CNearestPlatformmakeEmpty = _CArray_CNearestPlatformmakeEmptyPtr.asFunction<_CArray_CNearestPlatform Function()>();
+late final _CArray_CNearestPlatformaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CNearestPlatform, _CNearestPlatform)>>('CArray_CNearestPlatform_addElement');
+late final _CArray_CNearestPlatformaddElement = _CArray_CNearestPlatformaddElementPtr.asFunction<void Function(_CArray_CNearestPlatform, _CNearestPlatform)>();
+late final _forEach_CArray_CNearestPlatformPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CNearestPlatform, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CNearestPlatform)>>)
+>>('CArray_CNearestPlatform_forEachWithFunctionPointer');
+late final _forEach_CArray_CNearestPlatform = _forEach_CArray_CNearestPlatformPtr.asFunction<
+  void Function(_CArray_CNearestPlatform, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CNearestPlatform)
+>>)>();
+late final _CArray_CNearestPlatform_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CNearestPlatform)>>('CArray_CNearestPlatform_release');
+late final _CArray_CNearestPlatform_release = _CArray_CNearestPlatform_releasePtr.asFunction<void Function(_CArray_CNearestPlatform)>();
 
 late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function()>>('CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefault');
 late final _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefault = _CFuture_COptional_CPublicTransportDirectoryScheduleInfoMakeDefaultPtr.asFunction<_CFuture_COptional_CPublicTransportDirectoryScheduleInfo Function()>();
@@ -77659,6 +79022,10 @@ late final _CDevicePpiMakeDefault = _CDevicePpiMakeDefaultPtr.asFunction<_CDevic
 
 late final _CGraphicsPresetMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGraphicsPreset Function()>>('CGraphicsPresetMakeDefault');
 late final _CGraphicsPresetMakeDefault = _CGraphicsPresetMakeDefaultPtr.asFunction<_CGraphicsPreset Function()>();
+
+late final _CLabelingPriorityMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLabelingPriority Function()>>('CLabelingPriorityMakeDefault');
+late final _CLabelingPriorityMakeDefault = _CLabelingPriorityMakeDefaultPtr.asFunction<_CLabelingPriority Function()>();
+
 
 late final _CZIndexMakeDefaultPtr = _lookup<ffi.NativeFunction<_CZIndex Function()>>('CZIndexMakeDefault');
 late final _CZIndexMakeDefault = _CZIndexMakeDefaultPtr.asFunction<_CZIndex Function()>();
@@ -80064,6 +81431,10 @@ late final _CMarker_iconAnimationModePtr = _lookup<ffi.NativeFunction<_CAnimatio
 late final _CMarker_iconAnimationMode = _CMarker_iconAnimationModePtr.asFunction<_CAnimationMode Function(_CMarker)>();
 late final _CMarker_setIconAnimationMode_CAnimationModePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMarker, _CAnimationMode)>>('CMarker_setIconAnimationMode_CAnimationMode');
 late final _CMarker_setIconAnimationMode_CAnimationMode = _CMarker_setIconAnimationMode_CAnimationModePtr.asFunction<void Function(_CMarker, _CAnimationMode)>();
+late final _CMarker_labelingPriorityPtr = _lookup<ffi.NativeFunction<_CLabelingPriority Function(_CMarker)>>('CMarker_labelingPriority');
+late final _CMarker_labelingPriority = _CMarker_labelingPriorityPtr.asFunction<_CLabelingPriority Function(_CMarker)>();
+late final _CMarker_setLabelingPriority_CLabelingPriorityPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMarker, _CLabelingPriority)>>('CMarker_setLabelingPriority_CLabelingPriority');
+late final _CMarker_setLabelingPriority_CLabelingPriority = _CMarker_setLabelingPriority_CLabelingPriorityPtr.asFunction<void Function(_CMarker, _CLabelingPriority)>();
 
 late final _CMarker_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMarker_cg_objectIdentifier');
 late final _CMarker_cg_objectIdentifier = _CMarker_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -83277,6 +84648,19 @@ late final _forEach_CArray_CTrafficRoute = _forEach_CArray_CTrafficRoutePtr.asFu
 late final _CArray_CTrafficRoute_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CTrafficRoute)>>('CArray_CTrafficRoute_release');
 late final _CArray_CTrafficRoute_release = _CArray_CTrafficRoute_releasePtr.asFunction<void Function(_CArray_CTrafficRoute)>();
 
+late final _CRouterErrorSourceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouterErrorSource Function()>>('CRouterErrorSourceMakeDefault');
+late final _CRouterErrorSourceMakeDefault = _CRouterErrorSourceMakeDefaultPtr.asFunction<_CRouterErrorSource Function()>();
+
+late final _CRouterErrorCodeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouterErrorCode Function()>>('CRouterErrorCodeMakeDefault');
+late final _CRouterErrorCodeMakeDefault = _CRouterErrorCodeMakeDefaultPtr.asFunction<_CRouterErrorCode Function()>();
+
+late final _CRouterErrorInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRouterErrorInfo Function()>>('CRouterErrorInfoMakeDefault');
+late final _CRouterErrorInfoMakeDefault = _CRouterErrorInfoMakeDefaultPtr.asFunction<_CRouterErrorInfo Function()>();
+
+
+late final _COptional_CRouterErrorInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRouterErrorInfo Function()>>('COptional_CRouterErrorInfoMakeDefault');
+late final _COptional_CRouterErrorInfoMakeDefault = _COptional_CRouterErrorInfoMakeDefaultPtr.asFunction<_COptional_CRouterErrorInfo Function()>();
+
 late final _CArray_CRouteSearchPointmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CRouteSearchPoint Function()>>('CArray_CRouteSearchPoint_makeEmpty');
 late final _CArray_CRouteSearchPointmakeEmpty = _CArray_CRouteSearchPointmakeEmptyPtr.asFunction<_CArray_CRouteSearchPoint Function()>();
 late final _CArray_CRouteSearchPointaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteSearchPoint, _CRouteSearchPoint)>>('CArray_CRouteSearchPoint_addElement');
@@ -83922,6 +85306,10 @@ late final _CGestureActionPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void
 late final _CGestureActionPoint_release = _CGestureActionPoint_releasePtr.asFunction<void Function(_CGestureActionPoint)>();
 late final _CGestureActionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function()>>('CGestureActionPointMakeDefault');
 late final _CGestureActionPointMakeDefault = _CGestureActionPointMakeDefaultPtr.asFunction<_CGestureActionPoint Function()>();
+
+late final _CScalingKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function()>>('CScalingKinematicSettingsMakeDefault');
+late final _CScalingKinematicSettingsMakeDefault = _CScalingKinematicSettingsMakeDefaultPtr.asFunction<_CScalingKinematicSettings Function()>();
+
 late final _CScalingGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_recognizeSettings');
 late final _CScalingGestureSettings_recognizeSettings = _CScalingGestureSettings_recognizeSettingsPtr.asFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>();
 late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>>('CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings');
@@ -83930,6 +85318,10 @@ late final _CScalingGestureSettings_scalingCenterPtr = _lookup<ffi.NativeFunctio
 late final _CScalingGestureSettings_scalingCenter = _CScalingGestureSettings_scalingCenterPtr.asFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>();
 late final _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CGestureActionPoint)>>('CScalingGestureSettings_setScalingCenter_CGestureActionPoint');
 late final _CScalingGestureSettings_setScalingCenter_CGestureActionPoint = _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr.asFunction<void Function(_CScalingGestureSettings, _CGestureActionPoint)>();
+late final _CScalingGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_kinematicSettings');
+late final _CScalingGestureSettings_kinematicSettings = _CScalingGestureSettings_kinematicSettingsPtr.asFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>>('CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings');
+late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>();
 
 late final _CScalingGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_cg_objectIdentifier');
 late final _CScalingGestureSettings_cg_objectIdentifier = _CScalingGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -83950,6 +85342,10 @@ late final _CRotationRecognizeThresholdsMakeDefault = _CRotationRecognizeThresho
 late final _CRotationRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function()>>('CRotationRecognizeSettingsMakeDefault');
 late final _CRotationRecognizeSettingsMakeDefault = _CRotationRecognizeSettingsMakeDefaultPtr.asFunction<_CRotationRecognizeSettings Function()>();
 
+
+late final _CRotationKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function()>>('CRotationKinematicSettingsMakeDefault');
+late final _CRotationKinematicSettingsMakeDefault = _CRotationKinematicSettingsMakeDefaultPtr.asFunction<_CRotationKinematicSettings Function()>();
+
 late final _CRotationGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_recognizeSettings');
 late final _CRotationGestureSettings_recognizeSettings = _CRotationGestureSettings_recognizeSettingsPtr.asFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>();
 late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>>('CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings');
@@ -83958,6 +85354,10 @@ late final _CRotationGestureSettings_rotationCenterPtr = _lookup<ffi.NativeFunct
 late final _CRotationGestureSettings_rotationCenter = _CRotationGestureSettings_rotationCenterPtr.asFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>();
 late final _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CGestureActionPoint)>>('CRotationGestureSettings_setRotationCenter_CGestureActionPoint');
 late final _CRotationGestureSettings_setRotationCenter_CGestureActionPoint = _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr.asFunction<void Function(_CRotationGestureSettings, _CGestureActionPoint)>();
+late final _CRotationGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_kinematicSettings');
+late final _CRotationGestureSettings_kinematicSettings = _CRotationGestureSettings_kinematicSettingsPtr.asFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>>('CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings');
+late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>();
 
 late final _CRotationGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_cg_objectIdentifier');
 late final _CRotationGestureSettings_cg_objectIdentifier = _CRotationGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -83994,10 +85394,18 @@ late final _CMultiTouchGestureSettingsMakeDefault = _CMultiTouchGestureSettingsM
 late final _CTiltRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function()>>('CTiltRecognizeSettingsMakeDefault');
 late final _CTiltRecognizeSettingsMakeDefault = _CTiltRecognizeSettingsMakeDefaultPtr.asFunction<_CTiltRecognizeSettings Function()>();
 
+
+late final _CTiltKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function()>>('CTiltKinematicSettingsMakeDefault');
+late final _CTiltKinematicSettingsMakeDefault = _CTiltKinematicSettingsMakeDefaultPtr.asFunction<_CTiltKinematicSettings Function()>();
+
 late final _CTiltGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_recognizeSettings');
 late final _CTiltGestureSettings_recognizeSettings = _CTiltGestureSettings_recognizeSettingsPtr.asFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>();
 late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>>('CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings');
 late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>();
+late final _CTiltGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_kinematicSettings');
+late final _CTiltGestureSettings_kinematicSettings = _CTiltGestureSettings_kinematicSettingsPtr.asFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>();
+late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>>('CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings');
+late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>();
 
 late final _CTiltGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_cg_objectIdentifier');
 late final _CTiltGestureSettings_cg_objectIdentifier = _CTiltGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -84009,6 +85417,26 @@ late final _CTiltGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CTiltGe
 late final _CTiltGestureSettings_retain = _CTiltGestureSettings_retainPtr.asFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>();
 late final _CTiltGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function()>>('CTiltGestureSettingsMakeDefault');
 late final _CTiltGestureSettingsMakeDefault = _CTiltGestureSettingsMakeDefaultPtr.asFunction<_CTiltGestureSettings Function()>();
+
+
+late final _CCommonRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function()>>('CCommonRecognizeSettingsMakeDefault');
+late final _CCommonRecognizeSettingsMakeDefault = _CCommonRecognizeSettingsMakeDefaultPtr.asFunction<_CCommonRecognizeSettings Function()>();
+
+late final _CCommonGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>>('CCommonGestureSettings_recognizeSettings');
+late final _CCommonGestureSettings_recognizeSettings = _CCommonGestureSettings_recognizeSettingsPtr.asFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>();
+late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>>('CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings');
+late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr.asFunction<void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>();
+
+late final _CCommonGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_cg_objectIdentifier');
+late final _CCommonGestureSettings_cg_objectIdentifier = _CCommonGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CCommonGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_release');
+late final _CCommonGestureSettings_release = _CCommonGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CCommonGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_retain');
+late final _CCommonGestureSettings_retain = _CCommonGestureSettings_retainPtr.asFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CCommonGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function()>>('CCommonGestureSettingsMakeDefault');
+late final _CCommonGestureSettingsMakeDefault = _CCommonGestureSettingsMakeDefaultPtr.asFunction<_CCommonGestureSettings Function()>();
 
 late final _CGestureManager_enabledGesturesPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>>('CGestureManager_enabledGestures');
 late final _CGestureManager_enabledGestures = _CGestureManager_enabledGesturesPtr.asFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>();
@@ -84022,6 +85450,8 @@ late final _CGestureManager_multitouchShiftSettingsPtr = _lookup<ffi.NativeFunct
 late final _CGestureManager_multitouchShiftSettings = _CGestureManager_multitouchShiftSettingsPtr.asFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>();
 late final _CGestureManager_tiltSettingsPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(_CGestureManager)>>('CGestureManager_tiltSettings');
 late final _CGestureManager_tiltSettings = _CGestureManager_tiltSettingsPtr.asFunction<_CTiltGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_commonSettingsPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(_CGestureManager)>>('CGestureManager_commonSettings');
+late final _CGestureManager_commonSettings = _CGestureManager_commonSettingsPtr.asFunction<_CCommonGestureSettings Function(_CGestureManager)>();
 
 late final _CGestureManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_cg_objectIdentifier');
 late final _CGestureManager_cg_objectIdentifier = _CGestureManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -85004,6 +86434,23 @@ late final _CStatefulChannel_COptional_CCameraProgressInfoConnect = _CStatefulCh
 late final _COptional_CCameraProgressInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CCameraProgressInfo Function()>>('COptional_CCameraProgressInfoMakeDefault');
 late final _COptional_CCameraProgressInfoMakeDefault = _COptional_CCameraProgressInfoMakeDefaultPtr.asFunction<_COptional_CCameraProgressInfo Function()>();
 
+late final _CMiniMapControlModel_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMiniMapControlModel_cg_objectIdentifier');
+late final _CMiniMapControlModel_cg_objectIdentifier = _CMiniMapControlModel_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CMiniMapControlModel_C_createWith_CContext_CModel_CMapPtr = _lookup<ffi.NativeFunction<_CResult_CMiniMapControlModel Function(_CContext, _CModel, _CMap)>>('CMiniMapControlModel_C_createWith_CContext_CModel_CMap');
+late final _CMiniMapControlModel_C_createWith_CContext_CModel_CMap = _CMiniMapControlModel_C_createWith_CContext_CModel_CMapPtr.asFunction<_CResult_CMiniMapControlModel Function(_CContext, _CModel, _CMap)>();
+
+late final _CMiniMapControlModel_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMiniMapControlModel_release');
+late final _CMiniMapControlModel_release = _CMiniMapControlModel_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMiniMapControlModel_retainPtr = _lookup<ffi.NativeFunction<_CMiniMapControlModel Function(ffi.Pointer<ffi.Void>)>>('CMiniMapControlModel_retain');
+late final _CMiniMapControlModel_retain = _CMiniMapControlModel_retainPtr.asFunction<_CMiniMapControlModel Function(ffi.Pointer<ffi.Void>)>();
+late final _CMiniMapControlModelMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMiniMapControlModel Function()>>('CMiniMapControlModelMakeDefault');
+late final _CMiniMapControlModelMakeDefault = _CMiniMapControlModelMakeDefaultPtr.asFunction<_CMiniMapControlModel Function()>();
+
+
+late final _CResult_CMiniMapControlModel_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CMiniMapControlModel)>>('CResult_CMiniMapControlModel_release');
+late final _CResult_CMiniMapControlModel_release = _CResult_CMiniMapControlModel_releasePtr.asFunction<void Function(_CResult_CMiniMapControlModel)>();
+
 late final _CApplicationStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CApplicationState Function()>>('CApplicationStateMakeDefault');
 late final _CApplicationStateMakeDefault = _CApplicationStateMakeDefaultPtr.asFunction<_CApplicationState Function()>();
 late final _CHttpCacheManager_getCurrentSizePtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CHttpCacheManager)>>('CHttpCacheManager_getCurrentSize');
@@ -85135,10 +86582,6 @@ late final _CPlatformLocaleManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_C
 late final _CPlatformLocaleManagerMakeDefault = _CPlatformLocaleManagerMakeDefaultPtr.asFunction<_CPlatformLocaleManager Function()>();
 late final _CPlatformLocaleManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CPlatformLocaleManager)>>('CPlatformLocaleManager_release');
 late final _CPlatformLocaleManager_release = _CPlatformLocaleManager_releasePtr.asFunction<void Function(_CPlatformLocaleManager)>();
-
-late final _CStorageOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStorageOptions Function()>>('CStorageOptionsMakeDefault');
-late final _CStorageOptionsMakeDefault = _CStorageOptionsMakeDefaultPtr.asFunction<_CStorageOptions Function()>();
-
 late final _CFunction_G_toLocaleManager_With_CPlatformLocaleManagerPtr = _lookup<ffi.NativeFunction<_CLocaleManager Function(_CPlatformLocaleManager)>>('CFunction_G_toLocaleManager_With_CPlatformLocaleManager');
 late final _CFunction_G_toLocaleManager_With_CPlatformLocaleManager = _CFunction_G_toLocaleManager_With_CPlatformLocaleManagerPtr.asFunction<_CLocaleManager Function(_CPlatformLocaleManager)>();
 late final _CFunction_G_toLocalePosix_With_CLocalePtr = _lookup<ffi.NativeFunction<_CString Function(_CLocale)>>('CFunction_G_toLocalePosix_With_CLocale');

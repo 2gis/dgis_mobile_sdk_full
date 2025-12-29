@@ -34,3 +34,4 @@ flutter:
     - assets/models/
     - assets/dgissdk.key # ignore: asset_does_not_exist
     - assets/custom_styles.2gis
+    - assets/minimap_styles.2gis

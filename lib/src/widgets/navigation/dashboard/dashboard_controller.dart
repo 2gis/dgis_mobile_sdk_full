@@ -94,6 +94,9 @@ class DashboardController {
   /// Whether the dashboard is in route view mode (collapsed state).
   bool get isRouteViewMode => _model.value.isRouteViewMode;
 
+  /// Whether minimap is visible according to dashboard state.
+  bool get isMinimapVisible => _model.value.isMinimapVisible;
+
   /// The estimated time of arrival based on current [duration].
   DateTime get estimatedArrivalTime =>
       DateTime.now().add(Duration(seconds: duration));
@@ -224,6 +227,13 @@ class DashboardController {
 
     // Switch to route view mode
     _model.value = _model.value.copyWith(isRouteViewMode: true);
+  }
+
+  /// Handles minimap visibility toggle from UI.
+  void toggleMinimapVisibility() {
+    _model.value = _model.value.copyWith(
+      isMinimapVisible: !_model.value.isMinimapVisible,
+    );
   }
 
   /// Returns from route view mode to normal navigation view.

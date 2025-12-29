@@ -191,7 +191,7 @@ class MapWidgetController {
     return CancelableOperation.fromFuture(completer.future);
   }
 
-  void _dispose() {
+  void dispose() {
     _cancelConnections();
     _renderer = null;
     _provider = null;
@@ -301,31 +301,45 @@ class MapWidgetController {
   }
 }
 
-/// Widget для работы с картой.
-class MapWidget extends StatefulWidget {
-  final sdk.Context _sdkContext;
-  final MapOptions _mapOptions;
-  final MapWidgetController? _controller;
+class MapWidgetInternal extends StatefulWidget {
+  final sdk.Context sdkContext;
+  final MapOptions mapOptions;
+  final MapWidgetController? controller;
   final Widget? child;
+  final bool showCopyright;
 
   // Не можем использовать const конструктор тут, т.к.
   // некоторые из параметров – обертки над нативными объектами,
   // и для них это неприменимо
   // ignore: prefer_const_constructors_in_immutables
-  MapWidget({
-    required sdk.Context sdkContext,
-    required MapOptions mapOptions,
-    MapWidgetController? controller,
+  MapWidgetInternal({
+    required this.sdkContext,
+    required this.mapOptions,
+    this.controller,
     this.child,
+    this.showCopyright = true,
     super.key,
-  })  : _sdkContext = sdkContext,
-        _mapOptions = mapOptions,
-        _controller = controller;
-
-  MapOptions get mapOptions => _mapOptions;
+  });
 
   @override
   MapWidgetState createState() => MapWidgetState();
+}
+
+///  Виджет для работы с картой.
+class MapWidget extends MapWidgetInternal {
+  // Не можем использовать const конструктор тут, т.к.
+  // некоторые из параметров – обертки над нативными объектами,
+  // и для них это неприменимо
+  // ignore: prefer_const_constructors_in_immutables
+  MapWidget({
+    required super.sdkContext,
+    required super.mapOptions,
+    super.controller,
+    super.child,
+    super.key,
+  }) : super(
+          showCopyright: true,
+        );
 }
 
 class _TextureController {
@@ -548,7 +562,8 @@ class _MapGestureController {
   }
 }
 
-class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
+class MapWidgetState extends State<MapWidgetInternal>
+    with WidgetsBindingObserver {
   final _controller = _TextureController();
   late final MapWidgetController mapWidgetController;
   int? _textureId;
@@ -563,7 +578,7 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    mapWidgetController = widget._controller ?? MapWidgetController();
+    mapWidgetController = widget.controller ?? MapWidgetController();
     mapWidgetController
       .._appearance = widget.mapOptions.appearance
       .._maxFps = mapWidgetController.maxFps ?? widget.mapOptions.maxFps
@@ -581,17 +596,16 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!isMapInitialized) {
-      _deviceDensity = widget._mapOptions.deviceDensity?.value ??
+      _deviceDensity = widget.mapOptions.deviceDensity?.value ??
           MediaQuery.devicePixelRatioOf(context);
-      _devicePpi =
-          widget._mapOptions.devicePPI?.value ?? _deviceDensity * 160.0;
+      _devicePpi = widget.mapOptions.devicePPI?.value ?? _deviceDensity * 160.0;
       _initialize();
     }
   }
 
   @override
   void dispose() {
-    mapWidgetController._dispose();
+    mapWidgetController._cancelConnections();
     if (_textureId != null) {
       _controller.dispose(_textureId!);
     }
@@ -633,20 +647,21 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
             ),
           ),
         ),
-        _MapProvider(
-          map: mapWidgetController._map!,
-          mapTheme: _mapTheme.value,
-          child: ValueListenableBuilder(
-            valueListenable: mapWidgetController
-                ._copyrightWidgetController.copyrightAlignment,
-            builder: (_, copyrightAlignment, __) => Align(
-              alignment: copyrightAlignment.alignment,
-              child: CopyrightWidget(
-                controller: mapWidgetController._copyrightWidgetController,
+        if (widget.showCopyright)
+          _MapProvider(
+            map: mapWidgetController._map!,
+            mapTheme: _mapTheme.value,
+            child: ValueListenableBuilder(
+              valueListenable: mapWidgetController
+                  ._copyrightWidgetController.copyrightAlignment,
+              builder: (_, copyrightAlignment, __) => Align(
+                alignment: copyrightAlignment.alignment,
+                child: CopyrightWidget(
+                  controller: mapWidgetController._copyrightWidgetController,
+                ),
               ),
             ),
           ),
-        ),
         if (widget.child != null)
           ValueListenableBuilder(
             valueListenable: _mapTheme,
@@ -674,33 +689,41 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
   }
 
   Future<void> _initialize() async {
-    final builder = await sdk.MapBuilder().apply(
-      widget._mapOptions,
-      widget._sdkContext,
-      _deviceDensity,
-      _devicePpi,
-    );
-    final map = await builder.createMap(widget._sdkContext).value;
-    mapWidgetController
-      .._map = map
-      .._updateMapTheme();
+    if (mapWidgetController._map == null) {
+      final builder = await sdk.MapBuilder().apply(
+        widget.mapOptions,
+        widget.sdkContext,
+        _deviceDensity,
+        _devicePpi,
+      );
+      final map = await builder.createMap(widget.sdkContext).value;
+      mapWidgetController._map = map;
+    }
 
-    final provider = sdk.MapSurfaceProvider.create(map);
-    mapWidgetController._provider = provider;
+    final map = mapWidgetController._map;
+    if (map == null) {
+      throw NativeException(
+        'Failed to initialize map',
+      );
+    }
+    mapWidgetController._updateMapTheme();
+
+    final provider =
+        mapWidgetController._provider ??= sdk.MapSurfaceProvider.create(map);
     final id = await _controller.initialize(provider.id);
     final screenFps = await _controller.getScreenFps();
 
-    final renderer = sdk.MapRenderer.create(map);
+    final renderer =
+        mapWidgetController._renderer ??= sdk.MapRenderer.create(map);
     mapWidgetController
-      .._renderer = renderer
       ..maxFps = sdk.Fps(mapWidgetController.maxFps?.value ?? screenFps ?? 60)
       ..powerSavingMaxFps = mapWidgetController.powerSavingMaxFps
       .._updateRendererFps();
 
     _updateMapVisibility();
 
-    final mapGestureRecognizer = sdk.MapGestureRecognizer.create(map);
-    mapWidgetController._mapGestureRecognizer = mapGestureRecognizer;
+    final mapGestureRecognizer = mapWidgetController._mapGestureRecognizer ??=
+        sdk.MapGestureRecognizer.create(map);
     _mapGestureController = _MapGestureController(
       mapGestureRecognizer,
       _deviceDensity,

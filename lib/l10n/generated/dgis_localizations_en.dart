@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'dgis_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -102,6 +102,15 @@ class DgisLocalizationsEn extends DgisLocalizations {
 
   @override
   String get dgis_direct_route => 'Direct route';
+
+  @override
+  String get dgis_no_routes_found => 'No routes found';
+
+  @override
+  String get dgis_best_route => 'Best route';
+
+  @override
+  String get dgis_route_editor_start => 'Go!';
 
   @override
   String dgis_get_off_after(String after) {
@@ -270,6 +279,9 @@ class DgisLocalizationsEn extends DgisLocalizations {
 
   @override
   String get dgis_navi_view_route => 'View route';
+
+  @override
+  String get dgis_navi_show_minimap => 'Show minimap';
 
   @override
   String get dgis_navi_continue_the_trip => 'Continue the trip';

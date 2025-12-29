@@ -31,6 +31,8 @@ class _MiniMapPageState extends State<MiniMapPage> {
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
 
+  sdk.Style? _finishMiniMapStyle;
+
   final startPointDubai = const sdk.GeoPoint(
     latitude: sdk.Latitude(25.198014),
     longitude: sdk.Longitude(55.272859),
@@ -63,22 +65,45 @@ class _MiniMapPageState extends State<MiniMapPage> {
     navigationManager = sdk.NavigationManager(sdkContext);
     trafficRouter = sdk.TrafficRouter(sdkContext);
 
+    _loadMiniMapStyle();
+
     mapWidgetController.getMapAsync((map) {
       sdkMap = map;
     });
+
     miniMapWidgetController
       ..getMapAsync((map) {
         miniMap = map;
         miniMap?.interactive = false;
       })
       ..maxFps = const sdk.Fps(20);
+
     finishMiniMapWidgetController
       ..getMapAsync((map) {
         finishMiniMap = map;
-        finishMiniMap?.interactive = false;
         mapObjectManager = sdk.MapObjectManager(map);
       })
-      ..maxFps = const sdk.Fps(10);
+      ..maxFps = const sdk.Fps(20);
+  }
+
+  Future<void> _loadMiniMapStyle() async {
+    final style = await sdk.StyleBuilder(sdkContext)
+        .loadStyle(
+          sdk.File.fromAsset(
+            sdkContext,
+            'minimap_styles.2gis',
+          ),
+        )
+        .value;
+
+    if (!mounted) {
+      _finishMiniMapStyle = style;
+      return;
+    }
+
+    setState(() {
+      _finishMiniMapStyle = style;
+    });
   }
 
   @override
@@ -128,50 +153,28 @@ class _MiniMapPageState extends State<MiniMapPage> {
               Positioned(
                 bottom: 16,
                 left: 16,
-                child: _buildMiniMap(),
+                child: sdk.NavigationMiniMapWidget(
+                  sdkContext: sdkContext,
+                  mapOptions: sdk.MapOptions(style: _finishMiniMapStyle),
+                  controller: miniMapWidgetController,
+                  miniMapController: sdk.NavigationMiniMapController(
+                    navigationManager: navigationManager,
+                  ),
+                  size: 150,
+                ),
               ),
               Positioned(
                 top: 16,
                 left: 16,
-                child: _buildFinishMiniMap(),
+                child: _finishMiniMapStyle == null
+                    ? const SizedBox.shrink()
+                    : sdk.MiniMapWidget(
+                        sdkContext: sdkContext,
+                        mapOptions: sdk.MapOptions(style: _finishMiniMapStyle),
+                        controller: finishMiniMapWidgetController,
+                      ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMiniMap() {
-    return ClipOval(
-      child: Container(
-        width: 150,
-        height: 150,
-        // ignore: deprecated_member_use
-        color: Colors.blue.withOpacity(0.3),
-        child: Center(
-          child: sdk.MapWidget(
-            sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
-            controller: miniMapWidgetController,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFinishMiniMap() {
-    return ClipOval(
-      child: Container(
-        width: 150,
-        height: 150,
-        // ignore: deprecated_member_use
-        color: Colors.blue.withOpacity(0.3),
-        child: Center(
-          child: sdk.MapWidget(
-            sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
-            controller: finishMiniMapWidgetController,
           ),
         ),
       ),

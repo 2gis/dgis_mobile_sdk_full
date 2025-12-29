@@ -17,10 +17,13 @@ class NavigatorPage extends StatefulWidget {
 
 class _NavigatorPageState extends State<NavigatorPage> {
   final mapWidgetController = sdk.MapWidgetController();
+  final miniMapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
 
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
+
+  sdk.Style? _miniMapStyle;
 
   final _startPoint = const sdk.RouteSearchPoint(
     coordinates: sdk.GeoPoint(
@@ -52,11 +55,33 @@ class _NavigatorPageState extends State<NavigatorPage> {
     navigationManager = sdk.NavigationManager(sdkContext);
     trafficRouter = sdk.TrafficRouter(sdkContext);
 
+    _loadMiniMapStyle();
+
     super.initState();
     mapWidgetController.getMapAsync((map) {
       unawaited(
         _startNavigation(map),
       );
+    });
+  }
+
+  Future<void> _loadMiniMapStyle() async {
+    final style = await sdk.StyleBuilder(sdkContext)
+        .loadStyle(
+          sdk.File.fromAsset(
+            sdkContext,
+            'minimap_styles.2gis',
+          ),
+        )
+        .value;
+
+    if (!mounted) {
+      _miniMapStyle = style;
+      return;
+    }
+
+    setState(() {
+      _miniMapStyle = style;
     });
   }
 
@@ -188,6 +213,15 @@ class _NavigatorPageState extends State<NavigatorPage> {
             trafficLineWidgetBuilder: sdk.TrafficLineWidget.defaultBuilder,
             betterRoutePromptWidgetBuilder:
                 sdk.BetterRoutePromptWidget.defaultBuilder,
+            navigationMiniMapWidgetBuilder:
+                (miniMapController, dashboardController) =>
+                    sdk.NavigationMiniMapWidget(
+              sdkContext: sdkContext,
+              mapOptions: sdk.MapOptions(style: _miniMapStyle),
+              controller: miniMapWidgetController,
+              miniMapController: miniMapController,
+              dashboardController: dashboardController,
+            ),
           ),
         ),
       ),

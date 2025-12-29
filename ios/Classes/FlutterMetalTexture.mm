@@ -7,9 +7,11 @@
 @interface MetalDrawablePresenterImpl : NSObject <MetalDrawablePresenter>
 
 @property(nonatomic, weak) id<FlutterTextureRegistry> flutterTextureRegistry;
+@property(nonatomic, strong) NSLock * lock;
 @property(nonatomic, assign) NSInteger flutterTextureId;
 
-- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry;
+- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry
+								   lock:(NSLock *)lock;
 - (void)setFlutterTextureId:(NSInteger)textureId;
 
 @end
@@ -17,26 +19,34 @@
 @implementation MetalDrawablePresenterImpl
 
 - (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry
+								   lock:(NSLock *)lock
 {
 	self = [super init];
 	if (self)
 	{
 		_flutterTextureRegistry = flutterTextureRegistry;
+		_lock = lock;
 	}
 	return self;
 }
 
 - (void)setFlutterTextureId:(NSInteger)textureId
 {
+	[self.lock lock];
 	_flutterTextureId = textureId;
+	[self.lock unlock];
 }
 
 - (void)present
 {
-	__strong id<FlutterTextureRegistry> registry = _flutterTextureRegistry;
-	if (registry)
+	[self.lock lock];
+	NSInteger textureId = _flutterTextureId;
+	id<FlutterTextureRegistry> registry = _flutterTextureRegistry;
+	[self.lock unlock];
+
+	if (registry && textureId != NSNotFound)
 	{
-		[registry textureFrameAvailable:_flutterTextureId];
+		[registry textureFrameAvailable:textureId];
 	}
 }
 
@@ -59,7 +69,9 @@
 	self = [super init];
 	if (self)
 	{
-		_presenter = [[MetalDrawablePresenterImpl alloc] initWithTextureRegistry:flutterTextureRegistry];
+		_lock = [[NSLock alloc] init];
+		_presenter = [[MetalDrawablePresenterImpl alloc] initWithTextureRegistry:flutterTextureRegistry
+																			lock:_lock];
 		_metalLayerProvider = [[MetalLayerProvider alloc] initWithDevice:device
 															textureCache:textureCache
 															   presenter:_presenter

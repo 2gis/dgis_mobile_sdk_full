@@ -248,6 +248,24 @@ abstract class DgisLocalizations {
   /// **'Direct route'**
   String get dgis_direct_route;
 
+  /// No description provided for @dgis_no_routes_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No routes found'**
+  String get dgis_no_routes_found;
+
+  /// No description provided for @dgis_best_route.
+  ///
+  /// In en, this message translates to:
+  /// **'Best route'**
+  String get dgis_best_route;
+
+  /// No description provided for @dgis_route_editor_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get dgis_route_editor_start;
+
   /// No description provided for @dgis_get_off_after.
   ///
   /// In en, this message translates to:
@@ -505,6 +523,12 @@ abstract class DgisLocalizations {
   /// In en, this message translates to:
   /// **'View route'**
   String get dgis_navi_view_route;
+
+  /// No description provided for @dgis_navi_show_minimap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show minimap'**
+  String get dgis_navi_show_minimap;
 
   /// No description provided for @dgis_navi_continue_the_trip.
   ///

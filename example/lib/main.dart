@@ -20,6 +20,7 @@ import 'pages/map_snapshot.dart';
 import 'pages/mini_map.dart';
 import 'pages/navigator.dart';
 import 'pages/route_editor.dart';
+import 'pages/route_editor_new.dart';
 import 'pages/search_page.dart';
 import 'pages/stateless_screen_with_map.dart';
 import 'pages/traffic_widget.dart';
@@ -115,6 +116,17 @@ class _MyHomePageState extends State<MyHomePage> {
               context,
               MaterialPageRoute(
                   builder: (context) => MiniMapPage(title: 'Mini Map')),
+            );
+          },
+        ),
+        ListTile(
+          title: buildPageTitle('Route Editor (new)'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      RouteEditorNewPage(title: 'Route Editor (new)')),
             );
           },
         ),
