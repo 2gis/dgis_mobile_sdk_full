@@ -14,11 +14,14 @@ abstract class BaseMapWidgetState<T extends StatefulWidget> extends State<T> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _map = mapOf(context);
-    if (_map == null) {
+    final map = mapOf(context);
+    if (map == null) {
       throw Exception('Any MapControl should be added as child of MapWidget');
     }
-    onAttachedToMap(_map!);
+    if (map.id.value != _map?.id.value) {
+      _map = map;
+      onAttachedToMap(_map!);
+    }
   }
 
   @override

@@ -159,8 +159,9 @@ class DashboardController {
   /// Toggles the sound state for navigation instructions.
   /// Updates the [soundsEnabled] state and [state] accordingly.
   void toggleSounds() {
-    final categories =
-        navigationManager.soundNotificationSettings.enabledSoundCategories;
+    final categories = navigationManager
+        .soundNotificationSettings.enabledSoundCategories
+        .toMutableEnumSet();
 
     if (soundsEnabled) {
       categories.remove(sdk.SoundCategory.instructions);
@@ -169,7 +170,7 @@ class DashboardController {
     }
 
     navigationManager.soundNotificationSettings.enabledSoundCategories =
-        categories;
+        categories.toEnumSet();
 
     _model.value = _model.value.copyWith(
       soundsEnabled: _isSoundEnabled(),

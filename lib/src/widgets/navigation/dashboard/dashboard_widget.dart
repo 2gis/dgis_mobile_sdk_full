@@ -605,28 +605,27 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
             Text(
               localizations.dgis_navi_continue_the_trip,
               textAlign: TextAlign.center,
-              style: colorScheme.finishButtonTextStyle,
+              style: colorScheme.routeOverviewHeaderTextStyle,
             ),
-            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   '${duration.value} ${duration.unit}',
-                  style: colorScheme.unitTextStyle,
+                  style: colorScheme.routeOverviewContentTextStyle,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   width: 4,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: colorScheme.unitTextStyle.color,
+                    color: colorScheme.routeOverviewContentTextStyle.color,
                     shape: BoxShape.circle,
                   ),
                 ),
                 Text(
                   '${distance.value} ${distance.unit}',
-                  style: colorScheme.unitTextStyle,
+                  style: colorScheme.routeOverviewContentTextStyle,
                 ),
               ],
             ),

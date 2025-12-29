@@ -28,7 +28,7 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
     locationIconBackgroundColor: DgisColorScheme.darkGrey,
     passedColor: DgisColorScheme.blackNinePercent,
     locationIconBoxShadows: WidgetShadows.naviWidgetBoxShadowsLight,
-    trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultColors,
+    trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultLight,
   );
 
   /// Widget color scheme for default dark mode.
@@ -38,7 +38,7 @@ class TrafficLineColorScheme extends MapWidgetColorScheme {
     locationIconBackgroundColor: DgisColorScheme.surfaceLight,
     passedColor: DgisColorScheme.whiteSevenPercent,
     locationIconBoxShadows: WidgetShadows.naviWidgetBoxShadowsDark,
-    trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultColors,
+    trafficLineSegmentsColors: TrafficLineSegmentsColors.defaultDark,
   );
   @override
   TrafficLineColorScheme copyWith({

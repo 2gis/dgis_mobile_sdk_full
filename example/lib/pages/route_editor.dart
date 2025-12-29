@@ -52,8 +52,8 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
   bool switchTruckDangerousCargo = false;
   bool switchTruckExplosiveCargo = false;
   bool switchPublicUseSchedule = false;
-  sdk.PublicTransportTypeEnumSet selectedTransportTypes =
-      sdk.PublicTransportTypeEnumSet();
+  sdk.MutableEnumSet<sdk.PublicTransportType> selectedTransportTypes =
+      sdk.MutablePublicTransportTypeEnumSet();
   sdk.RouteSearchPoint? startPoint;
   sdk.RouteSearchPoint? finishPoint;
   sdk.Map? sdkMap;
@@ -1265,7 +1265,7 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
           sdk.PublicTransportRouteSearchOptions(
             startTime: selectedDateTime,
             useSchedule: switchPublicUseSchedule,
-            transportTypes: selectedTransportTypes,
+            transportTypes: selectedTransportTypes.toEnumSet(),
           ),
         );
       case 3:

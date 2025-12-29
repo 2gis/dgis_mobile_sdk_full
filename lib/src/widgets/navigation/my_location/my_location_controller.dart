@@ -64,9 +64,7 @@ enum _Behaviour {
 class MyLocationController {
   final sdk.Map map;
 
-  late StreamSubscription<sdk.CameraBehaviourChange>
-      _cameraBehaviorChannelConnection;
-
+  late final StreamSubscription<sdk.CameraChange> _cameraChangeSubscription;
   late final ValueNotifier<MyLocationModel> _model;
 
   bool get _isFollowPositionMode =>
@@ -95,8 +93,12 @@ class MyLocationController {
             'packages/$pluginName/assets/icons/dgis_follow_direction.svg',
       ),
     );
-    _cameraBehaviorChannelConnection =
-        map.camera.behaviourChannel.listen((change) {
+    _cameraChangeSubscription = map.camera.changed.listen((changes) {
+      if (!changes.changeReasons.contains(sdk.CameraChangeReason.behaviour)) {
+        return;
+      }
+
+      final change = map.camera.behaviour;
       String iconAssetName;
       var isActive = false;
       if (change.newBehaviour == _Behaviour.full.value) {
@@ -155,6 +157,6 @@ class MyLocationController {
   }
 
   void dispose() {
-    _cameraBehaviorChannelConnection.cancel();
+    _cameraChangeSubscription.cancel();
   }
 }

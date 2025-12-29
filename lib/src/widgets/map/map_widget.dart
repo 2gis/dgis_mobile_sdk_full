@@ -554,7 +554,7 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
   int? _textureId;
   AppLifecycleState? _appState;
   _MapGestureController? _mapGestureController;
-  StreamSubscription<sdk.DevicePpi>? _devicePpiSubscription;
+  StreamSubscription<sdk.CameraChange>? _cameraChangeSubscription;
   double _deviceDensity = 1;
   double _devicePpi = 1;
   late final ValueNotifier<MapTheme> _mapTheme;
@@ -597,7 +597,7 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
     }
     mapWidgetController._removeMapThemeChangedCallback(_onMapThemeChanged);
     WidgetsBinding.instance.removeObserver(this);
-    _devicePpiSubscription?.cancel();
+    _cameraChangeSubscription?.cancel();
     super.dispose();
   }
 
@@ -705,9 +705,11 @@ class MapWidgetState extends State<MapWidget> with WidgetsBindingObserver {
       mapGestureRecognizer,
       _deviceDensity,
     );
-    _devicePpiSubscription = map.camera.devicePpiChannel.listen((devicePpi) {
-      _mapGestureController?._mapGestureRecognizer
-          .onDevicePpiChanged(devicePpi);
+    _cameraChangeSubscription = map.camera.changed.listen((changes) {
+      if (changes.changeReasons.contains(sdk.CameraChangeReason.devicePPI)) {
+        _mapGestureController?._mapGestureRecognizer
+            .onDevicePpiChanged(map.camera.devicePpi);
+      }
     });
 
     mapWidgetController._updateTouchEventObserver();
@@ -776,7 +778,9 @@ extension _MapBuilderApplyMapOptions on sdk.MapBuilder {
     if (options.sources != null) {
       options.sources!.forEach(builder.addSource);
     } else {
-      builder.addSource(sdk.DgisSource.createDgisSource(sdkContext));
+      builder
+        ..addSource(sdk.DgisSource.createDgisSource(sdkContext))
+        ..addSource(sdk.DgisSource.createImmersiveDgisSource(sdkContext));
     }
 
     if (options.style != null) {

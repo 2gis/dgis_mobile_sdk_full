@@ -233,6 +233,10 @@ class _TrafficLinePainter extends CustomPainter {
         return colorScheme.red;
       case sdk.TrafficSpeedColor.deepRed:
         return colorScheme.deepRed;
+      case sdk.TrafficSpeedColor.deepGreen:
+        return colorScheme.deepGreen;
+      case sdk.TrafficSpeedColor.orange:
+        return colorScheme.orange;
       // ignore: unreachable_switch_default
       default:
         return colorScheme.undefined;
