@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/generated/dgis_localizations.dart';
+import '../../../l10n/generated/dgis_localizations_en.dart';
 import '../../generated/dart_bindings.dart' as sdk;
 import '../either.dart';
 import 'object_card.dart';
 import 'search_bar.dart';
+import 'search_result_item/search_result_item_theme.dart';
+import 'search_result_item/search_result_item_view_model.dart';
+import 'search_result_item/search_result_item_widget.dart';
 import 'search_widget_color_scheme.dart';
 
 /// Виджет, представляющий собой поисковую строку и лист выдачи объектов
@@ -70,6 +75,11 @@ class DgisSearchWidget extends StatefulWidget {
   final SearchQueryProvider _searchQueryProvider;
   final SuggestQueryProvider _suggestQueryProvider;
 
+  /// Optional location service for displaying distances to search results.
+  /// When provided, the distance from the user's current location to each
+  /// search result will be displayed in the result cards.
+  final sdk.LocationService? _locationService;
+
   const DgisSearchWidget({
     required sdk.SearchManager searchManager,
     void Function(sdk.DirectoryObject)? onObjectSelected,
@@ -77,9 +87,11 @@ class DgisSearchWidget extends StatefulWidget {
     this.colorScheme = defaultSearchWidgetColorScheme,
     SearchQueryProvider? searchQueryProvider,
     SuggestQueryProvider? suggestQueryProvider,
+    sdk.LocationService? locationService,
     super.key,
   })  : _onObjectSelected = onObjectSelected,
         _searchManager = searchManager,
+        _locationService = locationService,
         _searchQueryProvider =
             searchQueryProvider ?? _defaultSearchQueryProvider,
         _suggestQueryProvider =
@@ -99,6 +111,7 @@ class DgisSearchWidget extends StatefulWidget {
     objectCardNormalTextStyle: TextStyle(color: Colors.black),
     objectListSeparatorColor: Colors.grey,
     objectListBackgroundColor: Colors.white,
+    searchResultItemPadding: 24,
   );
 
   static sdk.SearchQuery _defaultSearchQueryProvider(
@@ -230,10 +243,42 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
     _objects.value = [];
   }
 
+  String _formatDistance(int meters, DgisLocalizations localizations) {
+    if (meters >= 1000) {
+      final km = meters / 1000;
+      final kmValue = double.parse(km.toStringAsFixed(km % 1 == 0 ? 0 : 1));
+      return localizations.dgis_km_format(kmValue);
+    }
+    return localizations.dgis_m__meters_format(meters);
+  }
+
+  String? _getFormattedDistance(
+    sdk.DirectoryObject object,
+    DgisLocalizations localizations,
+  ) {
+    final locationService = widget._locationService;
+    if (locationService == null) return null;
+
+    final myLocation = locationService.lastLocation().value;
+    final objectPosition = object.markerPosition;
+    if (myLocation == null || objectPosition == null) return null;
+
+    final objectGeoPoint = sdk.GeoPoint(
+      latitude: objectPosition.latitude,
+      longitude: objectPosition.longitude,
+    );
+    final distanceMeters =
+        sdk.calculateDistance(myLocation.coordinates.value, objectGeoPoint);
+    return _formatDistance(distanceMeters.toInt(), localizations);
+  }
+
   Widget _defaultSearchResultListBuilder(
     BuildContext context,
     List<EitherDirectoryObjOrSuggest> objects,
   ) {
+    final localizations =
+        DgisLocalizations.of(context) ?? DgisLocalizationsEn();
+
     return DecoratedSliver(
       decoration:
           BoxDecoration(color: widget.colorScheme.objectListBackgroundColor),
@@ -244,14 +289,37 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
               final itemIndex = index ~/ 2;
               if (itemIndex >= objects.length) return null;
               final suggestion = objects[itemIndex];
-              return SuggestionCard(
-                objectCardHighlightedTextStyle:
-                    widget.colorScheme.objectCardHighlightedTextStyle,
-                objectCardNormalTextStyle:
-                    widget.colorScheme.objectCardNormalTextStyle,
-                objectCardTileColor: widget.colorScheme.objectCardTileColor,
-                suggestion: suggestion,
-                onTap: () => _handleSuggestionTap(suggestion),
+
+              return suggestion.fold(
+                (object) {
+                  final vm = SearchResultItemViewModel.fromDirectoryObject(
+                    object: object,
+                    onTap: (object) => widget._onObjectSelected?.call(object),
+                    localizations: localizations,
+                    formattedDistance:
+                        _getFormattedDistance(object, localizations),
+                  );
+                  return Padding(
+                    padding: EdgeInsets.all(
+                      widget.colorScheme.searchResultItemPadding,
+                    ),
+                    child: SearchResultItemWidget(
+                      viewModel: vm,
+                      theme: SearchResultItemTheme.defaultLight,
+                    ),
+                  );
+                },
+                (suggest) {
+                  return SuggestionCard(
+                    objectCardHighlightedTextStyle:
+                        widget.colorScheme.objectCardHighlightedTextStyle,
+                    objectCardNormalTextStyle:
+                        widget.colorScheme.objectCardNormalTextStyle,
+                    objectCardTileColor: widget.colorScheme.objectCardTileColor,
+                    suggestion: suggestion,
+                    onTap: () => _handleSuggestionTap(suggestion),
+                  );
+                },
               );
             } else {
               return Padding(

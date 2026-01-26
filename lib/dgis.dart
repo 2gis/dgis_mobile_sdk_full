@@ -16,11 +16,13 @@ export 'src/generated/dart_bindings.dart'
         ModelDataLoader,
         PlatformLocaleManager,
         ProductType,
+        TouchPointState,
         calculateBearing,
         calculateDistance,
         downloadData,
         makeSystemContext,
         move,
+        releaseContext,
         toLocaleManager;
 export 'src/generated/enum_set.dart';
 export 'src/generated/native_exception.dart';
@@ -37,6 +39,11 @@ export 'src/util/stateful_channel_listenable.dart';
 export 'src/widgets/common/rounded_corners.dart';
 export 'src/widgets/directory/search.dart'
     show DgisSearchWidget, SearchResultBuilder;
+export 'src/widgets/directory/search_result_item/search_result_item_builder.dart';
+export 'src/widgets/directory/search_result_item/search_result_item_theme.dart';
+export 'src/widgets/directory/search_result_item/search_result_item_view_model.dart';
+export 'src/widgets/directory/search_result_item/search_result_item_widget.dart';
+export 'src/widgets/directory/search_result_item/star_rating_widget.dart';
 export 'src/widgets/directory/search_widget_color_scheme.dart';
 export 'src/widgets/either.dart';
 export 'src/widgets/map/base_map_state.dart' show BaseMapWidgetState;

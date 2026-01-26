@@ -210,5 +210,34 @@
             "type": "String"
          }
       }
+   },
+   "dgis_reviews_count": "{count, plural, =0{No reviews} =1{1 review} other{{count} reviews}}",
+   "@dgis_reviews_count": {
+      "placeholders": {
+         "count": {
+            "type": "num"
+         }
+      }
+   },
+   "dgis_charging_not_active": "Not active",
+   "dgis_no_places_available": "No places available",
+   "dgis_charging_available_places_all": "{count, plural, =1{1 place available} other{{count} places available}}",
+   "@dgis_charging_available_places_all": {
+      "placeholders": {
+         "count": {
+            "type": "num"
+         }
+      }
+   },
+   "dgis_charging_available_places_count": "{free} of {total} available",
+   "@dgis_charging_available_places_count": {
+      "placeholders": {
+         "free": {
+            "type": "num"
+         },
+         "total": {
+            "type": "num"
+         }
+      }
    }
 }

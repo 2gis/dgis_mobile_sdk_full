@@ -547,6 +547,36 @@ abstract class DgisLocalizations {
   /// In en, this message translates to:
   /// **'{floor} floor'**
   String dgis_navi_floor(String floor);
+
+  /// No description provided for @dgis_reviews_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No reviews} =1{1 review} other{{count} reviews}}'**
+  String dgis_reviews_count(num count);
+
+  /// No description provided for @dgis_charging_not_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Not active'**
+  String get dgis_charging_not_active;
+
+  /// No description provided for @dgis_no_places_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No places available'**
+  String get dgis_no_places_available;
+
+  /// No description provided for @dgis_charging_available_places_all.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 place available} other{{count} places available}}'**
+  String dgis_charging_available_places_all(num count);
+
+  /// No description provided for @dgis_charging_available_places_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{free} of {total} available'**
+  String dgis_charging_available_places_count(num free, num total);
 }
 
 class _DgisLocalizationsDelegate

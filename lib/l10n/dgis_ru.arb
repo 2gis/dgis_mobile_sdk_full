@@ -74,5 +74,10 @@
    "dgis_navi_view_route": "Просмотр маршрута",
    "dgis_navi_continue_the_trip": "Продолжить поездку",
    "dgis_navi_indoor_navigation": "Навигация внутри здания",
-   "dgis_navi_floor": "{floor} этаж"
+   "dgis_navi_floor": "{floor} этаж",
+   "dgis_reviews_count": "{count, plural, =0{Нет отзывов} =1{1 отзыв} few{{count} отзыва} many{{count} отзывов} other{{count} отзывов}}",
+   "dgis_charging_not_active": "Не активна",
+   "dgis_no_places_available": "Нет свободных мест",
+   "dgis_charging_available_places_all": "{count, plural, =1{1 место доступно} few{{count} места доступно} many{{count} мест доступно} other{{count} мест доступно}}",
+   "dgis_charging_available_places_count": "{free} из {total} доступно"
 }

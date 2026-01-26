@@ -9,6 +9,7 @@ class SearchWidgetColorScheme {
   final TextStyle objectCardNormalTextStyle;
   final Color objectListSeparatorColor;
   final Color objectListBackgroundColor;
+  final double searchResultItemPadding;
 
   const SearchWidgetColorScheme({
     required this.searchBarBackgroundColor,
@@ -18,6 +19,7 @@ class SearchWidgetColorScheme {
     required this.objectCardNormalTextStyle,
     required this.objectListSeparatorColor,
     required this.objectListBackgroundColor,
+    required this.searchResultItemPadding,
     this.searchBarTextStyle,
   });
 
@@ -30,6 +32,7 @@ class SearchWidgetColorScheme {
     TextStyle? objectCardNormalTextStyle,
     Color? objectListSeparatorColor,
     Color? objectListBackgroundColor,
+    double? searchResultItemPadding,
   }) {
     return SearchWidgetColorScheme(
       searchBarBackgroundColor:
@@ -46,6 +49,8 @@ class SearchWidgetColorScheme {
           objectListSeparatorColor ?? this.objectListSeparatorColor,
       objectListBackgroundColor:
           objectListBackgroundColor ?? this.objectListBackgroundColor,
+      searchResultItemPadding:
+          searchResultItemPadding ?? this.searchResultItemPadding,
     );
   }
 }

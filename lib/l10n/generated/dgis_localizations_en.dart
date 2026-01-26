@@ -293,4 +293,38 @@ class DgisLocalizationsEn extends DgisLocalizations {
   String dgis_navi_floor(String floor) {
     return '$floor floor';
   }
+
+  @override
+  String dgis_reviews_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+      zero: 'No reviews',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dgis_charging_not_active => 'Not active';
+
+  @override
+  String get dgis_no_places_available => 'No places available';
+
+  @override
+  String dgis_charging_available_places_all(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count places available',
+      one: '1 place available',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dgis_charging_available_places_count(num free, num total) {
+    return '$free of $total available';
+  }
 }

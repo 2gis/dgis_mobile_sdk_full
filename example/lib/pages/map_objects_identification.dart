@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
+import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations.dart';
+import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations_en.dart';
 import 'package:flutter/material.dart';
 
 import 'common.dart';
@@ -25,6 +27,9 @@ class _MapObjectsIdentificationFullState
   bool isRouteEnabled = false;
   bool isCircleEnabled = false;
 
+  sdk.DirectoryObject? selectedDirectoryObject;
+  String? formattedDistance;
+
   List<sdk.DgisObjectId> highlightedObjectIds = [];
   sdk.MapObjectManager? mapObjectManager;
   sdk.Marker? selectedObject;
@@ -37,6 +42,7 @@ class _MapObjectsIdentificationFullState
   late sdk.RouteEditor routeEditor;
   late sdk.RouteEditorSource routeEditorSource;
   late sdk.MyLocationMapObjectSource locationSource;
+  late sdk.LocationService locationService;
   late sdk.Circle circle;
 
   @override
@@ -56,82 +62,178 @@ class _MapObjectsIdentificationFullState
             mapOptions: sdk.MapOptions(),
             controller: mapWidgetController,
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SwitchListTile(
-                    title: const Text('TUGC enable'),
-                    value: isTUGCEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        isTUGCEnabled = value;
-                        if (isTUGCEnabled) {
-                          sdkMap?.addSource(roadEventSource);
-                        } else {
-                          sdkMap?.removeSource(roadEventSource);
-                        }
-                      });
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Show parking'),
-                    value: isParkingEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        isParkingEnabled = value;
-                        sdkMap?.attributes.setAttributeValue(
-                          'parkingOn',
-                          sdk.AttributeValue.boolean(value),
-                        );
-                      });
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Show route'),
-                    value: isRouteEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        isRouteEnabled = value;
-                        if (isRouteEnabled) {
-                          routeEditorSource.setRoutesVisible(true);
-                          _findRoute();
-                        } else {
-                          routeEditorSource.setRoutesVisible(false);
-                        }
-                      });
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Show circle'),
-                    value: isCircleEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        isCircleEnabled = value;
-                        if (isCircleEnabled) {
-                          _addCircle();
-                        } else {
-                          mapObjectManager?.removeAll();
-                        }
-                      });
-                    },
-                  ),
-                ],
+          if (selectedDirectoryObject == null)
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SwitchListTile(
+                      title: const Text('TUGC enable'),
+                      value: isTUGCEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isTUGCEnabled = value;
+                          if (isTUGCEnabled) {
+                            sdkMap?.addSource(roadEventSource);
+                          } else {
+                            sdkMap?.removeSource(roadEventSource);
+                          }
+                        });
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('Show parking'),
+                      value: isParkingEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isParkingEnabled = value;
+                          sdkMap?.attributes.setAttributeValue(
+                            'parkingOn',
+                            sdk.AttributeValue.boolean(value),
+                          );
+                        });
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('Show route'),
+                      value: isRouteEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isRouteEnabled = value;
+                          if (isRouteEnabled) {
+                            routeEditorSource.setRoutesVisible(true);
+                            _findRoute();
+                          } else {
+                            routeEditorSource.setRoutesVisible(false);
+                          }
+                        });
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('Show circle'),
+                      value: isCircleEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isCircleEnabled = value;
+                          if (isCircleEnabled) {
+                            _addCircle();
+                          } else {
+                            mapObjectManager?.removeAll();
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
+          if (selectedDirectoryObject != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _buildDirectoryObjectCard(),
+            ),
         ],
       ),
     );
   }
 
+  Widget _buildDirectoryObjectCard() {
+    final localizations =
+        DgisLocalizations.of(context) ?? DgisLocalizationsEn();
+    final isDarkMode =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final theme = isDarkMode
+        ? sdk.SearchResultItemTheme.defaultDark
+        : sdk.SearchResultItemTheme.defaultLight;
+
+    final viewModel = sdk.SearchResultItemViewModel.fromDirectoryObject(
+      object: selectedDirectoryObject!,
+      localizations: localizations,
+      onTap: (object) {
+        _closeDirectoryObjectCard();
+      },
+      formattedDistance: formattedDistance,
+    );
+
+    final cardBackgroundColor =
+        isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+    final closeButtonBackgroundColor =
+        isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: closeButtonBackgroundColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                onPressed: _closeDirectoryObjectCard,
+                icon: Icon(
+                  Icons.close,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: cardBackgroundColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: sdk.SearchResultItemWidget(
+                  viewModel: viewModel,
+                  theme: theme,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _closeDirectoryObjectCard() {
+    setState(() {
+      selectedDirectoryObject = null;
+      formattedDistance = null;
+    });
+    dgisSource?.setHighlighted(highlightedObjectIds, false);
+    highlightedObjectIds = [];
+  }
+
   Future<void> initContext() async {
     searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
     loader = sdk.ImageLoader(sdkContext);
-    final locationService = sdk.LocationService(sdkContext);
+    locationService = sdk.LocationService(sdkContext);
     roadEventSource = sdk.RoadEventSource(sdkContext);
 
     await checkLocationPermissions(locationService);
@@ -150,6 +252,14 @@ class _MapObjectsIdentificationFullState
         map
           ..addSource(locationSource)
           ..addSource(routeEditorSource);
+
+        map.camera.position = const sdk.CameraPosition(
+          point: sdk.GeoPoint(
+            latitude: sdk.Latitude(55.75),
+            longitude: sdk.Longitude(37.62),
+          ),
+          zoom: sdk.Zoom(12),
+        );
       })
       ..addObjectLongTouchCallback(_showObjectCard)
       ..addObjectTappedCallback(_handleObjectTapped);
@@ -398,88 +508,37 @@ class _MapObjectsIdentificationFullState
     );
   }
 
+  String _formatDistance(int meters, DgisLocalizations localizations) {
+    if (meters >= 1000) {
+      final km = meters / 1000;
+      final kmValue = double.parse(km.toStringAsFixed(km % 1 == 0 ? 0 : 1));
+      return localizations.dgis_km_format(kmValue);
+    }
+    return localizations.dgis_m__meters_format(meters);
+  }
+
   void _showDirectoryObjectCard(sdk.DirectoryObject? objectInfo) {
     if (objectInfo == null) {
       return;
     }
 
     _setHighlighted(objectInfo);
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(objectInfo.title),
-          content: Form(
-            key: formKey,
-            child: SizedBox(
-              height: 250,
-              width: 50,
-              child: ListView(
-                shrinkWrap: true,
-                children: _buildObjectInfoWidget(objectInfo),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  List<Widget> _buildObjectInfoWidget(sdk.DirectoryObject objectInfo) {
-    /// Main info.
-    final infoWidgets = <Widget>[
-      Text(objectInfo.subtitle),
-      Text('ID: ${objectInfo.id?.objectId}'),
-    ];
-    if (objectInfo.description.isNotEmpty) {
-      infoWidgets.add(Text(objectInfo.description));
-    }
-    infoWidgets.add(() {
-      String rating;
-      final ratingValue = objectInfo.reviews?.rating;
-      if (ratingValue != null) {
-        rating = 'Rating: ${ratingValue.toStringAsFixed(2)}';
-      } else {
-        rating = 'There is no rating for this organization';
-      }
-      return Text(rating);
-    }());
-    final fiasCode = objectInfo.address?.fiasCode;
-    if (fiasCode != null) {
-      infoWidgets.add(Text(fiasCode));
+    String? distance;
+    final myLocation = locationService.lastLocation().value;
+    final objectPosition = objectInfo.markerPosition;
+    if (myLocation != null && objectPosition != null) {
+      final localizations =
+          DgisLocalizations.of(context) ?? DgisLocalizationsEn();
+      final distanceMeters =
+          objectPosition.distance(myLocation.coordinates.value);
+      distance = _formatDistance(distanceMeters.value.toInt(), localizations);
     }
 
-    /// Address
-    infoWidgets.addAll([const SizedBox(height: 10), const Text('Location:')]);
-    final formattedAddress =
-        objectInfo.formattedAddress(sdk.FormattingType.full);
-    if (formattedAddress != null) {
-      infoWidgets.add(
-        Text(
-          '${formattedAddress.drilldownAddress}, ${formattedAddress.streetAddress}, ${formattedAddress.addressComment}, ${formattedAddress.postCode}',
-        ),
-      );
-    }
-    final position = objectInfo.markerPosition?.point;
-    if (position != null) {
-      infoWidgets.add(
-        Text(
-          'Latitude: ${position.latitude.value.toStringAsFixed(
-            6,
-          )}, Longitude: ${position.longitude.value.toStringAsFixed(6)}',
-        ),
-      );
-    }
-
-    return infoWidgets;
+    setState(() {
+      selectedDirectoryObject = objectInfo;
+      formattedDistance = distance;
+    });
   }
 
   sdk.DgisObjectId? _getObjectId(sdk.RenderedObjectInfo objectInfo) {

@@ -760,560 +760,88 @@ extension _DartTo_CPersonalDataCollectionConsent on PersonalDataCollectionConsen
   }
 }
 	
-// MARK: - ScreenDistance
+// MARK: - releaseContext
 
 /**
- Расстояние между объектами на экране в миллиметрах.
+ Освободить контекст
 
- - Note: не может быть отрицательным
+ - Parameter context: контекст для освобождения
+ - exception: Бросает исключение, если контекст все еще используется
+ - Note: После успешного вызова контекст становится невалидным и не должен использоваться
 */
-class ScreenDistance {
-  final double value;
-
-  const ScreenDistance([this.value = 0]);
-
-  ScreenDistance copyWith({
-    double? value
-  }) {
-    return ScreenDistance(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenDistance &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CScreenDistance extends ffi.Struct {
-  @ffi.Float()
-  external double value;
-
-}
-// MARK: - ScreenDistance <-> _CScreenDistance
-
-extension _CScreenDistanceToDart on _CScreenDistance {
-  ScreenDistance _toDart() {
-    return ScreenDistance(
-      this.value
-    );
-  }
+@internal
+void releaseContext(
+  Context context
+){
+  var _a0 = context._copyFromDartTo_CContext();
+  _CResult_CEmpty res = _CFunction_G_releaseContext_With_CContext(_a0);
+  _a0._releaseIntermediate();
+  res._toDart();
+  res._releaseIntermediate();
 }
 
-extension _DartTo_CScreenDistance on ScreenDistance {
-  _CScreenDistance _copyFromDartTo_CScreenDistance() {
-    final res = _CScreenDistanceMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CScreenDistanceRelease on _CScreenDistance {
-  void _releaseIntermediate() {
-  }
-}
+// MARK: - CError <-> _CError
 
-// MARK: - ScreenPoint
-
-/**
- Точка в экранных координатах.
-
- Направления осей: x - вправо, y - вниз.
- (0.0, 0.0) - левый верхний угол левого верхнего пикселя.
- Целая часть координаты - номер пикселя, дробная - относительное местоположение в пикселе.
-*/
-class ScreenPoint {
-  final double x;
-  final double y;
-
-  const ScreenPoint({
-    this.x = 0,
-    this.y = 0
-  });
-
-  ScreenPoint copyWith({
-    double? x,
-    double? y
-  }) {
-    return ScreenPoint(
-      x: x ?? this.x,
-      y: y ?? this.y
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenPoint &&
-    other.runtimeType == runtimeType &&
-    other.x == x &&
-    other.y == y;
-
-  @override
-  int get hashCode {
-    return Object.hash(x, y);
-  }
-
-}
-final class _CScreenPoint extends ffi.Struct {
-  @ffi.Float()
-  external double x;
-
-  @ffi.Float()
-  external double y;
-
-}
-// MARK: - ScreenPoint <-> _CScreenPoint
-
-extension _CScreenPointToDart on _CScreenPoint {
-  ScreenPoint _toDart() {
-    return ScreenPoint(
-      x: this.x,
-      y: this.y
-    );
-  }
-}
-
-extension _DartTo_CScreenPoint on ScreenPoint {
-  _CScreenPoint _copyFromDartTo_CScreenPoint() {
-    final res = _CScreenPointMakeDefault();
-    res.x = this.x;
-    res.y = this.y;
-    return res;
-  }
-}
-extension _CScreenPointRelease on _CScreenPoint {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - ScreenShift
-
-/**
- Смещение карты по горизонтали и вертикали в координатном пространстве экрана.
-
- Положительное направление смещения: dx - вправо, dy - вниз.
-*/
-class ScreenShift {
-  final double dx;
-  final double dy;
-
-  const ScreenShift({
-    this.dx = 0,
-    this.dy = 0
-  });
-
-  ScreenShift copyWith({
-    double? dx,
-    double? dy
-  }) {
-    return ScreenShift(
-      dx: dx ?? this.dx,
-      dy: dy ?? this.dy
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenShift &&
-    other.runtimeType == runtimeType &&
-    other.dx == dx &&
-    other.dy == dy;
-
-  @override
-  int get hashCode {
-    return Object.hash(dx, dy);
-  }
-
-}
-final class _CScreenShift extends ffi.Struct {
-  @ffi.Float()
-  external double dx;
-
-  @ffi.Float()
-  external double dy;
-
-}
-// MARK: - ScreenShift <-> _CScreenShift
-
-extension _CScreenShiftToDart on _CScreenShift {
-  ScreenShift _toDart() {
-    return ScreenShift(
-      dx: this.dx,
-      dy: this.dy
-    );
-  }
-}
-
-extension _DartTo_CScreenShift on ScreenShift {
-  _CScreenShift _copyFromDartTo_CScreenShift() {
-    final res = _CScreenShiftMakeDefault();
-    res.dx = this.dx;
-    res.dy = this.dy;
-    return res;
-  }
-}
-extension _CScreenShiftRelease on _CScreenShift {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - ScreenSize
-
-/** Размер в пикселях. */
-class ScreenSize {
-  final int width;
-  final int height;
-
-  const ScreenSize({
-    this.width = 0,
-    this.height = 0
-  });
-
-  ScreenSize copyWith({
-    int? width,
-    int? height
-  }) {
-    return ScreenSize(
-      width: width ?? this.width,
-      height: height ?? this.height
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScreenSize &&
-    other.runtimeType == runtimeType &&
-    other.width == width &&
-    other.height == height;
-
-  @override
-  int get hashCode {
-    return Object.hash(width, height);
-  }
-
-}
-final class _CScreenSize extends ffi.Struct {
-  @ffi.Uint32()
-  external int width;
-
-  @ffi.Uint32()
-  external int height;
-
-}
-// MARK: - ScreenSize <-> _CScreenSize
-
-extension _CScreenSizeToDart on _CScreenSize {
-  ScreenSize _toDart() {
-    return ScreenSize(
-      width: this.width,
-      height: this.height
-    );
-  }
-}
-
-extension _DartTo_CScreenSize on ScreenSize {
-  _CScreenSize _copyFromDartTo_CScreenSize() {
-    final res = _CScreenSizeMakeDefault();
-    res.width = this.width;
-    res.height = this.height;
-    return res;
-  }
-}
-extension _CScreenSizeRelease on _CScreenSize {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - WeekDay
-
-/** День недели. */
-enum WeekDay {
-  sunday(0),
-  monday(1),
-  tuesday(2),
-  wednesday(3),
-  thursday(4),
-  friday(5),
-  saturday(6),
-  ;
-
-  const WeekDay(this.rawValue);
-  final int rawValue;
-
-  static WeekDay getByValue(int value) {
-    return WeekDay.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CWeekDay extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CWeekDayBasicFunctions on _CWeekDay {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CWeekDayToDart on _CWeekDay {
-  WeekDay _toDart() {
-    return WeekDay.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CWeekDay on WeekDay {
-  _CWeekDay _copyFromDartTo_CWeekDay() {
-    return _CWeekDayMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - WeekTime
-
-/** Момент времени внутри недели. */
-class WeekTime {
-  /** День недели. */
-  final WeekDay weekDay;
-  /** Время. */
-  final DayTime time;
-
-  const WeekTime({
-    required this.weekDay,
-    required this.time
-  });
-
-  WeekTime copyWith({
-    WeekDay? weekDay,
-    DayTime? time
-  }) {
-    return WeekTime(
-      weekDay: weekDay ?? this.weekDay,
-      time: time ?? this.time
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is WeekTime &&
-    other.runtimeType == runtimeType &&
-    other.weekDay == weekDay &&
-    other.time == time;
-
-  @override
-  int get hashCode {
-    return Object.hash(weekDay, time);
-  }
-
-}
-final class _CWeekTime extends ffi.Struct {
-  external _CWeekDay weekDay;
-
-  external _CDayTime time;
-
-}
-// MARK: - WeekTime <-> _CWeekTime
-
-extension _CWeekTimeToDart on _CWeekTime {
-  WeekTime _toDart() {
-    return WeekTime(
-      weekDay: this.weekDay._toDart(),
-      time: this.time._toDart()
-    );
-  }
-}
-
-extension _DartTo_CWeekTime on WeekTime {
-  _CWeekTime _copyFromDartTo_CWeekTime() {
-    final res = _CWeekTimeMakeDefault();
-    res.weekDay = this.weekDay._copyFromDartTo_CWeekDay();
-    res.time = this.time._copyFromDartTo_CDayTime();
-    return res;
-  }
-}
-extension _CWeekTimeRelease on _CWeekTime {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - WeekTimeInterval
-
-/** Интервал времени в течение недели. */
-class WeekTimeInterval {
-  /** Время начала. */
-  final WeekTime startTime;
-  /** Время окончания. */
-  final WeekTime finishTime;
-
-  const WeekTimeInterval({
-    required this.startTime,
-    required this.finishTime
-  });
-
-  WeekTimeInterval copyWith({
-    WeekTime? startTime,
-    WeekTime? finishTime
-  }) {
-    return WeekTimeInterval(
-      startTime: startTime ?? this.startTime,
-      finishTime: finishTime ?? this.finishTime
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is WeekTimeInterval &&
-    other.runtimeType == runtimeType &&
-    other.startTime == startTime &&
-    other.finishTime == finishTime;
-
-  @override
-  int get hashCode {
-    return Object.hash(startTime, finishTime);
-  }
-
-}
-final class _CWeekTimeInterval extends ffi.Struct {
-  external _CWeekTime startTime;
-
-  external _CWeekTime finishTime;
-
-}
-// MARK: - WeekTimeInterval <-> _CWeekTimeInterval
-
-extension _CWeekTimeIntervalToDart on _CWeekTimeInterval {
-  WeekTimeInterval _toDart() {
-    return WeekTimeInterval(
-      startTime: this.startTime._toDart(),
-      finishTime: this.finishTime._toDart()
-    );
-  }
-}
-
-extension _DartTo_CWeekTimeInterval on WeekTimeInterval {
-  _CWeekTimeInterval _copyFromDartTo_CWeekTimeInterval() {
-    final res = _CWeekTimeIntervalMakeDefault();
-    res.startTime = this.startTime._copyFromDartTo_CWeekTime();
-    res.finishTime = this.finishTime._copyFromDartTo_CWeekTime();
-    return res;
-  }
-}
-extension _CWeekTimeIntervalRelease on _CWeekTimeInterval {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - File
-
-/**
- Идентификатор файла.
-
- Может являться не только файлом на файловой системе, но и произвольным источником данных.
-*/
-class File implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  static final _finalizer = ffi.NativeFinalizer(_CFile_releasePtr);
-
-  File._raw(this._self);
-  factory File._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = File._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  /**
-   Файл в файловой системе.
-  
-   - Parameter path: Путь к файлу.
-  */
-  factory File(
-    String path
-  ) {
-    var _a0 = path._copyFromDartTo_CString();
-    _CFile res = _CFile_C_createWith_CString(_a0);
-    _a0._releaseIntermediate();
-    return File._create(res._impl);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is File &&
-    other.runtimeType == runtimeType &&
-    _CFile_cg_objectIdentifier(this._self) == _CFile_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CFile_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: CFile: Static Methods
-
-  /**
-   Файл с содержимым из заданной строки.
-  
-   - Parameter contents: Содержимое файла.
-  */
-  static File fromString(
-    String contents
-  )  {
-    var _a0 = contents._copyFromDartTo_CString();
-    _CFile res = _CFile_S_fromString_CString(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  /**
-   Файл из asset-ов.
-  
-   - Parameter path: Путь относительно корневой директории asset-ов.
-  */
-  static File fromAsset(
-    Context context,
-    String path
-  )  {
-    var _a0 = context._copyFromDartTo_CContext();
-    var _a1 = path._copyFromDartTo_CString();
-    _CFile res = _CFile_S_fromAsset_CContext_CString(_a0, _a1);
-    _a1._releaseIntermediate();
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-// MARK: - File <-> CFile
-
-final class _CFile extends ffi.Struct {
+final class _CError extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CFileBasicFunctions on _CFile {
+extension _CErrorBasicFunctions on _CError {
   void _releaseIntermediate() {
-    _CFile_release(_impl);
-  }
-
-  _CFile _retain() {
-    return _CFile_retain(_impl);
+    _CError_release(this);
   }
 }
 
-extension _CFileToDart on _CFile {
-  File _toDart() {
-    return File._create(_retain()._impl);
+extension _CErrorToDart on _CError {
+  NativeException _toDart() {
+    final res = _CErrorGetDescription(_CErrorMakeDefault().._impl = _impl);
+    return NativeException(res.toDartString());
   }
 }
 
-
-extension _DartToCFile on File {
-  _CFile _copyFromDartTo_CFile() {
-    return (_CFileMakeDefault().._impl=_self)._retain();
+extension _DartTo_CError on NativeException {
+  _CError _copyFromDartTo_CError() {
+    _CString description = this.toString()._copyFromDartTo_CString();
+    final res = _CErrorCreateWithDescription(description._getData());
+    description._releaseIntermediate();
+    return res;
   }
 }
+	
+// MARK: - CEmpty <-> _CEmpty
+
+final class _CEmpty extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+	
+// MARK: - void <-> _CResult_CEmpty
+
+final class _CResult_CEmptyImpl extends ffi.Union {
+  external _CEmpty _value;
+  external _CError _error;
+}
+
+final class _CResult_CEmpty extends ffi.Struct {
+  external _CResult_CEmptyImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CResult_CEmptyBasicFunctions on _CResult_CEmpty {
+  void _releaseIntermediate() {
+    _CResult_CEmpty_release(this);
+  }
+}
+
+extension _CResult_CEmptyToDart on _CResult_CEmpty {
+  void _toDart() {
+    if (this._index == 1) {
+      throw this._impl._error._toDart();
+    }
+  }
+}
+	
 // MARK: - makeSystemContext
 
 /**
@@ -1359,34 +887,6 @@ Context makeSystemContext(
   return t;
 }
 
-// MARK: - CError <-> _CError
-
-final class _CError extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CErrorBasicFunctions on _CError {
-  void _releaseIntermediate() {
-    _CError_release(this);
-  }
-}
-
-extension _CErrorToDart on _CError {
-  NativeException _toDart() {
-    final res = _CErrorGetDescription(_CErrorMakeDefault().._impl = _impl);
-    return NativeException(res.toDartString());
-  }
-}
-
-extension _DartTo_CError on NativeException {
-  _CError _copyFromDartTo_CError() {
-    _CString description = this.toString()._copyFromDartTo_CString();
-    final res = _CErrorCreateWithDescription(description._getData());
-    description._releaseIntermediate();
-    return res;
-  }
-}
-	
 // MARK: - Context <-> _CResult_CContext
 
 final class _CResult_CContextImpl extends ffi.Union {
@@ -2319,13 +1819,6 @@ extension _CLogMessageRelease on _CLogMessage {
   }
 }
 
-// MARK: - CEmpty <-> _CEmpty
-
-final class _CEmpty extends ffi.Struct {
-  @ffi.Int8()
-  external int _dummy;
-}
-	
 // MARK: - VendorConfigFromAsset
 
 /**
@@ -4508,6 +4001,560 @@ extension _DartTo_COptional_CHeadingAvailableNotifier on HeadingAvailableNotifie
       cOptional.hasValue = false;
     }
     return cOptional;
+  }
+}
+// MARK: - ScreenDistance
+
+/**
+ Расстояние между объектами на экране в миллиметрах.
+
+ - Note: не может быть отрицательным
+*/
+class ScreenDistance {
+  final double value;
+
+  const ScreenDistance([this.value = 0]);
+
+  ScreenDistance copyWith({
+    double? value
+  }) {
+    return ScreenDistance(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenDistance &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CScreenDistance extends ffi.Struct {
+  @ffi.Float()
+  external double value;
+
+}
+// MARK: - ScreenDistance <-> _CScreenDistance
+
+extension _CScreenDistanceToDart on _CScreenDistance {
+  ScreenDistance _toDart() {
+    return ScreenDistance(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CScreenDistance on ScreenDistance {
+  _CScreenDistance _copyFromDartTo_CScreenDistance() {
+    final res = _CScreenDistanceMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CScreenDistanceRelease on _CScreenDistance {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScreenPoint
+
+/**
+ Точка в экранных координатах.
+
+ Направления осей: x - вправо, y - вниз.
+ (0.0, 0.0) - левый верхний угол левого верхнего пикселя.
+ Целая часть координаты - номер пикселя, дробная - относительное местоположение в пикселе.
+*/
+class ScreenPoint {
+  final double x;
+  final double y;
+
+  const ScreenPoint({
+    this.x = 0,
+    this.y = 0
+  });
+
+  ScreenPoint copyWith({
+    double? x,
+    double? y
+  }) {
+    return ScreenPoint(
+      x: x ?? this.x,
+      y: y ?? this.y
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenPoint &&
+    other.runtimeType == runtimeType &&
+    other.x == x &&
+    other.y == y;
+
+  @override
+  int get hashCode {
+    return Object.hash(x, y);
+  }
+
+}
+final class _CScreenPoint extends ffi.Struct {
+  @ffi.Float()
+  external double x;
+
+  @ffi.Float()
+  external double y;
+
+}
+// MARK: - ScreenPoint <-> _CScreenPoint
+
+extension _CScreenPointToDart on _CScreenPoint {
+  ScreenPoint _toDart() {
+    return ScreenPoint(
+      x: this.x,
+      y: this.y
+    );
+  }
+}
+
+extension _DartTo_CScreenPoint on ScreenPoint {
+  _CScreenPoint _copyFromDartTo_CScreenPoint() {
+    final res = _CScreenPointMakeDefault();
+    res.x = this.x;
+    res.y = this.y;
+    return res;
+  }
+}
+extension _CScreenPointRelease on _CScreenPoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScreenShift
+
+/**
+ Смещение карты по горизонтали и вертикали в координатном пространстве экрана.
+
+ Положительное направление смещения: dx - вправо, dy - вниз.
+*/
+class ScreenShift {
+  final double dx;
+  final double dy;
+
+  const ScreenShift({
+    this.dx = 0,
+    this.dy = 0
+  });
+
+  ScreenShift copyWith({
+    double? dx,
+    double? dy
+  }) {
+    return ScreenShift(
+      dx: dx ?? this.dx,
+      dy: dy ?? this.dy
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenShift &&
+    other.runtimeType == runtimeType &&
+    other.dx == dx &&
+    other.dy == dy;
+
+  @override
+  int get hashCode {
+    return Object.hash(dx, dy);
+  }
+
+}
+final class _CScreenShift extends ffi.Struct {
+  @ffi.Float()
+  external double dx;
+
+  @ffi.Float()
+  external double dy;
+
+}
+// MARK: - ScreenShift <-> _CScreenShift
+
+extension _CScreenShiftToDart on _CScreenShift {
+  ScreenShift _toDart() {
+    return ScreenShift(
+      dx: this.dx,
+      dy: this.dy
+    );
+  }
+}
+
+extension _DartTo_CScreenShift on ScreenShift {
+  _CScreenShift _copyFromDartTo_CScreenShift() {
+    final res = _CScreenShiftMakeDefault();
+    res.dx = this.dx;
+    res.dy = this.dy;
+    return res;
+  }
+}
+extension _CScreenShiftRelease on _CScreenShift {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScreenSize
+
+/** Размер в пикселях. */
+class ScreenSize {
+  final int width;
+  final int height;
+
+  const ScreenSize({
+    this.width = 0,
+    this.height = 0
+  });
+
+  ScreenSize copyWith({
+    int? width,
+    int? height
+  }) {
+    return ScreenSize(
+      width: width ?? this.width,
+      height: height ?? this.height
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScreenSize &&
+    other.runtimeType == runtimeType &&
+    other.width == width &&
+    other.height == height;
+
+  @override
+  int get hashCode {
+    return Object.hash(width, height);
+  }
+
+}
+final class _CScreenSize extends ffi.Struct {
+  @ffi.Uint32()
+  external int width;
+
+  @ffi.Uint32()
+  external int height;
+
+}
+// MARK: - ScreenSize <-> _CScreenSize
+
+extension _CScreenSizeToDart on _CScreenSize {
+  ScreenSize _toDart() {
+    return ScreenSize(
+      width: this.width,
+      height: this.height
+    );
+  }
+}
+
+extension _DartTo_CScreenSize on ScreenSize {
+  _CScreenSize _copyFromDartTo_CScreenSize() {
+    final res = _CScreenSizeMakeDefault();
+    res.width = this.width;
+    res.height = this.height;
+    return res;
+  }
+}
+extension _CScreenSizeRelease on _CScreenSize {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - WeekDay
+
+/** День недели. */
+enum WeekDay {
+  sunday(0),
+  monday(1),
+  tuesday(2),
+  wednesday(3),
+  thursday(4),
+  friday(5),
+  saturday(6),
+  ;
+
+  const WeekDay(this.rawValue);
+  final int rawValue;
+
+  static WeekDay getByValue(int value) {
+    return WeekDay.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CWeekDay extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CWeekDayBasicFunctions on _CWeekDay {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CWeekDayToDart on _CWeekDay {
+  WeekDay _toDart() {
+    return WeekDay.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CWeekDay on WeekDay {
+  _CWeekDay _copyFromDartTo_CWeekDay() {
+    return _CWeekDayMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - WeekTime
+
+/** Момент времени внутри недели. */
+class WeekTime {
+  /** День недели. */
+  final WeekDay weekDay;
+  /** Время. */
+  final DayTime time;
+
+  const WeekTime({
+    required this.weekDay,
+    required this.time
+  });
+
+  WeekTime copyWith({
+    WeekDay? weekDay,
+    DayTime? time
+  }) {
+    return WeekTime(
+      weekDay: weekDay ?? this.weekDay,
+      time: time ?? this.time
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is WeekTime &&
+    other.runtimeType == runtimeType &&
+    other.weekDay == weekDay &&
+    other.time == time;
+
+  @override
+  int get hashCode {
+    return Object.hash(weekDay, time);
+  }
+
+}
+final class _CWeekTime extends ffi.Struct {
+  external _CWeekDay weekDay;
+
+  external _CDayTime time;
+
+}
+// MARK: - WeekTime <-> _CWeekTime
+
+extension _CWeekTimeToDart on _CWeekTime {
+  WeekTime _toDart() {
+    return WeekTime(
+      weekDay: this.weekDay._toDart(),
+      time: this.time._toDart()
+    );
+  }
+}
+
+extension _DartTo_CWeekTime on WeekTime {
+  _CWeekTime _copyFromDartTo_CWeekTime() {
+    final res = _CWeekTimeMakeDefault();
+    res.weekDay = this.weekDay._copyFromDartTo_CWeekDay();
+    res.time = this.time._copyFromDartTo_CDayTime();
+    return res;
+  }
+}
+extension _CWeekTimeRelease on _CWeekTime {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - WeekTimeInterval
+
+/** Интервал времени в течение недели. */
+class WeekTimeInterval {
+  /** Время начала. */
+  final WeekTime startTime;
+  /** Время окончания. */
+  final WeekTime finishTime;
+
+  const WeekTimeInterval({
+    required this.startTime,
+    required this.finishTime
+  });
+
+  WeekTimeInterval copyWith({
+    WeekTime? startTime,
+    WeekTime? finishTime
+  }) {
+    return WeekTimeInterval(
+      startTime: startTime ?? this.startTime,
+      finishTime: finishTime ?? this.finishTime
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is WeekTimeInterval &&
+    other.runtimeType == runtimeType &&
+    other.startTime == startTime &&
+    other.finishTime == finishTime;
+
+  @override
+  int get hashCode {
+    return Object.hash(startTime, finishTime);
+  }
+
+}
+final class _CWeekTimeInterval extends ffi.Struct {
+  external _CWeekTime startTime;
+
+  external _CWeekTime finishTime;
+
+}
+// MARK: - WeekTimeInterval <-> _CWeekTimeInterval
+
+extension _CWeekTimeIntervalToDart on _CWeekTimeInterval {
+  WeekTimeInterval _toDart() {
+    return WeekTimeInterval(
+      startTime: this.startTime._toDart(),
+      finishTime: this.finishTime._toDart()
+    );
+  }
+}
+
+extension _DartTo_CWeekTimeInterval on WeekTimeInterval {
+  _CWeekTimeInterval _copyFromDartTo_CWeekTimeInterval() {
+    final res = _CWeekTimeIntervalMakeDefault();
+    res.startTime = this.startTime._copyFromDartTo_CWeekTime();
+    res.finishTime = this.finishTime._copyFromDartTo_CWeekTime();
+    return res;
+  }
+}
+extension _CWeekTimeIntervalRelease on _CWeekTimeInterval {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - File
+
+/**
+ Идентификатор файла.
+
+ Может являться не только файлом на файловой системе, но и произвольным источником данных.
+*/
+class File implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CFile_releasePtr);
+
+  File._raw(this._self);
+  factory File._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = File._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  /**
+   Файл в файловой системе.
+  
+   - Parameter path: Путь к файлу.
+  */
+  factory File(
+    String path
+  ) {
+    var _a0 = path._copyFromDartTo_CString();
+    _CFile res = _CFile_C_createWith_CString(_a0);
+    _a0._releaseIntermediate();
+    return File._create(res._impl);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is File &&
+    other.runtimeType == runtimeType &&
+    _CFile_cg_objectIdentifier(this._self) == _CFile_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CFile_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CFile: Static Methods
+
+  /**
+   Файл с содержимым из заданной строки.
+  
+   - Parameter contents: Содержимое файла.
+  */
+  static File fromString(
+    String contents
+  )  {
+    var _a0 = contents._copyFromDartTo_CString();
+    _CFile res = _CFile_S_fromString_CString(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Файл из asset-ов.
+  
+   - Parameter path: Путь относительно корневой директории asset-ов.
+  */
+  static File fromAsset(
+    Context context,
+    String path
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = path._copyFromDartTo_CString();
+    _CFile res = _CFile_S_fromAsset_CContext_CString(_a0, _a1);
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - File <-> CFile
+
+final class _CFile extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CFileBasicFunctions on _CFile {
+  void _releaseIntermediate() {
+    _CFile_release(_impl);
+  }
+
+  _CFile _retain() {
+    return _CFile_retain(_impl);
+  }
+}
+
+extension _CFileToDart on _CFile {
+  File _toDart() {
+    return File._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCFile on File {
+  _CFile _copyFromDartTo_CFile() {
+    return (_CFileMakeDefault().._impl=_self)._retain();
   }
 }
 // MARK: - GeoRect
@@ -30419,6 +30466,266 @@ extension _DartTo_CRoadEventDisplayCategory on RoadEventDisplayCategory {
   }
 }
 	
+// MARK: - RoadEventFilterData
+
+/** Данные о дорожном событии, используемые для фильтрации. */
+class RoadEventFilterData {
+  /** Время начала. */
+  final DateTime? startTime;
+  /** Время окончания. */
+  final DateTime? finishTime;
+  /** Тип события. */
+  final RoadEventType type;
+
+  const RoadEventFilterData({
+    required this.startTime,
+    required this.finishTime,
+    required this.type
+  });
+
+  RoadEventFilterData copyWith({
+    Optional<DateTime?>? startTime,
+    Optional<DateTime?>? finishTime,
+    RoadEventType? type
+  }) {
+    return RoadEventFilterData(
+      startTime: startTime != null ? startTime.value : this.startTime,
+      finishTime: finishTime != null ? finishTime.value : this.finishTime,
+      type: type ?? this.type
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RoadEventFilterData &&
+    other.runtimeType == runtimeType &&
+    other.startTime == startTime &&
+    other.finishTime == finishTime &&
+    other.type == type;
+
+  @override
+  int get hashCode {
+    return Object.hash(startTime, finishTime, type);
+  }
+
+}
+final class _CRoadEventFilterData extends ffi.Struct {
+  external _COptional_CDate startTime;
+
+  external _COptional_CDate finishTime;
+
+  external _CRoadEventType type;
+
+}
+// MARK: - RoadEventFilterData <-> _CRoadEventFilterData
+
+extension _CRoadEventFilterDataToDart on _CRoadEventFilterData {
+  RoadEventFilterData _toDart() {
+    return RoadEventFilterData(
+      startTime: this.startTime._toDart(),
+      finishTime: this.finishTime._toDart(),
+      type: this.type._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRoadEventFilterData on RoadEventFilterData {
+  _CRoadEventFilterData _copyFromDartTo_CRoadEventFilterData() {
+    final res = _CRoadEventFilterDataMakeDefault();
+    res.startTime = this.startTime._copyFromDartTo_COptional_CDate();
+    res.finishTime = this.finishTime._copyFromDartTo_COptional_CDate();
+    res.type = this.type._copyFromDartTo_CRoadEventType();
+    return res;
+  }
+}
+extension _CRoadEventFilterDataRelease on _CRoadEventFilterData {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - _RoadEventFilterCpp
+
+/** Фильтр отображаемых дорожных событий. */
+class _RoadEventFilterCpp extends RoadEventFilter implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CRoadEventFilterCpp_releasePtr);
+
+  _RoadEventFilterCpp._raw(this._self);
+  factory _RoadEventFilterCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _RoadEventFilterCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _RoadEventFilterCpp &&
+    other.runtimeType == runtimeType &&
+    _CRoadEventFilterCpp_cg_objectIdentifier(this._self) == _CRoadEventFilterCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CRoadEventFilterCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _RoadEventFilterCpp: Methods
+
+  bool passes(
+    RoadEventFilterData event
+  )  {
+    var _a1 = event._copyFromDartTo_CRoadEventFilterData();
+    bool res = _CRoadEventFilterCpp_passes_CRoadEventFilterData(_CRoadEventFilterCppMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+}
+
+// MARK: - _RoadEventFilterCpp <-> CRoadEventFilterCpp
+
+final class _CRoadEventFilterCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CRoadEventFilterCppBasicFunctions on _CRoadEventFilterCpp {
+  void _releaseIntermediate() {
+    _CRoadEventFilterCpp_release(_impl);
+  }
+
+  _CRoadEventFilterCpp _retain() {
+    return _CRoadEventFilterCpp_retain(_impl);
+  }
+}
+
+extension _CRoadEventFilterCppToDart on _CRoadEventFilterCpp {
+  _RoadEventFilterCpp _toDart() {
+    return _RoadEventFilterCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCRoadEventFilterCpp on _RoadEventFilterCpp {
+  _CRoadEventFilterCpp _copyFromDartTo_CRoadEventFilterCpp() {
+    return (_CRoadEventFilterCppMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - RoadEventFilter
+
+/** Фильтр отображаемых дорожных событий. */
+abstract class RoadEventFilter {
+  bool passes(
+    RoadEventFilterData event
+  );
+}
+
+class _RoadEventFilter {
+  final RoadEventFilter object;
+  int refCounter = 1;
+
+  _RoadEventFilter(this.object);
+}
+
+final class _CRoadEventFilter extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _value;
+  external ffi.Pointer<ffi.Void> _cppValue;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Bool)>>, _CRoadEventFilterData)>> _passes_CRoadEventFilterData;
+}
+
+extension _CRoadEventFilterBasicFunctions on _CRoadEventFilter {
+  void _releaseIntermediate() {
+    _CRoadEventFilter_release(this);
+  }
+}
+
+int _CRoadEventFilterInstanceCounter = 1;
+final _CRoadEventFilterInstanceMap = <int, _RoadEventFilter>{};
+
+extension _CRoadEventFilterToDart on _CRoadEventFilter {
+  RoadEventFilter _toDart() {
+    late RoadEventFilter? result;
+    final platformValue = this._value.cast<ffi.Int64>();
+    if (platformValue.address != 0) {
+      result = _CRoadEventFilterInstanceMap[platformValue.address]?.object;
+    } else if (this._cppValue.address != 0) {
+      final cppValue = _CRoadEventFilterCppMakeDefault().._impl = this._cppValue;
+      result = cppValue._toDart();
+    }
+    if (result == null) {
+      throw Exception("Invalid intermediate object of type _CRoadEventFilter");
+    }
+    return result;
+  }
+}
+
+extension _DartTo_CRoadEventFilter on RoadEventFilter {
+  static void retainFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    _CRoadEventFilterInstanceMap[platformValue.address]?.refCounter += 1;
+  }
+
+  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    final platformObject = _CRoadEventFilterInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      return;
+    }
+    platformObject.refCounter -= 1;
+    if (platformObject.refCounter > 0) {
+      return;
+    }
+    _CRoadEventFilterInstanceMap.remove(platformValue.address);
+  }
+
+  _CRoadEventFilter _copyFromDartTo_CRoadEventFilter() {
+    var res = _CRoadEventFilterMakeDefault();
+    if (this is _RoadEventFilterCpp) {
+      final cppValue = this as _RoadEventFilterCpp;
+      res._cppValue = cppValue._copyFromDartTo_CRoadEventFilterCpp()._impl;
+      return res;
+    }
+    final instanceId = _CRoadEventFilterInstanceCounter;
+    _CRoadEventFilterInstanceCounter += 1;
+    _CRoadEventFilterInstanceMap[instanceId] = _RoadEventFilter(this);
+    res._value = ffi.Pointer.fromAddress(instanceId);
+    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
+    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
+    res._retain = retainFunctionCallable.nativeFunction;
+    //res._release = releaseFunctionCallable.nativeFunction;
+
+    final passes_CRoadEventFilterDataFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Bool)>>, _CRoadEventFilterData)>.listener(passes_CRoadEventFilterDataFunction);
+    res._passes_CRoadEventFilterData = passes_CRoadEventFilterDataFunctionCallable.nativeFunction;
+    return res;
+  }
+
+  static void passes_CRoadEventFilterDataFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Bool)>> resultValueCallback, _CRoadEventFilterData event) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CRoadEventFilter");
+    }
+    final platformObject = _CRoadEventFilterInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CRoadEventFilter");
+    }
+
+    final eventDart = event._toDart();
+    final res = platformObject.object.passes(eventDart);
+    event._releaseIntermediate();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>, bool)>();
+    callbackFunction(context, res);
+  }
+
+
+}
+
 // MARK: - RoadEventSource
 
 /** Интерфейс класса, управляющего отображением дорожных событий (tUGC) на карте. */
@@ -30431,6 +30738,18 @@ class RoadEventSource extends Source implements ffi.Finalizable {
   set visibleEvents(EnumSet<RoadEventDisplayCategory> types) {
     var _a1 = types._copyFromDartTo_COptionSet_CRoadEventDisplayCategory();
     void res = _CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategory(_CRoadEventSourceMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  RoadEventFilter? get roadEventFilter {
+    _COptional_CRoadEventFilter res = _CRoadEventSource_roadEventFilter(_CRoadEventSourceMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  set roadEventFilter(RoadEventFilter? roadEventFilter) {
+    var _a1 = roadEventFilter._copyFromDartTo_COptional_CRoadEventFilter();
+    void res = _CRoadEventSource_setRoadEventFilter_COptional_CRoadEventFilter(_CRoadEventSourceMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
     return res;
   }
   /** Получение списка идентификаторов выделенных дорожных событий. */
@@ -30713,6 +31032,168 @@ extension _DartTo_COptionSet_CRoadEventDisplayCategory on EnumSet<RoadEventDispl
   }
 }
 	
+// MARK: - RoadEventFilter? <-> _COptional_CRoadEventFilter
+
+final class _COptional_CRoadEventFilter extends ffi.Struct {
+  
+  external _CRoadEventFilter value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CRoadEventFilterBasicFunctions on _COptional_CRoadEventFilter {
+  void _releaseIntermediate() {
+    _COptional_CRoadEventFilter_release(this);
+  }
+}
+
+extension _COptional_CRoadEventFilterToDart on _COptional_CRoadEventFilter {
+  RoadEventFilter? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CRoadEventFilter on RoadEventFilter? {
+  _COptional_CRoadEventFilter _copyFromDartTo_COptional_CRoadEventFilter() {
+    final cOptional = _COptional_CRoadEventFilterMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CRoadEventFilter();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - DefaultRoadEventFilter
+
+/**
+ Фабрика для создания стандартных временных фильтров дорожных событий.
+
+ - see: IDefaultRoadEventFilter.
+*/
+class DefaultRoadEventFilter implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CDefaultRoadEventFilter_releasePtr);
+
+  DefaultRoadEventFilter._raw(this._self);
+  factory DefaultRoadEventFilter._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = DefaultRoadEventFilter._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DefaultRoadEventFilter &&
+    other.runtimeType == runtimeType &&
+    _CDefaultRoadEventFilter_cg_objectIdentifier(this._self) == _CDefaultRoadEventFilter_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CDefaultRoadEventFilter_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CDefaultRoadEventFilter: Static Methods
+
+  /**
+   Создает фильтр отображаемых дорожных событий на карте.
+  
+   - Parameter context: Контекст.
+   - Parameter displayCategories: Категории событий, которые нужно отображать на карте.
+   Если не задано — фильтрация по категориям не применяется.
+   - Parameter startTimeCutoff: Максимально допустимое время начала события относительно текущего момента.
+   События с start_time позже этого порога будут скрыты.
+   Например, +1d — скрыть события, которые начнутся позже чем через сутки.
+   События без start_time не фильтруются.
+   Если не задано — фильтрация по времени начала не применяется.
+  */
+  static RoadEventFilter create(
+    Context context,
+    EnumSet<RoadEventDisplayCategory>? displayCategories,
+    Duration? startTimeCutoff
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = displayCategories._copyFromDartTo_COptional_COptionSet_CRoadEventDisplayCategory();
+    var _a2 = startTimeCutoff._copyFromDartTo_COptional_CTimeInterval();
+    _CRoadEventFilter res = _CDefaultRoadEventFilter_S_create_CContext_COptional_COptionSet_CRoadEventDisplayCategory_COptional_CTimeInterval(_a0, _a1, _a2);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+// MARK: - DefaultRoadEventFilter <-> CDefaultRoadEventFilter
+
+final class _CDefaultRoadEventFilter extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CDefaultRoadEventFilterBasicFunctions on _CDefaultRoadEventFilter {
+  void _releaseIntermediate() {
+    _CDefaultRoadEventFilter_release(_impl);
+  }
+
+  _CDefaultRoadEventFilter _retain() {
+    return _CDefaultRoadEventFilter_retain(_impl);
+  }
+}
+
+extension _CDefaultRoadEventFilterToDart on _CDefaultRoadEventFilter {
+  DefaultRoadEventFilter _toDart() {
+    return DefaultRoadEventFilter._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCDefaultRoadEventFilter on DefaultRoadEventFilter {
+  _CDefaultRoadEventFilter _copyFromDartTo_CDefaultRoadEventFilter() {
+    return (_CDefaultRoadEventFilterMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - EnumSet<RoadEventDisplayCategory>? <-> _COptional_COptionSet_CRoadEventDisplayCategory
+
+final class _COptional_COptionSet_CRoadEventDisplayCategory extends ffi.Struct {
+  
+  external _COptionSet_CRoadEventDisplayCategory value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_COptionSet_CRoadEventDisplayCategoryBasicFunctions on _COptional_COptionSet_CRoadEventDisplayCategory {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_COptionSet_CRoadEventDisplayCategoryToDart on _COptional_COptionSet_CRoadEventDisplayCategory {
+  EnumSet<RoadEventDisplayCategory>? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_COptionSet_CRoadEventDisplayCategory on EnumSet<RoadEventDisplayCategory>? {
+  _COptional_COptionSet_CRoadEventDisplayCategory _copyFromDartTo_COptional_COptionSet_CRoadEventDisplayCategory() {
+    final cOptional = _COptional_COptionSet_CRoadEventDisplayCategoryMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_COptionSet_CRoadEventDisplayCategory();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - Alignment
 
 enum Alignment {
@@ -34440,33 +34921,6 @@ extension _DartTo_CStatefulChannel_float on StatefulChannel<double> {
   }
 }
 	
-// MARK: - void <-> _CResult_CEmpty
-
-final class _CResult_CEmptyImpl extends ffi.Union {
-  external _CEmpty _value;
-  external _CError _error;
-}
-
-final class _CResult_CEmpty extends ffi.Struct {
-  external _CResult_CEmptyImpl _impl;
-  @ffi.Uint8()
-  external int _index;
-}
-
-extension _CResult_CEmptyBasicFunctions on _CResult_CEmpty {
-  void _releaseIntermediate() {
-    _CResult_CEmpty_release(this);
-  }
-}
-
-extension _CResult_CEmptyToDart on _CResult_CEmpty {
-  void _toDart() {
-    if (this._index == 1) {
-      throw this._impl._error._toDart();
-    }
-  }
-}
-	
 // MARK: - List<Source> <-> _CArray_CSource
 
 final class _CArray_CSource extends ffi.Struct {
@@ -36474,6 +36928,8 @@ class SimpleClusterOptions {
   final bool animatedAppearance;
   /** Режим анимации. */
   final AnimationMode iconAnimationMode;
+  /** Скрывать ли иконку при наложении с другими объектами (маркеры, подписи других объектов). */
+  final bool suppressOnOverlap;
 
   const SimpleClusterOptions({
     required this.icon,
@@ -36487,7 +36943,8 @@ class SimpleClusterOptions {
     this.zIndex = const ZIndex(0),
     this.labelingPriority = const LabelingPriority(0),
     this.animatedAppearance = true,
-    this.iconAnimationMode = AnimationMode.normal
+    this.iconAnimationMode = AnimationMode.normal,
+    this.suppressOnOverlap = false
   });
 
   SimpleClusterOptions copyWith({
@@ -36502,7 +36959,8 @@ class SimpleClusterOptions {
     ZIndex? zIndex,
     LabelingPriority? labelingPriority,
     bool? animatedAppearance,
-    AnimationMode? iconAnimationMode
+    AnimationMode? iconAnimationMode,
+    bool? suppressOnOverlap
   }) {
     return SimpleClusterOptions(
       icon: icon != null ? icon.value : this.icon,
@@ -36516,7 +36974,8 @@ class SimpleClusterOptions {
       zIndex: zIndex ?? this.zIndex,
       labelingPriority: labelingPriority ?? this.labelingPriority,
       animatedAppearance: animatedAppearance ?? this.animatedAppearance,
-      iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode
+      iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode,
+      suppressOnOverlap: suppressOnOverlap ?? this.suppressOnOverlap
     );
   }
   @override
@@ -36534,11 +36993,12 @@ class SimpleClusterOptions {
     other.zIndex == zIndex &&
     other.labelingPriority == labelingPriority &&
     other.animatedAppearance == animatedAppearance &&
-    other.iconAnimationMode == iconAnimationMode;
+    other.iconAnimationMode == iconAnimationMode &&
+    other.suppressOnOverlap == suppressOnOverlap;
 
   @override
   int get hashCode {
-    return Object.hash(icon, iconMapDirection, anchor, text, textStyle, iconOpacity, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, iconAnimationMode);
+    return Object.hash(icon, iconMapDirection, anchor, text, textStyle, iconOpacity, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, iconAnimationMode, suppressOnOverlap);
   }
 
 }
@@ -36568,6 +37028,9 @@ final class _CSimpleClusterOptions extends ffi.Struct {
 
   external _CAnimationMode iconAnimationMode;
 
+  @ffi.Bool()
+  external bool suppressOnOverlap;
+
 }
 // MARK: - SimpleClusterOptions <-> _CSimpleClusterOptions
 
@@ -36585,7 +37048,8 @@ extension _CSimpleClusterOptionsToDart on _CSimpleClusterOptions {
       zIndex: this.zIndex._toDart(),
       labelingPriority: this.labelingPriority._toDart(),
       animatedAppearance: this.animatedAppearance,
-      iconAnimationMode: this.iconAnimationMode._toDart()
+      iconAnimationMode: this.iconAnimationMode._toDart(),
+      suppressOnOverlap: this.suppressOnOverlap
     );
   }
 }
@@ -36605,6 +37069,7 @@ extension _DartTo_CSimpleClusterOptions on SimpleClusterOptions {
     res.labelingPriority = this.labelingPriority._copyFromDartTo_CLabelingPriority();
     res.animatedAppearance = this.animatedAppearance;
     res.iconAnimationMode = this.iconAnimationMode._copyFromDartTo_CAnimationMode();
+    res.suppressOnOverlap = this.suppressOnOverlap;
     return res;
   }
 }
@@ -36721,6 +37186,15 @@ class SimpleClusterObject extends MapObject implements ffi.Finalizable {
   set zIndex(ZIndex zIndex) {
     var _a1 = zIndex._copyFromDartTo_CZIndex();
     void res = _CSimpleClusterObject_setZIndex_CZIndex(_CSimpleClusterObjectMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Скрывать ли иконку при наложении с другими объектами (маркеры, подписи других объектов). */
+  bool get suppressOnOverlap {
+    bool res = _CSimpleClusterObject_suppressOnOverlap(_CSimpleClusterObjectMakeDefault().._impl=_self);
+    return res;
+  }
+  set suppressOnOverlap(bool suppressOnOverlap) {
+    void res = _CSimpleClusterObject_setSuppressOnOverlap_bool(_CSimpleClusterObjectMakeDefault().._impl=_self, suppressOnOverlap);
     return res;
   }
 
@@ -37035,6 +37509,15 @@ class Marker extends SimpleMapObject implements ffi.Finalizable {
     void res = _CMarker_setLabelingPriority_CLabelingPriority(_CMarkerMakeDefault().._impl=_self, _a1);
     return res;
   }
+  /** Скрывать ли иконку при наложении с другими объектами (маркеры, подписи других объектов). */
+  bool get suppressOnOverlap {
+    bool res = _CMarker_suppressOnOverlap(_CMarkerMakeDefault().._impl=_self);
+    return res;
+  }
+  set suppressOnOverlap(bool suppressOnOverlap) {
+    void res = _CMarker_setSuppressOnOverlap_bool(_CMarkerMakeDefault().._impl=_self, suppressOnOverlap);
+    return res;
+  }
 
   static final _finalizer = ffi.NativeFinalizer(_CMarker_releasePtr);
 
@@ -37122,6 +37605,8 @@ class MarkerOptions {
   final LevelId? levelId;
   /** Режим анимации. */
   final AnimationMode iconAnimationMode;
+  /** Скрывать ли иконку при наложении с другими объектами (маркеры, подписи других объектов). */
+  final bool suppressOnOverlap;
 
   const MarkerOptions({
     required this.position,
@@ -37139,7 +37624,8 @@ class MarkerOptions {
     this.labelingPriority = const LabelingPriority(0),
     this.animatedAppearance = true,
     this.levelId = null,
-    this.iconAnimationMode = AnimationMode.normal
+    this.iconAnimationMode = AnimationMode.normal,
+    this.suppressOnOverlap = false
   });
 
   MarkerOptions copyWith({
@@ -37158,7 +37644,8 @@ class MarkerOptions {
     LabelingPriority? labelingPriority,
     bool? animatedAppearance,
     Optional<LevelId?>? levelId,
-    AnimationMode? iconAnimationMode
+    AnimationMode? iconAnimationMode,
+    bool? suppressOnOverlap
   }) {
     return MarkerOptions(
       position: position ?? this.position,
@@ -37176,7 +37663,8 @@ class MarkerOptions {
       labelingPriority: labelingPriority ?? this.labelingPriority,
       animatedAppearance: animatedAppearance ?? this.animatedAppearance,
       levelId: levelId != null ? levelId.value : this.levelId,
-      iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode
+      iconAnimationMode: iconAnimationMode ?? this.iconAnimationMode,
+      suppressOnOverlap: suppressOnOverlap ?? this.suppressOnOverlap
     );
   }
   @override
@@ -37198,11 +37686,12 @@ class MarkerOptions {
     other.labelingPriority == labelingPriority &&
     other.animatedAppearance == animatedAppearance &&
     other.levelId == levelId &&
-    other.iconAnimationMode == iconAnimationMode;
+    other.iconAnimationMode == iconAnimationMode &&
+    other.suppressOnOverlap == suppressOnOverlap;
 
   @override
   int get hashCode {
-    return Object.hash(position, icon, iconMapDirection, anchor, text, textStyle, iconOpacity, visible, draggable, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, levelId, iconAnimationMode);
+    return Object.hash(position, icon, iconMapDirection, anchor, text, textStyle, iconOpacity, visible, draggable, iconWidth, userData, zIndex, labelingPriority, animatedAppearance, levelId, iconAnimationMode, suppressOnOverlap);
   }
 
 }
@@ -37242,6 +37731,9 @@ final class _CMarkerOptions extends ffi.Struct {
 
   external _CAnimationMode iconAnimationMode;
 
+  @ffi.Bool()
+  external bool suppressOnOverlap;
+
 }
 // MARK: - MarkerOptions <-> _CMarkerOptions
 
@@ -37263,7 +37755,8 @@ extension _CMarkerOptionsToDart on _CMarkerOptions {
       labelingPriority: this.labelingPriority._toDart(),
       animatedAppearance: this.animatedAppearance,
       levelId: this.levelId._toDart(),
-      iconAnimationMode: this.iconAnimationMode._toDart()
+      iconAnimationMode: this.iconAnimationMode._toDart(),
+      suppressOnOverlap: this.suppressOnOverlap
     );
   }
 }
@@ -37287,6 +37780,7 @@ extension _DartTo_CMarkerOptions on MarkerOptions {
     res.animatedAppearance = this.animatedAppearance;
     res.levelId = this.levelId._copyFromDartTo_COptional_CLevelId();
     res.iconAnimationMode = this.iconAnimationMode._copyFromDartTo_CAnimationMode();
+    res.suppressOnOverlap = this.suppressOnOverlap;
     return res;
   }
 }
@@ -41055,6 +41549,2296 @@ extension _CResult_CPackedMapStateToDart on _CResult_CPackedMapState {
   }
 }
 	
+// MARK: - DragBeginData
+
+/** Данные о начале перетаскивания: точка старта перемещения и перемещаемый объект. */
+class DragBeginData {
+  final ScreenPoint point;
+  final RenderedObject item;
+
+  const DragBeginData({
+    required this.point,
+    required this.item
+  });
+
+  DragBeginData copyWith({
+    ScreenPoint? point,
+    RenderedObject? item
+  }) {
+    return DragBeginData(
+      point: point ?? this.point,
+      item: item ?? this.item
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DragBeginData &&
+    other.runtimeType == runtimeType &&
+    other.point == point &&
+    other.item == item;
+
+  @override
+  int get hashCode {
+    return Object.hash(point, item);
+  }
+
+}
+final class _CDragBeginData extends ffi.Struct {
+  external _CScreenPoint point;
+
+  external _CRenderedObject item;
+
+}
+// MARK: - DragBeginData <-> _CDragBeginData
+
+extension _CDragBeginDataToDart on _CDragBeginData {
+  DragBeginData _toDart() {
+    return DragBeginData(
+      point: this.point._toDart(),
+      item: this.item._toDart()
+    );
+  }
+}
+
+extension _DartTo_CDragBeginData on DragBeginData {
+  _CDragBeginData _copyFromDartTo_CDragBeginData() {
+    final res = _CDragBeginDataMakeDefault();
+    res.point = this.point._copyFromDartTo_CScreenPoint();
+    res.item = this.item._copyFromDartTo_CRenderedObject();
+    return res;
+  }
+}
+extension _CDragBeginDataRelease on _CDragBeginData {
+  void _releaseIntermediate() {
+    item._releaseIntermediate();
+  }
+}
+
+// MARK: - TransformGesture
+
+enum TransformGesture {
+  rotation(1),
+  scaling(2),
+  shift(4),
+  multiTouchShift(8),
+  tilt(16),
+  ;
+
+  const TransformGesture(this.rawValue);
+  final int rawValue;
+
+  static TransformGesture getByValue(int value) {
+    return TransformGesture.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CTransformGesture extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CTransformGestureBasicFunctions on _CTransformGesture {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CTransformGestureToDart on _CTransformGesture {
+  TransformGesture _toDart() {
+    return TransformGesture.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CTransformGesture on TransformGesture {
+  _CTransformGesture _copyFromDartTo_CTransformGesture() {
+    return _CTransformGestureMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - ScalingRecognizeSettings
+
+/**
+ Настройки распознавания масштабирования.
+ Коэффициент масштабирования рассчитывается как отношения расстояния
+ между точками после перемещения и исходным расстоянием.
+*/
+class ScalingRecognizeSettings {
+  /**
+   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
+   Используется, если вращение неактивно.
+   Множитель должен выйти за пределы (1 / scale_ratio_threshold, scale_ratio_threshold).
+  */
+  final double scaleRatioThreshold;
+  /**
+   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
+   Используется, если вращение активно.
+   Множитель должен выйти за пределы (1 / scale_ratio_threshold_in_rotation, scale_ratio_threshold_in_rotation).
+  */
+  final double scaleRatioThresholdInRotation;
+  /** Отношение логарифмов старого и нового масштабов при обработке мгновенного события изменения масштаба. */
+  final double zoomScaleRatio;
+  /** Разница логарифмов масштабов при смещении на 1 мм. на экране. */
+  final double scaleLogDiffPerMm;
+  /** Отключение жестов ZoomEvent и DirectMapScaleEvent. */
+  final bool disableZoom;
+
+  const ScalingRecognizeSettings({
+    this.scaleRatioThreshold = 1.100000023841858,
+    this.scaleRatioThresholdInRotation = 1.2000000476837158,
+    this.zoomScaleRatio = 2,
+    this.scaleLogDiffPerMm = 0.05000000074505806,
+    this.disableZoom = false
+  });
+
+  ScalingRecognizeSettings copyWith({
+    double? scaleRatioThreshold,
+    double? scaleRatioThresholdInRotation,
+    double? zoomScaleRatio,
+    double? scaleLogDiffPerMm,
+    bool? disableZoom
+  }) {
+    return ScalingRecognizeSettings(
+      scaleRatioThreshold: scaleRatioThreshold ?? this.scaleRatioThreshold,
+      scaleRatioThresholdInRotation: scaleRatioThresholdInRotation ?? this.scaleRatioThresholdInRotation,
+      zoomScaleRatio: zoomScaleRatio ?? this.zoomScaleRatio,
+      scaleLogDiffPerMm: scaleLogDiffPerMm ?? this.scaleLogDiffPerMm,
+      disableZoom: disableZoom ?? this.disableZoom
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScalingRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.scaleRatioThreshold == scaleRatioThreshold &&
+    other.scaleRatioThresholdInRotation == scaleRatioThresholdInRotation &&
+    other.zoomScaleRatio == zoomScaleRatio &&
+    other.scaleLogDiffPerMm == scaleLogDiffPerMm &&
+    other.disableZoom == disableZoom;
+
+  @override
+  int get hashCode {
+    return Object.hash(scaleRatioThreshold, scaleRatioThresholdInRotation, zoomScaleRatio, scaleLogDiffPerMm, disableZoom);
+  }
+
+}
+final class _CScalingRecognizeSettings extends ffi.Struct {
+  @ffi.Float()
+  external double scaleRatioThreshold;
+
+  @ffi.Float()
+  external double scaleRatioThresholdInRotation;
+
+  @ffi.Float()
+  external double zoomScaleRatio;
+
+  @ffi.Float()
+  external double scaleLogDiffPerMm;
+
+  @ffi.Bool()
+  external bool disableZoom;
+
+}
+// MARK: - ScalingRecognizeSettings <-> _CScalingRecognizeSettings
+
+extension _CScalingRecognizeSettingsToDart on _CScalingRecognizeSettings {
+  ScalingRecognizeSettings _toDart() {
+    return ScalingRecognizeSettings(
+      scaleRatioThreshold: this.scaleRatioThreshold,
+      scaleRatioThresholdInRotation: this.scaleRatioThresholdInRotation,
+      zoomScaleRatio: this.zoomScaleRatio,
+      scaleLogDiffPerMm: this.scaleLogDiffPerMm,
+      disableZoom: this.disableZoom
+    );
+  }
+}
+
+extension _DartTo_CScalingRecognizeSettings on ScalingRecognizeSettings {
+  _CScalingRecognizeSettings _copyFromDartTo_CScalingRecognizeSettings() {
+    final res = _CScalingRecognizeSettingsMakeDefault();
+    res.scaleRatioThreshold = this.scaleRatioThreshold;
+    res.scaleRatioThresholdInRotation = this.scaleRatioThresholdInRotation;
+    res.zoomScaleRatio = this.zoomScaleRatio;
+    res.scaleLogDiffPerMm = this.scaleLogDiffPerMm;
+    res.disableZoom = this.disableZoom;
+    return res;
+  }
+}
+extension _CScalingRecognizeSettingsRelease on _CScalingRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionEventCenter
+
+/** Выполнить жест относительно геометрического центра множества точек постановки пальцев. */
+class GestureActionEventCenter {
+
+  const GestureActionEventCenter();
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionEventCenter &&
+    other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode {
+    return 0;
+  }
+
+}
+final class _CGestureActionEventCenter extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+// MARK: - GestureActionEventCenter <-> _CGestureActionEventCenter
+
+extension _CGestureActionEventCenterToDart on _CGestureActionEventCenter {
+  GestureActionEventCenter _toDart() {
+    return GestureActionEventCenter(
+    );
+  }
+}
+
+extension _DartTo_CGestureActionEventCenter on GestureActionEventCenter {
+  _CGestureActionEventCenter _copyFromDartTo_CGestureActionEventCenter() {
+    final res = _CGestureActionEventCenterMakeDefault();
+    return res;
+  }
+}
+extension _CGestureActionEventCenterRelease on _CGestureActionEventCenter {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionMapPosition
+
+/** Выполнить жест относительно точки позиции карты. */
+class GestureActionMapPosition {
+
+  const GestureActionMapPosition();
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionMapPosition &&
+    other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode {
+    return 0;
+  }
+
+}
+final class _CGestureActionMapPosition extends ffi.Struct {
+  @ffi.Int8()
+  external int _dummy;
+}
+// MARK: - GestureActionMapPosition <-> _CGestureActionMapPosition
+
+extension _CGestureActionMapPositionToDart on _CGestureActionMapPosition {
+  GestureActionMapPosition _toDart() {
+    return GestureActionMapPosition(
+    );
+  }
+}
+
+extension _DartTo_CGestureActionMapPosition on GestureActionMapPosition {
+  _CGestureActionMapPosition _copyFromDartTo_CGestureActionMapPosition() {
+    final res = _CGestureActionMapPositionMakeDefault();
+    return res;
+  }
+}
+extension _CGestureActionMapPositionRelease on _CGestureActionMapPosition {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionTargetGeoPoint
+
+/** Выполнить жест относительно геопозиции target_geo_point. */
+class GestureActionTargetGeoPoint {
+  final GeoPoint targetGeoPoint;
+
+  const GestureActionTargetGeoPoint(this.targetGeoPoint);
+
+  GestureActionTargetGeoPoint copyWith({
+    GeoPoint? targetGeoPoint
+  }) {
+    return GestureActionTargetGeoPoint(
+      targetGeoPoint ?? this.targetGeoPoint
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionTargetGeoPoint &&
+    other.runtimeType == runtimeType &&
+    other.targetGeoPoint == targetGeoPoint;
+
+  @override
+  int get hashCode {
+    return targetGeoPoint.hashCode;
+  }
+
+}
+final class _CGestureActionTargetGeoPoint extends ffi.Struct {
+  external _CGeoPoint targetGeoPoint;
+
+}
+// MARK: - GestureActionTargetGeoPoint <-> _CGestureActionTargetGeoPoint
+
+extension _CGestureActionTargetGeoPointToDart on _CGestureActionTargetGeoPoint {
+  GestureActionTargetGeoPoint _toDart() {
+    return GestureActionTargetGeoPoint(
+      this.targetGeoPoint._toDart()
+    );
+  }
+}
+
+extension _DartTo_CGestureActionTargetGeoPoint on GestureActionTargetGeoPoint {
+  _CGestureActionTargetGeoPoint _copyFromDartTo_CGestureActionTargetGeoPoint() {
+    final res = _CGestureActionTargetGeoPointMakeDefault();
+    res.targetGeoPoint = this.targetGeoPoint._copyFromDartTo_CGeoPoint();
+    return res;
+  }
+}
+extension _CGestureActionTargetGeoPointRelease on _CGestureActionTargetGeoPoint {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - GestureActionPoint
+
+/** Задает правило обработки событий карты. */
+final class GestureActionPoint {
+  final Object? _value;
+  final int _index;
+
+  GestureActionPoint._raw(this._value, this._index);
+
+  GestureActionPoint.eventCenter(GestureActionEventCenter value) : this._raw(value, 0);
+  GestureActionPoint.mapPosition(GestureActionMapPosition value) : this._raw(value, 1);
+  GestureActionPoint.targetGeoPoint(GestureActionTargetGeoPoint value) : this._raw(value, 2);
+
+  bool get isEventCenter => this._index == 0;
+  GestureActionEventCenter? get asEventCenter => this.isEventCenter ? this._value as GestureActionEventCenter : null;
+
+  bool get isMapPosition => this._index == 1;
+  GestureActionMapPosition? get asMapPosition => this.isMapPosition ? this._value as GestureActionMapPosition : null;
+
+  bool get isTargetGeoPoint => this._index == 2;
+  GestureActionTargetGeoPoint? get asTargetGeoPoint => this.isTargetGeoPoint ? this._value as GestureActionTargetGeoPoint : null;
+
+  T match<T>({
+    required T Function(GestureActionEventCenter value) eventCenter,
+    required T Function(GestureActionMapPosition value) mapPosition,
+    required T Function(GestureActionTargetGeoPoint value) targetGeoPoint,
+  }) {
+    return switch (this._index) {
+      0 => eventCenter(this._value as GestureActionEventCenter),
+      1 => mapPosition(this._value as GestureActionMapPosition),
+      2 => targetGeoPoint(this._value as GestureActionTargetGeoPoint),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "GestureActionPoint(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureActionPoint &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _CGestureActionPointImpl extends ffi.Union {
+  external _CGestureActionEventCenter _eventCenter;
+  external _CGestureActionMapPosition _mapPosition;
+  external _CGestureActionTargetGeoPoint _targetGeoPoint;
+}
+
+final class _CGestureActionPoint extends ffi.Struct {
+  external _CGestureActionPointImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CGestureActionPointBasicFunctions on _CGestureActionPoint {
+  void _releaseIntermediate() {
+    _CGestureActionPoint_release(this);
+  }
+}
+	
+// MARK: - GestureActionPoint <-> CGestureActionPoint
+
+extension _CGestureActionPointToDart on _CGestureActionPoint {
+  GestureActionPoint _toDart() {
+    return switch (this._index) {
+      0 => GestureActionPoint.eventCenter(this._impl._eventCenter._toDart()),
+      1 => GestureActionPoint.mapPosition(this._impl._mapPosition._toDart()),
+      2 => GestureActionPoint.targetGeoPoint(this._impl._targetGeoPoint._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_CGestureActionPoint on GestureActionPoint {
+  _CGestureActionPoint _copyFromDartTo_CGestureActionPoint() {
+    var res = _CGestureActionPointMakeDefault();
+    this.match<void>(
+      eventCenter: (GestureActionEventCenter value) {
+        res._impl._eventCenter = value._copyFromDartTo_CGestureActionEventCenter();
+        res._index = 0;
+      },
+      mapPosition: (GestureActionMapPosition value) {
+        res._impl._mapPosition = value._copyFromDartTo_CGestureActionMapPosition();
+        res._index = 1;
+      },
+      targetGeoPoint: (GestureActionTargetGeoPoint value) {
+        res._impl._targetGeoPoint = value._copyFromDartTo_CGestureActionTargetGeoPoint();
+        res._index = 2;
+      },
+    );
+    return res;
+  }
+}
+
+// MARK: - ScalingKinematicSettings
+
+class ScalingKinematicSettings {
+  /**
+   Включает или отключает кинематику масштабирования.
+   Если установлено в false, масштабирование мгновенно останавливается после окончания жеста,
+   и все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания масштабирования после окончания жеста.
+   Чем выше значение, тем быстрее замедляется масштабирование.
+  */
+  final double decelerationCoefficient;
+  /** Максимальная начальная скорость после окончания жеста (dgis::map::Zoom в секунду). */
+  final double maxInitialForwardZoomSpeed;
+  /**
+   Порог отклонения dgis::map::Zoom, при превышении которого карта продолжает масштабирование
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double zoomThreshold;
+
+  const ScalingKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 8,
+    this.maxInitialForwardZoomSpeed = 30,
+    this.zoomThreshold = 0.20000000298023224
+  });
+
+  ScalingKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? maxInitialForwardZoomSpeed,
+    double? zoomThreshold
+  }) {
+    return ScalingKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      maxInitialForwardZoomSpeed: maxInitialForwardZoomSpeed ?? this.maxInitialForwardZoomSpeed,
+      zoomThreshold: zoomThreshold ?? this.zoomThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScalingKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.maxInitialForwardZoomSpeed == maxInitialForwardZoomSpeed &&
+    other.zoomThreshold == zoomThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardZoomSpeed, zoomThreshold);
+  }
+
+}
+final class _CScalingKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double maxInitialForwardZoomSpeed;
+
+  @ffi.Float()
+  external double zoomThreshold;
+
+}
+// MARK: - ScalingKinematicSettings <-> _CScalingKinematicSettings
+
+extension _CScalingKinematicSettingsToDart on _CScalingKinematicSettings {
+  ScalingKinematicSettings _toDart() {
+    return ScalingKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      maxInitialForwardZoomSpeed: this.maxInitialForwardZoomSpeed,
+      zoomThreshold: this.zoomThreshold
+    );
+  }
+}
+
+extension _DartTo_CScalingKinematicSettings on ScalingKinematicSettings {
+  _CScalingKinematicSettings _copyFromDartTo_CScalingKinematicSettings() {
+    final res = _CScalingKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.maxInitialForwardZoomSpeed = this.maxInitialForwardZoomSpeed;
+    res.zoomThreshold = this.zoomThreshold;
+    return res;
+  }
+}
+extension _CScalingKinematicSettingsRelease on _CScalingKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ScalingGestureSettings
+
+/** Настройки жеста масштабирования. */
+class ScalingGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания масштабирования. */
+  ScalingRecognizeSettings get recognizeSettings {
+    _CScalingRecognizeSettings res = _CScalingGestureSettings_recognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(ScalingRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CScalingRecognizeSettings();
+    void res = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Точка, относительно которой производится масштабирование карты. */
+  GestureActionPoint get scalingCenter {
+    _CGestureActionPoint res = _CScalingGestureSettings_scalingCenter(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set scalingCenter(GestureActionPoint actionPoint) {
+    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
+    void res = _CScalingGestureSettings_setScalingCenter_CGestureActionPoint(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики масштабирования. */
+  ScalingKinematicSettings get kinematicSettings {
+    _CScalingKinematicSettings res = _CScalingGestureSettings_kinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(ScalingKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CScalingKinematicSettings();
+    void res = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CScalingGestureSettings_releasePtr);
+
+  ScalingGestureSettings._raw(this._self);
+  factory ScalingGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = ScalingGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ScalingGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CScalingGestureSettings_cg_objectIdentifier(this._self) == _CScalingGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CScalingGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - ScalingGestureSettings <-> CScalingGestureSettings
+
+final class _CScalingGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CScalingGestureSettingsBasicFunctions on _CScalingGestureSettings {
+  void _releaseIntermediate() {
+    _CScalingGestureSettings_release(_impl);
+  }
+
+  _CScalingGestureSettings _retain() {
+    return _CScalingGestureSettings_retain(_impl);
+  }
+}
+
+extension _CScalingGestureSettingsToDart on _CScalingGestureSettings {
+  ScalingGestureSettings _toDart() {
+    return ScalingGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCScalingGestureSettings on ScalingGestureSettings {
+  _CScalingGestureSettings _copyFromDartTo_CScalingGestureSettings() {
+    return (_CScalingGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - RotationRecognizeThresholds
+
+class RotationRecognizeThresholds {
+  /** Порог изменения угла, в градусах, преодоление которого говорит о начале вращения. */
+  final double angleDiffDeg;
+  /** Порог среднего радиального сдвига точек, в миллиметрах, преодоление которого говорит о начале вращения. */
+  final double distanceDiffMm;
+
+  const RotationRecognizeThresholds({
+    this.angleDiffDeg = 5,
+    this.distanceDiffMm = 5
+  });
+
+  RotationRecognizeThresholds copyWith({
+    double? angleDiffDeg,
+    double? distanceDiffMm
+  }) {
+    return RotationRecognizeThresholds(
+      angleDiffDeg: angleDiffDeg ?? this.angleDiffDeg,
+      distanceDiffMm: distanceDiffMm ?? this.distanceDiffMm
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationRecognizeThresholds &&
+    other.runtimeType == runtimeType &&
+    other.angleDiffDeg == angleDiffDeg &&
+    other.distanceDiffMm == distanceDiffMm;
+
+  @override
+  int get hashCode {
+    return Object.hash(angleDiffDeg, distanceDiffMm);
+  }
+
+}
+final class _CRotationRecognizeThresholds extends ffi.Struct {
+  @ffi.Float()
+  external double angleDiffDeg;
+
+  @ffi.Float()
+  external double distanceDiffMm;
+
+}
+// MARK: - RotationRecognizeThresholds <-> _CRotationRecognizeThresholds
+
+extension _CRotationRecognizeThresholdsToDart on _CRotationRecognizeThresholds {
+  RotationRecognizeThresholds _toDart() {
+    return RotationRecognizeThresholds(
+      angleDiffDeg: this.angleDiffDeg,
+      distanceDiffMm: this.distanceDiffMm
+    );
+  }
+}
+
+extension _DartTo_CRotationRecognizeThresholds on RotationRecognizeThresholds {
+  _CRotationRecognizeThresholds _copyFromDartTo_CRotationRecognizeThresholds() {
+    final res = _CRotationRecognizeThresholdsMakeDefault();
+    res.angleDiffDeg = this.angleDiffDeg;
+    res.distanceDiffMm = this.distanceDiffMm;
+    return res;
+  }
+}
+extension _CRotationRecognizeThresholdsRelease on _CRotationRecognizeThresholds {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - RotationRecognizeSettings
+
+/** Настройки распознавания вращения. */
+class RotationRecognizeSettings {
+  /** Пороги перехода к вращению, если масштабирование не активно. */
+  final RotationRecognizeThresholds rotationThreshold;
+  /** Пороги перехода к вращению, если масштабирование активно. */
+  final RotationRecognizeThresholds rotationThresholdInScaling;
+
+  const RotationRecognizeSettings({
+    required this.rotationThreshold,
+    required this.rotationThresholdInScaling
+  });
+
+  RotationRecognizeSettings copyWith({
+    RotationRecognizeThresholds? rotationThreshold,
+    RotationRecognizeThresholds? rotationThresholdInScaling
+  }) {
+    return RotationRecognizeSettings(
+      rotationThreshold: rotationThreshold ?? this.rotationThreshold,
+      rotationThresholdInScaling: rotationThresholdInScaling ?? this.rotationThresholdInScaling
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.rotationThreshold == rotationThreshold &&
+    other.rotationThresholdInScaling == rotationThresholdInScaling;
+
+  @override
+  int get hashCode {
+    return Object.hash(rotationThreshold, rotationThresholdInScaling);
+  }
+
+}
+final class _CRotationRecognizeSettings extends ffi.Struct {
+  external _CRotationRecognizeThresholds rotationThreshold;
+
+  external _CRotationRecognizeThresholds rotationThresholdInScaling;
+
+}
+// MARK: - RotationRecognizeSettings <-> _CRotationRecognizeSettings
+
+extension _CRotationRecognizeSettingsToDart on _CRotationRecognizeSettings {
+  RotationRecognizeSettings _toDart() {
+    return RotationRecognizeSettings(
+      rotationThreshold: this.rotationThreshold._toDart(),
+      rotationThresholdInScaling: this.rotationThresholdInScaling._toDart()
+    );
+  }
+}
+
+extension _DartTo_CRotationRecognizeSettings on RotationRecognizeSettings {
+  _CRotationRecognizeSettings _copyFromDartTo_CRotationRecognizeSettings() {
+    final res = _CRotationRecognizeSettingsMakeDefault();
+    res.rotationThreshold = this.rotationThreshold._copyFromDartTo_CRotationRecognizeThresholds();
+    res.rotationThresholdInScaling = this.rotationThresholdInScaling._copyFromDartTo_CRotationRecognizeThresholds();
+    return res;
+  }
+}
+extension _CRotationRecognizeSettingsRelease on _CRotationRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - RotationKinematicSettings
+
+class RotationKinematicSettings {
+  /**
+   Включает или отключает кинематику вращения.
+   Если установлено в false, вращение мгновенно останавливается после окончания жеста,
+   все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания вращения после окончания жеста.
+   Чем выше значение, тем быстрее замедляется вращение.
+  */
+  final double decelerationCoefficient;
+  /** Максимальная начальная угловая скорость после окончания жеста (в радианах в секунду). */
+  final double maxInitialForwardAngularSpeed;
+  /** Начальная угловая скорость возврата карты в исходное положение (в радианах в секунду). */
+  final double initialBackwardAngularSpeed;
+  /**
+   Порог углового отклонения (в радианах), при превышении которого карта продолжает вращение
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double angleThreshold;
+
+  const RotationKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 4,
+    this.maxInitialForwardAngularSpeed = 10,
+    this.initialBackwardAngularSpeed = 0.33000001311302185,
+    this.angleThreshold = 0.20000000298023224
+  });
+
+  RotationKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? maxInitialForwardAngularSpeed,
+    double? initialBackwardAngularSpeed,
+    double? angleThreshold
+  }) {
+    return RotationKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
+      initialBackwardAngularSpeed: initialBackwardAngularSpeed ?? this.initialBackwardAngularSpeed,
+      angleThreshold: angleThreshold ?? this.angleThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
+    other.initialBackwardAngularSpeed == initialBackwardAngularSpeed &&
+    other.angleThreshold == angleThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardAngularSpeed, initialBackwardAngularSpeed, angleThreshold);
+  }
+
+}
+final class _CRotationKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double maxInitialForwardAngularSpeed;
+
+  @ffi.Float()
+  external double initialBackwardAngularSpeed;
+
+  @ffi.Float()
+  external double angleThreshold;
+
+}
+// MARK: - RotationKinematicSettings <-> _CRotationKinematicSettings
+
+extension _CRotationKinematicSettingsToDart on _CRotationKinematicSettings {
+  RotationKinematicSettings _toDart() {
+    return RotationKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
+      initialBackwardAngularSpeed: this.initialBackwardAngularSpeed,
+      angleThreshold: this.angleThreshold
+    );
+  }
+}
+
+extension _DartTo_CRotationKinematicSettings on RotationKinematicSettings {
+  _CRotationKinematicSettings _copyFromDartTo_CRotationKinematicSettings() {
+    final res = _CRotationKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
+    res.initialBackwardAngularSpeed = this.initialBackwardAngularSpeed;
+    res.angleThreshold = this.angleThreshold;
+    return res;
+  }
+}
+extension _CRotationKinematicSettingsRelease on _CRotationKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - RotationGestureSettings
+
+/** Настройки жеста вращения. */
+class RotationGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания вращения. */
+  RotationRecognizeSettings get recognizeSettings {
+    _CRotationRecognizeSettings res = _CRotationGestureSettings_recognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(RotationRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CRotationRecognizeSettings();
+    void res = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Точка, относительно которой производится вращение карты. */
+  GestureActionPoint get rotationCenter {
+    _CGestureActionPoint res = _CRotationGestureSettings_rotationCenter(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set rotationCenter(GestureActionPoint actionPoint) {
+    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
+    void res = _CRotationGestureSettings_setRotationCenter_CGestureActionPoint(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики вращения. */
+  RotationKinematicSettings get kinematicSettings {
+    _CRotationKinematicSettings res = _CRotationGestureSettings_kinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(RotationKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CRotationKinematicSettings();
+    void res = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CRotationGestureSettings_releasePtr);
+
+  RotationGestureSettings._raw(this._self);
+  factory RotationGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = RotationGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is RotationGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CRotationGestureSettings_cg_objectIdentifier(this._self) == _CRotationGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CRotationGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - RotationGestureSettings <-> CRotationGestureSettings
+
+final class _CRotationGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CRotationGestureSettingsBasicFunctions on _CRotationGestureSettings {
+  void _releaseIntermediate() {
+    _CRotationGestureSettings_release(_impl);
+  }
+
+  _CRotationGestureSettings _retain() {
+    return _CRotationGestureSettings_retain(_impl);
+  }
+}
+
+extension _CRotationGestureSettingsToDart on _CRotationGestureSettings {
+  RotationGestureSettings _toDart() {
+    return RotationGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCRotationGestureSettings on RotationGestureSettings {
+  _CRotationGestureSettings _copyFromDartTo_CRotationGestureSettings() {
+    return (_CRotationGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - MultiTouchRecognizeSettings
+
+/** Настройки распознавания касания несколькими пальцами. */
+class MultiTouchRecognizeSettings {
+  /**
+   Порог сдвига взвешенного среднего точек, в миллиметрах, преодоление которого
+   говорит о начале сдвига несколькими пальцами.
+  */
+  final double multitouchShiftThresholdMm;
+
+  const MultiTouchRecognizeSettings([this.multitouchShiftThresholdMm = 7]);
+
+  MultiTouchRecognizeSettings copyWith({
+    double? multitouchShiftThresholdMm
+  }) {
+    return MultiTouchRecognizeSettings(
+      multitouchShiftThresholdMm ?? this.multitouchShiftThresholdMm
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MultiTouchRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.multitouchShiftThresholdMm == multitouchShiftThresholdMm;
+
+  @override
+  int get hashCode {
+    return multitouchShiftThresholdMm.hashCode;
+  }
+
+}
+final class _CMultiTouchRecognizeSettings extends ffi.Struct {
+  @ffi.Float()
+  external double multitouchShiftThresholdMm;
+
+}
+// MARK: - MultiTouchRecognizeSettings <-> _CMultiTouchRecognizeSettings
+
+extension _CMultiTouchRecognizeSettingsToDart on _CMultiTouchRecognizeSettings {
+  MultiTouchRecognizeSettings _toDart() {
+    return MultiTouchRecognizeSettings(
+      this.multitouchShiftThresholdMm
+    );
+  }
+}
+
+extension _DartTo_CMultiTouchRecognizeSettings on MultiTouchRecognizeSettings {
+  _CMultiTouchRecognizeSettings _copyFromDartTo_CMultiTouchRecognizeSettings() {
+    final res = _CMultiTouchRecognizeSettingsMakeDefault();
+    res.multitouchShiftThresholdMm = this.multitouchShiftThresholdMm;
+    return res;
+  }
+}
+extension _CMultiTouchRecognizeSettingsRelease on _CMultiTouchRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - MultiTouchGestureSettings
+
+/** Настройки жеста касания несколькими пальцами. */
+class MultiTouchGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания касания несколькими пальцами. */
+  MultiTouchRecognizeSettings get recognizeSettings {
+    _CMultiTouchRecognizeSettings res = _CMultiTouchGestureSettings_recognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(MultiTouchRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CMultiTouchRecognizeSettings();
+    void res = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CMultiTouchGestureSettings_releasePtr);
+
+  MultiTouchGestureSettings._raw(this._self);
+  factory MultiTouchGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MultiTouchGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MultiTouchGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CMultiTouchGestureSettings_cg_objectIdentifier(this._self) == _CMultiTouchGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMultiTouchGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - MultiTouchGestureSettings <-> CMultiTouchGestureSettings
+
+final class _CMultiTouchGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMultiTouchGestureSettingsBasicFunctions on _CMultiTouchGestureSettings {
+  void _releaseIntermediate() {
+    _CMultiTouchGestureSettings_release(_impl);
+  }
+
+  _CMultiTouchGestureSettings _retain() {
+    return _CMultiTouchGestureSettings_retain(_impl);
+  }
+}
+
+extension _CMultiTouchGestureSettingsToDart on _CMultiTouchGestureSettings {
+  MultiTouchGestureSettings _toDart() {
+    return MultiTouchGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMultiTouchGestureSettings on MultiTouchGestureSettings {
+  _CMultiTouchGestureSettings _copyFromDartTo_CMultiTouchGestureSettings() {
+    return (_CMultiTouchGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - TiltRecognizeSettings
+
+/** Настройки распознавания наклона. */
+class TiltRecognizeSettings {
+  /**
+   Расстояние, в миллиметрах, на которое нужно сдвинуть пальцы по экрану,
+   чтобы изменить угол наклона камеры на 1 градус.
+   Отрицательное значение приведет к инверсии направления, значение 0 недопустимо.
+  */
+  final double lenOnDegreeMm;
+  /**
+   Максимально допустимый угол, в градусах, отклонения линии постановки пальцев
+   от горизонта для вертикального свайпа.
+  */
+  final double horizontalSwerveDeg;
+  /** Максимально допустимый угол, в градусах, отклонения направления свайпа от вертикальной линии. */
+  final double verticalSwerveDeg;
+  /** Порог сдвига взвешенного среднего точек в миллиметрах, преодоление которого говорит о начале наклона. */
+  final double thresholdMm;
+  /**
+   Максимально допустимый угол между векторами, в градусах, преодоление которого
+   говорит о нарушении сонаправленности.
+  */
+  final double maxParallelsDeviationDeg;
+
+  const TiltRecognizeSettings({
+    this.lenOnDegreeMm = 1,
+    this.horizontalSwerveDeg = 20,
+    this.verticalSwerveDeg = 10,
+    this.thresholdMm = 1.100000023841858,
+    this.maxParallelsDeviationDeg = 16
+  });
+
+  TiltRecognizeSettings copyWith({
+    double? lenOnDegreeMm,
+    double? horizontalSwerveDeg,
+    double? verticalSwerveDeg,
+    double? thresholdMm,
+    double? maxParallelsDeviationDeg
+  }) {
+    return TiltRecognizeSettings(
+      lenOnDegreeMm: lenOnDegreeMm ?? this.lenOnDegreeMm,
+      horizontalSwerveDeg: horizontalSwerveDeg ?? this.horizontalSwerveDeg,
+      verticalSwerveDeg: verticalSwerveDeg ?? this.verticalSwerveDeg,
+      thresholdMm: thresholdMm ?? this.thresholdMm,
+      maxParallelsDeviationDeg: maxParallelsDeviationDeg ?? this.maxParallelsDeviationDeg
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TiltRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.lenOnDegreeMm == lenOnDegreeMm &&
+    other.horizontalSwerveDeg == horizontalSwerveDeg &&
+    other.verticalSwerveDeg == verticalSwerveDeg &&
+    other.thresholdMm == thresholdMm &&
+    other.maxParallelsDeviationDeg == maxParallelsDeviationDeg;
+
+  @override
+  int get hashCode {
+    return Object.hash(lenOnDegreeMm, horizontalSwerveDeg, verticalSwerveDeg, thresholdMm, maxParallelsDeviationDeg);
+  }
+
+}
+final class _CTiltRecognizeSettings extends ffi.Struct {
+  @ffi.Float()
+  external double lenOnDegreeMm;
+
+  @ffi.Float()
+  external double horizontalSwerveDeg;
+
+  @ffi.Float()
+  external double verticalSwerveDeg;
+
+  @ffi.Float()
+  external double thresholdMm;
+
+  @ffi.Float()
+  external double maxParallelsDeviationDeg;
+
+}
+// MARK: - TiltRecognizeSettings <-> _CTiltRecognizeSettings
+
+extension _CTiltRecognizeSettingsToDart on _CTiltRecognizeSettings {
+  TiltRecognizeSettings _toDart() {
+    return TiltRecognizeSettings(
+      lenOnDegreeMm: this.lenOnDegreeMm,
+      horizontalSwerveDeg: this.horizontalSwerveDeg,
+      verticalSwerveDeg: this.verticalSwerveDeg,
+      thresholdMm: this.thresholdMm,
+      maxParallelsDeviationDeg: this.maxParallelsDeviationDeg
+    );
+  }
+}
+
+extension _DartTo_CTiltRecognizeSettings on TiltRecognizeSettings {
+  _CTiltRecognizeSettings _copyFromDartTo_CTiltRecognizeSettings() {
+    final res = _CTiltRecognizeSettingsMakeDefault();
+    res.lenOnDegreeMm = this.lenOnDegreeMm;
+    res.horizontalSwerveDeg = this.horizontalSwerveDeg;
+    res.verticalSwerveDeg = this.verticalSwerveDeg;
+    res.thresholdMm = this.thresholdMm;
+    res.maxParallelsDeviationDeg = this.maxParallelsDeviationDeg;
+    return res;
+  }
+}
+extension _CTiltRecognizeSettingsRelease on _CTiltRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - TiltKinematicSettings
+
+class TiltKinematicSettings {
+  /**
+   Включает или отключает кинематику наклона.
+   Если установлено в false, наклон мгновенно останавливается после окончания жеста,
+   все остальные параметры игнорируются.
+  */
+  final bool enabled;
+  /**
+   Коэффициент затухания наклона после окончания жеста.
+   Чем выше значение, тем быстрее замедляется наклон.
+  */
+  final double decelerationCoefficient;
+  /** Множитель начальной скорости наклона. */
+  final double initialForwardSpeedMultiplier;
+  /**
+   Максимальная начальная угловая скорость наклона после окончания жеста (в радианах в секунду).
+   При вычисоении скорости сначала производится умножение на initial_forward_speed_multiplier, а затем применяется
+   ограничение.
+  */
+  final double maxInitialForwardAngularSpeed;
+  final Tilt minTiltAdditionalBorder;
+  final Tilt maxTiltAdditionalBorder;
+  /**
+   Порог углового отклонения (в радианах), при превышении которого карта продолжает наклоняться
+   в направлении жеста. Если меньше — движется в сторону исходного положения.
+  */
+  final double tiltThreshold;
+
+  const TiltKinematicSettings({
+    this.enabled = true,
+    this.decelerationCoefficient = 7,
+    this.initialForwardSpeedMultiplier = 0.699999988079071,
+    this.maxInitialForwardAngularSpeed = 3,
+    this.minTiltAdditionalBorder = const Tilt(10),
+    this.maxTiltAdditionalBorder = const Tilt(10),
+    this.tiltThreshold = 0.08500000089406967
+  });
+
+  TiltKinematicSettings copyWith({
+    bool? enabled,
+    double? decelerationCoefficient,
+    double? initialForwardSpeedMultiplier,
+    double? maxInitialForwardAngularSpeed,
+    Tilt? minTiltAdditionalBorder,
+    Tilt? maxTiltAdditionalBorder,
+    double? tiltThreshold
+  }) {
+    return TiltKinematicSettings(
+      enabled: enabled ?? this.enabled,
+      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
+      initialForwardSpeedMultiplier: initialForwardSpeedMultiplier ?? this.initialForwardSpeedMultiplier,
+      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
+      minTiltAdditionalBorder: minTiltAdditionalBorder ?? this.minTiltAdditionalBorder,
+      maxTiltAdditionalBorder: maxTiltAdditionalBorder ?? this.maxTiltAdditionalBorder,
+      tiltThreshold: tiltThreshold ?? this.tiltThreshold
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TiltKinematicSettings &&
+    other.runtimeType == runtimeType &&
+    other.enabled == enabled &&
+    other.decelerationCoefficient == decelerationCoefficient &&
+    other.initialForwardSpeedMultiplier == initialForwardSpeedMultiplier &&
+    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
+    other.minTiltAdditionalBorder == minTiltAdditionalBorder &&
+    other.maxTiltAdditionalBorder == maxTiltAdditionalBorder &&
+    other.tiltThreshold == tiltThreshold;
+
+  @override
+  int get hashCode {
+    return Object.hash(enabled, decelerationCoefficient, initialForwardSpeedMultiplier, maxInitialForwardAngularSpeed, minTiltAdditionalBorder, maxTiltAdditionalBorder, tiltThreshold);
+  }
+
+}
+final class _CTiltKinematicSettings extends ffi.Struct {
+  @ffi.Bool()
+  external bool enabled;
+
+  @ffi.Float()
+  external double decelerationCoefficient;
+
+  @ffi.Float()
+  external double initialForwardSpeedMultiplier;
+
+  @ffi.Float()
+  external double maxInitialForwardAngularSpeed;
+
+  external _CTilt minTiltAdditionalBorder;
+
+  external _CTilt maxTiltAdditionalBorder;
+
+  @ffi.Float()
+  external double tiltThreshold;
+
+}
+// MARK: - TiltKinematicSettings <-> _CTiltKinematicSettings
+
+extension _CTiltKinematicSettingsToDart on _CTiltKinematicSettings {
+  TiltKinematicSettings _toDart() {
+    return TiltKinematicSettings(
+      enabled: this.enabled,
+      decelerationCoefficient: this.decelerationCoefficient,
+      initialForwardSpeedMultiplier: this.initialForwardSpeedMultiplier,
+      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
+      minTiltAdditionalBorder: this.minTiltAdditionalBorder._toDart(),
+      maxTiltAdditionalBorder: this.maxTiltAdditionalBorder._toDart(),
+      tiltThreshold: this.tiltThreshold
+    );
+  }
+}
+
+extension _DartTo_CTiltKinematicSettings on TiltKinematicSettings {
+  _CTiltKinematicSettings _copyFromDartTo_CTiltKinematicSettings() {
+    final res = _CTiltKinematicSettingsMakeDefault();
+    res.enabled = this.enabled;
+    res.decelerationCoefficient = this.decelerationCoefficient;
+    res.initialForwardSpeedMultiplier = this.initialForwardSpeedMultiplier;
+    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
+    res.minTiltAdditionalBorder = this.minTiltAdditionalBorder._copyFromDartTo_CTilt();
+    res.maxTiltAdditionalBorder = this.maxTiltAdditionalBorder._copyFromDartTo_CTilt();
+    res.tiltThreshold = this.tiltThreshold;
+    return res;
+  }
+}
+extension _CTiltKinematicSettingsRelease on _CTiltKinematicSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - TiltGestureSettings
+
+/** Настройки жеста наклона. */
+class TiltGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Настройки распознавания наклона. */
+  TiltRecognizeSettings get recognizeSettings {
+    _CTiltRecognizeSettings res = _CTiltGestureSettings_recognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(TiltRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CTiltRecognizeSettings();
+    void res = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  /** Настройки кинематики наклона. */
+  TiltKinematicSettings get kinematicSettings {
+    _CTiltKinematicSettings res = _CTiltGestureSettings_kinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set kinematicSettings(TiltKinematicSettings settings) {
+    var _a1 = settings._copyFromDartTo_CTiltKinematicSettings();
+    void res = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTiltGestureSettings_releasePtr);
+
+  TiltGestureSettings._raw(this._self);
+  factory TiltGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TiltGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TiltGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CTiltGestureSettings_cg_objectIdentifier(this._self) == _CTiltGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTiltGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - TiltGestureSettings <-> CTiltGestureSettings
+
+final class _CTiltGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTiltGestureSettingsBasicFunctions on _CTiltGestureSettings {
+  void _releaseIntermediate() {
+    _CTiltGestureSettings_release(_impl);
+  }
+
+  _CTiltGestureSettings _retain() {
+    return _CTiltGestureSettings_retain(_impl);
+  }
+}
+
+extension _CTiltGestureSettingsToDart on _CTiltGestureSettings {
+  TiltGestureSettings _toDart() {
+    return TiltGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTiltGestureSettings on TiltGestureSettings {
+  _CTiltGestureSettings _copyFromDartTo_CTiltGestureSettings() {
+    return (_CTiltGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - CommonRecognizeSettings
+
+/** Общие настройки распознавания жестов. */
+class CommonRecognizeSettings {
+  /**
+   Таймаут между распознаваемыми жестами.
+   Используется для предотвращения ложных срабатываний в конце жеста.
+  */
+  final Duration interGestureTimeout;
+
+  const CommonRecognizeSettings([this.interGestureTimeout = const Duration(milliseconds: 50)]);
+
+  CommonRecognizeSettings copyWith({
+    Duration? interGestureTimeout
+  }) {
+    return CommonRecognizeSettings(
+      interGestureTimeout ?? this.interGestureTimeout
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CommonRecognizeSettings &&
+    other.runtimeType == runtimeType &&
+    other.interGestureTimeout == interGestureTimeout;
+
+  @override
+  int get hashCode {
+    return interGestureTimeout.hashCode;
+  }
+
+}
+final class _CCommonRecognizeSettings extends ffi.Struct {
+  external _CTimeInterval interGestureTimeout;
+
+}
+// MARK: - CommonRecognizeSettings <-> _CCommonRecognizeSettings
+
+extension _CCommonRecognizeSettingsToDart on _CCommonRecognizeSettings {
+  CommonRecognizeSettings _toDart() {
+    return CommonRecognizeSettings(
+      this.interGestureTimeout._toDart()
+    );
+  }
+}
+
+extension _DartTo_CCommonRecognizeSettings on CommonRecognizeSettings {
+  _CCommonRecognizeSettings _copyFromDartTo_CCommonRecognizeSettings() {
+    final res = _CCommonRecognizeSettingsMakeDefault();
+    res.interGestureTimeout = this.interGestureTimeout._copyFromDartTo_CTimeInterval();
+    return res;
+  }
+}
+extension _CCommonRecognizeSettingsRelease on _CCommonRecognizeSettings {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - CommonGestureSettings
+
+class CommonGestureSettings implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Общие настройки распознования жестов. */
+  CommonRecognizeSettings get recognizeSettings {
+    _CCommonRecognizeSettings res = _CCommonGestureSettings_recognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set recognizeSettings(CommonRecognizeSettings settings) {
+    var _a1 = settings._copyFromDartTo_CCommonRecognizeSettings();
+    void res = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CCommonGestureSettings_releasePtr);
+
+  CommonGestureSettings._raw(this._self);
+  factory CommonGestureSettings._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = CommonGestureSettings._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is CommonGestureSettings &&
+    other.runtimeType == runtimeType &&
+    _CCommonGestureSettings_cg_objectIdentifier(this._self) == _CCommonGestureSettings_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CCommonGestureSettings_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+}
+
+// MARK: - CommonGestureSettings <-> CCommonGestureSettings
+
+final class _CCommonGestureSettings extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CCommonGestureSettingsBasicFunctions on _CCommonGestureSettings {
+  void _releaseIntermediate() {
+    _CCommonGestureSettings_release(_impl);
+  }
+
+  _CCommonGestureSettings _retain() {
+    return _CCommonGestureSettings_retain(_impl);
+  }
+}
+
+extension _CCommonGestureSettingsToDart on _CCommonGestureSettings {
+  CommonGestureSettings _toDart() {
+    return CommonGestureSettings._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCCommonGestureSettings on CommonGestureSettings {
+  _CCommonGestureSettings _copyFromDartTo_CCommonGestureSettings() {
+    return (_CCommonGestureSettingsMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - GestureManager
+
+/** Класс для управления обработкой жестов. */
+class GestureManager implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  EnumSet<TransformGesture> get enabledGestures {
+    _COptionSet_CTransformGesture res = _CGestureManager_enabledGestures(_CGestureManagerMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  set enabledGestures(EnumSet<TransformGesture> flags) {
+    var _a1 = flags._copyFromDartTo_COptionSet_CTransformGesture();
+    void res = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+  ScalingGestureSettings get scalingSettings {
+    _CScalingGestureSettings res = _CGestureManager_scalingSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  RotationGestureSettings get rotationSettings {
+    _CRotationGestureSettings res = _CGestureManager_rotationSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  MultiTouchGestureSettings get multitouchShiftSettings {
+    _CMultiTouchGestureSettings res = _CGestureManager_multitouchShiftSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  TiltGestureSettings get tiltSettings {
+    _CTiltGestureSettings res = _CGestureManager_tiltSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  CommonGestureSettings get commonSettings {
+    _CCommonGestureSettings res = _CGestureManager_commonSettings(_CGestureManagerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CGestureManager_releasePtr);
+
+  GestureManager._raw(this._self);
+  factory GestureManager._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = GestureManager._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is GestureManager &&
+    other.runtimeType == runtimeType &&
+    _CGestureManager_cg_objectIdentifier(this._self) == _CGestureManager_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CGestureManager_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: GestureManager: Methods
+
+  void enableGesture(
+    TransformGesture gesture
+  )  {
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    void res = _CGestureManager_enableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  void disableGesture(
+    TransformGesture gesture
+  )  {
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    void res = _CGestureManager_disableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  bool gestureEnabled(
+    TransformGesture gesture
+  )  {
+    var _a1 = gesture._copyFromDartTo_CTransformGesture();
+    bool res = _CGestureManager_gestureEnabled_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  /**
+   Установка списка правил исключения одновременного срабатывания нескольких жестов.
+  
+   - Note: К переданному списку правил добавляются правила по умолчанию, которые не позволяют жесту управления наклоном
+   срабатывать одновременно с другими жестами.
+   Каждое правило представляет собой перечень жестов, которые не могут срабатывать одновременно
+   Например, если в правиле указать жесты Scaling и Rotation то эти жесты не будут работать одновременно
+   В случае одновременного выполнения жестов из правила, сработает жест с большим приоритетом
+   Порядок приоритета жестов (по убыванию): (Shift ->) Tilt -> Scaling -> Rotation -> MultiTouchShift
+  */
+  void setMutuallyExclusiveGestures(
+    List<EnumSet<TransformGesture>> rules
+  )  {
+    var _a1 = rules._copyFromDartTo_CArray_COptionSet_CTransformGesture();
+    void res = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    return res;
+  }
+
+}
+
+// MARK: - GestureManager <-> CGestureManager
+
+final class _CGestureManager extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CGestureManagerBasicFunctions on _CGestureManager {
+  void _releaseIntermediate() {
+    _CGestureManager_release(_impl);
+  }
+
+  _CGestureManager _retain() {
+    return _CGestureManager_retain(_impl);
+  }
+}
+
+extension _CGestureManagerToDart on _CGestureManager {
+  GestureManager _toDart() {
+    return GestureManager._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCGestureManager on GestureManager {
+  _CGestureManager _copyFromDartTo_CGestureManager() {
+    return (_CGestureManagerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - EnumSet<TransformGesture>
+
+class TransformGestureEnumSet extends EnumSet<TransformGesture> {
+  const TransformGestureEnumSet([int rawValue = 0]) : super(rawValue);
+
+  factory TransformGestureEnumSet.fromRawValue(int rawValue) {
+    return TransformGestureEnumSet(rawValue);
+  }
+
+  factory TransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
+    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
+    return TransformGestureEnumSet(rawValue);
+  }
+
+  factory TransformGestureEnumSet.all() {
+    final rawValue = TransformGesture.values.fold(0, (acc, type) => acc | type.rawValue);
+    return TransformGestureEnumSet(rawValue);
+  }
+
+  @override
+  bool contains(TransformGesture value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(EnumSet<TransformGesture> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  EnumSet<TransformGesture> intersection(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  EnumSet<TransformGesture> union(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  EnumSet<TransformGesture> difference(EnumSet<TransformGesture> other) =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  MutableEnumSet<TransformGesture> toMutableEnumSet() =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<TransformGesture> toSet() {
+    Set<TransformGesture> result = {};
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
+class MutableTransformGestureEnumSet extends MutableEnumSet<TransformGesture> {
+  MutableTransformGestureEnumSet() : super();
+
+  factory MutableTransformGestureEnumSet.fromRawValue(int rawValue) {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.rawValue = rawValue;
+    return enumSet;
+  }
+
+  factory MutableTransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.addAll(elements);
+    return enumSet;
+  }
+
+  factory MutableTransformGestureEnumSet.all() {
+    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
+    enumSet.addAll(TransformGesture.values);
+    return enumSet;
+  }
+
+  @override
+  bool contains(TransformGesture value) =>
+      (this.rawValue & value.rawValue) == value.rawValue;
+
+  @override
+  bool containsAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      (this.rawValue & other.rawValue) == this.rawValue;
+
+  @override
+  MutableEnumSet<TransformGesture> intersection(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
+
+  @override
+  MutableEnumSet<TransformGesture> union(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
+
+  @override
+  MutableEnumSet<TransformGesture> difference(MutableEnumSet<TransformGesture> other) =>
+      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
+
+  @override
+  EnumSet<TransformGesture> toEnumSet() =>
+      TransformGestureEnumSet.fromRawValue(this.rawValue);
+
+  @override
+  Set<TransformGesture> toSet() {
+    Set<TransformGesture> result = {};
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  @override
+  bool add(TransformGesture value) {
+    if (this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue | value.rawValue;
+    return true;
+  }
+
+  @override
+  void addAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      this.rawValue = this.rawValue | other.rawValue;
+
+  @override
+  bool remove(TransformGesture value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+    this.rawValue = this.rawValue & ~value.rawValue;
+    return true;
+  }
+
+  @override
+  void removeAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
+      this.rawValue = this.rawValue & ~other.rawValue;
+
+
+  @override
+  String toString() {
+    List<String> validOptionNames = [];
+    TransformGesture.values.forEach((element) {
+      if (this.contains(element)) {
+        validOptionNames.add(element.name);
+      }
+    });
+
+    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
+  }
+}
+
+final class _COptionSet_CTransformGesture extends ffi.Struct {
+  @ffi.Uint32()
+  external int _rawValue;
+}
+
+extension _COptionSet_CTransformGestureBasicFunctions on _COptionSet_CTransformGesture {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _COptionSet_CTransformGestureToDart on _COptionSet_CTransformGesture {
+  EnumSet<TransformGesture> _toDart() {
+    return TransformGestureEnumSet.fromRawValue(this._rawValue);
+  }
+}
+
+extension _DartTo_COptionSet_CTransformGesture on EnumSet<TransformGesture> {
+  _COptionSet_CTransformGesture _copyFromDartTo_COptionSet_CTransformGesture() {
+    return _COptionSet_CTransformGestureMakeDefault().._rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - List<EnumSet<TransformGesture>> <-> _CArray_COptionSet_CTransformGesture
+
+final class _CArray_COptionSet_CTransformGesture extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_COptionSet_CTransformGestureToDart on _CArray_COptionSet_CTransformGesture {
+  List<EnumSet<TransformGesture>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_COptionSet_CTransformGesture on List<EnumSet<TransformGesture>> {
+  _CArray_COptionSet_CTransformGesture _copyFromDartTo_CArray_COptionSet_CTransformGesture() {
+    final cArray = _CArray_COptionSet_CTransformGesturemakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_COptionSet_CTransformGesture();
+        _CArray_COptionSet_CTransformGestureaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_COptionSet_CTransformGestureBasicFunctions on _CArray_COptionSet_CTransformGesture {
+  void _releaseIntermediate() {
+    _CArray_COptionSet_CTransformGesture_release(this);
+  }
+
+  static final _listToFill = <EnumSet<TransformGesture>>[];
+
+  static void _iterate(_COptionSet_CTransformGesture item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<EnumSet<TransformGesture>> _fillFromC() {
+    _forEach_CArray_COptionSet_CTransformGesture(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptionSet_CTransformGesture)>(_iterate));
+    final result = List<EnumSet<TransformGesture>>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - TouchPointState
+
+/** Тип состояния точки прикосновения. */
+@internal
+enum TouchPointState {
+  /** Точка нажата. */
+  pressed(1),
+  /** Точка нажата. */
+  released(2),
+  /** Точка переместилась или осталась на месте. */
+  moved(4),
+  ;
+
+  const TouchPointState(this.rawValue);
+  final int rawValue;
+
+  static TouchPointState getByValue(int value) {
+    return TouchPointState.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CTouchPointState extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CTouchPointStateBasicFunctions on _CTouchPointState {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CTouchPointStateToDart on _CTouchPointState {
+  TouchPointState _toDart() {
+    return TouchPointState.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CTouchPointState on TouchPointState {
+  _CTouchPointState _copyFromDartTo_CTouchPointState() {
+    return _CTouchPointStateMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - MapGestureRecognizer
+
+/**
+ Принимает информацию о нажатиях и преобразует их в жесты карты.
+ Обработка происходит в два этапа:
+ * Добавляется несколько точек - add_touch_point
+ * Точки обрабатываются - process_touch_event
+*/
+@internal
+class MapGestureRecognizer implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  Channel<DragBeginData> get dragBegin {
+    _CChannel_CDragBeginData res = _CMapGestureRecognizer_dragBegin(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  Channel<bool> get dragEnd {
+    _CChannel_bool res = _CMapGestureRecognizer_dragEnd(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  Channel<ScreenPoint> get dragMove {
+    _CChannel_CScreenPoint res = _CMapGestureRecognizer_dragMove(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  Channel<ScreenPoint> get tap {
+    _CChannel_CScreenPoint res = _CMapGestureRecognizer_tap(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  Channel<ScreenPoint> get longTouch {
+    _CChannel_CScreenPoint res = _CMapGestureRecognizer_longTouch(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  GestureManager? get gestureManager {
+    _COptional_CGestureManager res = _CMapGestureRecognizer_gestureManager(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CMapGestureRecognizer_releasePtr);
+
+  MapGestureRecognizer._raw(this._self);
+  factory MapGestureRecognizer._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MapGestureRecognizer._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MapGestureRecognizer &&
+    other.runtimeType == runtimeType &&
+    _CMapGestureRecognizer_cg_objectIdentifier(this._self) == _CMapGestureRecognizer_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMapGestureRecognizer_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CMapGestureRecognizer: Static Methods
+
+  static MapGestureRecognizer create(
+    Map map
+  )  {
+    var _a0 = map._copyFromDartTo_CMap();
+    _CMapGestureRecognizer res = _CMapGestureRecognizer_S_create_CMap(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  // MARK: MapGestureRecognizer: Methods
+
+  void addTouchPoint(
+    ScreenPoint point,
+    TouchPointState state,
+    int id
+  )  {
+    var _a1 = point._copyFromDartTo_CScreenPoint();
+    var _a2 = state._copyFromDartTo_CTouchPointState();
+    void res = _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1, _a2, id);
+    return res;
+  }
+
+  bool processTouchEvent(
+    Duration timestamp
+  )  {
+    var _a1 = timestamp._copyFromDartTo_CTimeInterval();
+    bool res = _CMapGestureRecognizer_processTouchEvent_CTimeInterval(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+  void cancel()  {
+    void res = _CMapGestureRecognizer_cancel(_CMapGestureRecognizerMakeDefault().._impl=_self);
+    return res;
+  }
+
+  void onDevicePpiChanged(
+    DevicePpi devicePpi
+  )  {
+    var _a1 = devicePpi._copyFromDartTo_CDevicePpi();
+    void res = _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1);
+    return res;
+  }
+
+}
+
+// MARK: - MapGestureRecognizer <-> CMapGestureRecognizer
+
+final class _CMapGestureRecognizer extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMapGestureRecognizerBasicFunctions on _CMapGestureRecognizer {
+  void _releaseIntermediate() {
+    _CMapGestureRecognizer_release(_impl);
+  }
+
+  _CMapGestureRecognizer _retain() {
+    return _CMapGestureRecognizer_retain(_impl);
+  }
+}
+
+extension _CMapGestureRecognizerToDart on _CMapGestureRecognizer {
+  MapGestureRecognizer _toDart() {
+    return MapGestureRecognizer._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMapGestureRecognizer on MapGestureRecognizer {
+  _CMapGestureRecognizer _copyFromDartTo_CMapGestureRecognizer() {
+    return (_CMapGestureRecognizerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - Channel<DragBeginData> <-> _CChannel_CDragBeginData
+
+class _CChannel_CDragBeginDataImpl extends Channel<DragBeginData> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<DragBeginData>>{};
+
+  final _CChannel_CDragBeginData _channel;
+
+  _CChannel_CDragBeginDataImpl(this._channel);
+
+  static void valueFunction(_CDragBeginData cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    cValue._releaseIntermediate();
+  }
+
+  @override
+  StreamSubscription<DragBeginData> listen(void onData(DragBeginData event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDragBeginData, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<DragBeginData>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CChannel_CDragBeginData extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CChannel_CDragBeginDataBasicFunctions on _CChannel_CDragBeginData {
+  void _releaseIntermediate() {
+    _CChannel_CDragBeginData_release(this);
+  }
+
+  _CChannel_CDragBeginData _retain() {
+    return _CChannel_CDragBeginData_retain(this);
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CDragBeginData, ffi.Int64)> callback) {
+    return _CChannel_CDragBeginDataConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CChannel_CDragBeginDataToDart on _CChannel_CDragBeginData {
+  Channel<DragBeginData> _toDart() {
+    return _CChannel_CDragBeginDataImpl(this._retain());
+  }
+}
+
+extension _DartTo_CChannel_CDragBeginData on Channel<DragBeginData> {
+  _CChannel_CDragBeginData _copyFromDartTo_CChannel_CDragBeginData() {
+    return _CChannel_CDragBeginDataMakeDefault();
+  }
+}
+	
+// MARK: - Channel<ScreenPoint> <-> _CChannel_CScreenPoint
+
+class _CChannel_CScreenPointImpl extends Channel<ScreenPoint> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<ScreenPoint>>{};
+
+  final _CChannel_CScreenPoint _channel;
+
+  _CChannel_CScreenPointImpl(this._channel);
+
+  static void valueFunction(_CScreenPoint cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    
+  }
+
+  @override
+  StreamSubscription<ScreenPoint> listen(void onData(ScreenPoint event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CScreenPoint, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<ScreenPoint>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CChannel_CScreenPoint extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CChannel_CScreenPointBasicFunctions on _CChannel_CScreenPoint {
+  void _releaseIntermediate() {
+    _CChannel_CScreenPoint_release(this);
+  }
+
+  _CChannel_CScreenPoint _retain() {
+    return _CChannel_CScreenPoint_retain(this);
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CScreenPoint, ffi.Int64)> callback) {
+    return _CChannel_CScreenPointConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CChannel_CScreenPointToDart on _CChannel_CScreenPoint {
+  Channel<ScreenPoint> _toDart() {
+    return _CChannel_CScreenPointImpl(this._retain());
+  }
+}
+
+extension _DartTo_CChannel_CScreenPoint on Channel<ScreenPoint> {
+  _CChannel_CScreenPoint _copyFromDartTo_CChannel_CScreenPoint() {
+    return _CChannel_CScreenPointMakeDefault();
+  }
+}
+	
+// MARK: - GestureManager? <-> _COptional_CGestureManager
+
+final class _COptional_CGestureManager extends ffi.Struct {
+  
+  external _CGestureManager value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CGestureManagerBasicFunctions on _COptional_CGestureManager {
+  void _releaseIntermediate() {
+    _COptional_CGestureManager_release(this);
+  }
+}
+
+extension _COptional_CGestureManagerToDart on _COptional_CGestureManager {
+  GestureManager? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CGestureManager on GestureManager? {
+  _COptional_CGestureManager _copyFromDartTo_COptional_CGestureManager() {
+    final cOptional = _COptional_CGestureManagerMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CGestureManager();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
 // MARK: - CalloutMapPosition
 
 /** Положение бабла маршрута. */
@@ -64328,2295 +67112,6 @@ extension _DartTo_CFuture_CStyle on CancelableOperation<Style> {
   }
 }
 	
-// MARK: - DragBeginData
-
-/** Данные о начале перетаскивания: точка старта перемещения и перемещаемый объект. */
-class DragBeginData {
-  final ScreenPoint point;
-  final RenderedObject item;
-
-  const DragBeginData({
-    required this.point,
-    required this.item
-  });
-
-  DragBeginData copyWith({
-    ScreenPoint? point,
-    RenderedObject? item
-  }) {
-    return DragBeginData(
-      point: point ?? this.point,
-      item: item ?? this.item
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is DragBeginData &&
-    other.runtimeType == runtimeType &&
-    other.point == point &&
-    other.item == item;
-
-  @override
-  int get hashCode {
-    return Object.hash(point, item);
-  }
-
-}
-final class _CDragBeginData extends ffi.Struct {
-  external _CScreenPoint point;
-
-  external _CRenderedObject item;
-
-}
-// MARK: - DragBeginData <-> _CDragBeginData
-
-extension _CDragBeginDataToDart on _CDragBeginData {
-  DragBeginData _toDart() {
-    return DragBeginData(
-      point: this.point._toDart(),
-      item: this.item._toDart()
-    );
-  }
-}
-
-extension _DartTo_CDragBeginData on DragBeginData {
-  _CDragBeginData _copyFromDartTo_CDragBeginData() {
-    final res = _CDragBeginDataMakeDefault();
-    res.point = this.point._copyFromDartTo_CScreenPoint();
-    res.item = this.item._copyFromDartTo_CRenderedObject();
-    return res;
-  }
-}
-extension _CDragBeginDataRelease on _CDragBeginData {
-  void _releaseIntermediate() {
-    item._releaseIntermediate();
-  }
-}
-
-// MARK: - TransformGesture
-
-enum TransformGesture {
-  rotation(1),
-  scaling(2),
-  shift(4),
-  multiTouchShift(8),
-  tilt(16),
-  ;
-
-  const TransformGesture(this.rawValue);
-  final int rawValue;
-
-  static TransformGesture getByValue(int value) {
-    return TransformGesture.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CTransformGesture extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CTransformGestureBasicFunctions on _CTransformGesture {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CTransformGestureToDart on _CTransformGesture {
-  TransformGesture _toDart() {
-    return TransformGesture.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CTransformGesture on TransformGesture {
-  _CTransformGesture _copyFromDartTo_CTransformGesture() {
-    return _CTransformGestureMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - ScalingRecognizeSettings
-
-/**
- Настройки распознавания масштабирования.
- Коэффициент масштабирования рассчитывается как отношения расстояния
- между точками после перемещения и исходным расстоянием.
-*/
-class ScalingRecognizeSettings {
-  /**
-   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
-   Используется, если вращение неактивно.
-   Множитель должен выйти за пределы (1 / scale_ratio_threshold, scale_ratio_threshold).
-  */
-  final double scaleRatioThreshold;
-  /**
-   Порог коэффициента масштабирования, преодоление которого говорит о начале масштабирования.
-   Используется, если вращение активно.
-   Множитель должен выйти за пределы (1 / scale_ratio_threshold_in_rotation, scale_ratio_threshold_in_rotation).
-  */
-  final double scaleRatioThresholdInRotation;
-  /** Отношение логарифмов старого и нового масштабов при обработке мгновенного события изменения масштаба. */
-  final double zoomScaleRatio;
-  /** Разница логарифмов масштабов при смещении на 1 мм. на экране. */
-  final double scaleLogDiffPerMm;
-  /** Отключение жестов ZoomEvent и DirectMapScaleEvent. */
-  final bool disableZoom;
-
-  const ScalingRecognizeSettings({
-    this.scaleRatioThreshold = 1.100000023841858,
-    this.scaleRatioThresholdInRotation = 1.2000000476837158,
-    this.zoomScaleRatio = 2,
-    this.scaleLogDiffPerMm = 0.05000000074505806,
-    this.disableZoom = false
-  });
-
-  ScalingRecognizeSettings copyWith({
-    double? scaleRatioThreshold,
-    double? scaleRatioThresholdInRotation,
-    double? zoomScaleRatio,
-    double? scaleLogDiffPerMm,
-    bool? disableZoom
-  }) {
-    return ScalingRecognizeSettings(
-      scaleRatioThreshold: scaleRatioThreshold ?? this.scaleRatioThreshold,
-      scaleRatioThresholdInRotation: scaleRatioThresholdInRotation ?? this.scaleRatioThresholdInRotation,
-      zoomScaleRatio: zoomScaleRatio ?? this.zoomScaleRatio,
-      scaleLogDiffPerMm: scaleLogDiffPerMm ?? this.scaleLogDiffPerMm,
-      disableZoom: disableZoom ?? this.disableZoom
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScalingRecognizeSettings &&
-    other.runtimeType == runtimeType &&
-    other.scaleRatioThreshold == scaleRatioThreshold &&
-    other.scaleRatioThresholdInRotation == scaleRatioThresholdInRotation &&
-    other.zoomScaleRatio == zoomScaleRatio &&
-    other.scaleLogDiffPerMm == scaleLogDiffPerMm &&
-    other.disableZoom == disableZoom;
-
-  @override
-  int get hashCode {
-    return Object.hash(scaleRatioThreshold, scaleRatioThresholdInRotation, zoomScaleRatio, scaleLogDiffPerMm, disableZoom);
-  }
-
-}
-final class _CScalingRecognizeSettings extends ffi.Struct {
-  @ffi.Float()
-  external double scaleRatioThreshold;
-
-  @ffi.Float()
-  external double scaleRatioThresholdInRotation;
-
-  @ffi.Float()
-  external double zoomScaleRatio;
-
-  @ffi.Float()
-  external double scaleLogDiffPerMm;
-
-  @ffi.Bool()
-  external bool disableZoom;
-
-}
-// MARK: - ScalingRecognizeSettings <-> _CScalingRecognizeSettings
-
-extension _CScalingRecognizeSettingsToDart on _CScalingRecognizeSettings {
-  ScalingRecognizeSettings _toDart() {
-    return ScalingRecognizeSettings(
-      scaleRatioThreshold: this.scaleRatioThreshold,
-      scaleRatioThresholdInRotation: this.scaleRatioThresholdInRotation,
-      zoomScaleRatio: this.zoomScaleRatio,
-      scaleLogDiffPerMm: this.scaleLogDiffPerMm,
-      disableZoom: this.disableZoom
-    );
-  }
-}
-
-extension _DartTo_CScalingRecognizeSettings on ScalingRecognizeSettings {
-  _CScalingRecognizeSettings _copyFromDartTo_CScalingRecognizeSettings() {
-    final res = _CScalingRecognizeSettingsMakeDefault();
-    res.scaleRatioThreshold = this.scaleRatioThreshold;
-    res.scaleRatioThresholdInRotation = this.scaleRatioThresholdInRotation;
-    res.zoomScaleRatio = this.zoomScaleRatio;
-    res.scaleLogDiffPerMm = this.scaleLogDiffPerMm;
-    res.disableZoom = this.disableZoom;
-    return res;
-  }
-}
-extension _CScalingRecognizeSettingsRelease on _CScalingRecognizeSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GestureActionEventCenter
-
-/** Выполнить жест относительно геометрического центра множества точек постановки пальцев. */
-class GestureActionEventCenter {
-
-  const GestureActionEventCenter();
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GestureActionEventCenter &&
-    other.runtimeType == runtimeType;
-
-  @override
-  int get hashCode {
-    return 0;
-  }
-
-}
-final class _CGestureActionEventCenter extends ffi.Struct {
-  @ffi.Int8()
-  external int _dummy;
-}
-// MARK: - GestureActionEventCenter <-> _CGestureActionEventCenter
-
-extension _CGestureActionEventCenterToDart on _CGestureActionEventCenter {
-  GestureActionEventCenter _toDart() {
-    return GestureActionEventCenter(
-    );
-  }
-}
-
-extension _DartTo_CGestureActionEventCenter on GestureActionEventCenter {
-  _CGestureActionEventCenter _copyFromDartTo_CGestureActionEventCenter() {
-    final res = _CGestureActionEventCenterMakeDefault();
-    return res;
-  }
-}
-extension _CGestureActionEventCenterRelease on _CGestureActionEventCenter {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GestureActionMapPosition
-
-/** Выполнить жест относительно точки позиции карты. */
-class GestureActionMapPosition {
-
-  const GestureActionMapPosition();
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GestureActionMapPosition &&
-    other.runtimeType == runtimeType;
-
-  @override
-  int get hashCode {
-    return 0;
-  }
-
-}
-final class _CGestureActionMapPosition extends ffi.Struct {
-  @ffi.Int8()
-  external int _dummy;
-}
-// MARK: - GestureActionMapPosition <-> _CGestureActionMapPosition
-
-extension _CGestureActionMapPositionToDart on _CGestureActionMapPosition {
-  GestureActionMapPosition _toDart() {
-    return GestureActionMapPosition(
-    );
-  }
-}
-
-extension _DartTo_CGestureActionMapPosition on GestureActionMapPosition {
-  _CGestureActionMapPosition _copyFromDartTo_CGestureActionMapPosition() {
-    final res = _CGestureActionMapPositionMakeDefault();
-    return res;
-  }
-}
-extension _CGestureActionMapPositionRelease on _CGestureActionMapPosition {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GestureActionTargetGeoPoint
-
-/** Выполнить жест относительно геопозиции target_geo_point. */
-class GestureActionTargetGeoPoint {
-  final GeoPoint targetGeoPoint;
-
-  const GestureActionTargetGeoPoint(this.targetGeoPoint);
-
-  GestureActionTargetGeoPoint copyWith({
-    GeoPoint? targetGeoPoint
-  }) {
-    return GestureActionTargetGeoPoint(
-      targetGeoPoint ?? this.targetGeoPoint
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GestureActionTargetGeoPoint &&
-    other.runtimeType == runtimeType &&
-    other.targetGeoPoint == targetGeoPoint;
-
-  @override
-  int get hashCode {
-    return targetGeoPoint.hashCode;
-  }
-
-}
-final class _CGestureActionTargetGeoPoint extends ffi.Struct {
-  external _CGeoPoint targetGeoPoint;
-
-}
-// MARK: - GestureActionTargetGeoPoint <-> _CGestureActionTargetGeoPoint
-
-extension _CGestureActionTargetGeoPointToDart on _CGestureActionTargetGeoPoint {
-  GestureActionTargetGeoPoint _toDart() {
-    return GestureActionTargetGeoPoint(
-      this.targetGeoPoint._toDart()
-    );
-  }
-}
-
-extension _DartTo_CGestureActionTargetGeoPoint on GestureActionTargetGeoPoint {
-  _CGestureActionTargetGeoPoint _copyFromDartTo_CGestureActionTargetGeoPoint() {
-    final res = _CGestureActionTargetGeoPointMakeDefault();
-    res.targetGeoPoint = this.targetGeoPoint._copyFromDartTo_CGeoPoint();
-    return res;
-  }
-}
-extension _CGestureActionTargetGeoPointRelease on _CGestureActionTargetGeoPoint {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - GestureActionPoint
-
-/** Задает правило обработки событий карты. */
-final class GestureActionPoint {
-  final Object? _value;
-  final int _index;
-
-  GestureActionPoint._raw(this._value, this._index);
-
-  GestureActionPoint.eventCenter(GestureActionEventCenter value) : this._raw(value, 0);
-  GestureActionPoint.mapPosition(GestureActionMapPosition value) : this._raw(value, 1);
-  GestureActionPoint.targetGeoPoint(GestureActionTargetGeoPoint value) : this._raw(value, 2);
-
-  bool get isEventCenter => this._index == 0;
-  GestureActionEventCenter? get asEventCenter => this.isEventCenter ? this._value as GestureActionEventCenter : null;
-
-  bool get isMapPosition => this._index == 1;
-  GestureActionMapPosition? get asMapPosition => this.isMapPosition ? this._value as GestureActionMapPosition : null;
-
-  bool get isTargetGeoPoint => this._index == 2;
-  GestureActionTargetGeoPoint? get asTargetGeoPoint => this.isTargetGeoPoint ? this._value as GestureActionTargetGeoPoint : null;
-
-  T match<T>({
-    required T Function(GestureActionEventCenter value) eventCenter,
-    required T Function(GestureActionMapPosition value) mapPosition,
-    required T Function(GestureActionTargetGeoPoint value) targetGeoPoint,
-  }) {
-    return switch (this._index) {
-      0 => eventCenter(this._value as GestureActionEventCenter),
-      1 => mapPosition(this._value as GestureActionMapPosition),
-      2 => targetGeoPoint(this._value as GestureActionTargetGeoPoint),
-      _ => throw NativeException("Unrecognized case index ${this._index}")
-    };
-  }
-
-  @override
-  String toString() => "GestureActionPoint(${this._value})";
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GestureActionPoint &&
-    other.runtimeType == runtimeType &&
-    other._value == this._value && other._index == this._index;
-
-  @override
-  int get hashCode => Object.hash(this._index, this._value);
-}
-
-final class _CGestureActionPointImpl extends ffi.Union {
-  external _CGestureActionEventCenter _eventCenter;
-  external _CGestureActionMapPosition _mapPosition;
-  external _CGestureActionTargetGeoPoint _targetGeoPoint;
-}
-
-final class _CGestureActionPoint extends ffi.Struct {
-  external _CGestureActionPointImpl _impl;
-  @ffi.Uint8()
-  external int _index;
-}
-
-extension _CGestureActionPointBasicFunctions on _CGestureActionPoint {
-  void _releaseIntermediate() {
-    _CGestureActionPoint_release(this);
-  }
-}
-	
-// MARK: - GestureActionPoint <-> CGestureActionPoint
-
-extension _CGestureActionPointToDart on _CGestureActionPoint {
-  GestureActionPoint _toDart() {
-    return switch (this._index) {
-      0 => GestureActionPoint.eventCenter(this._impl._eventCenter._toDart()),
-      1 => GestureActionPoint.mapPosition(this._impl._mapPosition._toDart()),
-      2 => GestureActionPoint.targetGeoPoint(this._impl._targetGeoPoint._toDart()),
-      _ => throw NativeException("Unrecognized case index ${this._index}")
-    };
-  }
-}
-
-extension _DartTo_CGestureActionPoint on GestureActionPoint {
-  _CGestureActionPoint _copyFromDartTo_CGestureActionPoint() {
-    var res = _CGestureActionPointMakeDefault();
-    this.match<void>(
-      eventCenter: (GestureActionEventCenter value) {
-        res._impl._eventCenter = value._copyFromDartTo_CGestureActionEventCenter();
-        res._index = 0;
-      },
-      mapPosition: (GestureActionMapPosition value) {
-        res._impl._mapPosition = value._copyFromDartTo_CGestureActionMapPosition();
-        res._index = 1;
-      },
-      targetGeoPoint: (GestureActionTargetGeoPoint value) {
-        res._impl._targetGeoPoint = value._copyFromDartTo_CGestureActionTargetGeoPoint();
-        res._index = 2;
-      },
-    );
-    return res;
-  }
-}
-
-// MARK: - ScalingKinematicSettings
-
-class ScalingKinematicSettings {
-  /**
-   Включает или отключает кинематику масштабирования.
-   Если установлено в false, масштабирование мгновенно останавливается после окончания жеста,
-   и все остальные параметры игнорируются.
-  */
-  final bool enabled;
-  /**
-   Коэффициент затухания масштабирования после окончания жеста.
-   Чем выше значение, тем быстрее замедляется масштабирование.
-  */
-  final double decelerationCoefficient;
-  /** Максимальная начальная скорость после окончания жеста (dgis::map::Zoom в секунду). */
-  final double maxInitialForwardZoomSpeed;
-  /**
-   Порог отклонения dgis::map::Zoom, при превышении которого карта продолжает масштабирование
-   в направлении жеста. Если меньше — движется в сторону исходного положения.
-  */
-  final double zoomThreshold;
-
-  const ScalingKinematicSettings({
-    this.enabled = true,
-    this.decelerationCoefficient = 8,
-    this.maxInitialForwardZoomSpeed = 30,
-    this.zoomThreshold = 0.20000000298023224
-  });
-
-  ScalingKinematicSettings copyWith({
-    bool? enabled,
-    double? decelerationCoefficient,
-    double? maxInitialForwardZoomSpeed,
-    double? zoomThreshold
-  }) {
-    return ScalingKinematicSettings(
-      enabled: enabled ?? this.enabled,
-      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
-      maxInitialForwardZoomSpeed: maxInitialForwardZoomSpeed ?? this.maxInitialForwardZoomSpeed,
-      zoomThreshold: zoomThreshold ?? this.zoomThreshold
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScalingKinematicSettings &&
-    other.runtimeType == runtimeType &&
-    other.enabled == enabled &&
-    other.decelerationCoefficient == decelerationCoefficient &&
-    other.maxInitialForwardZoomSpeed == maxInitialForwardZoomSpeed &&
-    other.zoomThreshold == zoomThreshold;
-
-  @override
-  int get hashCode {
-    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardZoomSpeed, zoomThreshold);
-  }
-
-}
-final class _CScalingKinematicSettings extends ffi.Struct {
-  @ffi.Bool()
-  external bool enabled;
-
-  @ffi.Float()
-  external double decelerationCoefficient;
-
-  @ffi.Float()
-  external double maxInitialForwardZoomSpeed;
-
-  @ffi.Float()
-  external double zoomThreshold;
-
-}
-// MARK: - ScalingKinematicSettings <-> _CScalingKinematicSettings
-
-extension _CScalingKinematicSettingsToDart on _CScalingKinematicSettings {
-  ScalingKinematicSettings _toDart() {
-    return ScalingKinematicSettings(
-      enabled: this.enabled,
-      decelerationCoefficient: this.decelerationCoefficient,
-      maxInitialForwardZoomSpeed: this.maxInitialForwardZoomSpeed,
-      zoomThreshold: this.zoomThreshold
-    );
-  }
-}
-
-extension _DartTo_CScalingKinematicSettings on ScalingKinematicSettings {
-  _CScalingKinematicSettings _copyFromDartTo_CScalingKinematicSettings() {
-    final res = _CScalingKinematicSettingsMakeDefault();
-    res.enabled = this.enabled;
-    res.decelerationCoefficient = this.decelerationCoefficient;
-    res.maxInitialForwardZoomSpeed = this.maxInitialForwardZoomSpeed;
-    res.zoomThreshold = this.zoomThreshold;
-    return res;
-  }
-}
-extension _CScalingKinematicSettingsRelease on _CScalingKinematicSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - ScalingGestureSettings
-
-/** Настройки жеста масштабирования. */
-class ScalingGestureSettings implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Настройки распознавания масштабирования. */
-  ScalingRecognizeSettings get recognizeSettings {
-    _CScalingRecognizeSettings res = _CScalingGestureSettings_recognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set recognizeSettings(ScalingRecognizeSettings settings) {
-    var _a1 = settings._copyFromDartTo_CScalingRecognizeSettings();
-    void res = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  /** Точка, относительно которой производится масштабирование карты. */
-  GestureActionPoint get scalingCenter {
-    _CGestureActionPoint res = _CScalingGestureSettings_scalingCenter(_CScalingGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set scalingCenter(GestureActionPoint actionPoint) {
-    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
-    void res = _CScalingGestureSettings_setScalingCenter_CGestureActionPoint(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  /** Настройки кинематики масштабирования. */
-  ScalingKinematicSettings get kinematicSettings {
-    _CScalingKinematicSettings res = _CScalingGestureSettings_kinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set kinematicSettings(ScalingKinematicSettings settings) {
-    var _a1 = settings._copyFromDartTo_CScalingKinematicSettings();
-    void res = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings(_CScalingGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CScalingGestureSettings_releasePtr);
-
-  ScalingGestureSettings._raw(this._self);
-  factory ScalingGestureSettings._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = ScalingGestureSettings._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is ScalingGestureSettings &&
-    other.runtimeType == runtimeType &&
-    _CScalingGestureSettings_cg_objectIdentifier(this._self) == _CScalingGestureSettings_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CScalingGestureSettings_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - ScalingGestureSettings <-> CScalingGestureSettings
-
-final class _CScalingGestureSettings extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CScalingGestureSettingsBasicFunctions on _CScalingGestureSettings {
-  void _releaseIntermediate() {
-    _CScalingGestureSettings_release(_impl);
-  }
-
-  _CScalingGestureSettings _retain() {
-    return _CScalingGestureSettings_retain(_impl);
-  }
-}
-
-extension _CScalingGestureSettingsToDart on _CScalingGestureSettings {
-  ScalingGestureSettings _toDart() {
-    return ScalingGestureSettings._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCScalingGestureSettings on ScalingGestureSettings {
-  _CScalingGestureSettings _copyFromDartTo_CScalingGestureSettings() {
-    return (_CScalingGestureSettingsMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - RotationRecognizeThresholds
-
-class RotationRecognizeThresholds {
-  /** Порог изменения угла, в градусах, преодоление которого говорит о начале вращения. */
-  final double angleDiffDeg;
-  /** Порог среднего радиального сдвига точек, в миллиметрах, преодоление которого говорит о начале вращения. */
-  final double distanceDiffMm;
-
-  const RotationRecognizeThresholds({
-    this.angleDiffDeg = 5,
-    this.distanceDiffMm = 5
-  });
-
-  RotationRecognizeThresholds copyWith({
-    double? angleDiffDeg,
-    double? distanceDiffMm
-  }) {
-    return RotationRecognizeThresholds(
-      angleDiffDeg: angleDiffDeg ?? this.angleDiffDeg,
-      distanceDiffMm: distanceDiffMm ?? this.distanceDiffMm
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RotationRecognizeThresholds &&
-    other.runtimeType == runtimeType &&
-    other.angleDiffDeg == angleDiffDeg &&
-    other.distanceDiffMm == distanceDiffMm;
-
-  @override
-  int get hashCode {
-    return Object.hash(angleDiffDeg, distanceDiffMm);
-  }
-
-}
-final class _CRotationRecognizeThresholds extends ffi.Struct {
-  @ffi.Float()
-  external double angleDiffDeg;
-
-  @ffi.Float()
-  external double distanceDiffMm;
-
-}
-// MARK: - RotationRecognizeThresholds <-> _CRotationRecognizeThresholds
-
-extension _CRotationRecognizeThresholdsToDart on _CRotationRecognizeThresholds {
-  RotationRecognizeThresholds _toDart() {
-    return RotationRecognizeThresholds(
-      angleDiffDeg: this.angleDiffDeg,
-      distanceDiffMm: this.distanceDiffMm
-    );
-  }
-}
-
-extension _DartTo_CRotationRecognizeThresholds on RotationRecognizeThresholds {
-  _CRotationRecognizeThresholds _copyFromDartTo_CRotationRecognizeThresholds() {
-    final res = _CRotationRecognizeThresholdsMakeDefault();
-    res.angleDiffDeg = this.angleDiffDeg;
-    res.distanceDiffMm = this.distanceDiffMm;
-    return res;
-  }
-}
-extension _CRotationRecognizeThresholdsRelease on _CRotationRecognizeThresholds {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - RotationRecognizeSettings
-
-/** Настройки распознавания вращения. */
-class RotationRecognizeSettings {
-  /** Пороги перехода к вращению, если масштабирование не активно. */
-  final RotationRecognizeThresholds rotationThreshold;
-  /** Пороги перехода к вращению, если масштабирование активно. */
-  final RotationRecognizeThresholds rotationThresholdInScaling;
-
-  const RotationRecognizeSettings({
-    required this.rotationThreshold,
-    required this.rotationThresholdInScaling
-  });
-
-  RotationRecognizeSettings copyWith({
-    RotationRecognizeThresholds? rotationThreshold,
-    RotationRecognizeThresholds? rotationThresholdInScaling
-  }) {
-    return RotationRecognizeSettings(
-      rotationThreshold: rotationThreshold ?? this.rotationThreshold,
-      rotationThresholdInScaling: rotationThresholdInScaling ?? this.rotationThresholdInScaling
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RotationRecognizeSettings &&
-    other.runtimeType == runtimeType &&
-    other.rotationThreshold == rotationThreshold &&
-    other.rotationThresholdInScaling == rotationThresholdInScaling;
-
-  @override
-  int get hashCode {
-    return Object.hash(rotationThreshold, rotationThresholdInScaling);
-  }
-
-}
-final class _CRotationRecognizeSettings extends ffi.Struct {
-  external _CRotationRecognizeThresholds rotationThreshold;
-
-  external _CRotationRecognizeThresholds rotationThresholdInScaling;
-
-}
-// MARK: - RotationRecognizeSettings <-> _CRotationRecognizeSettings
-
-extension _CRotationRecognizeSettingsToDart on _CRotationRecognizeSettings {
-  RotationRecognizeSettings _toDart() {
-    return RotationRecognizeSettings(
-      rotationThreshold: this.rotationThreshold._toDart(),
-      rotationThresholdInScaling: this.rotationThresholdInScaling._toDart()
-    );
-  }
-}
-
-extension _DartTo_CRotationRecognizeSettings on RotationRecognizeSettings {
-  _CRotationRecognizeSettings _copyFromDartTo_CRotationRecognizeSettings() {
-    final res = _CRotationRecognizeSettingsMakeDefault();
-    res.rotationThreshold = this.rotationThreshold._copyFromDartTo_CRotationRecognizeThresholds();
-    res.rotationThresholdInScaling = this.rotationThresholdInScaling._copyFromDartTo_CRotationRecognizeThresholds();
-    return res;
-  }
-}
-extension _CRotationRecognizeSettingsRelease on _CRotationRecognizeSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - RotationKinematicSettings
-
-class RotationKinematicSettings {
-  /**
-   Включает или отключает кинематику вращения.
-   Если установлено в false, вращение мгновенно останавливается после окончания жеста,
-   все остальные параметры игнорируются.
-  */
-  final bool enabled;
-  /**
-   Коэффициент затухания вращения после окончания жеста.
-   Чем выше значение, тем быстрее замедляется вращение.
-  */
-  final double decelerationCoefficient;
-  /** Максимальная начальная угловая скорость после окончания жеста (в радианах в секунду). */
-  final double maxInitialForwardAngularSpeed;
-  /** Начальная угловая скорость возврата карты в исходное положение (в радианах в секунду). */
-  final double initialBackwardAngularSpeed;
-  /**
-   Порог углового отклонения (в радианах), при превышении которого карта продолжает вращение
-   в направлении жеста. Если меньше — движется в сторону исходного положения.
-  */
-  final double angleThreshold;
-
-  const RotationKinematicSettings({
-    this.enabled = true,
-    this.decelerationCoefficient = 4,
-    this.maxInitialForwardAngularSpeed = 10,
-    this.initialBackwardAngularSpeed = 0.33000001311302185,
-    this.angleThreshold = 0.20000000298023224
-  });
-
-  RotationKinematicSettings copyWith({
-    bool? enabled,
-    double? decelerationCoefficient,
-    double? maxInitialForwardAngularSpeed,
-    double? initialBackwardAngularSpeed,
-    double? angleThreshold
-  }) {
-    return RotationKinematicSettings(
-      enabled: enabled ?? this.enabled,
-      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
-      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
-      initialBackwardAngularSpeed: initialBackwardAngularSpeed ?? this.initialBackwardAngularSpeed,
-      angleThreshold: angleThreshold ?? this.angleThreshold
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RotationKinematicSettings &&
-    other.runtimeType == runtimeType &&
-    other.enabled == enabled &&
-    other.decelerationCoefficient == decelerationCoefficient &&
-    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
-    other.initialBackwardAngularSpeed == initialBackwardAngularSpeed &&
-    other.angleThreshold == angleThreshold;
-
-  @override
-  int get hashCode {
-    return Object.hash(enabled, decelerationCoefficient, maxInitialForwardAngularSpeed, initialBackwardAngularSpeed, angleThreshold);
-  }
-
-}
-final class _CRotationKinematicSettings extends ffi.Struct {
-  @ffi.Bool()
-  external bool enabled;
-
-  @ffi.Float()
-  external double decelerationCoefficient;
-
-  @ffi.Float()
-  external double maxInitialForwardAngularSpeed;
-
-  @ffi.Float()
-  external double initialBackwardAngularSpeed;
-
-  @ffi.Float()
-  external double angleThreshold;
-
-}
-// MARK: - RotationKinematicSettings <-> _CRotationKinematicSettings
-
-extension _CRotationKinematicSettingsToDart on _CRotationKinematicSettings {
-  RotationKinematicSettings _toDart() {
-    return RotationKinematicSettings(
-      enabled: this.enabled,
-      decelerationCoefficient: this.decelerationCoefficient,
-      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
-      initialBackwardAngularSpeed: this.initialBackwardAngularSpeed,
-      angleThreshold: this.angleThreshold
-    );
-  }
-}
-
-extension _DartTo_CRotationKinematicSettings on RotationKinematicSettings {
-  _CRotationKinematicSettings _copyFromDartTo_CRotationKinematicSettings() {
-    final res = _CRotationKinematicSettingsMakeDefault();
-    res.enabled = this.enabled;
-    res.decelerationCoefficient = this.decelerationCoefficient;
-    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
-    res.initialBackwardAngularSpeed = this.initialBackwardAngularSpeed;
-    res.angleThreshold = this.angleThreshold;
-    return res;
-  }
-}
-extension _CRotationKinematicSettingsRelease on _CRotationKinematicSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - RotationGestureSettings
-
-/** Настройки жеста вращения. */
-class RotationGestureSettings implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Настройки распознавания вращения. */
-  RotationRecognizeSettings get recognizeSettings {
-    _CRotationRecognizeSettings res = _CRotationGestureSettings_recognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set recognizeSettings(RotationRecognizeSettings settings) {
-    var _a1 = settings._copyFromDartTo_CRotationRecognizeSettings();
-    void res = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  /** Точка, относительно которой производится вращение карты. */
-  GestureActionPoint get rotationCenter {
-    _CGestureActionPoint res = _CRotationGestureSettings_rotationCenter(_CRotationGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set rotationCenter(GestureActionPoint actionPoint) {
-    var _a1 = actionPoint._copyFromDartTo_CGestureActionPoint();
-    void res = _CRotationGestureSettings_setRotationCenter_CGestureActionPoint(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  /** Настройки кинематики вращения. */
-  RotationKinematicSettings get kinematicSettings {
-    _CRotationKinematicSettings res = _CRotationGestureSettings_kinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set kinematicSettings(RotationKinematicSettings settings) {
-    var _a1 = settings._copyFromDartTo_CRotationKinematicSettings();
-    void res = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings(_CRotationGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CRotationGestureSettings_releasePtr);
-
-  RotationGestureSettings._raw(this._self);
-  factory RotationGestureSettings._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = RotationGestureSettings._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is RotationGestureSettings &&
-    other.runtimeType == runtimeType &&
-    _CRotationGestureSettings_cg_objectIdentifier(this._self) == _CRotationGestureSettings_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CRotationGestureSettings_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - RotationGestureSettings <-> CRotationGestureSettings
-
-final class _CRotationGestureSettings extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CRotationGestureSettingsBasicFunctions on _CRotationGestureSettings {
-  void _releaseIntermediate() {
-    _CRotationGestureSettings_release(_impl);
-  }
-
-  _CRotationGestureSettings _retain() {
-    return _CRotationGestureSettings_retain(_impl);
-  }
-}
-
-extension _CRotationGestureSettingsToDart on _CRotationGestureSettings {
-  RotationGestureSettings _toDart() {
-    return RotationGestureSettings._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCRotationGestureSettings on RotationGestureSettings {
-  _CRotationGestureSettings _copyFromDartTo_CRotationGestureSettings() {
-    return (_CRotationGestureSettingsMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - MultiTouchRecognizeSettings
-
-/** Настройки распознавания касания несколькими пальцами. */
-class MultiTouchRecognizeSettings {
-  /**
-   Порог сдвига взвешенного среднего точек, в миллиметрах, преодоление которого
-   говорит о начале сдвига несколькими пальцами.
-  */
-  final double multitouchShiftThresholdMm;
-
-  const MultiTouchRecognizeSettings([this.multitouchShiftThresholdMm = 7]);
-
-  MultiTouchRecognizeSettings copyWith({
-    double? multitouchShiftThresholdMm
-  }) {
-    return MultiTouchRecognizeSettings(
-      multitouchShiftThresholdMm ?? this.multitouchShiftThresholdMm
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is MultiTouchRecognizeSettings &&
-    other.runtimeType == runtimeType &&
-    other.multitouchShiftThresholdMm == multitouchShiftThresholdMm;
-
-  @override
-  int get hashCode {
-    return multitouchShiftThresholdMm.hashCode;
-  }
-
-}
-final class _CMultiTouchRecognizeSettings extends ffi.Struct {
-  @ffi.Float()
-  external double multitouchShiftThresholdMm;
-
-}
-// MARK: - MultiTouchRecognizeSettings <-> _CMultiTouchRecognizeSettings
-
-extension _CMultiTouchRecognizeSettingsToDart on _CMultiTouchRecognizeSettings {
-  MultiTouchRecognizeSettings _toDart() {
-    return MultiTouchRecognizeSettings(
-      this.multitouchShiftThresholdMm
-    );
-  }
-}
-
-extension _DartTo_CMultiTouchRecognizeSettings on MultiTouchRecognizeSettings {
-  _CMultiTouchRecognizeSettings _copyFromDartTo_CMultiTouchRecognizeSettings() {
-    final res = _CMultiTouchRecognizeSettingsMakeDefault();
-    res.multitouchShiftThresholdMm = this.multitouchShiftThresholdMm;
-    return res;
-  }
-}
-extension _CMultiTouchRecognizeSettingsRelease on _CMultiTouchRecognizeSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - MultiTouchGestureSettings
-
-/** Настройки жеста касания несколькими пальцами. */
-class MultiTouchGestureSettings implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Настройки распознавания касания несколькими пальцами. */
-  MultiTouchRecognizeSettings get recognizeSettings {
-    _CMultiTouchRecognizeSettings res = _CMultiTouchGestureSettings_recognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set recognizeSettings(MultiTouchRecognizeSettings settings) {
-    var _a1 = settings._copyFromDartTo_CMultiTouchRecognizeSettings();
-    void res = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings(_CMultiTouchGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CMultiTouchGestureSettings_releasePtr);
-
-  MultiTouchGestureSettings._raw(this._self);
-  factory MultiTouchGestureSettings._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = MultiTouchGestureSettings._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is MultiTouchGestureSettings &&
-    other.runtimeType == runtimeType &&
-    _CMultiTouchGestureSettings_cg_objectIdentifier(this._self) == _CMultiTouchGestureSettings_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CMultiTouchGestureSettings_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - MultiTouchGestureSettings <-> CMultiTouchGestureSettings
-
-final class _CMultiTouchGestureSettings extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CMultiTouchGestureSettingsBasicFunctions on _CMultiTouchGestureSettings {
-  void _releaseIntermediate() {
-    _CMultiTouchGestureSettings_release(_impl);
-  }
-
-  _CMultiTouchGestureSettings _retain() {
-    return _CMultiTouchGestureSettings_retain(_impl);
-  }
-}
-
-extension _CMultiTouchGestureSettingsToDart on _CMultiTouchGestureSettings {
-  MultiTouchGestureSettings _toDart() {
-    return MultiTouchGestureSettings._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCMultiTouchGestureSettings on MultiTouchGestureSettings {
-  _CMultiTouchGestureSettings _copyFromDartTo_CMultiTouchGestureSettings() {
-    return (_CMultiTouchGestureSettingsMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - TiltRecognizeSettings
-
-/** Настройки распознавания наклона. */
-class TiltRecognizeSettings {
-  /**
-   Расстояние, в миллиметрах, на которое нужно сдвинуть пальцы по экрану,
-   чтобы изменить угол наклона камеры на 1 градус.
-   Отрицательное значение приведет к инверсии направления, значение 0 недопустимо.
-  */
-  final double lenOnDegreeMm;
-  /**
-   Максимально допустимый угол, в градусах, отклонения линии постановки пальцев
-   от горизонта для вертикального свайпа.
-  */
-  final double horizontalSwerveDeg;
-  /** Максимально допустимый угол, в градусах, отклонения направления свайпа от вертикальной линии. */
-  final double verticalSwerveDeg;
-  /** Порог сдвига взвешенного среднего точек в миллиметрах, преодоление которого говорит о начале наклона. */
-  final double thresholdMm;
-  /**
-   Максимально допустимый угол между векторами, в градусах, преодоление которого
-   говорит о нарушении сонаправленности.
-  */
-  final double maxParallelsDeviationDeg;
-
-  const TiltRecognizeSettings({
-    this.lenOnDegreeMm = 1,
-    this.horizontalSwerveDeg = 20,
-    this.verticalSwerveDeg = 10,
-    this.thresholdMm = 1.100000023841858,
-    this.maxParallelsDeviationDeg = 16
-  });
-
-  TiltRecognizeSettings copyWith({
-    double? lenOnDegreeMm,
-    double? horizontalSwerveDeg,
-    double? verticalSwerveDeg,
-    double? thresholdMm,
-    double? maxParallelsDeviationDeg
-  }) {
-    return TiltRecognizeSettings(
-      lenOnDegreeMm: lenOnDegreeMm ?? this.lenOnDegreeMm,
-      horizontalSwerveDeg: horizontalSwerveDeg ?? this.horizontalSwerveDeg,
-      verticalSwerveDeg: verticalSwerveDeg ?? this.verticalSwerveDeg,
-      thresholdMm: thresholdMm ?? this.thresholdMm,
-      maxParallelsDeviationDeg: maxParallelsDeviationDeg ?? this.maxParallelsDeviationDeg
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TiltRecognizeSettings &&
-    other.runtimeType == runtimeType &&
-    other.lenOnDegreeMm == lenOnDegreeMm &&
-    other.horizontalSwerveDeg == horizontalSwerveDeg &&
-    other.verticalSwerveDeg == verticalSwerveDeg &&
-    other.thresholdMm == thresholdMm &&
-    other.maxParallelsDeviationDeg == maxParallelsDeviationDeg;
-
-  @override
-  int get hashCode {
-    return Object.hash(lenOnDegreeMm, horizontalSwerveDeg, verticalSwerveDeg, thresholdMm, maxParallelsDeviationDeg);
-  }
-
-}
-final class _CTiltRecognizeSettings extends ffi.Struct {
-  @ffi.Float()
-  external double lenOnDegreeMm;
-
-  @ffi.Float()
-  external double horizontalSwerveDeg;
-
-  @ffi.Float()
-  external double verticalSwerveDeg;
-
-  @ffi.Float()
-  external double thresholdMm;
-
-  @ffi.Float()
-  external double maxParallelsDeviationDeg;
-
-}
-// MARK: - TiltRecognizeSettings <-> _CTiltRecognizeSettings
-
-extension _CTiltRecognizeSettingsToDart on _CTiltRecognizeSettings {
-  TiltRecognizeSettings _toDart() {
-    return TiltRecognizeSettings(
-      lenOnDegreeMm: this.lenOnDegreeMm,
-      horizontalSwerveDeg: this.horizontalSwerveDeg,
-      verticalSwerveDeg: this.verticalSwerveDeg,
-      thresholdMm: this.thresholdMm,
-      maxParallelsDeviationDeg: this.maxParallelsDeviationDeg
-    );
-  }
-}
-
-extension _DartTo_CTiltRecognizeSettings on TiltRecognizeSettings {
-  _CTiltRecognizeSettings _copyFromDartTo_CTiltRecognizeSettings() {
-    final res = _CTiltRecognizeSettingsMakeDefault();
-    res.lenOnDegreeMm = this.lenOnDegreeMm;
-    res.horizontalSwerveDeg = this.horizontalSwerveDeg;
-    res.verticalSwerveDeg = this.verticalSwerveDeg;
-    res.thresholdMm = this.thresholdMm;
-    res.maxParallelsDeviationDeg = this.maxParallelsDeviationDeg;
-    return res;
-  }
-}
-extension _CTiltRecognizeSettingsRelease on _CTiltRecognizeSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - TiltKinematicSettings
-
-class TiltKinematicSettings {
-  /**
-   Включает или отключает кинематику наклона.
-   Если установлено в false, наклон мгновенно останавливается после окончания жеста,
-   все остальные параметры игнорируются.
-  */
-  final bool enabled;
-  /**
-   Коэффициент затухания наклона после окончания жеста.
-   Чем выше значение, тем быстрее замедляется наклон.
-  */
-  final double decelerationCoefficient;
-  /** Множитель начальной скорости наклона. */
-  final double initialForwardSpeedMultiplier;
-  /**
-   Максимальная начальная угловая скорость наклона после окончания жеста (в радианах в секунду).
-   При вычисоении скорости сначала производится умножение на initial_forward_speed_multiplier, а затем применяется
-   ограничение.
-  */
-  final double maxInitialForwardAngularSpeed;
-  final Tilt minTiltAdditionalBorder;
-  final Tilt maxTiltAdditionalBorder;
-  /**
-   Порог углового отклонения (в радианах), при превышении которого карта продолжает наклоняться
-   в направлении жеста. Если меньше — движется в сторону исходного положения.
-  */
-  final double tiltThreshold;
-
-  const TiltKinematicSettings({
-    this.enabled = true,
-    this.decelerationCoefficient = 7,
-    this.initialForwardSpeedMultiplier = 0.699999988079071,
-    this.maxInitialForwardAngularSpeed = 3,
-    this.minTiltAdditionalBorder = const Tilt(10),
-    this.maxTiltAdditionalBorder = const Tilt(10),
-    this.tiltThreshold = 0.08500000089406967
-  });
-
-  TiltKinematicSettings copyWith({
-    bool? enabled,
-    double? decelerationCoefficient,
-    double? initialForwardSpeedMultiplier,
-    double? maxInitialForwardAngularSpeed,
-    Tilt? minTiltAdditionalBorder,
-    Tilt? maxTiltAdditionalBorder,
-    double? tiltThreshold
-  }) {
-    return TiltKinematicSettings(
-      enabled: enabled ?? this.enabled,
-      decelerationCoefficient: decelerationCoefficient ?? this.decelerationCoefficient,
-      initialForwardSpeedMultiplier: initialForwardSpeedMultiplier ?? this.initialForwardSpeedMultiplier,
-      maxInitialForwardAngularSpeed: maxInitialForwardAngularSpeed ?? this.maxInitialForwardAngularSpeed,
-      minTiltAdditionalBorder: minTiltAdditionalBorder ?? this.minTiltAdditionalBorder,
-      maxTiltAdditionalBorder: maxTiltAdditionalBorder ?? this.maxTiltAdditionalBorder,
-      tiltThreshold: tiltThreshold ?? this.tiltThreshold
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TiltKinematicSettings &&
-    other.runtimeType == runtimeType &&
-    other.enabled == enabled &&
-    other.decelerationCoefficient == decelerationCoefficient &&
-    other.initialForwardSpeedMultiplier == initialForwardSpeedMultiplier &&
-    other.maxInitialForwardAngularSpeed == maxInitialForwardAngularSpeed &&
-    other.minTiltAdditionalBorder == minTiltAdditionalBorder &&
-    other.maxTiltAdditionalBorder == maxTiltAdditionalBorder &&
-    other.tiltThreshold == tiltThreshold;
-
-  @override
-  int get hashCode {
-    return Object.hash(enabled, decelerationCoefficient, initialForwardSpeedMultiplier, maxInitialForwardAngularSpeed, minTiltAdditionalBorder, maxTiltAdditionalBorder, tiltThreshold);
-  }
-
-}
-final class _CTiltKinematicSettings extends ffi.Struct {
-  @ffi.Bool()
-  external bool enabled;
-
-  @ffi.Float()
-  external double decelerationCoefficient;
-
-  @ffi.Float()
-  external double initialForwardSpeedMultiplier;
-
-  @ffi.Float()
-  external double maxInitialForwardAngularSpeed;
-
-  external _CTilt minTiltAdditionalBorder;
-
-  external _CTilt maxTiltAdditionalBorder;
-
-  @ffi.Float()
-  external double tiltThreshold;
-
-}
-// MARK: - TiltKinematicSettings <-> _CTiltKinematicSettings
-
-extension _CTiltKinematicSettingsToDart on _CTiltKinematicSettings {
-  TiltKinematicSettings _toDart() {
-    return TiltKinematicSettings(
-      enabled: this.enabled,
-      decelerationCoefficient: this.decelerationCoefficient,
-      initialForwardSpeedMultiplier: this.initialForwardSpeedMultiplier,
-      maxInitialForwardAngularSpeed: this.maxInitialForwardAngularSpeed,
-      minTiltAdditionalBorder: this.minTiltAdditionalBorder._toDart(),
-      maxTiltAdditionalBorder: this.maxTiltAdditionalBorder._toDart(),
-      tiltThreshold: this.tiltThreshold
-    );
-  }
-}
-
-extension _DartTo_CTiltKinematicSettings on TiltKinematicSettings {
-  _CTiltKinematicSettings _copyFromDartTo_CTiltKinematicSettings() {
-    final res = _CTiltKinematicSettingsMakeDefault();
-    res.enabled = this.enabled;
-    res.decelerationCoefficient = this.decelerationCoefficient;
-    res.initialForwardSpeedMultiplier = this.initialForwardSpeedMultiplier;
-    res.maxInitialForwardAngularSpeed = this.maxInitialForwardAngularSpeed;
-    res.minTiltAdditionalBorder = this.minTiltAdditionalBorder._copyFromDartTo_CTilt();
-    res.maxTiltAdditionalBorder = this.maxTiltAdditionalBorder._copyFromDartTo_CTilt();
-    res.tiltThreshold = this.tiltThreshold;
-    return res;
-  }
-}
-extension _CTiltKinematicSettingsRelease on _CTiltKinematicSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - TiltGestureSettings
-
-/** Настройки жеста наклона. */
-class TiltGestureSettings implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Настройки распознавания наклона. */
-  TiltRecognizeSettings get recognizeSettings {
-    _CTiltRecognizeSettings res = _CTiltGestureSettings_recognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set recognizeSettings(TiltRecognizeSettings settings) {
-    var _a1 = settings._copyFromDartTo_CTiltRecognizeSettings();
-    void res = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  /** Настройки кинематики наклона. */
-  TiltKinematicSettings get kinematicSettings {
-    _CTiltKinematicSettings res = _CTiltGestureSettings_kinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set kinematicSettings(TiltKinematicSettings settings) {
-    var _a1 = settings._copyFromDartTo_CTiltKinematicSettings();
-    void res = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings(_CTiltGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CTiltGestureSettings_releasePtr);
-
-  TiltGestureSettings._raw(this._self);
-  factory TiltGestureSettings._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = TiltGestureSettings._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TiltGestureSettings &&
-    other.runtimeType == runtimeType &&
-    _CTiltGestureSettings_cg_objectIdentifier(this._self) == _CTiltGestureSettings_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CTiltGestureSettings_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - TiltGestureSettings <-> CTiltGestureSettings
-
-final class _CTiltGestureSettings extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CTiltGestureSettingsBasicFunctions on _CTiltGestureSettings {
-  void _releaseIntermediate() {
-    _CTiltGestureSettings_release(_impl);
-  }
-
-  _CTiltGestureSettings _retain() {
-    return _CTiltGestureSettings_retain(_impl);
-  }
-}
-
-extension _CTiltGestureSettingsToDart on _CTiltGestureSettings {
-  TiltGestureSettings _toDart() {
-    return TiltGestureSettings._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCTiltGestureSettings on TiltGestureSettings {
-  _CTiltGestureSettings _copyFromDartTo_CTiltGestureSettings() {
-    return (_CTiltGestureSettingsMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - CommonRecognizeSettings
-
-/** Общие настройки распознавания жестов. */
-class CommonRecognizeSettings {
-  /**
-   Таймаут между распознаваемыми жестами.
-   Используется для предотвращения ложных срабатываний в конце жеста.
-  */
-  final Duration interGestureTimeout;
-
-  const CommonRecognizeSettings([this.interGestureTimeout = const Duration(milliseconds: 50)]);
-
-  CommonRecognizeSettings copyWith({
-    Duration? interGestureTimeout
-  }) {
-    return CommonRecognizeSettings(
-      interGestureTimeout ?? this.interGestureTimeout
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is CommonRecognizeSettings &&
-    other.runtimeType == runtimeType &&
-    other.interGestureTimeout == interGestureTimeout;
-
-  @override
-  int get hashCode {
-    return interGestureTimeout.hashCode;
-  }
-
-}
-final class _CCommonRecognizeSettings extends ffi.Struct {
-  external _CTimeInterval interGestureTimeout;
-
-}
-// MARK: - CommonRecognizeSettings <-> _CCommonRecognizeSettings
-
-extension _CCommonRecognizeSettingsToDart on _CCommonRecognizeSettings {
-  CommonRecognizeSettings _toDart() {
-    return CommonRecognizeSettings(
-      this.interGestureTimeout._toDart()
-    );
-  }
-}
-
-extension _DartTo_CCommonRecognizeSettings on CommonRecognizeSettings {
-  _CCommonRecognizeSettings _copyFromDartTo_CCommonRecognizeSettings() {
-    final res = _CCommonRecognizeSettingsMakeDefault();
-    res.interGestureTimeout = this.interGestureTimeout._copyFromDartTo_CTimeInterval();
-    return res;
-  }
-}
-extension _CCommonRecognizeSettingsRelease on _CCommonRecognizeSettings {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - CommonGestureSettings
-
-class CommonGestureSettings implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /** Общие настройки распознования жестов. */
-  CommonRecognizeSettings get recognizeSettings {
-    _CCommonRecognizeSettings res = _CCommonGestureSettings_recognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set recognizeSettings(CommonRecognizeSettings settings) {
-    var _a1 = settings._copyFromDartTo_CCommonRecognizeSettings();
-    void res = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings(_CCommonGestureSettingsMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CCommonGestureSettings_releasePtr);
-
-  CommonGestureSettings._raw(this._self);
-  factory CommonGestureSettings._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = CommonGestureSettings._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is CommonGestureSettings &&
-    other.runtimeType == runtimeType &&
-    _CCommonGestureSettings_cg_objectIdentifier(this._self) == _CCommonGestureSettings_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CCommonGestureSettings_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-}
-
-// MARK: - CommonGestureSettings <-> CCommonGestureSettings
-
-final class _CCommonGestureSettings extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CCommonGestureSettingsBasicFunctions on _CCommonGestureSettings {
-  void _releaseIntermediate() {
-    _CCommonGestureSettings_release(_impl);
-  }
-
-  _CCommonGestureSettings _retain() {
-    return _CCommonGestureSettings_retain(_impl);
-  }
-}
-
-extension _CCommonGestureSettingsToDart on _CCommonGestureSettings {
-  CommonGestureSettings _toDart() {
-    return CommonGestureSettings._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCCommonGestureSettings on CommonGestureSettings {
-  _CCommonGestureSettings _copyFromDartTo_CCommonGestureSettings() {
-    return (_CCommonGestureSettingsMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - GestureManager
-
-/** Класс для управления обработкой жестов. */
-class GestureManager implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  EnumSet<TransformGesture> get enabledGestures {
-    _COptionSet_CTransformGesture res = _CGestureManager_enabledGestures(_CGestureManagerMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  set enabledGestures(EnumSet<TransformGesture> flags) {
-    var _a1 = flags._copyFromDartTo_COptionSet_CTransformGesture();
-    void res = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-  ScalingGestureSettings get scalingSettings {
-    _CScalingGestureSettings res = _CGestureManager_scalingSettings(_CGestureManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  RotationGestureSettings get rotationSettings {
-    _CRotationGestureSettings res = _CGestureManager_rotationSettings(_CGestureManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  MultiTouchGestureSettings get multitouchShiftSettings {
-    _CMultiTouchGestureSettings res = _CGestureManager_multitouchShiftSettings(_CGestureManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  TiltGestureSettings get tiltSettings {
-    _CTiltGestureSettings res = _CGestureManager_tiltSettings(_CGestureManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  CommonGestureSettings get commonSettings {
-    _CCommonGestureSettings res = _CGestureManager_commonSettings(_CGestureManagerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CGestureManager_releasePtr);
-
-  GestureManager._raw(this._self);
-  factory GestureManager._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = GestureManager._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is GestureManager &&
-    other.runtimeType == runtimeType &&
-    _CGestureManager_cg_objectIdentifier(this._self) == _CGestureManager_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CGestureManager_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: GestureManager: Methods
-
-  void enableGesture(
-    TransformGesture gesture
-  )  {
-    var _a1 = gesture._copyFromDartTo_CTransformGesture();
-    void res = _CGestureManager_enableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  void disableGesture(
-    TransformGesture gesture
-  )  {
-    var _a1 = gesture._copyFromDartTo_CTransformGesture();
-    void res = _CGestureManager_disableGesture_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  bool gestureEnabled(
-    TransformGesture gesture
-  )  {
-    var _a1 = gesture._copyFromDartTo_CTransformGesture();
-    bool res = _CGestureManager_gestureEnabled_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  /**
-   Установка списка правил исключения одновременного срабатывания нескольких жестов.
-  
-   - Note: К переданному списку правил добавляются правила по умолчанию, которые не позволяют жесту управления наклоном
-   срабатывать одновременно с другими жестами.
-   Каждое правило представляет собой перечень жестов, которые не могут срабатывать одновременно
-   Например, если в правиле указать жесты Scaling и Rotation то эти жесты не будут работать одновременно
-   В случае одновременного выполнения жестов из правила, сработает жест с большим приоритетом
-   Порядок приоритета жестов (по убыванию): (Shift ->) Tilt -> Scaling -> Rotation -> MultiTouchShift
-  */
-  void setMutuallyExclusiveGestures(
-    List<EnumSet<TransformGesture>> rules
-  )  {
-    var _a1 = rules._copyFromDartTo_CArray_COptionSet_CTransformGesture();
-    void res = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture(_CGestureManagerMakeDefault().._impl=_self, _a1);
-    _a1._releaseIntermediate();
-    return res;
-  }
-
-}
-
-// MARK: - GestureManager <-> CGestureManager
-
-final class _CGestureManager extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CGestureManagerBasicFunctions on _CGestureManager {
-  void _releaseIntermediate() {
-    _CGestureManager_release(_impl);
-  }
-
-  _CGestureManager _retain() {
-    return _CGestureManager_retain(_impl);
-  }
-}
-
-extension _CGestureManagerToDart on _CGestureManager {
-  GestureManager _toDart() {
-    return GestureManager._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCGestureManager on GestureManager {
-  _CGestureManager _copyFromDartTo_CGestureManager() {
-    return (_CGestureManagerMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - EnumSet<TransformGesture>
-
-class TransformGestureEnumSet extends EnumSet<TransformGesture> {
-  const TransformGestureEnumSet([int rawValue = 0]) : super(rawValue);
-
-  factory TransformGestureEnumSet.fromRawValue(int rawValue) {
-    return TransformGestureEnumSet(rawValue);
-  }
-
-  factory TransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
-    final rawValue = elements.fold(0, (acc, value) => acc | value.rawValue);
-    return TransformGestureEnumSet(rawValue);
-  }
-
-  factory TransformGestureEnumSet.all() {
-    final rawValue = TransformGesture.values.fold(0, (acc, type) => acc | type.rawValue);
-    return TransformGestureEnumSet(rawValue);
-  }
-
-  @override
-  bool contains(TransformGesture value) =>
-      (this.rawValue & value.rawValue) == value.rawValue;
-
-  @override
-  bool containsAllFromEnumSet(EnumSet<TransformGesture> other) =>
-      (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  EnumSet<TransformGesture> intersection(EnumSet<TransformGesture> other) =>
-      TransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
-
-  @override
-  EnumSet<TransformGesture> union(EnumSet<TransformGesture> other) =>
-      TransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
-
-  @override
-  EnumSet<TransformGesture> difference(EnumSet<TransformGesture> other) =>
-      TransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
-
-  @override
-  MutableEnumSet<TransformGesture> toMutableEnumSet() =>
-      MutableTransformGestureEnumSet.fromRawValue(this.rawValue);
-
-  @override
-  Set<TransformGesture> toSet() {
-    Set<TransformGesture> result = {};
-    TransformGesture.values.forEach((element) {
-      if (this.contains(element)) {
-        result.add(element);
-      }
-    });
-    return result;
-  }
-
-  @override
-  String toString() {
-    List<String> validOptionNames = [];
-    TransformGesture.values.forEach((element) {
-      if (this.contains(element)) {
-        validOptionNames.add(element.name);
-      }
-    });
-
-    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
-  }
-}
-
-class MutableTransformGestureEnumSet extends MutableEnumSet<TransformGesture> {
-  MutableTransformGestureEnumSet() : super();
-
-  factory MutableTransformGestureEnumSet.fromRawValue(int rawValue) {
-    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
-    enumSet.rawValue = rawValue;
-    return enumSet;
-  }
-
-  factory MutableTransformGestureEnumSet.of(Iterable<TransformGesture> elements) {
-    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
-    enumSet.addAll(elements);
-    return enumSet;
-  }
-
-  factory MutableTransformGestureEnumSet.all() {
-    MutableTransformGestureEnumSet enumSet = MutableTransformGestureEnumSet();
-    enumSet.addAll(TransformGesture.values);
-    return enumSet;
-  }
-
-  @override
-  bool contains(TransformGesture value) =>
-      (this.rawValue & value.rawValue) == value.rawValue;
-
-  @override
-  bool containsAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
-      (this.rawValue & other.rawValue) == this.rawValue;
-
-  @override
-  MutableEnumSet<TransformGesture> intersection(MutableEnumSet<TransformGesture> other) =>
-      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & other.rawValue);
-
-  @override
-  MutableEnumSet<TransformGesture> union(MutableEnumSet<TransformGesture> other) =>
-      MutableTransformGestureEnumSet.fromRawValue(this.rawValue | other.rawValue);
-
-  @override
-  MutableEnumSet<TransformGesture> difference(MutableEnumSet<TransformGesture> other) =>
-      MutableTransformGestureEnumSet.fromRawValue(this.rawValue & ~other.rawValue);
-
-  @override
-  EnumSet<TransformGesture> toEnumSet() =>
-      TransformGestureEnumSet.fromRawValue(this.rawValue);
-
-  @override
-  Set<TransformGesture> toSet() {
-    Set<TransformGesture> result = {};
-    TransformGesture.values.forEach((element) {
-      if (this.contains(element)) {
-        result.add(element);
-      }
-    });
-    return result;
-  }
-
-  @override
-  bool add(TransformGesture value) {
-    if (this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue | value.rawValue;
-    return true;
-  }
-
-  @override
-  void addAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
-      this.rawValue = this.rawValue | other.rawValue;
-
-  @override
-  bool remove(TransformGesture value) {
-    if (!this.contains(value)) {
-      return false;
-    }
-    this.rawValue = this.rawValue & ~value.rawValue;
-    return true;
-  }
-
-  @override
-  void removeAllFromEnumSet(MutableEnumSet<TransformGesture> other) =>
-      this.rawValue = this.rawValue & ~other.rawValue;
-
-
-  @override
-  String toString() {
-    List<String> validOptionNames = [];
-    TransformGesture.values.forEach((element) {
-      if (this.contains(element)) {
-        validOptionNames.add(element.name);
-      }
-    });
-
-    return "${this.runtimeType}: ${validOptionNames.join(', ')}";
-  }
-}
-
-final class _COptionSet_CTransformGesture extends ffi.Struct {
-  @ffi.Uint32()
-  external int _rawValue;
-}
-
-extension _COptionSet_CTransformGestureBasicFunctions on _COptionSet_CTransformGesture {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _COptionSet_CTransformGestureToDart on _COptionSet_CTransformGesture {
-  EnumSet<TransformGesture> _toDart() {
-    return TransformGestureEnumSet.fromRawValue(this._rawValue);
-  }
-}
-
-extension _DartTo_COptionSet_CTransformGesture on EnumSet<TransformGesture> {
-  _COptionSet_CTransformGesture _copyFromDartTo_COptionSet_CTransformGesture() {
-    return _COptionSet_CTransformGestureMakeDefault().._rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - List<EnumSet<TransformGesture>> <-> _CArray_COptionSet_CTransformGesture
-
-final class _CArray_COptionSet_CTransformGesture extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_COptionSet_CTransformGestureToDart on _CArray_COptionSet_CTransformGesture {
-  List<EnumSet<TransformGesture>> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_COptionSet_CTransformGesture on List<EnumSet<TransformGesture>> {
-  _CArray_COptionSet_CTransformGesture _copyFromDartTo_CArray_COptionSet_CTransformGesture() {
-    final cArray = _CArray_COptionSet_CTransformGesturemakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_COptionSet_CTransformGesture();
-        _CArray_COptionSet_CTransformGestureaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_COptionSet_CTransformGestureBasicFunctions on _CArray_COptionSet_CTransformGesture {
-  void _releaseIntermediate() {
-    _CArray_COptionSet_CTransformGesture_release(this);
-  }
-
-  static final _listToFill = <EnumSet<TransformGesture>>[];
-
-  static void _iterate(_COptionSet_CTransformGesture item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<EnumSet<TransformGesture>> _fillFromC() {
-    _forEach_CArray_COptionSet_CTransformGesture(this, ffi.Pointer.fromFunction<ffi.Void Function(_COptionSet_CTransformGesture)>(_iterate));
-    final result = List<EnumSet<TransformGesture>>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - TouchPointState
-
-/** Тип состояния точки прикосновения. */
-enum TouchPointState {
-  /** Точка нажата. */
-  pressed(1),
-  /** Точка нажата. */
-  released(2),
-  /** Точка переместилась или осталась на месте. */
-  moved(4),
-  ;
-
-  const TouchPointState(this.rawValue);
-  final int rawValue;
-
-  static TouchPointState getByValue(int value) {
-    return TouchPointState.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CTouchPointState extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CTouchPointStateBasicFunctions on _CTouchPointState {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CTouchPointStateToDart on _CTouchPointState {
-  TouchPointState _toDart() {
-    return TouchPointState.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CTouchPointState on TouchPointState {
-  _CTouchPointState _copyFromDartTo_CTouchPointState() {
-    return _CTouchPointStateMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
-// MARK: - MapGestureRecognizer
-
-/**
- Принимает информацию о нажатиях и преобразует их в жесты карты.
- Обработка происходит в два этапа:
- * Добавляется несколько точек - add_touch_point
- * Точки обрабатываются - process_touch_event
-*/
-@internal
-class MapGestureRecognizer implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  Channel<DragBeginData> get dragBegin {
-    _CChannel_CDragBeginData res = _CMapGestureRecognizer_dragBegin(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  Channel<bool> get dragEnd {
-    _CChannel_bool res = _CMapGestureRecognizer_dragEnd(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  Channel<ScreenPoint> get dragMove {
-    _CChannel_CScreenPoint res = _CMapGestureRecognizer_dragMove(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  Channel<ScreenPoint> get tap {
-    _CChannel_CScreenPoint res = _CMapGestureRecognizer_tap(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  Channel<ScreenPoint> get longTouch {
-    _CChannel_CScreenPoint res = _CMapGestureRecognizer_longTouch(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  GestureManager? get gestureManager {
-    _COptional_CGestureManager res = _CMapGestureRecognizer_gestureManager(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CMapGestureRecognizer_releasePtr);
-
-  MapGestureRecognizer._raw(this._self);
-  factory MapGestureRecognizer._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = MapGestureRecognizer._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is MapGestureRecognizer &&
-    other.runtimeType == runtimeType &&
-    _CMapGestureRecognizer_cg_objectIdentifier(this._self) == _CMapGestureRecognizer_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CMapGestureRecognizer_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: CMapGestureRecognizer: Static Methods
-
-  static MapGestureRecognizer create(
-    Map map
-  )  {
-    var _a0 = map._copyFromDartTo_CMap();
-    _CMapGestureRecognizer res = _CMapGestureRecognizer_S_create_CMap(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  // MARK: MapGestureRecognizer: Methods
-
-  void addTouchPoint(
-    ScreenPoint point,
-    TouchPointState state,
-    int id
-  )  {
-    var _a1 = point._copyFromDartTo_CScreenPoint();
-    var _a2 = state._copyFromDartTo_CTouchPointState();
-    void res = _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1, _a2, id);
-    return res;
-  }
-
-  bool processTouchEvent(
-    Duration timestamp
-  )  {
-    var _a1 = timestamp._copyFromDartTo_CTimeInterval();
-    bool res = _CMapGestureRecognizer_processTouchEvent_CTimeInterval(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-  void cancel()  {
-    void res = _CMapGestureRecognizer_cancel(_CMapGestureRecognizerMakeDefault().._impl=_self);
-    return res;
-  }
-
-  void onDevicePpiChanged(
-    DevicePpi devicePpi
-  )  {
-    var _a1 = devicePpi._copyFromDartTo_CDevicePpi();
-    void res = _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi(_CMapGestureRecognizerMakeDefault().._impl=_self, _a1);
-    return res;
-  }
-
-}
-
-// MARK: - MapGestureRecognizer <-> CMapGestureRecognizer
-
-final class _CMapGestureRecognizer extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CMapGestureRecognizerBasicFunctions on _CMapGestureRecognizer {
-  void _releaseIntermediate() {
-    _CMapGestureRecognizer_release(_impl);
-  }
-
-  _CMapGestureRecognizer _retain() {
-    return _CMapGestureRecognizer_retain(_impl);
-  }
-}
-
-extension _CMapGestureRecognizerToDart on _CMapGestureRecognizer {
-  MapGestureRecognizer _toDart() {
-    return MapGestureRecognizer._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCMapGestureRecognizer on MapGestureRecognizer {
-  _CMapGestureRecognizer _copyFromDartTo_CMapGestureRecognizer() {
-    return (_CMapGestureRecognizerMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - Channel<DragBeginData> <-> _CChannel_CDragBeginData
-
-class _CChannel_CDragBeginDataImpl extends Channel<DragBeginData> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<DragBeginData>>{};
-
-  final _CChannel_CDragBeginData _channel;
-
-  _CChannel_CDragBeginDataImpl(this._channel);
-
-  static void valueFunction(_CDragBeginData cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    cValue._releaseIntermediate();
-  }
-
-  @override
-  StreamSubscription<DragBeginData> listen(void onData(DragBeginData event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDragBeginData, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<DragBeginData>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CChannel_CDragBeginData extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CChannel_CDragBeginDataBasicFunctions on _CChannel_CDragBeginData {
-  void _releaseIntermediate() {
-    _CChannel_CDragBeginData_release(this);
-  }
-
-  _CChannel_CDragBeginData _retain() {
-    return _CChannel_CDragBeginData_retain(this);
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CDragBeginData, ffi.Int64)> callback) {
-    return _CChannel_CDragBeginDataConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CChannel_CDragBeginDataToDart on _CChannel_CDragBeginData {
-  Channel<DragBeginData> _toDart() {
-    return _CChannel_CDragBeginDataImpl(this._retain());
-  }
-}
-
-extension _DartTo_CChannel_CDragBeginData on Channel<DragBeginData> {
-  _CChannel_CDragBeginData _copyFromDartTo_CChannel_CDragBeginData() {
-    return _CChannel_CDragBeginDataMakeDefault();
-  }
-}
-	
-// MARK: - Channel<ScreenPoint> <-> _CChannel_CScreenPoint
-
-class _CChannel_CScreenPointImpl extends Channel<ScreenPoint> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<ScreenPoint>>{};
-
-  final _CChannel_CScreenPoint _channel;
-
-  _CChannel_CScreenPointImpl(this._channel);
-
-  static void valueFunction(_CScreenPoint cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<ScreenPoint> listen(void onData(ScreenPoint event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CScreenPoint, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<ScreenPoint>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CChannel_CScreenPoint extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CChannel_CScreenPointBasicFunctions on _CChannel_CScreenPoint {
-  void _releaseIntermediate() {
-    _CChannel_CScreenPoint_release(this);
-  }
-
-  _CChannel_CScreenPoint _retain() {
-    return _CChannel_CScreenPoint_retain(this);
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CScreenPoint, ffi.Int64)> callback) {
-    return _CChannel_CScreenPointConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CChannel_CScreenPointToDart on _CChannel_CScreenPoint {
-  Channel<ScreenPoint> _toDart() {
-    return _CChannel_CScreenPointImpl(this._retain());
-  }
-}
-
-extension _DartTo_CChannel_CScreenPoint on Channel<ScreenPoint> {
-  _CChannel_CScreenPoint _copyFromDartTo_CChannel_CScreenPoint() {
-    return _CChannel_CScreenPointMakeDefault();
-  }
-}
-	
-// MARK: - GestureManager? <-> _COptional_CGestureManager
-
-final class _COptional_CGestureManager extends ffi.Struct {
-  
-  external _CGestureManager value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CGestureManagerBasicFunctions on _COptional_CGestureManager {
-  void _releaseIntermediate() {
-    _COptional_CGestureManager_release(this);
-  }
-}
-
-extension _COptional_CGestureManagerToDart on _COptional_CGestureManager {
-  GestureManager? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CGestureManager on GestureManager? {
-  _COptional_CGestureManager _copyFromDartTo_COptional_CGestureManager() {
-    final cOptional = _COptional_CGestureManagerMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CGestureManager();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
 // MARK: - IndoorDetector
 
 /** Детектор, который определяет находится ли пользователь в помещении. */
@@ -76339,53 +76834,8 @@ late final _CMeterMakeDefault = _CMeterMakeDefaultPtr.asFunction<_CMeter Functio
 
 late final _CPersonalDataCollectionConsentMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPersonalDataCollectionConsent Function()>>('CPersonalDataCollectionConsentMakeDefault');
 late final _CPersonalDataCollectionConsentMakeDefault = _CPersonalDataCollectionConsentMakeDefaultPtr.asFunction<_CPersonalDataCollectionConsent Function()>();
-
-late final _CScreenDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenDistance Function()>>('CScreenDistanceMakeDefault');
-late final _CScreenDistanceMakeDefault = _CScreenDistanceMakeDefaultPtr.asFunction<_CScreenDistance Function()>();
-
-
-late final _CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenPoint Function()>>('CScreenPointMakeDefault');
-late final _CScreenPointMakeDefault = _CScreenPointMakeDefaultPtr.asFunction<_CScreenPoint Function()>();
-
-
-late final _CScreenShiftMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenShift Function()>>('CScreenShiftMakeDefault');
-late final _CScreenShiftMakeDefault = _CScreenShiftMakeDefaultPtr.asFunction<_CScreenShift Function()>();
-
-
-late final _CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenSize Function()>>('CScreenSizeMakeDefault');
-late final _CScreenSizeMakeDefault = _CScreenSizeMakeDefaultPtr.asFunction<_CScreenSize Function()>();
-
-
-late final _CWeekDayMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekDay Function()>>('CWeekDayMakeDefault');
-late final _CWeekDayMakeDefault = _CWeekDayMakeDefaultPtr.asFunction<_CWeekDay Function()>();
-
-late final _CWeekTimeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekTime Function()>>('CWeekTimeMakeDefault');
-late final _CWeekTimeMakeDefault = _CWeekTimeMakeDefaultPtr.asFunction<_CWeekTime Function()>();
-
-
-late final _CWeekTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekTimeInterval Function()>>('CWeekTimeIntervalMakeDefault');
-late final _CWeekTimeIntervalMakeDefault = _CWeekTimeIntervalMakeDefaultPtr.asFunction<_CWeekTimeInterval Function()>();
-
-
-late final _CFile_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFile_cg_objectIdentifier');
-late final _CFile_cg_objectIdentifier = _CFile_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CFile_S_fromString_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_S_fromString_CString');
-late final _CFile_S_fromString_CString = _CFile_S_fromString_CStringPtr.asFunction<_CFile Function(_CString)>();
-late final _CFile_S_fromAsset_CContext_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CContext, _CString)>>('CFile_S_fromAsset_CContext_CString');
-late final _CFile_S_fromAsset_CContext_CString = _CFile_S_fromAsset_CContext_CStringPtr.asFunction<_CFile Function(_CContext, _CString)>();
-late final _CFile_C_createWith_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_C_createWith_CString');
-late final _CFile_C_createWith_CString = _CFile_C_createWith_CStringPtr.asFunction<_CFile Function(_CString)>();
-
-late final _CFile_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CFile_release');
-late final _CFile_release = _CFile_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CFile_retainPtr = _lookup<ffi.NativeFunction<_CFile Function(ffi.Pointer<ffi.Void>)>>('CFile_retain');
-late final _CFile_retain = _CFile_retainPtr.asFunction<_CFile Function(ffi.Pointer<ffi.Void>)>();
-late final _CFileMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFile Function()>>('CFileMakeDefault');
-late final _CFileMakeDefault = _CFileMakeDefaultPtr.asFunction<_CFile Function()>();
-
-late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
-late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
+late final _CFunction_G_releaseContext_With_CContextPtr = _lookup<ffi.NativeFunction<_CResult_CEmpty Function(_CContext)>>('CFunction_G_releaseContext_With_CContext');
+late final _CFunction_G_releaseContext_With_CContext = _CFunction_G_releaseContext_With_CContextPtr.asFunction<_CResult_CEmpty Function(_CContext)>();
 
 late final _CErrorCreateWithDescriptionPtr = _lookup<ffi.NativeFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>>('CError_createWithDescription');
 late final _CErrorCreateWithDescription = _CErrorCreateWithDescriptionPtr.asFunction<_CError Function(ffi.Pointer<ffi_package.Utf8>)>();
@@ -76395,6 +76845,11 @@ late final _CError_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CE
 late final _CError_release = _CError_releasePtr.asFunction<void Function(_CError)>();
 late final _CErrorGetDescriptionPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>>('CError_getDescription');
 late final _CErrorGetDescription = _CErrorGetDescriptionPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CError)>();
+
+late final _CResult_CEmpty_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CEmpty)>>('CResult_CEmpty_release');
+late final _CResult_CEmpty_release = _CResult_CEmpty_releasePtr.asFunction<void Function(_CResult_CEmpty)>();
+late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
+late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
 
 late final _CResult_CContext_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CContext)>>('CResult_CContext_release');
 late final _CResult_CContext_release = _CResult_CContext_releasePtr.asFunction<void Function(_CResult_CContext)>();
@@ -76685,6 +77140,51 @@ late final _COptional_CHeadingAvailableNotifierMakeDefault = _COptional_CHeading
 
 late final _COptional_CHeadingAvailableNotifier_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CHeadingAvailableNotifier)>>('COptional_CHeadingAvailableNotifier_release');
 late final _COptional_CHeadingAvailableNotifier_release = _COptional_CHeadingAvailableNotifier_releasePtr.asFunction<void Function(_COptional_CHeadingAvailableNotifier)>();
+
+late final _CScreenDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenDistance Function()>>('CScreenDistanceMakeDefault');
+late final _CScreenDistanceMakeDefault = _CScreenDistanceMakeDefaultPtr.asFunction<_CScreenDistance Function()>();
+
+
+late final _CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenPoint Function()>>('CScreenPointMakeDefault');
+late final _CScreenPointMakeDefault = _CScreenPointMakeDefaultPtr.asFunction<_CScreenPoint Function()>();
+
+
+late final _CScreenShiftMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenShift Function()>>('CScreenShiftMakeDefault');
+late final _CScreenShiftMakeDefault = _CScreenShiftMakeDefaultPtr.asFunction<_CScreenShift Function()>();
+
+
+late final _CScreenSizeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenSize Function()>>('CScreenSizeMakeDefault');
+late final _CScreenSizeMakeDefault = _CScreenSizeMakeDefaultPtr.asFunction<_CScreenSize Function()>();
+
+
+late final _CWeekDayMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekDay Function()>>('CWeekDayMakeDefault');
+late final _CWeekDayMakeDefault = _CWeekDayMakeDefaultPtr.asFunction<_CWeekDay Function()>();
+
+late final _CWeekTimeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekTime Function()>>('CWeekTimeMakeDefault');
+late final _CWeekTimeMakeDefault = _CWeekTimeMakeDefaultPtr.asFunction<_CWeekTime Function()>();
+
+
+late final _CWeekTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekTimeInterval Function()>>('CWeekTimeIntervalMakeDefault');
+late final _CWeekTimeIntervalMakeDefault = _CWeekTimeIntervalMakeDefaultPtr.asFunction<_CWeekTimeInterval Function()>();
+
+
+late final _CFile_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFile_cg_objectIdentifier');
+late final _CFile_cg_objectIdentifier = _CFile_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CFile_S_fromString_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_S_fromString_CString');
+late final _CFile_S_fromString_CString = _CFile_S_fromString_CStringPtr.asFunction<_CFile Function(_CString)>();
+late final _CFile_S_fromAsset_CContext_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CContext, _CString)>>('CFile_S_fromAsset_CContext_CString');
+late final _CFile_S_fromAsset_CContext_CString = _CFile_S_fromAsset_CContext_CStringPtr.asFunction<_CFile Function(_CContext, _CString)>();
+late final _CFile_C_createWith_CStringPtr = _lookup<ffi.NativeFunction<_CFile Function(_CString)>>('CFile_C_createWith_CString');
+late final _CFile_C_createWith_CString = _CFile_C_createWith_CStringPtr.asFunction<_CFile Function(_CString)>();
+
+late final _CFile_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CFile_release');
+late final _CFile_release = _CFile_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CFile_retainPtr = _lookup<ffi.NativeFunction<_CFile Function(ffi.Pointer<ffi.Void>)>>('CFile_retain');
+late final _CFile_retain = _CFile_retainPtr.asFunction<_CFile Function(ffi.Pointer<ffi.Void>)>();
+late final _CFileMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFile Function()>>('CFileMakeDefault');
+late final _CFileMakeDefault = _CFileMakeDefaultPtr.asFunction<_CFile Function()>();
+
 
 late final _CGeoRectMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGeoRect Function()>>('CGeoRectMakeDefault');
 late final _CGeoRectMakeDefault = _CGeoRectMakeDefaultPtr.asFunction<_CGeoRect Function()>();
@@ -80314,10 +80814,37 @@ late final _CTrafficSourceMakeDefault = _CTrafficSourceMakeDefaultPtr.asFunction
 
 late final _CRoadEventDisplayCategoryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventDisplayCategory Function()>>('CRoadEventDisplayCategoryMakeDefault');
 late final _CRoadEventDisplayCategoryMakeDefault = _CRoadEventDisplayCategoryMakeDefaultPtr.asFunction<_CRoadEventDisplayCategory Function()>();
+
+late final _CRoadEventFilterDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventFilterData Function()>>('CRoadEventFilterDataMakeDefault');
+late final _CRoadEventFilterDataMakeDefault = _CRoadEventFilterDataMakeDefaultPtr.asFunction<_CRoadEventFilterData Function()>();
+
+
+late final _CRoadEventFilterCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRoadEventFilterCpp_cg_objectIdentifier');
+late final _CRoadEventFilterCpp_cg_objectIdentifier = _CRoadEventFilterCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CRoadEventFilterCpp_passes_CRoadEventFilterDataPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CRoadEventFilterCpp, _CRoadEventFilterData)>>('CRoadEventFilterCpp_passes_CRoadEventFilterData');
+late final _CRoadEventFilterCpp_passes_CRoadEventFilterData = _CRoadEventFilterCpp_passes_CRoadEventFilterDataPtr.asFunction<bool Function(_CRoadEventFilterCpp, _CRoadEventFilterData)>();
+
+late final _CRoadEventFilterCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRoadEventFilterCpp_release');
+late final _CRoadEventFilterCpp_release = _CRoadEventFilterCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CRoadEventFilterCpp_retainPtr = _lookup<ffi.NativeFunction<_CRoadEventFilterCpp Function(ffi.Pointer<ffi.Void>)>>('CRoadEventFilterCpp_retain');
+late final _CRoadEventFilterCpp_retain = _CRoadEventFilterCpp_retainPtr.asFunction<_CRoadEventFilterCpp Function(ffi.Pointer<ffi.Void>)>();
+late final _CRoadEventFilterCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventFilterCpp Function()>>('CRoadEventFilterCppMakeDefault');
+late final _CRoadEventFilterCppMakeDefault = _CRoadEventFilterCppMakeDefaultPtr.asFunction<_CRoadEventFilterCpp Function()>();
+
+
+late final _CRoadEventFilterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRoadEventFilter Function()>>('CRoadEventFilterMakeDefault');
+late final _CRoadEventFilterMakeDefault = _CRoadEventFilterMakeDefaultPtr.asFunction<_CRoadEventFilter Function()>();
+late final _CRoadEventFilter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRoadEventFilter)>>('CRoadEventFilter_release');
+late final _CRoadEventFilter_release = _CRoadEventFilter_releasePtr.asFunction<void Function(_CRoadEventFilter)>();
 late final _CRoadEventSource_getVisibleEventsPtr = _lookup<ffi.NativeFunction<_COptionSet_CRoadEventDisplayCategory Function(_CRoadEventSource)>>('CRoadEventSource_getVisibleEvents');
 late final _CRoadEventSource_getVisibleEvents = _CRoadEventSource_getVisibleEventsPtr.asFunction<_COptionSet_CRoadEventDisplayCategory Function(_CRoadEventSource)>();
 late final _CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategoryPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRoadEventSource, _COptionSet_CRoadEventDisplayCategory)>>('CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategory');
 late final _CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategory = _CRoadEventSource_setVisibleEvents_COptionSet_CRoadEventDisplayCategoryPtr.asFunction<void Function(_CRoadEventSource, _COptionSet_CRoadEventDisplayCategory)>();
+late final _CRoadEventSource_roadEventFilterPtr = _lookup<ffi.NativeFunction<_COptional_CRoadEventFilter Function(_CRoadEventSource)>>('CRoadEventSource_roadEventFilter');
+late final _CRoadEventSource_roadEventFilter = _CRoadEventSource_roadEventFilterPtr.asFunction<_COptional_CRoadEventFilter Function(_CRoadEventSource)>();
+late final _CRoadEventSource_setRoadEventFilter_COptional_CRoadEventFilterPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRoadEventSource, _COptional_CRoadEventFilter)>>('CRoadEventSource_setRoadEventFilter_COptional_CRoadEventFilter');
+late final _CRoadEventSource_setRoadEventFilter_COptional_CRoadEventFilter = _CRoadEventSource_setRoadEventFilter_COptional_CRoadEventFilterPtr.asFunction<void Function(_CRoadEventSource, _COptional_CRoadEventFilter)>();
 late final _CRoadEventSource_highlightedObjectsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CDgisObjectId Function(_CRoadEventSource)>>('CRoadEventSource_highlightedObjectsChannel');
 late final _CRoadEventSource_highlightedObjectsChannel = _CRoadEventSource_highlightedObjectsChannelPtr.asFunction<_CStatefulChannel_CArray_CDgisObjectId Function(_CRoadEventSource)>();
 late final _CRoadEventSource_highlightedObjectsPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function(_CRoadEventSource)>>('CRoadEventSource_highlightedObjects');
@@ -80341,6 +80868,29 @@ late final _CRoadEventSourceMakeDefault = _CRoadEventSourceMakeDefaultPtr.asFunc
 
 late final _COptionSet_CRoadEventDisplayCategoryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CRoadEventDisplayCategory Function()>>('COptionSet_CRoadEventDisplayCategoryMakeDefault');
 late final _COptionSet_CRoadEventDisplayCategoryMakeDefault = _COptionSet_CRoadEventDisplayCategoryMakeDefaultPtr.asFunction<_COptionSet_CRoadEventDisplayCategory Function()>();
+
+late final _COptional_CRoadEventFilterMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CRoadEventFilter Function()>>('COptional_CRoadEventFilterMakeDefault');
+late final _COptional_CRoadEventFilterMakeDefault = _COptional_CRoadEventFilterMakeDefaultPtr.asFunction<_COptional_CRoadEventFilter Function()>();
+
+late final _COptional_CRoadEventFilter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CRoadEventFilter)>>('COptional_CRoadEventFilter_release');
+late final _COptional_CRoadEventFilter_release = _COptional_CRoadEventFilter_releasePtr.asFunction<void Function(_COptional_CRoadEventFilter)>();
+
+late final _CDefaultRoadEventFilter_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDefaultRoadEventFilter_cg_objectIdentifier');
+late final _CDefaultRoadEventFilter_cg_objectIdentifier = _CDefaultRoadEventFilter_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CDefaultRoadEventFilter_S_create_CContext_COptional_COptionSet_CRoadEventDisplayCategory_COptional_CTimeIntervalPtr = _lookup<ffi.NativeFunction<_CRoadEventFilter Function(_CContext, _COptional_COptionSet_CRoadEventDisplayCategory, _COptional_CTimeInterval)>>('CDefaultRoadEventFilter_S_create_CContext_COptional_COptionSet_CRoadEventDisplayCategory_COptional_CTimeInterval');
+late final _CDefaultRoadEventFilter_S_create_CContext_COptional_COptionSet_CRoadEventDisplayCategory_COptional_CTimeInterval = _CDefaultRoadEventFilter_S_create_CContext_COptional_COptionSet_CRoadEventDisplayCategory_COptional_CTimeIntervalPtr.asFunction<_CRoadEventFilter Function(_CContext, _COptional_COptionSet_CRoadEventDisplayCategory, _COptional_CTimeInterval)>();
+
+late final _CDefaultRoadEventFilter_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CDefaultRoadEventFilter_release');
+late final _CDefaultRoadEventFilter_release = _CDefaultRoadEventFilter_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CDefaultRoadEventFilter_retainPtr = _lookup<ffi.NativeFunction<_CDefaultRoadEventFilter Function(ffi.Pointer<ffi.Void>)>>('CDefaultRoadEventFilter_retain');
+late final _CDefaultRoadEventFilter_retain = _CDefaultRoadEventFilter_retainPtr.asFunction<_CDefaultRoadEventFilter Function(ffi.Pointer<ffi.Void>)>();
+late final _CDefaultRoadEventFilterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDefaultRoadEventFilter Function()>>('CDefaultRoadEventFilterMakeDefault');
+late final _CDefaultRoadEventFilterMakeDefault = _CDefaultRoadEventFilterMakeDefaultPtr.asFunction<_CDefaultRoadEventFilter Function()>();
+
+
+late final _COptional_COptionSet_CRoadEventDisplayCategoryMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_COptionSet_CRoadEventDisplayCategory Function()>>('COptional_COptionSet_CRoadEventDisplayCategoryMakeDefault');
+late final _COptional_COptionSet_CRoadEventDisplayCategoryMakeDefault = _COptional_COptionSet_CRoadEventDisplayCategoryMakeDefaultPtr.asFunction<_COptional_COptionSet_CRoadEventDisplayCategory Function()>();
 
 late final _CAlignmentMakeDefaultPtr = _lookup<ffi.NativeFunction<_CAlignment Function()>>('CAlignmentMakeDefault');
 late final _CAlignmentMakeDefault = _CAlignmentMakeDefaultPtr.asFunction<_CAlignment Function()>();
@@ -80917,9 +81467,6 @@ late final _CStatefulChannel_floatConnect = _CStatefulChannel_floatConnectPtr.as
   )
 >();
 
-late final _CResult_CEmpty_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CEmpty)>>('CResult_CEmpty_release');
-late final _CResult_CEmpty_release = _CResult_CEmpty_releasePtr.asFunction<void Function(_CResult_CEmpty)>();
-
 late final _CArray_CSourcemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CSource Function()>>('CArray_CSource_makeEmpty');
 late final _CArray_CSourcemakeEmpty = _CArray_CSourcemakeEmptyPtr.asFunction<_CArray_CSource Function()>();
 late final _CArray_CSourceaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CSource, _CSource)>>('CArray_CSource_addElement');
@@ -81368,6 +81915,10 @@ late final _CSimpleClusterObject_zIndexPtr = _lookup<ffi.NativeFunction<_CZIndex
 late final _CSimpleClusterObject_zIndex = _CSimpleClusterObject_zIndexPtr.asFunction<_CZIndex Function(_CSimpleClusterObject)>();
 late final _CSimpleClusterObject_setZIndex_CZIndexPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSimpleClusterObject, _CZIndex)>>('CSimpleClusterObject_setZIndex_CZIndex');
 late final _CSimpleClusterObject_setZIndex_CZIndex = _CSimpleClusterObject_setZIndex_CZIndexPtr.asFunction<void Function(_CSimpleClusterObject, _CZIndex)>();
+late final _CSimpleClusterObject_suppressOnOverlapPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CSimpleClusterObject)>>('CSimpleClusterObject_suppressOnOverlap');
+late final _CSimpleClusterObject_suppressOnOverlap = _CSimpleClusterObject_suppressOnOverlapPtr.asFunction<bool Function(_CSimpleClusterObject)>();
+late final _CSimpleClusterObject_setSuppressOnOverlap_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSimpleClusterObject, ffi.Bool)>>('CSimpleClusterObject_setSuppressOnOverlap_bool');
+late final _CSimpleClusterObject_setSuppressOnOverlap_bool = _CSimpleClusterObject_setSuppressOnOverlap_boolPtr.asFunction<void Function(_CSimpleClusterObject, bool)>();
 
 late final _CSimpleClusterObject_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSimpleClusterObject_cg_objectIdentifier');
 late final _CSimpleClusterObject_cg_objectIdentifier = _CSimpleClusterObject_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -81435,6 +81986,10 @@ late final _CMarker_labelingPriorityPtr = _lookup<ffi.NativeFunction<_CLabelingP
 late final _CMarker_labelingPriority = _CMarker_labelingPriorityPtr.asFunction<_CLabelingPriority Function(_CMarker)>();
 late final _CMarker_setLabelingPriority_CLabelingPriorityPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMarker, _CLabelingPriority)>>('CMarker_setLabelingPriority_CLabelingPriority');
 late final _CMarker_setLabelingPriority_CLabelingPriority = _CMarker_setLabelingPriority_CLabelingPriorityPtr.asFunction<void Function(_CMarker, _CLabelingPriority)>();
+late final _CMarker_suppressOnOverlapPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CMarker)>>('CMarker_suppressOnOverlap');
+late final _CMarker_suppressOnOverlap = _CMarker_suppressOnOverlapPtr.asFunction<bool Function(_CMarker)>();
+late final _CMarker_setSuppressOnOverlap_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMarker, ffi.Bool)>>('CMarker_setSuppressOnOverlap_bool');
+late final _CMarker_setSuppressOnOverlap_bool = _CMarker_setSuppressOnOverlap_boolPtr.asFunction<void Function(_CMarker, bool)>();
 
 late final _CMarker_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMarker_cg_objectIdentifier');
 late final _CMarker_cg_objectIdentifier = _CMarker_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -81981,6 +82536,301 @@ late final _CPackedMapStateMakeDefault = _CPackedMapStateMakeDefaultPtr.asFuncti
 
 late final _CResult_CPackedMapState_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CPackedMapState)>>('CResult_CPackedMapState_release');
 late final _CResult_CPackedMapState_release = _CResult_CPackedMapState_releasePtr.asFunction<void Function(_CResult_CPackedMapState)>();
+
+late final _CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDragBeginData Function()>>('CDragBeginDataMakeDefault');
+late final _CDragBeginDataMakeDefault = _CDragBeginDataMakeDefaultPtr.asFunction<_CDragBeginData Function()>();
+
+
+late final _CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTransformGesture Function()>>('CTransformGestureMakeDefault');
+late final _CTransformGestureMakeDefault = _CTransformGestureMakeDefaultPtr.asFunction<_CTransformGesture Function()>();
+
+late final _CScalingRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function()>>('CScalingRecognizeSettingsMakeDefault');
+late final _CScalingRecognizeSettingsMakeDefault = _CScalingRecognizeSettingsMakeDefaultPtr.asFunction<_CScalingRecognizeSettings Function()>();
+
+
+late final _CGestureActionEventCenterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionEventCenter Function()>>('CGestureActionEventCenterMakeDefault');
+late final _CGestureActionEventCenterMakeDefault = _CGestureActionEventCenterMakeDefaultPtr.asFunction<_CGestureActionEventCenter Function()>();
+
+
+late final _CGestureActionMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionMapPosition Function()>>('CGestureActionMapPositionMakeDefault');
+late final _CGestureActionMapPositionMakeDefault = _CGestureActionMapPositionMakeDefaultPtr.asFunction<_CGestureActionMapPosition Function()>();
+
+
+late final _CGestureActionTargetGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionTargetGeoPoint Function()>>('CGestureActionTargetGeoPointMakeDefault');
+late final _CGestureActionTargetGeoPointMakeDefault = _CGestureActionTargetGeoPointMakeDefaultPtr.asFunction<_CGestureActionTargetGeoPoint Function()>();
+
+
+late final _CGestureActionPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureActionPoint)>>('CGestureActionPoint_release');
+late final _CGestureActionPoint_release = _CGestureActionPoint_releasePtr.asFunction<void Function(_CGestureActionPoint)>();
+late final _CGestureActionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function()>>('CGestureActionPointMakeDefault');
+late final _CGestureActionPointMakeDefault = _CGestureActionPointMakeDefaultPtr.asFunction<_CGestureActionPoint Function()>();
+
+late final _CScalingKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function()>>('CScalingKinematicSettingsMakeDefault');
+late final _CScalingKinematicSettingsMakeDefault = _CScalingKinematicSettingsMakeDefaultPtr.asFunction<_CScalingKinematicSettings Function()>();
+
+late final _CScalingGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_recognizeSettings');
+late final _CScalingGestureSettings_recognizeSettings = _CScalingGestureSettings_recognizeSettingsPtr.asFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>>('CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings');
+late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>();
+late final _CScalingGestureSettings_scalingCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>>('CScalingGestureSettings_scalingCenter');
+late final _CScalingGestureSettings_scalingCenter = _CScalingGestureSettings_scalingCenterPtr.asFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CGestureActionPoint)>>('CScalingGestureSettings_setScalingCenter_CGestureActionPoint');
+late final _CScalingGestureSettings_setScalingCenter_CGestureActionPoint = _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr.asFunction<void Function(_CScalingGestureSettings, _CGestureActionPoint)>();
+late final _CScalingGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_kinematicSettings');
+late final _CScalingGestureSettings_kinematicSettings = _CScalingGestureSettings_kinematicSettingsPtr.asFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>();
+late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>>('CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings');
+late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>();
+
+late final _CScalingGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_cg_objectIdentifier');
+late final _CScalingGestureSettings_cg_objectIdentifier = _CScalingGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CScalingGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_release');
+late final _CScalingGestureSettings_release = _CScalingGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CScalingGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_retain');
+late final _CScalingGestureSettings_retain = _CScalingGestureSettings_retainPtr.asFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CScalingGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function()>>('CScalingGestureSettingsMakeDefault');
+late final _CScalingGestureSettingsMakeDefault = _CScalingGestureSettingsMakeDefaultPtr.asFunction<_CScalingGestureSettings Function()>();
+
+
+late final _CRotationRecognizeThresholdsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeThresholds Function()>>('CRotationRecognizeThresholdsMakeDefault');
+late final _CRotationRecognizeThresholdsMakeDefault = _CRotationRecognizeThresholdsMakeDefaultPtr.asFunction<_CRotationRecognizeThresholds Function()>();
+
+
+late final _CRotationRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function()>>('CRotationRecognizeSettingsMakeDefault');
+late final _CRotationRecognizeSettingsMakeDefault = _CRotationRecognizeSettingsMakeDefaultPtr.asFunction<_CRotationRecognizeSettings Function()>();
+
+
+late final _CRotationKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function()>>('CRotationKinematicSettingsMakeDefault');
+late final _CRotationKinematicSettingsMakeDefault = _CRotationKinematicSettingsMakeDefaultPtr.asFunction<_CRotationKinematicSettings Function()>();
+
+late final _CRotationGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_recognizeSettings');
+late final _CRotationGestureSettings_recognizeSettings = _CRotationGestureSettings_recognizeSettingsPtr.asFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>>('CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings');
+late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>();
+late final _CRotationGestureSettings_rotationCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>>('CRotationGestureSettings_rotationCenter');
+late final _CRotationGestureSettings_rotationCenter = _CRotationGestureSettings_rotationCenterPtr.asFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CGestureActionPoint)>>('CRotationGestureSettings_setRotationCenter_CGestureActionPoint');
+late final _CRotationGestureSettings_setRotationCenter_CGestureActionPoint = _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr.asFunction<void Function(_CRotationGestureSettings, _CGestureActionPoint)>();
+late final _CRotationGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_kinematicSettings');
+late final _CRotationGestureSettings_kinematicSettings = _CRotationGestureSettings_kinematicSettingsPtr.asFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>();
+late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>>('CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings');
+late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>();
+
+late final _CRotationGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_cg_objectIdentifier');
+late final _CRotationGestureSettings_cg_objectIdentifier = _CRotationGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CRotationGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_release');
+late final _CRotationGestureSettings_release = _CRotationGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CRotationGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_retain');
+late final _CRotationGestureSettings_retain = _CRotationGestureSettings_retainPtr.asFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CRotationGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function()>>('CRotationGestureSettingsMakeDefault');
+late final _CRotationGestureSettingsMakeDefault = _CRotationGestureSettingsMakeDefaultPtr.asFunction<_CRotationGestureSettings Function()>();
+
+
+late final _CMultiTouchRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function()>>('CMultiTouchRecognizeSettingsMakeDefault');
+late final _CMultiTouchRecognizeSettingsMakeDefault = _CMultiTouchRecognizeSettingsMakeDefaultPtr.asFunction<_CMultiTouchRecognizeSettings Function()>();
+
+late final _CMultiTouchGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>>('CMultiTouchGestureSettings_recognizeSettings');
+late final _CMultiTouchGestureSettings_recognizeSettings = _CMultiTouchGestureSettings_recognizeSettingsPtr.asFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>();
+late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>>('CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings');
+late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr.asFunction<void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>();
+
+late final _CMultiTouchGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_cg_objectIdentifier');
+late final _CMultiTouchGestureSettings_cg_objectIdentifier = _CMultiTouchGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CMultiTouchGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_release');
+late final _CMultiTouchGestureSettings_release = _CMultiTouchGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMultiTouchGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_retain');
+late final _CMultiTouchGestureSettings_retain = _CMultiTouchGestureSettings_retainPtr.asFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CMultiTouchGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function()>>('CMultiTouchGestureSettingsMakeDefault');
+late final _CMultiTouchGestureSettingsMakeDefault = _CMultiTouchGestureSettingsMakeDefaultPtr.asFunction<_CMultiTouchGestureSettings Function()>();
+
+
+late final _CTiltRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function()>>('CTiltRecognizeSettingsMakeDefault');
+late final _CTiltRecognizeSettingsMakeDefault = _CTiltRecognizeSettingsMakeDefaultPtr.asFunction<_CTiltRecognizeSettings Function()>();
+
+
+late final _CTiltKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function()>>('CTiltKinematicSettingsMakeDefault');
+late final _CTiltKinematicSettingsMakeDefault = _CTiltKinematicSettingsMakeDefaultPtr.asFunction<_CTiltKinematicSettings Function()>();
+
+late final _CTiltGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_recognizeSettings');
+late final _CTiltGestureSettings_recognizeSettings = _CTiltGestureSettings_recognizeSettingsPtr.asFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>();
+late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>>('CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings');
+late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>();
+late final _CTiltGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_kinematicSettings');
+late final _CTiltGestureSettings_kinematicSettings = _CTiltGestureSettings_kinematicSettingsPtr.asFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>();
+late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>>('CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings');
+late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>();
+
+late final _CTiltGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_cg_objectIdentifier');
+late final _CTiltGestureSettings_cg_objectIdentifier = _CTiltGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CTiltGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_release');
+late final _CTiltGestureSettings_release = _CTiltGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTiltGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_retain');
+late final _CTiltGestureSettings_retain = _CTiltGestureSettings_retainPtr.asFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CTiltGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function()>>('CTiltGestureSettingsMakeDefault');
+late final _CTiltGestureSettingsMakeDefault = _CTiltGestureSettingsMakeDefaultPtr.asFunction<_CTiltGestureSettings Function()>();
+
+
+late final _CCommonRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function()>>('CCommonRecognizeSettingsMakeDefault');
+late final _CCommonRecognizeSettingsMakeDefault = _CCommonRecognizeSettingsMakeDefaultPtr.asFunction<_CCommonRecognizeSettings Function()>();
+
+late final _CCommonGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>>('CCommonGestureSettings_recognizeSettings');
+late final _CCommonGestureSettings_recognizeSettings = _CCommonGestureSettings_recognizeSettingsPtr.asFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>();
+late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>>('CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings');
+late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr.asFunction<void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>();
+
+late final _CCommonGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_cg_objectIdentifier');
+late final _CCommonGestureSettings_cg_objectIdentifier = _CCommonGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+
+late final _CCommonGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_release');
+late final _CCommonGestureSettings_release = _CCommonGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CCommonGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_retain');
+late final _CCommonGestureSettings_retain = _CCommonGestureSettings_retainPtr.asFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>();
+late final _CCommonGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function()>>('CCommonGestureSettingsMakeDefault');
+late final _CCommonGestureSettingsMakeDefault = _CCommonGestureSettingsMakeDefaultPtr.asFunction<_CCommonGestureSettings Function()>();
+
+late final _CGestureManager_enabledGesturesPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>>('CGestureManager_enabledGestures');
+late final _CGestureManager_enabledGestures = _CGestureManager_enabledGesturesPtr.asFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>();
+late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _COptionSet_CTransformGesture)>>('CGestureManager_setEnabledGestures_COptionSet_CTransformGesture');
+late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _COptionSet_CTransformGesture)>();
+late final _CGestureManager_scalingSettingsPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(_CGestureManager)>>('CGestureManager_scalingSettings');
+late final _CGestureManager_scalingSettings = _CGestureManager_scalingSettingsPtr.asFunction<_CScalingGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_rotationSettingsPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(_CGestureManager)>>('CGestureManager_rotationSettings');
+late final _CGestureManager_rotationSettings = _CGestureManager_rotationSettingsPtr.asFunction<_CRotationGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_multitouchShiftSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>>('CGestureManager_multitouchShiftSettings');
+late final _CGestureManager_multitouchShiftSettings = _CGestureManager_multitouchShiftSettingsPtr.asFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_tiltSettingsPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(_CGestureManager)>>('CGestureManager_tiltSettings');
+late final _CGestureManager_tiltSettings = _CGestureManager_tiltSettingsPtr.asFunction<_CTiltGestureSettings Function(_CGestureManager)>();
+late final _CGestureManager_commonSettingsPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(_CGestureManager)>>('CGestureManager_commonSettings');
+late final _CGestureManager_commonSettings = _CGestureManager_commonSettingsPtr.asFunction<_CCommonGestureSettings Function(_CGestureManager)>();
+
+late final _CGestureManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_cg_objectIdentifier');
+late final _CGestureManager_cg_objectIdentifier = _CGestureManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CGestureManager_enableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_enableGesture_CTransformGesture');
+late final _CGestureManager_enableGesture_CTransformGesture = _CGestureManager_enableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_disableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_disableGesture_CTransformGesture');
+late final _CGestureManager_disableGesture_CTransformGesture = _CGestureManager_disableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_gestureEnabled_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_gestureEnabled_CTransformGesture');
+late final _CGestureManager_gestureEnabled_CTransformGesture = _CGestureManager_gestureEnabled_CTransformGesturePtr.asFunction<bool Function(_CGestureManager, _CTransformGesture)>();
+late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>>('CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture');
+late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>();
+
+late final _CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_release');
+late final _CGestureManager_release = _CGestureManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CGestureManager_retainPtr = _lookup<ffi.NativeFunction<_CGestureManager Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_retain');
+late final _CGestureManager_retain = _CGestureManager_retainPtr.asFunction<_CGestureManager Function(ffi.Pointer<ffi.Void>)>();
+late final _CGestureManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureManager Function()>>('CGestureManagerMakeDefault');
+late final _CGestureManagerMakeDefault = _CGestureManagerMakeDefaultPtr.asFunction<_CGestureManager Function()>();
+
+
+late final _COptionSet_CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function()>>('COptionSet_CTransformGestureMakeDefault');
+late final _COptionSet_CTransformGestureMakeDefault = _COptionSet_CTransformGestureMakeDefaultPtr.asFunction<_COptionSet_CTransformGesture Function()>();
+
+late final _CArray_COptionSet_CTransformGesturemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptionSet_CTransformGesture Function()>>('CArray_COptionSet_CTransformGesture_makeEmpty');
+late final _CArray_COptionSet_CTransformGesturemakeEmpty = _CArray_COptionSet_CTransformGesturemakeEmptyPtr.asFunction<_CArray_COptionSet_CTransformGesture Function()>();
+late final _CArray_COptionSet_CTransformGestureaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_addElement');
+late final _CArray_COptionSet_CTransformGestureaddElement = _CArray_COptionSet_CTransformGestureaddElementPtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>();
+late final _forEach_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)>>)
+>>('CArray_COptionSet_CTransformGesture_forEachWithFunctionPointer');
+late final _forEach_CArray_COptionSet_CTransformGesture = _forEach_CArray_COptionSet_CTransformGesturePtr.asFunction<
+  void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)
+>>)>();
+late final _CArray_COptionSet_CTransformGesture_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_release');
+late final _CArray_COptionSet_CTransformGesture_release = _CArray_COptionSet_CTransformGesture_releasePtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture)>();
+
+late final _CTouchPointStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTouchPointState Function()>>('CTouchPointStateMakeDefault');
+late final _CTouchPointStateMakeDefault = _CTouchPointStateMakeDefaultPtr.asFunction<_CTouchPointState Function()>();
+late final _CMapGestureRecognizer_dragBeginPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragBegin');
+late final _CMapGestureRecognizer_dragBegin = _CMapGestureRecognizer_dragBeginPtr.asFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_dragEndPtr = _lookup<ffi.NativeFunction<_CChannel_bool Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragEnd');
+late final _CMapGestureRecognizer_dragEnd = _CMapGestureRecognizer_dragEndPtr.asFunction<_CChannel_bool Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_dragMovePtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragMove');
+late final _CMapGestureRecognizer_dragMove = _CMapGestureRecognizer_dragMovePtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_tapPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_tap');
+late final _CMapGestureRecognizer_tap = _CMapGestureRecognizer_tapPtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_longTouchPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_longTouch');
+late final _CMapGestureRecognizer_longTouch = _CMapGestureRecognizer_longTouchPtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_gestureManagerPtr = _lookup<ffi.NativeFunction<_COptional_CGestureManager Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_gestureManager');
+late final _CMapGestureRecognizer_gestureManager = _CMapGestureRecognizer_gestureManagerPtr.asFunction<_COptional_CGestureManager Function(_CMapGestureRecognizer)>();
+
+late final _CMapGestureRecognizer_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_cg_objectIdentifier');
+late final _CMapGestureRecognizer_cg_objectIdentifier = _CMapGestureRecognizer_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CMapGestureRecognizer_S_create_CMapPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function(_CMap)>>('CMapGestureRecognizer_S_create_CMap');
+late final _CMapGestureRecognizer_S_create_CMap = _CMapGestureRecognizer_S_create_CMapPtr.asFunction<_CMapGestureRecognizer Function(_CMap)>();
+late final _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_tPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer, _CScreenPoint, _CTouchPointState, ffi.Uint64)>>('CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t');
+late final _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t = _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_tPtr.asFunction<void Function(_CMapGestureRecognizer, _CScreenPoint, _CTouchPointState, int)>();
+late final _CMapGestureRecognizer_processTouchEvent_CTimeIntervalPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CMapGestureRecognizer, _CTimeInterval)>>('CMapGestureRecognizer_processTouchEvent_CTimeInterval');
+late final _CMapGestureRecognizer_processTouchEvent_CTimeInterval = _CMapGestureRecognizer_processTouchEvent_CTimeIntervalPtr.asFunction<bool Function(_CMapGestureRecognizer, _CTimeInterval)>();
+late final _CMapGestureRecognizer_cancelPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_cancel');
+late final _CMapGestureRecognizer_cancel = _CMapGestureRecognizer_cancelPtr.asFunction<void Function(_CMapGestureRecognizer)>();
+late final _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpiPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer, _CDevicePpi)>>('CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi');
+late final _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi = _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpiPtr.asFunction<void Function(_CMapGestureRecognizer, _CDevicePpi)>();
+
+late final _CMapGestureRecognizer_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_release');
+late final _CMapGestureRecognizer_release = _CMapGestureRecognizer_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapGestureRecognizer_retainPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_retain');
+late final _CMapGestureRecognizer_retain = _CMapGestureRecognizer_retainPtr.asFunction<_CMapGestureRecognizer Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapGestureRecognizerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function()>>('CMapGestureRecognizerMakeDefault');
+late final _CMapGestureRecognizerMakeDefault = _CMapGestureRecognizerMakeDefaultPtr.asFunction<_CMapGestureRecognizer Function()>();
+
+
+late final _CChannel_CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function()>>('CChannel_CDragBeginDataMakeDefault');
+late final _CChannel_CDragBeginDataMakeDefault = _CChannel_CDragBeginDataMakeDefaultPtr.asFunction<_CChannel_CDragBeginData Function()>();
+late final _CChannel_CDragBeginData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CChannel_CDragBeginData)>>('CChannel_CDragBeginData_release');
+late final _CChannel_CDragBeginData_release = _CChannel_CDragBeginData_releasePtr.asFunction<void Function(_CChannel_CDragBeginData)>();
+late final _CChannel_CDragBeginData_retainPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function(_CChannel_CDragBeginData)>>('CChannel_CDragBeginData_retain');
+late final _CChannel_CDragBeginData_retain = _CChannel_CDragBeginData_retainPtr.asFunction<_CChannel_CDragBeginData Function(_CChannel_CDragBeginData)>();
+late final _CChannel_CDragBeginDataConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CChannel_CDragBeginData,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDragBeginData, ffi.Int64)>>
+  )
+>>('CChannel_CDragBeginData_connect');
+late final _CChannel_CDragBeginDataConnect = _CChannel_CDragBeginDataConnectPtr.asFunction<
+  _CCancellable Function(
+    _CChannel_CDragBeginData,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDragBeginData, ffi.Int64)>>
+  )
+>();
+
+late final _CChannel_CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function()>>('CChannel_CScreenPointMakeDefault');
+late final _CChannel_CScreenPointMakeDefault = _CChannel_CScreenPointMakeDefaultPtr.asFunction<_CChannel_CScreenPoint Function()>();
+late final _CChannel_CScreenPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CChannel_CScreenPoint)>>('CChannel_CScreenPoint_release');
+late final _CChannel_CScreenPoint_release = _CChannel_CScreenPoint_releasePtr.asFunction<void Function(_CChannel_CScreenPoint)>();
+late final _CChannel_CScreenPoint_retainPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CChannel_CScreenPoint)>>('CChannel_CScreenPoint_retain');
+late final _CChannel_CScreenPoint_retain = _CChannel_CScreenPoint_retainPtr.asFunction<_CChannel_CScreenPoint Function(_CChannel_CScreenPoint)>();
+late final _CChannel_CScreenPointConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CChannel_CScreenPoint,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenPoint, ffi.Int64)>>
+  )
+>>('CChannel_CScreenPoint_connect');
+late final _CChannel_CScreenPointConnect = _CChannel_CScreenPointConnectPtr.asFunction<
+  _CCancellable Function(
+    _CChannel_CScreenPoint,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenPoint, ffi.Int64)>>
+  )
+>();
+
+late final _COptional_CGestureManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGestureManager Function()>>('COptional_CGestureManagerMakeDefault');
+late final _COptional_CGestureManagerMakeDefault = _COptional_CGestureManagerMakeDefaultPtr.asFunction<_COptional_CGestureManager Function()>();
+
+late final _COptional_CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CGestureManager)>>('COptional_CGestureManager_release');
+late final _COptional_CGestureManager_release = _COptional_CGestureManager_releasePtr.asFunction<void Function(_COptional_CGestureManager)>();
 
 late final _CCalloutMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCalloutMapPosition Function()>>('CCalloutMapPositionMakeDefault');
 late final _CCalloutMapPositionMakeDefault = _CCalloutMapPositionMakeDefaultPtr.asFunction<_CCalloutMapPosition Function()>();
@@ -85278,301 +86128,6 @@ late final _CFuture_CStyleReceive = _CFuture_CStyleReceivePtr.asFunction<
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
   )
 >();
-
-late final _CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDragBeginData Function()>>('CDragBeginDataMakeDefault');
-late final _CDragBeginDataMakeDefault = _CDragBeginDataMakeDefaultPtr.asFunction<_CDragBeginData Function()>();
-
-
-late final _CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTransformGesture Function()>>('CTransformGestureMakeDefault');
-late final _CTransformGestureMakeDefault = _CTransformGestureMakeDefaultPtr.asFunction<_CTransformGesture Function()>();
-
-late final _CScalingRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function()>>('CScalingRecognizeSettingsMakeDefault');
-late final _CScalingRecognizeSettingsMakeDefault = _CScalingRecognizeSettingsMakeDefaultPtr.asFunction<_CScalingRecognizeSettings Function()>();
-
-
-late final _CGestureActionEventCenterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionEventCenter Function()>>('CGestureActionEventCenterMakeDefault');
-late final _CGestureActionEventCenterMakeDefault = _CGestureActionEventCenterMakeDefaultPtr.asFunction<_CGestureActionEventCenter Function()>();
-
-
-late final _CGestureActionMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionMapPosition Function()>>('CGestureActionMapPositionMakeDefault');
-late final _CGestureActionMapPositionMakeDefault = _CGestureActionMapPositionMakeDefaultPtr.asFunction<_CGestureActionMapPosition Function()>();
-
-
-late final _CGestureActionTargetGeoPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionTargetGeoPoint Function()>>('CGestureActionTargetGeoPointMakeDefault');
-late final _CGestureActionTargetGeoPointMakeDefault = _CGestureActionTargetGeoPointMakeDefaultPtr.asFunction<_CGestureActionTargetGeoPoint Function()>();
-
-
-late final _CGestureActionPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureActionPoint)>>('CGestureActionPoint_release');
-late final _CGestureActionPoint_release = _CGestureActionPoint_releasePtr.asFunction<void Function(_CGestureActionPoint)>();
-late final _CGestureActionPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function()>>('CGestureActionPointMakeDefault');
-late final _CGestureActionPointMakeDefault = _CGestureActionPointMakeDefaultPtr.asFunction<_CGestureActionPoint Function()>();
-
-late final _CScalingKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function()>>('CScalingKinematicSettingsMakeDefault');
-late final _CScalingKinematicSettingsMakeDefault = _CScalingKinematicSettingsMakeDefaultPtr.asFunction<_CScalingKinematicSettings Function()>();
-
-late final _CScalingGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_recognizeSettings');
-late final _CScalingGestureSettings_recognizeSettings = _CScalingGestureSettings_recognizeSettingsPtr.asFunction<_CScalingRecognizeSettings Function(_CScalingGestureSettings)>();
-late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>>('CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings');
-late final _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettings = _CScalingGestureSettings_setRecognizeSettings_CScalingRecognizeSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingRecognizeSettings)>();
-late final _CScalingGestureSettings_scalingCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>>('CScalingGestureSettings_scalingCenter');
-late final _CScalingGestureSettings_scalingCenter = _CScalingGestureSettings_scalingCenterPtr.asFunction<_CGestureActionPoint Function(_CScalingGestureSettings)>();
-late final _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CGestureActionPoint)>>('CScalingGestureSettings_setScalingCenter_CGestureActionPoint');
-late final _CScalingGestureSettings_setScalingCenter_CGestureActionPoint = _CScalingGestureSettings_setScalingCenter_CGestureActionPointPtr.asFunction<void Function(_CScalingGestureSettings, _CGestureActionPoint)>();
-late final _CScalingGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>>('CScalingGestureSettings_kinematicSettings');
-late final _CScalingGestureSettings_kinematicSettings = _CScalingGestureSettings_kinematicSettingsPtr.asFunction<_CScalingKinematicSettings Function(_CScalingGestureSettings)>();
-late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>>('CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings');
-late final _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettings = _CScalingGestureSettings_setKinematicSettings_CScalingKinematicSettingsPtr.asFunction<void Function(_CScalingGestureSettings, _CScalingKinematicSettings)>();
-
-late final _CScalingGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_cg_objectIdentifier');
-late final _CScalingGestureSettings_cg_objectIdentifier = _CScalingGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CScalingGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_release');
-late final _CScalingGestureSettings_release = _CScalingGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CScalingGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CScalingGestureSettings_retain');
-late final _CScalingGestureSettings_retain = _CScalingGestureSettings_retainPtr.asFunction<_CScalingGestureSettings Function(ffi.Pointer<ffi.Void>)>();
-late final _CScalingGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function()>>('CScalingGestureSettingsMakeDefault');
-late final _CScalingGestureSettingsMakeDefault = _CScalingGestureSettingsMakeDefaultPtr.asFunction<_CScalingGestureSettings Function()>();
-
-
-late final _CRotationRecognizeThresholdsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeThresholds Function()>>('CRotationRecognizeThresholdsMakeDefault');
-late final _CRotationRecognizeThresholdsMakeDefault = _CRotationRecognizeThresholdsMakeDefaultPtr.asFunction<_CRotationRecognizeThresholds Function()>();
-
-
-late final _CRotationRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function()>>('CRotationRecognizeSettingsMakeDefault');
-late final _CRotationRecognizeSettingsMakeDefault = _CRotationRecognizeSettingsMakeDefaultPtr.asFunction<_CRotationRecognizeSettings Function()>();
-
-
-late final _CRotationKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function()>>('CRotationKinematicSettingsMakeDefault');
-late final _CRotationKinematicSettingsMakeDefault = _CRotationKinematicSettingsMakeDefaultPtr.asFunction<_CRotationKinematicSettings Function()>();
-
-late final _CRotationGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_recognizeSettings');
-late final _CRotationGestureSettings_recognizeSettings = _CRotationGestureSettings_recognizeSettingsPtr.asFunction<_CRotationRecognizeSettings Function(_CRotationGestureSettings)>();
-late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>>('CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings');
-late final _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettings = _CRotationGestureSettings_setRecognizeSettings_CRotationRecognizeSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationRecognizeSettings)>();
-late final _CRotationGestureSettings_rotationCenterPtr = _lookup<ffi.NativeFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>>('CRotationGestureSettings_rotationCenter');
-late final _CRotationGestureSettings_rotationCenter = _CRotationGestureSettings_rotationCenterPtr.asFunction<_CGestureActionPoint Function(_CRotationGestureSettings)>();
-late final _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CGestureActionPoint)>>('CRotationGestureSettings_setRotationCenter_CGestureActionPoint');
-late final _CRotationGestureSettings_setRotationCenter_CGestureActionPoint = _CRotationGestureSettings_setRotationCenter_CGestureActionPointPtr.asFunction<void Function(_CRotationGestureSettings, _CGestureActionPoint)>();
-late final _CRotationGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>>('CRotationGestureSettings_kinematicSettings');
-late final _CRotationGestureSettings_kinematicSettings = _CRotationGestureSettings_kinematicSettingsPtr.asFunction<_CRotationKinematicSettings Function(_CRotationGestureSettings)>();
-late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>>('CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings');
-late final _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettings = _CRotationGestureSettings_setKinematicSettings_CRotationKinematicSettingsPtr.asFunction<void Function(_CRotationGestureSettings, _CRotationKinematicSettings)>();
-
-late final _CRotationGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_cg_objectIdentifier');
-late final _CRotationGestureSettings_cg_objectIdentifier = _CRotationGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CRotationGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_release');
-late final _CRotationGestureSettings_release = _CRotationGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CRotationGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CRotationGestureSettings_retain');
-late final _CRotationGestureSettings_retain = _CRotationGestureSettings_retainPtr.asFunction<_CRotationGestureSettings Function(ffi.Pointer<ffi.Void>)>();
-late final _CRotationGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function()>>('CRotationGestureSettingsMakeDefault');
-late final _CRotationGestureSettingsMakeDefault = _CRotationGestureSettingsMakeDefaultPtr.asFunction<_CRotationGestureSettings Function()>();
-
-
-late final _CMultiTouchRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function()>>('CMultiTouchRecognizeSettingsMakeDefault');
-late final _CMultiTouchRecognizeSettingsMakeDefault = _CMultiTouchRecognizeSettingsMakeDefaultPtr.asFunction<_CMultiTouchRecognizeSettings Function()>();
-
-late final _CMultiTouchGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>>('CMultiTouchGestureSettings_recognizeSettings');
-late final _CMultiTouchGestureSettings_recognizeSettings = _CMultiTouchGestureSettings_recognizeSettingsPtr.asFunction<_CMultiTouchRecognizeSettings Function(_CMultiTouchGestureSettings)>();
-late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>>('CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings');
-late final _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettings = _CMultiTouchGestureSettings_setRecognizeSettings_CMultiTouchRecognizeSettingsPtr.asFunction<void Function(_CMultiTouchGestureSettings, _CMultiTouchRecognizeSettings)>();
-
-late final _CMultiTouchGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_cg_objectIdentifier');
-late final _CMultiTouchGestureSettings_cg_objectIdentifier = _CMultiTouchGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CMultiTouchGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_release');
-late final _CMultiTouchGestureSettings_release = _CMultiTouchGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CMultiTouchGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CMultiTouchGestureSettings_retain');
-late final _CMultiTouchGestureSettings_retain = _CMultiTouchGestureSettings_retainPtr.asFunction<_CMultiTouchGestureSettings Function(ffi.Pointer<ffi.Void>)>();
-late final _CMultiTouchGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function()>>('CMultiTouchGestureSettingsMakeDefault');
-late final _CMultiTouchGestureSettingsMakeDefault = _CMultiTouchGestureSettingsMakeDefaultPtr.asFunction<_CMultiTouchGestureSettings Function()>();
-
-
-late final _CTiltRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function()>>('CTiltRecognizeSettingsMakeDefault');
-late final _CTiltRecognizeSettingsMakeDefault = _CTiltRecognizeSettingsMakeDefaultPtr.asFunction<_CTiltRecognizeSettings Function()>();
-
-
-late final _CTiltKinematicSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function()>>('CTiltKinematicSettingsMakeDefault');
-late final _CTiltKinematicSettingsMakeDefault = _CTiltKinematicSettingsMakeDefaultPtr.asFunction<_CTiltKinematicSettings Function()>();
-
-late final _CTiltGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_recognizeSettings');
-late final _CTiltGestureSettings_recognizeSettings = _CTiltGestureSettings_recognizeSettingsPtr.asFunction<_CTiltRecognizeSettings Function(_CTiltGestureSettings)>();
-late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>>('CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings');
-late final _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettings = _CTiltGestureSettings_setRecognizeSettings_CTiltRecognizeSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltRecognizeSettings)>();
-late final _CTiltGestureSettings_kinematicSettingsPtr = _lookup<ffi.NativeFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>>('CTiltGestureSettings_kinematicSettings');
-late final _CTiltGestureSettings_kinematicSettings = _CTiltGestureSettings_kinematicSettingsPtr.asFunction<_CTiltKinematicSettings Function(_CTiltGestureSettings)>();
-late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>>('CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings');
-late final _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettings = _CTiltGestureSettings_setKinematicSettings_CTiltKinematicSettingsPtr.asFunction<void Function(_CTiltGestureSettings, _CTiltKinematicSettings)>();
-
-late final _CTiltGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_cg_objectIdentifier');
-late final _CTiltGestureSettings_cg_objectIdentifier = _CTiltGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CTiltGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_release');
-late final _CTiltGestureSettings_release = _CTiltGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CTiltGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CTiltGestureSettings_retain');
-late final _CTiltGestureSettings_retain = _CTiltGestureSettings_retainPtr.asFunction<_CTiltGestureSettings Function(ffi.Pointer<ffi.Void>)>();
-late final _CTiltGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function()>>('CTiltGestureSettingsMakeDefault');
-late final _CTiltGestureSettingsMakeDefault = _CTiltGestureSettingsMakeDefaultPtr.asFunction<_CTiltGestureSettings Function()>();
-
-
-late final _CCommonRecognizeSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function()>>('CCommonRecognizeSettingsMakeDefault');
-late final _CCommonRecognizeSettingsMakeDefault = _CCommonRecognizeSettingsMakeDefaultPtr.asFunction<_CCommonRecognizeSettings Function()>();
-
-late final _CCommonGestureSettings_recognizeSettingsPtr = _lookup<ffi.NativeFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>>('CCommonGestureSettings_recognizeSettings');
-late final _CCommonGestureSettings_recognizeSettings = _CCommonGestureSettings_recognizeSettingsPtr.asFunction<_CCommonRecognizeSettings Function(_CCommonGestureSettings)>();
-late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>>('CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings');
-late final _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettings = _CCommonGestureSettings_setRecognizeSettings_CCommonRecognizeSettingsPtr.asFunction<void Function(_CCommonGestureSettings, _CCommonRecognizeSettings)>();
-
-late final _CCommonGestureSettings_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_cg_objectIdentifier');
-late final _CCommonGestureSettings_cg_objectIdentifier = _CCommonGestureSettings_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-
-late final _CCommonGestureSettings_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_release');
-late final _CCommonGestureSettings_release = _CCommonGestureSettings_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CCommonGestureSettings_retainPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>>('CCommonGestureSettings_retain');
-late final _CCommonGestureSettings_retain = _CCommonGestureSettings_retainPtr.asFunction<_CCommonGestureSettings Function(ffi.Pointer<ffi.Void>)>();
-late final _CCommonGestureSettingsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function()>>('CCommonGestureSettingsMakeDefault');
-late final _CCommonGestureSettingsMakeDefault = _CCommonGestureSettingsMakeDefaultPtr.asFunction<_CCommonGestureSettings Function()>();
-
-late final _CGestureManager_enabledGesturesPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>>('CGestureManager_enabledGestures');
-late final _CGestureManager_enabledGestures = _CGestureManager_enabledGesturesPtr.asFunction<_COptionSet_CTransformGesture Function(_CGestureManager)>();
-late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _COptionSet_CTransformGesture)>>('CGestureManager_setEnabledGestures_COptionSet_CTransformGesture');
-late final _CGestureManager_setEnabledGestures_COptionSet_CTransformGesture = _CGestureManager_setEnabledGestures_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _COptionSet_CTransformGesture)>();
-late final _CGestureManager_scalingSettingsPtr = _lookup<ffi.NativeFunction<_CScalingGestureSettings Function(_CGestureManager)>>('CGestureManager_scalingSettings');
-late final _CGestureManager_scalingSettings = _CGestureManager_scalingSettingsPtr.asFunction<_CScalingGestureSettings Function(_CGestureManager)>();
-late final _CGestureManager_rotationSettingsPtr = _lookup<ffi.NativeFunction<_CRotationGestureSettings Function(_CGestureManager)>>('CGestureManager_rotationSettings');
-late final _CGestureManager_rotationSettings = _CGestureManager_rotationSettingsPtr.asFunction<_CRotationGestureSettings Function(_CGestureManager)>();
-late final _CGestureManager_multitouchShiftSettingsPtr = _lookup<ffi.NativeFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>>('CGestureManager_multitouchShiftSettings');
-late final _CGestureManager_multitouchShiftSettings = _CGestureManager_multitouchShiftSettingsPtr.asFunction<_CMultiTouchGestureSettings Function(_CGestureManager)>();
-late final _CGestureManager_tiltSettingsPtr = _lookup<ffi.NativeFunction<_CTiltGestureSettings Function(_CGestureManager)>>('CGestureManager_tiltSettings');
-late final _CGestureManager_tiltSettings = _CGestureManager_tiltSettingsPtr.asFunction<_CTiltGestureSettings Function(_CGestureManager)>();
-late final _CGestureManager_commonSettingsPtr = _lookup<ffi.NativeFunction<_CCommonGestureSettings Function(_CGestureManager)>>('CGestureManager_commonSettings');
-late final _CGestureManager_commonSettings = _CGestureManager_commonSettingsPtr.asFunction<_CCommonGestureSettings Function(_CGestureManager)>();
-
-late final _CGestureManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_cg_objectIdentifier');
-late final _CGestureManager_cg_objectIdentifier = _CGestureManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CGestureManager_enableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_enableGesture_CTransformGesture');
-late final _CGestureManager_enableGesture_CTransformGesture = _CGestureManager_enableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
-late final _CGestureManager_disableGesture_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_disableGesture_CTransformGesture');
-late final _CGestureManager_disableGesture_CTransformGesture = _CGestureManager_disableGesture_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CTransformGesture)>();
-late final _CGestureManager_gestureEnabled_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CGestureManager, _CTransformGesture)>>('CGestureManager_gestureEnabled_CTransformGesture');
-late final _CGestureManager_gestureEnabled_CTransformGesture = _CGestureManager_gestureEnabled_CTransformGesturePtr.asFunction<bool Function(_CGestureManager, _CTransformGesture)>();
-late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>>('CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture');
-late final _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesture = _CGestureManager_setMutuallyExclusiveGestures_CArray_COptionSet_CTransformGesturePtr.asFunction<void Function(_CGestureManager, _CArray_COptionSet_CTransformGesture)>();
-
-late final _CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_release');
-late final _CGestureManager_release = _CGestureManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CGestureManager_retainPtr = _lookup<ffi.NativeFunction<_CGestureManager Function(ffi.Pointer<ffi.Void>)>>('CGestureManager_retain');
-late final _CGestureManager_retain = _CGestureManager_retainPtr.asFunction<_CGestureManager Function(ffi.Pointer<ffi.Void>)>();
-late final _CGestureManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CGestureManager Function()>>('CGestureManagerMakeDefault');
-late final _CGestureManagerMakeDefault = _CGestureManagerMakeDefaultPtr.asFunction<_CGestureManager Function()>();
-
-
-late final _COptionSet_CTransformGestureMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptionSet_CTransformGesture Function()>>('COptionSet_CTransformGestureMakeDefault');
-late final _COptionSet_CTransformGestureMakeDefault = _COptionSet_CTransformGestureMakeDefaultPtr.asFunction<_COptionSet_CTransformGesture Function()>();
-
-late final _CArray_COptionSet_CTransformGesturemakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_COptionSet_CTransformGesture Function()>>('CArray_COptionSet_CTransformGesture_makeEmpty');
-late final _CArray_COptionSet_CTransformGesturemakeEmpty = _CArray_COptionSet_CTransformGesturemakeEmptyPtr.asFunction<_CArray_COptionSet_CTransformGesture Function()>();
-late final _CArray_COptionSet_CTransformGestureaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_addElement');
-late final _CArray_COptionSet_CTransformGestureaddElement = _CArray_COptionSet_CTransformGestureaddElementPtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture, _COptionSet_CTransformGesture)>();
-late final _forEach_CArray_COptionSet_CTransformGesturePtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)>>)
->>('CArray_COptionSet_CTransformGesture_forEachWithFunctionPointer');
-late final _forEach_CArray_COptionSet_CTransformGesture = _forEach_CArray_COptionSet_CTransformGesturePtr.asFunction<
-  void Function(_CArray_COptionSet_CTransformGesture, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_COptionSet_CTransformGesture)
->>)>();
-late final _CArray_COptionSet_CTransformGesture_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_release');
-late final _CArray_COptionSet_CTransformGesture_release = _CArray_COptionSet_CTransformGesture_releasePtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture)>();
-
-late final _CTouchPointStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTouchPointState Function()>>('CTouchPointStateMakeDefault');
-late final _CTouchPointStateMakeDefault = _CTouchPointStateMakeDefaultPtr.asFunction<_CTouchPointState Function()>();
-late final _CMapGestureRecognizer_dragBeginPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragBegin');
-late final _CMapGestureRecognizer_dragBegin = _CMapGestureRecognizer_dragBeginPtr.asFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_dragEndPtr = _lookup<ffi.NativeFunction<_CChannel_bool Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragEnd');
-late final _CMapGestureRecognizer_dragEnd = _CMapGestureRecognizer_dragEndPtr.asFunction<_CChannel_bool Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_dragMovePtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragMove');
-late final _CMapGestureRecognizer_dragMove = _CMapGestureRecognizer_dragMovePtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_tapPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_tap');
-late final _CMapGestureRecognizer_tap = _CMapGestureRecognizer_tapPtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_longTouchPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_longTouch');
-late final _CMapGestureRecognizer_longTouch = _CMapGestureRecognizer_longTouchPtr.asFunction<_CChannel_CScreenPoint Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_gestureManagerPtr = _lookup<ffi.NativeFunction<_COptional_CGestureManager Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_gestureManager');
-late final _CMapGestureRecognizer_gestureManager = _CMapGestureRecognizer_gestureManagerPtr.asFunction<_COptional_CGestureManager Function(_CMapGestureRecognizer)>();
-
-late final _CMapGestureRecognizer_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_cg_objectIdentifier');
-late final _CMapGestureRecognizer_cg_objectIdentifier = _CMapGestureRecognizer_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CMapGestureRecognizer_S_create_CMapPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function(_CMap)>>('CMapGestureRecognizer_S_create_CMap');
-late final _CMapGestureRecognizer_S_create_CMap = _CMapGestureRecognizer_S_create_CMapPtr.asFunction<_CMapGestureRecognizer Function(_CMap)>();
-late final _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_tPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer, _CScreenPoint, _CTouchPointState, ffi.Uint64)>>('CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t');
-late final _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_t = _CMapGestureRecognizer_addTouchPoint_CScreenPoint_CTouchPointState_uint64_tPtr.asFunction<void Function(_CMapGestureRecognizer, _CScreenPoint, _CTouchPointState, int)>();
-late final _CMapGestureRecognizer_processTouchEvent_CTimeIntervalPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CMapGestureRecognizer, _CTimeInterval)>>('CMapGestureRecognizer_processTouchEvent_CTimeInterval');
-late final _CMapGestureRecognizer_processTouchEvent_CTimeInterval = _CMapGestureRecognizer_processTouchEvent_CTimeIntervalPtr.asFunction<bool Function(_CMapGestureRecognizer, _CTimeInterval)>();
-late final _CMapGestureRecognizer_cancelPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_cancel');
-late final _CMapGestureRecognizer_cancel = _CMapGestureRecognizer_cancelPtr.asFunction<void Function(_CMapGestureRecognizer)>();
-late final _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpiPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapGestureRecognizer, _CDevicePpi)>>('CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi');
-late final _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpi = _CMapGestureRecognizer_onDevicePpiChanged_CDevicePpiPtr.asFunction<void Function(_CMapGestureRecognizer, _CDevicePpi)>();
-
-late final _CMapGestureRecognizer_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_release');
-late final _CMapGestureRecognizer_release = _CMapGestureRecognizer_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CMapGestureRecognizer_retainPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function(ffi.Pointer<ffi.Void>)>>('CMapGestureRecognizer_retain');
-late final _CMapGestureRecognizer_retain = _CMapGestureRecognizer_retainPtr.asFunction<_CMapGestureRecognizer Function(ffi.Pointer<ffi.Void>)>();
-late final _CMapGestureRecognizerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function()>>('CMapGestureRecognizerMakeDefault');
-late final _CMapGestureRecognizerMakeDefault = _CMapGestureRecognizerMakeDefaultPtr.asFunction<_CMapGestureRecognizer Function()>();
-
-
-late final _CChannel_CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function()>>('CChannel_CDragBeginDataMakeDefault');
-late final _CChannel_CDragBeginDataMakeDefault = _CChannel_CDragBeginDataMakeDefaultPtr.asFunction<_CChannel_CDragBeginData Function()>();
-late final _CChannel_CDragBeginData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CChannel_CDragBeginData)>>('CChannel_CDragBeginData_release');
-late final _CChannel_CDragBeginData_release = _CChannel_CDragBeginData_releasePtr.asFunction<void Function(_CChannel_CDragBeginData)>();
-late final _CChannel_CDragBeginData_retainPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function(_CChannel_CDragBeginData)>>('CChannel_CDragBeginData_retain');
-late final _CChannel_CDragBeginData_retain = _CChannel_CDragBeginData_retainPtr.asFunction<_CChannel_CDragBeginData Function(_CChannel_CDragBeginData)>();
-late final _CChannel_CDragBeginDataConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CChannel_CDragBeginData,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDragBeginData, ffi.Int64)>>
-  )
->>('CChannel_CDragBeginData_connect');
-late final _CChannel_CDragBeginDataConnect = _CChannel_CDragBeginDataConnectPtr.asFunction<
-  _CCancellable Function(
-    _CChannel_CDragBeginData,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CDragBeginData, ffi.Int64)>>
-  )
->();
-
-late final _CChannel_CScreenPointMakeDefaultPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function()>>('CChannel_CScreenPointMakeDefault');
-late final _CChannel_CScreenPointMakeDefault = _CChannel_CScreenPointMakeDefaultPtr.asFunction<_CChannel_CScreenPoint Function()>();
-late final _CChannel_CScreenPoint_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CChannel_CScreenPoint)>>('CChannel_CScreenPoint_release');
-late final _CChannel_CScreenPoint_release = _CChannel_CScreenPoint_releasePtr.asFunction<void Function(_CChannel_CScreenPoint)>();
-late final _CChannel_CScreenPoint_retainPtr = _lookup<ffi.NativeFunction<_CChannel_CScreenPoint Function(_CChannel_CScreenPoint)>>('CChannel_CScreenPoint_retain');
-late final _CChannel_CScreenPoint_retain = _CChannel_CScreenPoint_retainPtr.asFunction<_CChannel_CScreenPoint Function(_CChannel_CScreenPoint)>();
-late final _CChannel_CScreenPointConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CChannel_CScreenPoint,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenPoint, ffi.Int64)>>
-  )
->>('CChannel_CScreenPoint_connect');
-late final _CChannel_CScreenPointConnect = _CChannel_CScreenPointConnectPtr.asFunction<
-  _CCancellable Function(
-    _CChannel_CScreenPoint,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CScreenPoint, ffi.Int64)>>
-  )
->();
-
-late final _COptional_CGestureManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CGestureManager Function()>>('COptional_CGestureManagerMakeDefault');
-late final _COptional_CGestureManagerMakeDefault = _COptional_CGestureManagerMakeDefaultPtr.asFunction<_COptional_CGestureManager Function()>();
-
-late final _COptional_CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CGestureManager)>>('COptional_CGestureManager_release');
-late final _COptional_CGestureManager_release = _COptional_CGestureManager_releasePtr.asFunction<void Function(_COptional_CGestureManager)>();
 late final _CIndoorDetector_indoorChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_bool Function(_CIndoorDetector)>>('CIndoorDetector_indoorChannel');
 late final _CIndoorDetector_indoorChannel = _CIndoorDetector_indoorChannelPtr.asFunction<_CStatefulChannel_bool Function(_CIndoorDetector)>();
 late final _CIndoorDetector_indoorPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CIndoorDetector)>>('CIndoorDetector_indoor');
@@ -87258,4 +87813,4 @@ late final _CStatefulChannel_CArray_CTerritoryConnect = _CStatefulChannel_CArray
   )
 >();
 
-//ApplicationState, BaseCameraInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, toLocaleManager
+//ApplicationState, BaseCameraInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, toLocaleManager

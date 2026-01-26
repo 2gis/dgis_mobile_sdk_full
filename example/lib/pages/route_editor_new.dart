@@ -1,9 +1,14 @@
 import 'dart:async';
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
+import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations.dart';
+import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations_en.dart';
 import 'package:flutter/material.dart';
 
 import 'common.dart';
+import 'route_editor_widgets/location_selector_sheet.dart';
+import 'route_editor_widgets/route_points_editor_theme.dart';
+import 'route_editor_widgets/route_points_editor_widget.dart';
 
 class RouteEditorNewPage extends StatefulWidget {
   final String title;
@@ -31,6 +36,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   sdk.Marker? startMarker;
   sdk.Marker? finishMarker;
+  List<sdk.Marker> intermediateMarkers = [];
 
   late sdk.ImageLoader loader;
   bool showCrosshair = false;
@@ -39,6 +45,8 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   bool useTrafficRouterProvider = false;
   bool useDarkTheme = false;
   bool showRouteEditor = false;
+  bool showPointsEditor = false;
+  int? editingPointIndex;
   double routeEditorHeight = 0;
 
   final defaultStartPoint = const sdk.GeoPoint(
@@ -51,6 +59,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   );
 
   final pinStartPath = 'assets/icons/pina64.png';
+  final pinIntermediatePath = 'assets/icons/pin64.png';
   final pinFinishPath = 'assets/icons/pinb64.png';
 
   final _cameraPadding = 32;
@@ -101,7 +110,8 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
           _routesIndexSubscription = routeEditor!.activeRouteIndexChannel
               .listen(_onActiveRouteIndexChanged);
         })
-        ..addObjectTappedCallback(_handleRouteObjectTapped);
+        ..addObjectTappedCallback(_handleRouteObjectTapped)
+        ..addObjectLongTouchCallback(_handleMapLongTouch);
     });
   }
 
@@ -166,7 +176,8 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
           ),
           if (routeEditorController != null &&
               showRouteEditor &&
-              !isSelectingLocation)
+              !isSelectingLocation &&
+              !showPointsEditor)
             sdk.RouteEditorWidget(
               theme: useDarkTheme
                   ? sdk.RouteEditorViewTheme.defaultDark
@@ -174,8 +185,8 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
               controller: routeEditorController!,
               onSwapCallback: _updateMarkers,
               routeSearchPointBuilder: _CustomRouteSearchPointBuilder(
-                onStartPointTap: () => _showLocationSelector(true),
-                onFinishPointTap: () => _showLocationSelector(false),
+                controller: routeEditorController!,
+                onTap: _showPointsEditor,
               ),
               onStartNavigation: (route) {
                 _showMessage('Starting navigation');
@@ -190,6 +201,23 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
                   routeEditorHeight = height;
                 });
               },
+            ),
+          if (showPointsEditor && routeEditorController != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: RoutePointsEditorWidget(
+                controller: routeEditorController!,
+                theme: useDarkTheme
+                    ? RoutePointsEditorTheme.defaultDark
+                    : RoutePointsEditorTheme.defaultLight,
+                routeDuration: _getRouteDuration(),
+                onCancel: _hidePointsEditor,
+                onPointTap: _onPointTap,
+                onAddStop: _onAddStop,
+                onPointDeleted: _updateMarkers,
+              ),
             ),
           if (showCrosshair && isSelectingLocation)
             const Center(
@@ -300,7 +328,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       onDirectoryObjectSelected: _onSearchDirectoryObjectSelected,
       onMyLocationPressed: _useMyLocation,
       onChooseOnMapPressed: _chooseOnMap,
-      sdkContext: sdkContext,
+      theme: useDarkTheme
+          ? LocationSelectorTheme.defaultDark
+          : LocationSelectorTheme.defaultLight,
     );
   }
 
@@ -363,20 +393,55 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     });
   }
 
-  void _confirmLocationSelection() {
+  Future<void> _confirmLocationSelection() async {
     if (sdkMap == null) return;
 
     final selectedPoint = sdkMap!.camera.position.point;
 
+    final screenSize = MediaQuery.of(context).size;
+    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final centerX = (screenSize.width / 2) * devicePixelRatio;
+    final centerY = (screenSize.height / 2) * devicePixelRatio;
+
+    final renderedObjects = await sdkMap!
+        .getRenderedObjects(
+          sdk.ScreenPoint(x: centerX, y: centerY),
+          const sdk.ScreenDistance(10),
+        )
+        .value;
+
+    var label =
+        '${selectedPoint.latitude.value.toStringAsFixed(4)}, ${selectedPoint.longitude.value.toStringAsFixed(4)}';
+    var coordinates = selectedPoint;
+
+    for (final objectInfo in renderedObjects) {
+      final object = objectInfo.item.item;
+      if (object is sdk.DgisMapObject) {
+        final objectId = object.id;
+        if (searchManager != null) {
+          final directoryObject =
+              await searchManager!.searchByDirectoryObjectId(objectId).value;
+          if (directoryObject != null) {
+            label = directoryObject.title;
+            coordinates =
+                directoryObject.markerPosition?.point ?? selectedPoint;
+          }
+        }
+        break;
+      }
+    }
+
     final routePoint = sdk.RoutePointUI(
-      point: sdk.RouteSearchPoint(coordinates: selectedPoint),
-      label:
-          '${selectedPoint.latitude.value.toStringAsFixed(4)}, ${selectedPoint.longitude.value.toStringAsFixed(4)}',
+      point: sdk.RouteSearchPoint(coordinates: coordinates),
+      label: label,
     );
 
     final currentPoints =
         List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
-    if (isSelectingStart && currentPoints.isNotEmpty) {
+
+    if (editingPointIndex == -1) {
+      currentPoints.insert(currentPoints.length - 1, routePoint);
+    } else if (isSelectingStart && currentPoints.isNotEmpty) {
       currentPoints[0] = routePoint;
     } else if (!isSelectingStart && currentPoints.length > 1) {
       currentPoints[currentPoints.length - 1] = routePoint;
@@ -387,15 +452,17 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     setState(() {
       isSelectingLocation = false;
       showCrosshair = false;
+      editingPointIndex = null;
     });
 
-    _updateMarkers();
+    await _updateMarkers();
   }
 
   void _cancelLocationSelection() {
     setState(() {
       isSelectingLocation = false;
       showCrosshair = false;
+      editingPointIndex = null;
     });
   }
 
@@ -404,12 +471,18 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
     if (startMarker != null) {
       mapObjectManager?.removeObject(startMarker!);
+      startMarker = null;
     }
     if (finishMarker != null) {
       mapObjectManager?.removeObject(finishMarker!);
+      finishMarker = null;
     }
+    intermediateMarkers
+      ..forEach(mapObjectManager!.removeObject)
+      ..clear();
 
     final routePoints = routeEditorController!.routePoints.value;
+
     if (routePoints.isNotEmpty) {
       final startPoint = routePoints[0].point.coordinates;
       final marker = sdk.Marker(
@@ -423,6 +496,23 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       );
       mapObjectManager?.addObject(marker);
       startMarker = marker;
+    }
+
+    if (routePoints.length > 2) {
+      for (var i = 1; i < routePoints.length - 1; i++) {
+        final intermediatePoint = routePoints[i].point.coordinates;
+        final marker = sdk.Marker(
+          sdk.MarkerOptions(
+            position: sdk.GeoPointWithElevation(
+              latitude: intermediatePoint.latitude,
+              longitude: intermediatePoint.longitude,
+            ),
+            icon: await loader.loadPngFromAsset(pinIntermediatePath, 64, 64),
+          ),
+        );
+        mapObjectManager?.addObject(marker);
+        intermediateMarkers.add(marker);
+      }
     }
 
     if (routePoints.length > 1) {
@@ -450,6 +540,53 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       final routeIndex = object.routeIndex.value;
       routeEditorController!.setActiveRouteIndex(routeIndex);
     }
+  }
+
+  Future<void> _handleMapLongTouch(sdk.RenderedObjectInfo objectInfo) async {
+    if (!showRouteEditor || routeEditorController == null) return;
+    if (isSelectingLocation || showPointsEditor) return;
+
+    final currentPoints = routeEditorController!.routePoints.value;
+    if (currentPoints.length < 2) return;
+
+    final object = objectInfo.item.item;
+    String label;
+    sdk.GeoPoint coordinates;
+
+    final closestPoint = sdk.GeoPoint(
+      latitude: objectInfo.closestMapPoint.latitude,
+      longitude: objectInfo.closestMapPoint.longitude,
+    );
+
+    if (object is sdk.DgisMapObject && searchManager != null) {
+      final objectId = object.id;
+      final directoryObject =
+          await searchManager!.searchByDirectoryObjectId(objectId).value;
+
+      if (directoryObject != null) {
+        label = directoryObject.title;
+        coordinates = directoryObject.markerPosition?.point ?? closestPoint;
+      } else {
+        coordinates = closestPoint;
+        label =
+            '${coordinates.latitude.value.toStringAsFixed(4)}, ${coordinates.longitude.value.toStringAsFixed(4)}';
+      }
+    } else {
+      coordinates = closestPoint;
+      label =
+          '${coordinates.latitude.value.toStringAsFixed(4)}, ${coordinates.longitude.value.toStringAsFixed(4)}';
+    }
+
+    final routePoint = sdk.RoutePointUI(
+      point: sdk.RouteSearchPoint(coordinates: coordinates),
+      label: label,
+    );
+
+    final newPoints = List<sdk.RoutePointUI>.from(currentPoints);
+    newPoints.insert(newPoints.length - 1, routePoint);
+
+    routeEditorController!.setRoutePoints(newPoints);
+    await _updateMarkers();
   }
 
   sdk.BriefInfoProvider _createBriefInfoProvider() {
@@ -543,108 +680,123 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       SnackBar(content: Text(message)),
     );
   }
-}
 
-class LocationSelectorSheet extends StatefulWidget {
-  final bool isSelectingStart;
-  final sdk.SearchManager? searchManager;
-  final Function(sdk.DirectoryObject) onDirectoryObjectSelected;
-  final VoidCallback onMyLocationPressed;
-  final VoidCallback onChooseOnMapPressed;
-  final sdk.Context sdkContext;
+  void _showPointsEditor() {
+    setState(() {
+      showPointsEditor = true;
+    });
+  }
 
-  const LocationSelectorSheet({
-    required this.isSelectingStart,
-    required this.searchManager,
-    required this.onDirectoryObjectSelected,
-    required this.onMyLocationPressed,
-    required this.onChooseOnMapPressed,
-    required this.sdkContext,
-    super.key,
-  });
+  void _hidePointsEditor() {
+    setState(() {
+      showPointsEditor = false;
+      editingPointIndex = null;
+    });
+    _updateMarkers();
+  }
 
-  @override
-  State<LocationSelectorSheet> createState() => _LocationSelectorSheetState();
-}
+  String? _getRouteDuration() {
+    if (routeEditor == null) return null;
+    final routesInfo = routeEditor!.routesInfoChannel.value;
+    if (routesInfo.routes.isEmpty) return null;
 
-class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  widget.isSelectingStart
-                      ? 'Select start location'
-                      : 'Select destination',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: widget.onMyLocationPressed,
-                        icon: const Icon(Icons.my_location),
-                        label: const Text('My Location'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: widget.onChooseOnMapPressed,
-                        icon: const Icon(Icons.map),
-                        label: const Text('Choose on Map'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: widget.searchManager != null
-                ? sdk.DgisSearchWidget(
-                    searchManager: widget.searchManager!,
-                    onObjectSelected: widget.onDirectoryObjectSelected,
-                  )
-                : const Center(
-                    child: Text(
-                      'Search not available',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-          ),
-        ],
+    final activeIndex = routeEditor!.activeRouteIndexChannel.value?.value ?? 0;
+    if (activeIndex >= routesInfo.routes.length) return null;
+
+    final trafficRoute = routesInfo.routes[activeIndex];
+    final durationMinutes = trafficRoute.traffic.durations.duration.inMinutes;
+
+    final localizations =
+        DgisLocalizations.of(context) ?? DgisLocalizationsEn();
+    return localizations.dgis_min__minutes_format(durationMinutes);
+  }
+
+  void _onPointTap(int index) {
+    setState(() {
+      editingPointIndex = index;
+      isSelectingStart = index == 0;
+    });
+    _hidePointsEditor();
+    _showLocationSelector(index == 0);
+  }
+
+  void _onAddStop() {
+    _hidePointsEditor();
+    setState(() {
+      editingPointIndex = routeEditorController!.routePoints.value.length - 1;
+      isSelectingStart = false;
+    });
+    _showLocationSelectorForIntermediatePoint();
+  }
+
+  void _showLocationSelectorForIntermediatePoint() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => LocationSelectorSheet(
+        isSelectingStart: false,
+        searchManager: searchManager,
+        onDirectoryObjectSelected: _onIntermediatePointSelected,
+        onMyLocationPressed: _useMyLocationForIntermediatePoint,
+        onChooseOnMapPressed: _chooseOnMapForIntermediatePoint,
+        theme: useDarkTheme
+            ? LocationSelectorTheme.defaultDark
+            : LocationSelectorTheme.defaultLight,
       ),
     );
+  }
+
+  void _onIntermediatePointSelected(sdk.DirectoryObject location) {
+    Navigator.pop(context);
+
+    final position = location.markerPosition?.point;
+    if (position != null) {
+      final routePoint = sdk.RoutePointUI(
+        point: sdk.RouteSearchPoint(coordinates: position),
+        label: location.title,
+      );
+
+      final currentPoints =
+          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
+      currentPoints.insert(currentPoints.length - 1, routePoint);
+
+      routeEditorController!.setRoutePoints(currentPoints);
+      _updateMarkers();
+    }
+  }
+
+  Future<void> _useMyLocationForIntermediatePoint() async {
+    Navigator.pop(context);
+
+    final locationService = sdk.LocationService(sdkContext);
+    final lastLocation = locationService.lastLocation().value;
+
+    if (lastLocation != null) {
+      final newPoint = lastLocation.coordinates.value;
+
+      final routePoint = sdk.RoutePointUI(
+        point: sdk.RouteSearchPoint(coordinates: newPoint),
+        label: 'My Location',
+      );
+
+      final currentPoints =
+          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
+
+      currentPoints.insert(currentPoints.length - 1, routePoint);
+
+      routeEditorController!.setRoutePoints(currentPoints);
+      await _updateMarkers();
+    }
+  }
+
+  void _chooseOnMapForIntermediatePoint() {
+    Navigator.pop(context);
+    setState(() {
+      isSelectingLocation = true;
+      showCrosshair = true;
+      editingPointIndex = -1;
+    });
   }
 }
 
@@ -775,12 +927,12 @@ class _ThemeSwitchButtonState extends State<_ThemeSwitchButton> {
 }
 
 class _CustomRouteSearchPointBuilder implements sdk.RouteSearchPointBuilder {
-  final VoidCallback onStartPointTap;
-  final VoidCallback onFinishPointTap;
+  final sdk.RouteEditorController controller;
+  final VoidCallback onTap;
 
   const _CustomRouteSearchPointBuilder({
-    required this.onStartPointTap,
-    required this.onFinishPointTap,
+    required this.controller,
+    required this.onTap,
   });
 
   @override
@@ -790,7 +942,7 @@ class _CustomRouteSearchPointBuilder implements sdk.RouteSearchPointBuilder {
     sdk.RouteEditorViewTheme theme,
   ) {
     return GestureDetector(
-      onTap: onStartPointTap,
+      onTap: onTap,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -819,27 +971,64 @@ class _CustomRouteSearchPointBuilder implements sdk.RouteSearchPointBuilder {
     sdk.RouteEditorController controller,
     sdk.RouteEditorViewTheme theme,
   ) {
-    return GestureDetector(
-      onTap: onFinishPointTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: Text(
-              point.label,
-              style: theme.finishLabelTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+    return _FinishPointView(
+      point: point,
+      controller: this.controller,
+      theme: theme,
+      onTap: onTap,
+    );
+  }
+}
+
+class _FinishPointView extends StatelessWidget {
+  final sdk.RoutePointUI point;
+  final sdk.RouteEditorController controller;
+  final sdk.RouteEditorViewTheme theme;
+  final VoidCallback onTap;
+
+  const _FinishPointView({
+    required this.point,
+    required this.controller,
+    required this.theme,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<sdk.RoutePointUI>>(
+      valueListenable: controller.routePoints,
+      builder: (context, points, _) {
+        final intermediateCount = points.length - 2;
+        final localizations =
+            DgisLocalizations.of(context) ?? DgisLocalizationsEn();
+
+        final label = intermediateCount > 0
+            ? localizations.dgis_stops(intermediateCount)
+            : point.label;
+
+        return GestureDetector(
+          onTap: onTap,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  label,
+                  style: theme.finishLabelTextStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(
+                Icons.edit,
+                size: 14,
+                color: theme.finishLabelTextStyle.color?.withValues(alpha: 0.7),
+              ),
+            ],
           ),
-          const SizedBox(width: 4),
-          Icon(
-            Icons.edit,
-            size: 14,
-            color: theme.finishLabelTextStyle.color?.withValues(alpha: 0.7),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

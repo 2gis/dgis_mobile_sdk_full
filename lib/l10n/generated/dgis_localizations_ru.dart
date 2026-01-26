@@ -294,4 +294,42 @@ class DgisLocalizationsRu extends DgisLocalizations {
   String dgis_navi_floor(String floor) {
     return '$floor этаж';
   }
+
+  @override
+  String dgis_reviews_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count отзывов',
+      few: '$count отзыва',
+      many: '$count отзывов',
+      one: '1 отзыв',
+      zero: 'Нет отзывов',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dgis_charging_not_active => 'Не активна';
+
+  @override
+  String get dgis_no_places_available => 'Нет свободных мест';
+
+  @override
+  String dgis_charging_available_places_all(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count мест доступно',
+      few: '$count места доступно',
+      many: '$count мест доступно',
+      one: '1 место доступно',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dgis_charging_available_places_count(num free, num total) {
+    return '$free из $total доступно';
+  }
 }
