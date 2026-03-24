@@ -39,7 +39,9 @@ class TrafficWidget
     unactiveColor: Color(0xffffffff),
     surfaceColor: Color(0xffffffff),
     iconColor: Color(0xff4d4d4d),
+    iconColorEnabled: Color(0xff057ddf),
     scoreTextColor: Color(0xff4d4d4d),
+    scoreTextColorEnabled: Color(0xffffffff),
   );
 
   /// Цветовая схема UI–элемента для темного режима по умолчанию.
@@ -51,7 +53,9 @@ class TrafficWidget
     unactiveColor: Color(0xff121212),
     surfaceColor: Color(0xff121212),
     iconColor: Color(0xffcccccc),
+    iconColorEnabled: Color(0xff70aee0),
     scoreTextColor: Color(0xffcccccc),
+    scoreTextColorEnabled: Color(0xffffffff),
   );
 }
 
@@ -121,7 +125,10 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
                             height: 24,
                             fit: BoxFit.none,
                             colorFilter: ColorFilter.mode(
-                              colorScheme.iconColor,
+                              currentState?.status ==
+                                      sdk.TrafficControlStatus.enabled
+                                  ? colorScheme.iconColorEnabled
+                                  : colorScheme.iconColor,
                               BlendMode.srcIn,
                             ),
                           ),
@@ -133,7 +140,10 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
                             style: TextStyle(
                               leadingDistribution: TextLeadingDistribution.even,
                               height: 1,
-                              color: colorScheme.scoreTextColor,
+                              color: currentState.status ==
+                                      sdk.TrafficControlStatus.enabled
+                                  ? colorScheme.scoreTextColorEnabled
+                                  : colorScheme.scoreTextColor,
                               fontSize: 19,
                             ),
                           ),
@@ -179,7 +189,9 @@ class TrafficWidgetColorScheme extends MapWidgetColorScheme {
   final Color unactiveColor;
   final Color surfaceColor;
   final Color iconColor;
+  final Color iconColorEnabled;
   final Color scoreTextColor;
+  final Color scoreTextColorEnabled;
 
   const TrafficWidgetColorScheme({
     required this.heavyTrafficColor,
@@ -188,7 +200,9 @@ class TrafficWidgetColorScheme extends MapWidgetColorScheme {
     required this.unactiveColor,
     required this.surfaceColor,
     required this.iconColor,
+    required this.iconColorEnabled,
     required this.scoreTextColor,
+    required this.scoreTextColorEnabled,
   });
 
   @override
@@ -199,7 +213,9 @@ class TrafficWidgetColorScheme extends MapWidgetColorScheme {
     Color? unactiveColor,
     Color? surfaceColor,
     Color? iconColor,
+    Color? iconColorEnabled,
     Color? scoreTextColor,
+    Color? scoreTextColorEnabled,
   }) {
     return TrafficWidgetColorScheme(
       heavyTrafficColor: heavyTrafficColor ?? this.heavyTrafficColor,
@@ -208,7 +224,10 @@ class TrafficWidgetColorScheme extends MapWidgetColorScheme {
       unactiveColor: unactiveColor ?? this.unactiveColor,
       surfaceColor: surfaceColor ?? this.surfaceColor,
       iconColor: iconColor ?? this.iconColor,
+      iconColorEnabled: iconColorEnabled ?? this.iconColorEnabled,
       scoreTextColor: scoreTextColor ?? this.scoreTextColor,
+      scoreTextColorEnabled:
+          scoreTextColorEnabled ?? this.scoreTextColorEnabled,
     );
   }
 }

@@ -263,7 +263,7 @@ abstract class DgisLocalizations {
   /// No description provided for @dgis_route_editor_start.
   ///
   /// In en, this message translates to:
-  /// **'Start'**
+  /// **'Go!'**
   String get dgis_route_editor_start;
 
   /// No description provided for @dgis_get_off_after.
@@ -524,12 +524,6 @@ abstract class DgisLocalizations {
   /// **'View route'**
   String get dgis_navi_view_route;
 
-  /// No description provided for @dgis_navi_show_minimap.
-  ///
-  /// In en, this message translates to:
-  /// **'Show minimap'**
-  String get dgis_navi_show_minimap;
-
   /// No description provided for @dgis_navi_continue_the_trip.
   ///
   /// In en, this message translates to:
@@ -577,6 +571,234 @@ abstract class DgisLocalizations {
   /// In en, this message translates to:
   /// **'{free} of {total} available'**
   String dgis_charging_available_places_count(num free, num total);
+
+  /// No description provided for @dgis_entrances_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 entrance} other{{count} entrances}}'**
+  String dgis_entrances_count(num count);
+
+  /// No description provided for @dgis_building_porches_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Entrances:'**
+  String get dgis_building_porches_prefix;
+
+  /// No description provided for @dgis_apartments_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'apt.'**
+  String get dgis_apartments_suffix;
+
+  /// No description provided for @dgis_porches.
+  ///
+  /// In en, this message translates to:
+  /// **'Porches'**
+  String get dgis_porches;
+
+  /// No description provided for @dgis_entrances.
+  ///
+  /// In en, this message translates to:
+  /// **'Entrances'**
+  String get dgis_entrances;
+
+  /// No description provided for @dgis_contacts_more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get dgis_contacts_more;
+
+  /// No description provided for @dgis_write_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Write to'**
+  String get dgis_write_to;
+
+  /// No description provided for @dgis_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get dgis_copy;
+
+  /// No description provided for @dgis_contacts_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get dgis_contacts_title;
+
+  /// No description provided for @dgis_websites_social_networks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Websites and social networks'**
+  String get dgis_websites_social_networks_title;
+
+  /// No description provided for @dgis_navi_show_minimap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show minimap'**
+  String get dgis_navi_show_minimap;
+
+  /// No description provided for @dgis_working_hours_24_7.
+  ///
+  /// In en, this message translates to:
+  /// **'Open 24/7'**
+  String get dgis_working_hours_24_7;
+
+  /// No description provided for @dgis_working_hours_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get dgis_working_hours_daily;
+
+  /// No description provided for @dgis_working_hours_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get dgis_working_hours_today;
+
+  /// No description provided for @dgis_working_hours_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get dgis_working_hours_schedule;
+
+  /// No description provided for @dgis_working_hours_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get dgis_working_hours_closed;
+
+  /// No description provided for @dgis_working_hours_closed_until.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed until {time}'**
+  String dgis_working_hours_closed_until(String time);
+
+  /// No description provided for @dgis_working_hours_closes_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes in'**
+  String get dgis_working_hours_closes_in;
+
+  /// No description provided for @dgis_working_hours_opens_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in'**
+  String get dgis_working_hours_opens_in;
+
+  /// No description provided for @dgis_working_hours_min_short.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get dgis_working_hours_min_short;
+
+  /// No description provided for @dgis_working_hours_tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'tomorrow'**
+  String get dgis_working_hours_tomorrow;
+
+  /// No description provided for @dgis_working_hours_lunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get dgis_working_hours_lunch;
+
+  /// No description provided for @dgis_working_hours_break.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get dgis_working_hours_break;
+
+  /// No description provided for @dgis_working_hours_weekdays_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get dgis_working_hours_weekdays_label;
+
+  /// No description provided for @dgis_working_hours_weekday_short_mon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get dgis_working_hours_weekday_short_mon;
+
+  /// No description provided for @dgis_working_hours_weekday_short_tue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get dgis_working_hours_weekday_short_tue;
+
+  /// No description provided for @dgis_working_hours_weekday_short_wed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get dgis_working_hours_weekday_short_wed;
+
+  /// No description provided for @dgis_working_hours_weekday_short_thu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get dgis_working_hours_weekday_short_thu;
+
+  /// No description provided for @dgis_working_hours_weekday_short_fri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get dgis_working_hours_weekday_short_fri;
+
+  /// No description provided for @dgis_working_hours_weekday_short_sat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get dgis_working_hours_weekday_short_sat;
+
+  /// No description provided for @dgis_working_hours_weekday_short_sun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get dgis_working_hours_weekday_short_sun;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_mon.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get dgis_working_hours_weekday_closed_to_mon;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_tue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get dgis_working_hours_weekday_closed_to_tue;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_wed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get dgis_working_hours_weekday_closed_to_wed;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_thu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get dgis_working_hours_weekday_closed_to_thu;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_fri.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get dgis_working_hours_weekday_closed_to_fri;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_sat.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get dgis_working_hours_weekday_closed_to_sat;
+
+  /// No description provided for @dgis_working_hours_weekday_closed_to_sun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get dgis_working_hours_weekday_closed_to_sun;
 }
 
 class _DgisLocalizationsDelegate

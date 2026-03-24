@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../../generated/class_message.dart';
 import '../../generated/dart_bindings.dart' as sdk;
 
 /// Класс для загрузки изображений.
@@ -10,6 +11,11 @@ class ImageLoader {
   final sdk.Context _sdkContext;
 
   ImageLoader(this._sdkContext);
+
+  factory ImageLoader.fromMessage(ClassMessage<sdk.Context> message) {
+    final sdkContext = sdk.Context.fromMessage(message);
+    return ImageLoader(sdkContext);
+  }
 
   /// Загрузить PNG изображение из assets.
   Future<sdk.Image> loadPngFromAsset(String name, int height, int width) async {

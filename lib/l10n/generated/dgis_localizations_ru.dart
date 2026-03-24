@@ -282,9 +282,6 @@ class DgisLocalizationsRu extends DgisLocalizations {
   String get dgis_navi_view_route => 'Просмотр маршрута';
 
   @override
-  String get dgis_navi_show_minimap => 'Показать миникарту';
-
-  @override
   String get dgis_navi_continue_the_trip => 'Продолжить поездку';
 
   @override
@@ -301,8 +298,8 @@ class DgisLocalizationsRu extends DgisLocalizations {
       count,
       locale: localeName,
       other: '$count отзывов',
-      few: '$count отзыва',
       many: '$count отзывов',
+      few: '$count отзыва',
       one: '1 отзыв',
       zero: 'Нет отзывов',
     );
@@ -321,8 +318,8 @@ class DgisLocalizationsRu extends DgisLocalizations {
       count,
       locale: localeName,
       other: '$count мест доступно',
-      few: '$count места доступно',
       many: '$count мест доступно',
+      few: '$count места доступно',
       one: '1 место доступно',
     );
     return '$_temp0';
@@ -332,4 +329,130 @@ class DgisLocalizationsRu extends DgisLocalizations {
   String dgis_charging_available_places_count(num free, num total) {
     return '$free из $total доступно';
   }
+
+  @override
+  String dgis_entrances_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count подъездов',
+      many: '$count подъездов',
+      few: '$count подъезда',
+      one: '1 подъезд',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dgis_building_porches_prefix => 'Подъезды:';
+
+  @override
+  String get dgis_apartments_suffix => 'кв.';
+
+  @override
+  String get dgis_porches => 'Подъезды';
+
+  @override
+  String get dgis_entrances => 'Входы';
+
+  @override
+  String get dgis_contacts_more => 'Ещё';
+
+  @override
+  String get dgis_write_to => 'Написать в';
+
+  @override
+  String get dgis_copy => 'Копировать';
+
+  @override
+  String get dgis_contacts_title => 'Контакты';
+
+  @override
+  String get dgis_websites_social_networks_title => 'Сайты и соцсети';
+
+  @override
+  String get dgis_navi_show_minimap => 'Показать миникарту';
+
+  @override
+  String get dgis_working_hours_24_7 => 'Круглосуточно';
+
+  @override
+  String get dgis_working_hours_daily => 'Ежедневно';
+
+  @override
+  String get dgis_working_hours_today => 'Сегодня';
+
+  @override
+  String get dgis_working_hours_schedule => 'Расписание';
+
+  @override
+  String get dgis_working_hours_closed => 'Закрыто';
+
+  @override
+  String dgis_working_hours_closed_until(String time) {
+    return 'Закрыто до $time';
+  }
+
+  @override
+  String get dgis_working_hours_closes_in => 'Закроется через';
+
+  @override
+  String get dgis_working_hours_opens_in => 'Откроется через';
+
+  @override
+  String get dgis_working_hours_min_short => 'мин';
+
+  @override
+  String get dgis_working_hours_tomorrow => 'завтра';
+
+  @override
+  String get dgis_working_hours_lunch => 'Обед';
+
+  @override
+  String get dgis_working_hours_break => 'Перерыв';
+
+  @override
+  String get dgis_working_hours_weekdays_label => 'Будни';
+
+  @override
+  String get dgis_working_hours_weekday_short_mon => 'Пн';
+
+  @override
+  String get dgis_working_hours_weekday_short_tue => 'Вт';
+
+  @override
+  String get dgis_working_hours_weekday_short_wed => 'Ср';
+
+  @override
+  String get dgis_working_hours_weekday_short_thu => 'Чт';
+
+  @override
+  String get dgis_working_hours_weekday_short_fri => 'Пт';
+
+  @override
+  String get dgis_working_hours_weekday_short_sat => 'Сб';
+
+  @override
+  String get dgis_working_hours_weekday_short_sun => 'Вс';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_mon => 'понедельника';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_tue => 'вторника';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_wed => 'среды';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_thu => 'четверга';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_fri => 'пятницы';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_sat => 'субботы';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_sun => 'воскресенья';
 }

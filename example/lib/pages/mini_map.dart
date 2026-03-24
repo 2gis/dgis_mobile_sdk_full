@@ -129,13 +129,10 @@ class _MiniMapPageState extends State<MiniMapPage> {
               sdk.NavigationLayoutWidget(
                 navigationManager: navigationManager,
                 speedLimitWidgetBuilder: sdk.SpeedLimitWidget.defaultBuilder,
-                parkingWidgetBuilder:
-                    sdk.NavigationParkingWidget.defaultBuilder,
+                parkingWidgetBuilder: sdk.NavigationParkingWidget.defaultBuilder,
                 zoomWidgetBuilder: sdk.NavigationZoomWidget.defaultBuilder,
-                trafficWidgetBuilder:
-                    sdk.NavigationTrafficWidget.defaultBuilder,
-                compassWidgetbuilder:
-                    sdk.NavigationCompassWidget.defaultBuilder,
+                trafficWidgetBuilder: sdk.NavigationTrafficWidget.defaultBuilder,
+                compassWidgetbuilder: sdk.NavigationCompassWidget.defaultBuilder,
                 myLocationWidgetBuilder:
                     sdk.NavigationMyLocationWidget.defaultBuilder,
               ),
@@ -144,35 +141,47 @@ class _MiniMapPageState extends State<MiniMapPage> {
                 child: sdk.IndoorWidget(),
               ),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomLeft,
                 child: CupertinoButton(
                   onPressed: _show,
                   child: const Icon(Icons.format_list_bulleted),
                 ),
               ),
-              Positioned(
-                bottom: 16,
-                left: 16,
-                child: sdk.NavigationMiniMapWidget(
-                  sdkContext: sdkContext,
-                  mapOptions: sdk.MapOptions(style: _finishMiniMapStyle),
-                  controller: miniMapWidgetController,
-                  miniMapController: sdk.NavigationMiniMapController(
-                    navigationManager: navigationManager,
-                  ),
-                  size: 150,
-                ),
-              ),
-              Positioned(
-                top: 16,
-                left: 16,
-                child: _finishMiniMapStyle == null
-                    ? const SizedBox.shrink()
-                    : sdk.MiniMapWidget(
-                        sdkContext: sdkContext,
-                        mapOptions: sdk.MapOptions(style: _finishMiniMapStyle),
-                        controller: finishMiniMapWidgetController,
+              OrientationBuilder(
+                builder: (context, orientation) {
+                  return Stack(
+                    children: [
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        child: sdk.NavigationMiniMapWidget(
+                          sdkContext: sdkContext,
+                          mapOptions:
+                              sdk.MapOptions(style: _finishMiniMapStyle),
+                          controller: miniMapWidgetController,
+                          miniMapController: sdk.NavigationMiniMapController(
+                            navigationManager: navigationManager,
+                          ),
+                          size: 150,
+                        ),
                       ),
+                      Positioned(
+                        bottom:
+                            orientation == Orientation.landscape ? 16 : null,
+                        top: orientation == Orientation.portrait ? 16 : null,
+                        right: 60,
+                        child: _finishMiniMapStyle == null
+                            ? const SizedBox.shrink()
+                            : sdk.MiniMapWidget(
+                                sdkContext: sdkContext,
+                                mapOptions:
+                                    sdk.MapOptions(style: _finishMiniMapStyle),
+                                controller: finishMiniMapWidgetController,
+                              ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),

@@ -155,7 +155,7 @@ class _MapObjectsIdentificationFullState
       object: selectedDirectoryObject!,
       localizations: localizations,
       onTap: (object) {
-        _closeDirectoryObjectCard();
+        _showFullDirectoryObjectCard(object, localizations, isDarkMode);
       },
       formattedDistance: formattedDistance,
     );
@@ -228,6 +228,48 @@ class _MapObjectsIdentificationFullState
     });
     dgisSource?.setHighlighted(highlightedObjectIds, false);
     highlightedObjectIds = [];
+  }
+
+  void _showFullDirectoryObjectCard(
+    sdk.DirectoryObject object,
+    DgisLocalizations localizations,
+    bool isDarkMode,
+  ) {
+    final theme = isDarkMode
+        ? sdk.DirectoryObjectWidgetTheme.defaultDark
+        : sdk.DirectoryObjectWidgetTheme.defaultLight;
+
+    final viewModel = sdk.DirectoryObjectViewModel.fromDirectoryObject(
+      object: object,
+      localizations: localizations,
+      onDismiss: () => Navigator.of(context).pop(),
+      onShowEntrances: (entrances) {
+        // Handle show entrances on map
+        Navigator.of(context).pop();
+      },
+    );
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          maxChildSize: 0.9,
+          snap: true,
+          snapSizes: const [0.25, 0.5, 0.9],
+          expand: false,
+          builder: (context, scrollController) {
+            return sdk.DirectoryObjectWidget(
+              viewModel: viewModel,
+              theme: theme,
+              startExpanded: true,
+              scrollController: scrollController,
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> initContext() async {

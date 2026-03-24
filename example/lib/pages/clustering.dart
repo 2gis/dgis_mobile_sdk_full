@@ -10,6 +10,7 @@ import 'common.dart';
 enum _MarkerType { scooterPng, bridgeSvg, batLottie }
 
 enum _GroupingType {
+  without,
   clustering,
   generalization,
 }
@@ -227,6 +228,16 @@ class _SamplePageState extends State<ClusteringPage> {
                       Column(
                         children: <Widget>[
                           RadioListTile<_GroupingType>(
+                            title: const Text('Without'),
+                            value: _GroupingType.without,
+                            groupValue: selectedGroupingType,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGroupingType = value;
+                              });
+                            },
+                          ),
+                          RadioListTile<_GroupingType>(
                             title: const Text('Clustering'),
                             value: _GroupingType.clustering,
                             groupValue: selectedGroupingType,
@@ -388,6 +399,8 @@ class _SamplePageState extends State<ClusteringPage> {
     }
 
     switch (type) {
+      case _GroupingType.without:
+        return sdk.MapObjectManager(map);
       case _GroupingType.clustering:
         return sdk.MapObjectManager.withClustering(
           map,

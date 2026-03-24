@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../../generated/class_message.dart';
 import '../../generated/dart_bindings.dart' as sdk;
 
 /// Класс для загрузки объемных моделей.
@@ -10,6 +11,11 @@ class ModelLoader {
   final sdk.Context _sdkContext;
 
   ModelLoader(this._sdkContext);
+
+  factory ModelLoader.fromMessage(ClassMessage<sdk.Context> message) {
+    final sdkContext = sdk.Context.fromMessage(message);
+    return ModelLoader(sdkContext);
+  }
 
   /// Загрузить модель из assets.
   Future<sdk.ModelData> loadFromAsset(String name) async {

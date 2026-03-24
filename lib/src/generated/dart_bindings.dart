@@ -12,6 +12,7 @@ import 'package:async/async.dart';
 import 'package:meta/meta.dart';
 import 'buffered_channel.dart';
 import 'channel.dart';
+import 'class_message.dart';
 import 'enum_set.dart';
 import 'native_exception.dart';
 import 'optional.dart';
@@ -288,6 +289,11 @@ class SystemMemoryManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SystemMemoryManager.fromMessage(ClassMessage<SystemMemoryManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SystemMemoryManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SystemMemoryManager &&
@@ -322,6 +328,13 @@ class SystemMemoryManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension SystemMemoryManagerToClassMessage on SystemMemoryManager {
+  ClassMessage<SystemMemoryManager> message() {
+    final res = (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SystemMemoryManager>(res._impl.address, _CSystemMemoryManager_release);
+  }
 }
 
 // MARK: - SystemMemoryManager <-> CSystemMemoryManager
@@ -367,6 +380,11 @@ class Context implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Context.fromMessage(ClassMessage<Context> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Context._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Context &&
@@ -379,6 +397,13 @@ class Context implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ContextToClassMessage on Context {
+  ClassMessage<Context> message() {
+    final res = (_CContextMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Context>(res._impl.address, _CContext_release);
+  }
 }
 
 // MARK: - Context <-> CContext
@@ -1673,6 +1698,11 @@ class _LogSinkCpp extends LogSink implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _LogSinkCpp.fromMessage(ClassMessage<_LogSinkCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _LogSinkCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _LogSinkCpp &&
@@ -1700,6 +1730,13 @@ class _LogSinkCpp extends LogSink implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension _LogSinkCppToClassMessage on _LogSinkCpp {
+  ClassMessage<_LogSinkCpp> message() {
+    final res = (_CLogSinkCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_LogSinkCpp>(res._impl.address, _CLogSinkCpp_release);
+  }
 }
 
 // MARK: - _LogSinkCpp <-> CLogSinkCpp
@@ -2383,6 +2420,11 @@ class _LocationProviderCpp extends LocationProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _LocationProviderCpp.fromMessage(ClassMessage<_LocationProviderCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _LocationProviderCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _LocationProviderCpp &&
@@ -2462,6 +2504,13 @@ class _LocationProviderCpp extends LocationProvider implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension _LocationProviderCppToClassMessage on _LocationProviderCpp {
+  ClassMessage<_LocationProviderCpp> message() {
+    final res = (_CLocationProviderCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_LocationProviderCpp>(res._impl.address, _CLocationProviderCpp_release);
+  }
 }
 
 // MARK: - _LocationProviderCpp <-> CLocationProviderCpp
@@ -3240,6 +3289,11 @@ class LocationNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LocationNotifier.fromMessage(ClassMessage<LocationNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LocationNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LocationNotifier &&
@@ -3264,6 +3318,13 @@ class LocationNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension LocationNotifierToClassMessage on LocationNotifier {
+  ClassMessage<LocationNotifier> message() {
+    final res = (_CLocationNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LocationNotifier>(res._impl.address, _CLocationNotifier_release);
+  }
 }
 
 // MARK: - LocationNotifier <-> CLocationNotifier
@@ -3388,6 +3449,11 @@ class LocationAvailableNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LocationAvailableNotifier.fromMessage(ClassMessage<LocationAvailableNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LocationAvailableNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LocationAvailableNotifier &&
@@ -3410,6 +3476,13 @@ class LocationAvailableNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension LocationAvailableNotifierToClassMessage on LocationAvailableNotifier {
+  ClassMessage<LocationAvailableNotifier> message() {
+    final res = (_CLocationAvailableNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LocationAvailableNotifier>(res._impl.address, _CLocationAvailableNotifier_release);
+  }
 }
 
 // MARK: - LocationAvailableNotifier <-> CLocationAvailableNotifier
@@ -3657,6 +3730,11 @@ class _HeadingProviderCpp extends HeadingProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _HeadingProviderCpp.fromMessage(ClassMessage<_HeadingProviderCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _HeadingProviderCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _HeadingProviderCpp &&
@@ -3694,6 +3772,13 @@ class _HeadingProviderCpp extends HeadingProvider implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension _HeadingProviderCppToClassMessage on _HeadingProviderCpp {
+  ClassMessage<_HeadingProviderCpp> message() {
+    final res = (_CHeadingProviderCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_HeadingProviderCpp>(res._impl.address, _CHeadingProviderCpp_release);
+  }
 }
 
 // MARK: - _HeadingProviderCpp <-> CHeadingProviderCpp
@@ -3739,6 +3824,11 @@ class HeadingNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory HeadingNotifier.fromMessage(ClassMessage<HeadingNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return HeadingNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is HeadingNotifier &&
@@ -3762,6 +3852,13 @@ class HeadingNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension HeadingNotifierToClassMessage on HeadingNotifier {
+  ClassMessage<HeadingNotifier> message() {
+    final res = (_CHeadingNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<HeadingNotifier>(res._impl.address, _CHeadingNotifier_release);
+  }
 }
 
 // MARK: - HeadingNotifier <-> CHeadingNotifier
@@ -3915,6 +4012,11 @@ class HeadingAvailableNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory HeadingAvailableNotifier.fromMessage(ClassMessage<HeadingAvailableNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return HeadingAvailableNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is HeadingAvailableNotifier &&
@@ -3937,6 +4039,13 @@ class HeadingAvailableNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension HeadingAvailableNotifierToClassMessage on HeadingAvailableNotifier {
+  ClassMessage<HeadingAvailableNotifier> message() {
+    final res = (_CHeadingAvailableNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<HeadingAvailableNotifier>(res._impl.address, _CHeadingAvailableNotifier_release);
+  }
 }
 
 // MARK: - HeadingAvailableNotifier <-> CHeadingAvailableNotifier
@@ -4445,6 +4554,498 @@ extension _CWeekTimeIntervalRelease on _CWeekTimeInterval {
   }
 }
 
+// MARK: - List<String> <-> _CArray_CString
+
+final class _CArray_CString extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CStringToDart on _CArray_CString {
+  List<String> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CString on List<String> {
+  _CArray_CString _copyFromDartTo_CArray_CString() {
+    final cArray = _CArray_CStringmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CString();
+        _CArray_CStringaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CStringBasicFunctions on _CArray_CString {
+  void _releaseIntermediate() {
+    _CArray_CString_release(this);
+  }
+
+  static final _listToFill = <String>[];
+
+  static void _iterate(_CString item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<String> _fillFromC() {
+    _forEach_CArray_CString(this, ffi.Pointer.fromFunction<ffi.Void Function(_CString)>(_iterate));
+    final result = List<String>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - ContextTaggedPointerSnapshot
+
+/**
+ Снимок состояния одного указателя из контекста.
+ Содержит количество ссылок и теги для идентификации объекта.
+*/
+@internal
+class ContextTaggedPointerSnapshot {
+  /**
+   Количество активных ссылок (shared_ptr::use_count).
+   Если > 0 после уничтожения контекста — потенциальная утечка.
+  */
+  final int useCount;
+  /** Теги объекта для идентификации (например, имя типа в DI-контейнере). */
+  final List<String> tags;
+
+  const ContextTaggedPointerSnapshot({
+    this.useCount = 0,
+    required this.tags
+  });
+
+  ContextTaggedPointerSnapshot copyWith({
+    int? useCount,
+    List<String>? tags
+  }) {
+    return ContextTaggedPointerSnapshot(
+      useCount: useCount ?? this.useCount,
+      tags: tags ?? this.tags
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ContextTaggedPointerSnapshot &&
+    other.runtimeType == runtimeType &&
+    other.useCount == useCount &&
+    other.tags == tags;
+
+  @override
+  int get hashCode {
+    return Object.hash(useCount, tags);
+  }
+
+}
+final class _CContextTaggedPointerSnapshot extends ffi.Struct {
+  @ffi.Uint64()
+  external int useCount;
+
+  external _CArray_CString tags;
+
+}
+// MARK: - ContextTaggedPointerSnapshot <-> _CContextTaggedPointerSnapshot
+
+extension _CContextTaggedPointerSnapshotToDart on _CContextTaggedPointerSnapshot {
+  ContextTaggedPointerSnapshot _toDart() {
+    return ContextTaggedPointerSnapshot(
+      useCount: this.useCount,
+      tags: this.tags._toDart()
+    );
+  }
+}
+
+extension _DartTo_CContextTaggedPointerSnapshot on ContextTaggedPointerSnapshot {
+  _CContextTaggedPointerSnapshot _copyFromDartTo_CContextTaggedPointerSnapshot() {
+    final res = _CContextTaggedPointerSnapshotMakeDefault();
+    res.useCount = this.useCount;
+    res.tags = this.tags._copyFromDartTo_CArray_CString();
+    return res;
+  }
+}
+extension _CContextTaggedPointerSnapshotRelease on _CContextTaggedPointerSnapshot {
+  void _releaseIntermediate() {
+    tags._releaseIntermediate();
+  }
+}
+
+// MARK: - ContextTaggedPointersProvider
+
+/**
+ Провайдер снимков указателей контекста.
+
+ Хранит weak_ptr на объекты контекста и позволяет получать их текущее состояние.
+ Используется для периодического мониторинга утечек после уничтожения контекста.
+
+ - Note: weak_ptr нельзя передать напрямую через bindings, поэтому этот класс
+ служит обёрткой, которая остаётся на C++ стороне и предоставляет снимки.
+*/
+@internal
+class ContextTaggedPointersProvider implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CContextTaggedPointersProvider_releasePtr);
+
+  ContextTaggedPointersProvider._raw(this._self);
+  factory ContextTaggedPointersProvider._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = ContextTaggedPointersProvider._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory ContextTaggedPointersProvider.fromMessage(ClassMessage<ContextTaggedPointersProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ContextTaggedPointersProvider._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ContextTaggedPointersProvider &&
+    other.runtimeType == runtimeType &&
+    _CContextTaggedPointersProvider_cg_objectIdentifier(this._self) == _CContextTaggedPointersProvider_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CContextTaggedPointersProvider_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: ContextTaggedPointersProvider: Methods
+
+}
+
+@internal
+extension ContextTaggedPointersProviderInternalMethods on ContextTaggedPointersProvider {
+  /**
+   Получить текущий снимок всех указателей.
+  
+   - Returns: Вектор снимков с use_count и тегами каждого объекта.
+  */
+  @internal
+  List<ContextTaggedPointerSnapshot> pointersSnapshot()  {
+    _CArray_CContextTaggedPointerSnapshot res = _CContextTaggedPointersProvider_pointersSnapshot(_CContextTaggedPointersProviderMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+extension ContextTaggedPointersProviderToClassMessage on ContextTaggedPointersProvider {
+  ClassMessage<ContextTaggedPointersProvider> message() {
+    final res = (_CContextTaggedPointersProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ContextTaggedPointersProvider>(res._impl.address, _CContextTaggedPointersProvider_release);
+  }
+}
+
+// MARK: - ContextTaggedPointersProvider <-> CContextTaggedPointersProvider
+
+final class _CContextTaggedPointersProvider extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CContextTaggedPointersProviderBasicFunctions on _CContextTaggedPointersProvider {
+  void _releaseIntermediate() {
+    _CContextTaggedPointersProvider_release(_impl);
+  }
+
+  _CContextTaggedPointersProvider _retain() {
+    return _CContextTaggedPointersProvider_retain(_impl);
+  }
+}
+
+extension _CContextTaggedPointersProviderToDart on _CContextTaggedPointersProvider {
+  ContextTaggedPointersProvider _toDart() {
+    return ContextTaggedPointersProvider._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCContextTaggedPointersProvider on ContextTaggedPointersProvider {
+  _CContextTaggedPointersProvider _copyFromDartTo_CContextTaggedPointersProvider() {
+    return (_CContextTaggedPointersProviderMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - List<ContextTaggedPointerSnapshot> <-> _CArray_CContextTaggedPointerSnapshot
+
+final class _CArray_CContextTaggedPointerSnapshot extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CContextTaggedPointerSnapshotToDart on _CArray_CContextTaggedPointerSnapshot {
+  List<ContextTaggedPointerSnapshot> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CContextTaggedPointerSnapshot on List<ContextTaggedPointerSnapshot> {
+  _CArray_CContextTaggedPointerSnapshot _copyFromDartTo_CArray_CContextTaggedPointerSnapshot() {
+    final cArray = _CArray_CContextTaggedPointerSnapshotmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CContextTaggedPointerSnapshot();
+        _CArray_CContextTaggedPointerSnapshotaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CContextTaggedPointerSnapshotBasicFunctions on _CArray_CContextTaggedPointerSnapshot {
+  void _releaseIntermediate() {
+    _CArray_CContextTaggedPointerSnapshot_release(this);
+  }
+
+  static final _listToFill = <ContextTaggedPointerSnapshot>[];
+
+  static void _iterate(_CContextTaggedPointerSnapshot item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<ContextTaggedPointerSnapshot> _fillFromC() {
+    _forEach_CArray_CContextTaggedPointerSnapshot(this, ffi.Pointer.fromFunction<ffi.Void Function(_CContextTaggedPointerSnapshot)>(_iterate));
+    final result = List<ContextTaggedPointerSnapshot>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - _ContextObserverCpp
+
+/**
+ Наблюдатель жизненного цикла контекста (DI-контейнера карты).
+ Используется для диагностики утечек памяти в debug-сборках.
+*/
+class _ContextObserverCpp extends ContextObserver implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CContextObserverCpp_releasePtr);
+
+  _ContextObserverCpp._raw(this._self);
+  factory _ContextObserverCpp._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = _ContextObserverCpp._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory _ContextObserverCpp.fromMessage(ClassMessage<_ContextObserverCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _ContextObserverCpp._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is _ContextObserverCpp &&
+    other.runtimeType == runtimeType &&
+    _CContextObserverCpp_cg_objectIdentifier(this._self) == _CContextObserverCpp_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CContextObserverCpp_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: _ContextObserverCpp: Methods
+
+  /** Вызывается при создании контекста. */
+  void onContextCreated()  {
+    void res = _CContextObserverCpp_onContextCreated(_CContextObserverCppMakeDefault().._impl=_self);
+    return res;
+  }
+
+  /**
+   Вызывается при уничтожении контекста.
+  
+   - Parameter provider: Провайдер для получения снимков указателей, которые ещё не освободились.
+  */
+  void onContextDestroyed(
+    ContextTaggedPointersProvider provider
+  )  {
+    var _a1 = provider._copyFromDartTo_CContextTaggedPointersProvider();
+    void res = _CContextObserverCpp_onContextDestroyed_CContextTaggedPointersProvider(_CContextObserverCppMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    return res;
+  }
+
+}
+
+extension _ContextObserverCppToClassMessage on _ContextObserverCpp {
+  ClassMessage<_ContextObserverCpp> message() {
+    final res = (_CContextObserverCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_ContextObserverCpp>(res._impl.address, _CContextObserverCpp_release);
+  }
+}
+
+// MARK: - _ContextObserverCpp <-> CContextObserverCpp
+
+final class _CContextObserverCpp extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CContextObserverCppBasicFunctions on _CContextObserverCpp {
+  void _releaseIntermediate() {
+    _CContextObserverCpp_release(_impl);
+  }
+
+  _CContextObserverCpp _retain() {
+    return _CContextObserverCpp_retain(_impl);
+  }
+}
+
+extension _CContextObserverCppToDart on _CContextObserverCpp {
+  _ContextObserverCpp _toDart() {
+    return _ContextObserverCpp._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCContextObserverCpp on _ContextObserverCpp {
+  _CContextObserverCpp _copyFromDartTo_CContextObserverCpp() {
+    return (_CContextObserverCppMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - ContextObserver
+
+/**
+ Наблюдатель жизненного цикла контекста (DI-контейнера карты).
+ Используется для диагностики утечек памяти в debug-сборках.
+*/
+@internal
+abstract class ContextObserver {
+  void onContextCreated();
+  void onContextDestroyed(
+    ContextTaggedPointersProvider provider
+  );
+}
+
+class _ContextObserver {
+  final ContextObserver object;
+  int refCounter = 1;
+
+  _ContextObserver(this.object);
+}
+
+final class _CContextObserver extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _value;
+  external ffi.Pointer<ffi.Void> _cppValue;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _retain;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> _release;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>)>> _onContextCreated;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>, _CContextTaggedPointersProvider)>> _onContextDestroyed_CContextTaggedPointersProvider;
+}
+
+extension _CContextObserverBasicFunctions on _CContextObserver {
+  void _releaseIntermediate() {
+    _CContextObserver_release(this);
+  }
+}
+
+int _CContextObserverInstanceCounter = 1;
+final _CContextObserverInstanceMap = <int, _ContextObserver>{};
+
+extension _CContextObserverToDart on _CContextObserver {
+  ContextObserver _toDart() {
+    late ContextObserver? result;
+    final platformValue = this._value.cast<ffi.Int64>();
+    if (platformValue.address != 0) {
+      result = _CContextObserverInstanceMap[platformValue.address]?.object;
+    } else if (this._cppValue.address != 0) {
+      final cppValue = _CContextObserverCppMakeDefault().._impl = this._cppValue;
+      result = cppValue._toDart();
+    }
+    if (result == null) {
+      throw Exception("Invalid intermediate object of type _CContextObserver");
+    }
+    return result;
+  }
+}
+
+extension _DartTo_CContextObserver on ContextObserver {
+  static void retainFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    _CContextObserverInstanceMap[platformValue.address]?.refCounter += 1;
+  }
+
+  static void releaseFunction(ffi.Pointer<ffi.Void> value) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      return;
+    }
+    final platformObject = _CContextObserverInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      return;
+    }
+    platformObject.refCounter -= 1;
+    if (platformObject.refCounter > 0) {
+      return;
+    }
+    _CContextObserverInstanceMap.remove(platformValue.address);
+  }
+
+  _CContextObserver _copyFromDartTo_CContextObserver() {
+    var res = _CContextObserverMakeDefault();
+    if (this is _ContextObserverCpp) {
+      final cppValue = this as _ContextObserverCpp;
+      res._cppValue = cppValue._copyFromDartTo_CContextObserverCpp()._impl;
+      return res;
+    }
+    final instanceId = _CContextObserverInstanceCounter;
+    _CContextObserverInstanceCounter += 1;
+    _CContextObserverInstanceMap[instanceId] = _ContextObserver(this);
+    res._value = ffi.Pointer.fromAddress(instanceId);
+    final retainFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(retainFunction);
+    //final releaseFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>)>.listener(releaseFunction);
+    res._retain = retainFunctionCallable.nativeFunction;
+    //res._release = releaseFunctionCallable.nativeFunction;
+
+    final onContextCreatedFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>)>.listener(onContextCreatedFunction);
+    res._onContextCreated = onContextCreatedFunctionCallable.nativeFunction;
+    final onContextDestroyed_CContextTaggedPointersProviderFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>, _CContextTaggedPointersProvider)>.listener(onContextDestroyed_CContextTaggedPointersProviderFunction);
+    res._onContextDestroyed_CContextTaggedPointersProvider = onContextDestroyed_CContextTaggedPointersProviderFunctionCallable.nativeFunction;
+    return res;
+  }
+
+  static void onContextCreatedFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> resultValueCallback) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CContextObserver");
+    }
+    final platformObject = _CContextObserverInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CContextObserver");
+    }
+
+    platformObject.object.onContextCreated();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+    callbackFunction(context);
+  }
+
+  static void onContextDestroyed_CContextTaggedPointersProviderFunction(ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> resultValueCallback, _CContextTaggedPointersProvider provider) {
+    final platformValue = value.cast<ffi.Int64>();
+    if (platformValue.address == 0) {
+      throw Exception("Invalid object of type _CContextObserver");
+    }
+    final platformObject = _CContextObserverInstanceMap[platformValue.address];
+    if (platformObject == null) {
+      throw Exception("Invalid object of type _CContextObserver");
+    }
+
+    final providerDart = provider._toDart();
+    platformObject.object.onContextDestroyed(providerDart);
+    provider._releaseIntermediate();
+    final callbackFunction = resultValueCallback.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+    callbackFunction(context);
+  }
+
+
+}
+
 // MARK: - File
 
 /**
@@ -4462,6 +5063,11 @@ class File implements ffi.Finalizable {
     final classObject = File._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory File.fromMessage(ClassMessage<File> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return File._create(ptr);
   }
 
   /**
@@ -4527,6 +5133,13 @@ class File implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension FileToClassMessage on File {
+  ClassMessage<File> message() {
+    final res = (_CFileMakeDefault().._impl=_self)._retain();
+    return ClassMessage<File>(res._impl.address, _CFile_release);
+  }
 }
 
 // MARK: - File <-> CFile
@@ -4691,74 +5304,76 @@ GeoPoint move(
   return res._toDart();
 }
 
-// MARK: - isGeoPointValid
+// MARK: - GeoPoint
 
-bool isGeoPointValid(
-  GeoPoint geoPoint
-){
-  var _a0 = geoPoint._copyFromDartTo_CGeoPoint();
-  bool res = _CFunction_G_isGeoPointValid_With_CGeoPoint(_a0);
-  return res;
+extension GeoPointIsGeoPointValid on GeoPoint {
+  bool get isGeoPointValid {
+    var _a0 = this._copyFromDartTo_CGeoPoint();
+    bool res = _CFunction_G_isGeoPointValid_With_CGeoPoint(_a0);
+    return res;
+  }
 }
+// MARK: - GeoRect
 
-// MARK: - isGeoRectValid
-
-bool isGeoRectValid(
-  GeoRect geoRect
-){
-  var _a0 = geoRect._copyFromDartTo_CGeoRect();
-  bool res = _CFunction_G_isGeoRectValid_With_CGeoRect(_a0);
-  return res;
+extension GeoRectIsGeoRectValid on GeoRect {
+  bool get isGeoRectValid {
+    var _a0 = this._copyFromDartTo_CGeoRect();
+    bool res = _CFunction_G_isGeoRectValid_With_CGeoRect(_a0);
+    return res;
+  }
 }
+// MARK: - GeoRect
 
-// MARK: - containsPoint
+extension GeoRectContainsPoint on GeoRect {
+  bool containsPoint(
+    GeoPoint point
+  )  {
+    var _a0 = this._copyFromDartTo_CGeoRect();
+    var _a1 = point._copyFromDartTo_CGeoPoint();
+    bool res = _CFunction_G_containsPoint_With_CGeoRect_CGeoPoint(_a0, _a1);
+    return res;
+  }
 
-bool containsPoint(
-  GeoRect rect,
-  GeoPoint point
-){
-  var _a0 = rect._copyFromDartTo_CGeoRect();
-  var _a1 = point._copyFromDartTo_CGeoPoint();
-  bool res = _CFunction_G_containsPoint_With_CGeoRect_CGeoPoint(_a0, _a1);
-  return res;
 }
+// MARK: - GeoRect
 
-// MARK: - containsRect
+extension GeoRectContainsRect on GeoRect {
+  bool containsRect(
+    GeoRect rect2
+  )  {
+    var _a0 = this._copyFromDartTo_CGeoRect();
+    var _a1 = rect2._copyFromDartTo_CGeoRect();
+    bool res = _CFunction_G_containsRect_With_CGeoRect_CGeoRect(_a0, _a1);
+    return res;
+  }
 
-bool containsRect(
-  GeoRect rect1,
-  GeoRect rect2
-){
-  var _a0 = rect1._copyFromDartTo_CGeoRect();
-  var _a1 = rect2._copyFromDartTo_CGeoRect();
-  bool res = _CFunction_G_containsRect_With_CGeoRect_CGeoRect(_a0, _a1);
-  return res;
 }
+// MARK: - GeoRect
 
-// MARK: - expandPoint
+extension GeoRectExpandPoint on GeoRect {
+  GeoRect expandPoint(
+    GeoPoint point
+  )  {
+    var _a0 = this._copyFromDartTo_CGeoRect();
+    var _a1 = point._copyFromDartTo_CGeoPoint();
+    _CGeoRect res = _CFunction_G_expandPoint_With_CGeoRect_CGeoPoint(_a0, _a1);
+    return res._toDart();
+  }
 
-GeoRect expandPoint(
-  GeoRect rect,
-  GeoPoint point
-){
-  var _a0 = rect._copyFromDartTo_CGeoRect();
-  var _a1 = point._copyFromDartTo_CGeoPoint();
-  _CGeoRect res = _CFunction_G_expandPoint_With_CGeoRect_CGeoPoint(_a0, _a1);
-  return res._toDart();
 }
+// MARK: - GeoRect
 
-// MARK: - expandRect
+extension GeoRectExpandRect on GeoRect {
+  GeoRect expandRect(
+    GeoRect rect2
+  )  {
+    var _a0 = this._copyFromDartTo_CGeoRect();
+    var _a1 = rect2._copyFromDartTo_CGeoRect();
+    _CGeoRect res = _CFunction_G_expandRect_With_CGeoRect_CGeoRect(_a0, _a1);
+    return res._toDart();
+  }
 
-GeoRect expandRect(
-  GeoRect rect1,
-  GeoRect rect2
-){
-  var _a0 = rect1._copyFromDartTo_CGeoRect();
-  var _a1 = rect2._copyFromDartTo_CGeoRect();
-  _CGeoRect res = _CFunction_G_expandRect_With_CGeoRect_CGeoRect(_a0, _a1);
-  return res._toDart();
 }
-
 // MARK: - GeoRect
 
 extension GeoRectIsDegenerate on GeoRect {
@@ -8038,6 +8653,11 @@ class ItemMarkerInfo implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ItemMarkerInfo.fromMessage(ClassMessage<ItemMarkerInfo> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ItemMarkerInfo._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ItemMarkerInfo &&
@@ -8050,6 +8670,13 @@ class ItemMarkerInfo implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ItemMarkerInfoToClassMessage on ItemMarkerInfo {
+  ClassMessage<ItemMarkerInfo> message() {
+    final res = (_CItemMarkerInfoMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ItemMarkerInfo>(res._impl.address, _CItemMarkerInfo_release);
+  }
 }
 
 // MARK: - ItemMarkerInfo <-> CItemMarkerInfo
@@ -8362,6 +8989,115 @@ extension _DartTo_COptional_CTradeLicense on TradeLicense? {
     return cOptional;
   }
 }
+// MARK: - ClosedReason
+
+/** Причина закрытия. */
+enum ClosedReason {
+  /** Обед. */
+  lunch(0),
+  /** Перерыв. */
+  break_(1),
+  /** Закрыто по графику работы. */
+  workTime(2),
+  ;
+
+  const ClosedReason(this.rawValue);
+  final int rawValue;
+
+  static ClosedReason getByValue(int value) {
+    return ClosedReason.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CClosedReason extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CClosedReasonBasicFunctions on _CClosedReason {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CClosedReasonToDart on _CClosedReason {
+  ClosedReason _toDart() {
+    return ClosedReason.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CClosedReason on ClosedReason {
+  _CClosedReason _copyFromDartTo_CClosedReason() {
+    return _CClosedReasonMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
+// MARK: - ClosingHours
+
+/** Интервал, когда заведение закрыто. */
+class ClosingHours {
+  /** Временной интервал. */
+  final WeekTimeInterval interval;
+  /** Причина закрытия. */
+  final ClosedReason reason;
+
+  const ClosingHours({
+    required this.interval,
+    required this.reason
+  });
+
+  ClosingHours copyWith({
+    WeekTimeInterval? interval,
+    ClosedReason? reason
+  }) {
+    return ClosingHours(
+      interval: interval ?? this.interval,
+      reason: reason ?? this.reason
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ClosingHours &&
+    other.runtimeType == runtimeType &&
+    other.interval == interval &&
+    other.reason == reason;
+
+  @override
+  int get hashCode {
+    return Object.hash(interval, reason);
+  }
+
+}
+final class _CClosingHours extends ffi.Struct {
+  external _CWeekTimeInterval interval;
+
+  external _CClosedReason reason;
+
+}
+// MARK: - ClosingHours <-> _CClosingHours
+
+extension _CClosingHoursToDart on _CClosingHours {
+  ClosingHours _toDart() {
+    return ClosingHours(
+      interval: this.interval._toDart(),
+      reason: this.reason._toDart()
+    );
+  }
+}
+
+extension _DartTo_CClosingHours on ClosingHours {
+  _CClosingHours _copyFromDartTo_CClosingHours() {
+    final res = _CClosingHoursMakeDefault();
+    res.interval = this.interval._copyFromDartTo_CWeekTimeInterval();
+    res.reason = this.reason._copyFromDartTo_CClosedReason();
+    return res;
+  }
+}
+extension _CClosingHoursRelease on _CClosingHours {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - List<List<WeekTimeInterval>> <-> _CArray_CArray_CWeekTimeInterval
 
 final class _CArray_CArray_CWeekTimeInterval extends ffi.Struct {
@@ -8405,25 +9141,74 @@ extension _CArray_CArray_CWeekTimeIntervalBasicFunctions on _CArray_CArray_CWeek
   }
 }
 	
+// MARK: - List<List<ClosingHours>> <-> _CArray_CArray_CClosingHours
+
+final class _CArray_CArray_CClosingHours extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CArray_CClosingHoursToDart on _CArray_CArray_CClosingHours {
+  List<List<ClosingHours>> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CArray_CClosingHours on List<List<ClosingHours>> {
+  _CArray_CArray_CClosingHours _copyFromDartTo_CArray_CArray_CClosingHours() {
+    final cArray = _CArray_CArray_CClosingHoursmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CArray_CClosingHours();
+        _CArray_CArray_CClosingHoursaddElement(cArray, cItem);
+        cItem._releaseIntermediate();
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CArray_CClosingHoursBasicFunctions on _CArray_CArray_CClosingHours {
+  void _releaseIntermediate() {
+    _CArray_CArray_CClosingHours_release(this);
+  }
+
+  static final _listToFill = <List<ClosingHours>>[];
+
+  static void _iterate(_CArray_CClosingHours item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<List<ClosingHours>> _fillFromC() {
+    _forEach_CArray_CArray_CClosingHours(this, ffi.Pointer.fromFunction<ffi.Void Function(_CArray_CClosingHours)>(_iterate));
+    final result = List<List<ClosingHours>>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
 // MARK: - OpeningHours
 
 /** Часы работы организации. */
 class OpeningHours {
   /** Часы работы для каждого дня недели, начиная с понедельника. */
   final List<List<WeekTimeInterval>> weekOpeningHours;
+  /** Нерабочие интервалы для каждого дня недели, начиная с понедельника. */
+  final List<List<ClosingHours>> weekClosingHours;
+  /** Признак, что организация работает круглосуточно. */
   final bool isOpen24x7;
 
   const OpeningHours({
     required this.weekOpeningHours,
+    required this.weekClosingHours,
     required this.isOpen24x7
   });
 
   OpeningHours copyWith({
     List<List<WeekTimeInterval>>? weekOpeningHours,
+    List<List<ClosingHours>>? weekClosingHours,
     bool? isOpen24x7
   }) {
     return OpeningHours(
       weekOpeningHours: weekOpeningHours ?? this.weekOpeningHours,
+      weekClosingHours: weekClosingHours ?? this.weekClosingHours,
       isOpen24x7: isOpen24x7 ?? this.isOpen24x7
     );
   }
@@ -8432,16 +9217,19 @@ class OpeningHours {
     identical(this, other) || other is OpeningHours &&
     other.runtimeType == runtimeType &&
     other.weekOpeningHours == weekOpeningHours &&
+    other.weekClosingHours == weekClosingHours &&
     other.isOpen24x7 == isOpen24x7;
 
   @override
   int get hashCode {
-    return Object.hash(weekOpeningHours, isOpen24x7);
+    return Object.hash(weekOpeningHours, weekClosingHours, isOpen24x7);
   }
 
 }
 final class _COpeningHours extends ffi.Struct {
   external _CArray_CArray_CWeekTimeInterval weekOpeningHours;
+
+  external _CArray_CArray_CClosingHours weekClosingHours;
 
   @ffi.Bool()
   external bool isOpen24x7;
@@ -8453,6 +9241,7 @@ extension _COpeningHoursToDart on _COpeningHours {
   OpeningHours _toDart() {
     return OpeningHours(
       weekOpeningHours: this.weekOpeningHours._toDart(),
+      weekClosingHours: this.weekClosingHours._toDart(),
       isOpen24x7: this.isOpen24x7
     );
   }
@@ -8462,6 +9251,7 @@ extension _DartTo_COpeningHours on OpeningHours {
   _COpeningHours _copyFromDartTo_COpeningHours() {
     final res = _COpeningHoursMakeDefault();
     res.weekOpeningHours = this.weekOpeningHours._copyFromDartTo_CArray_CArray_CWeekTimeInterval();
+    res.weekClosingHours = this.weekClosingHours._copyFromDartTo_CArray_CArray_CClosingHours();
     res.isOpen24x7 = this.isOpen24x7;
     return res;
   }
@@ -8469,6 +9259,7 @@ extension _DartTo_COpeningHours on OpeningHours {
 extension _COpeningHoursRelease on _COpeningHours {
   void _releaseIntermediate() {
     weekOpeningHours._releaseIntermediate();
+    weekClosingHours._releaseIntermediate();
   }
 }
 
@@ -8510,6 +9301,49 @@ extension _CArray_CWeekTimeIntervalBasicFunctions on _CArray_CWeekTimeInterval {
   List<WeekTimeInterval> _fillFromC() {
     _forEach_CArray_CWeekTimeInterval(this, ffi.Pointer.fromFunction<ffi.Void Function(_CWeekTimeInterval)>(_iterate));
     final result = List<WeekTimeInterval>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - List<ClosingHours> <-> _CArray_CClosingHours
+
+final class _CArray_CClosingHours extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CClosingHoursToDart on _CArray_CClosingHours {
+  List<ClosingHours> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CClosingHours on List<ClosingHours> {
+  _CArray_CClosingHours _copyFromDartTo_CArray_CClosingHours() {
+    final cArray = _CArray_CClosingHoursmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CClosingHours();
+        _CArray_CClosingHoursaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CClosingHoursBasicFunctions on _CArray_CClosingHours {
+  void _releaseIntermediate() {
+    _CArray_CClosingHours_release(this);
+  }
+
+  static final _listToFill = <ClosingHours>[];
+
+  static void _iterate(_CClosingHours item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<ClosingHours> _fillFromC() {
+    _forEach_CArray_CClosingHours(this, ffi.Pointer.fromFunction<ffi.Void Function(_CClosingHours)>(_iterate));
+    final result = List<ClosingHours>.from(_listToFill);
     _listToFill.clear();
     return result;
   }
@@ -9325,19 +10159,24 @@ class Reviews {
   final double rating;
   /** Количество отзывов. */
   final int count;
+  /** Общее количество оценок (включая отзывы без текста). */
+  final int countWithStars;
 
   const Reviews({
-    required this.rating,
-    required this.count
+    this.rating = 0,
+    this.count = 0,
+    this.countWithStars = 0
   });
 
   Reviews copyWith({
     double? rating,
-    int? count
+    int? count,
+    int? countWithStars
   }) {
     return Reviews(
       rating: rating ?? this.rating,
-      count: count ?? this.count
+      count: count ?? this.count,
+      countWithStars: countWithStars ?? this.countWithStars
     );
   }
   @override
@@ -9345,11 +10184,12 @@ class Reviews {
     identical(this, other) || other is Reviews &&
     other.runtimeType == runtimeType &&
     other.rating == rating &&
-    other.count == count;
+    other.count == count &&
+    other.countWithStars == countWithStars;
 
   @override
   int get hashCode {
-    return Object.hash(rating, count);
+    return Object.hash(rating, count, countWithStars);
   }
 
 }
@@ -9360,6 +10200,9 @@ final class _CReviews extends ffi.Struct {
   @ffi.Uint32()
   external int count;
 
+  @ffi.Uint32()
+  external int countWithStars;
+
 }
 // MARK: - Reviews <-> _CReviews
 
@@ -9367,7 +10210,8 @@ extension _CReviewsToDart on _CReviews {
   Reviews _toDart() {
     return Reviews(
       rating: this.rating,
-      count: this.count
+      count: this.count,
+      countWithStars: this.countWithStars
     );
   }
 }
@@ -9377,6 +10221,7 @@ extension _DartTo_CReviews on Reviews {
     final res = _CReviewsMakeDefault();
     res.rating = this.rating;
     res.count = this.count;
+    res.countWithStars = this.countWithStars;
     return res;
   }
 }
@@ -9587,30 +10432,456 @@ extension _CUIMarkerInfoRelease on _CUIMarkerInfo {
   }
 }
 
+// MARK: - Duration? <-> _COptional_CTimeInterval
+
+final class _COptional_CTimeInterval extends ffi.Struct {
+  
+  external _CTimeInterval value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CTimeIntervalBasicFunctions on _COptional_CTimeInterval {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CTimeIntervalToDart on _COptional_CTimeInterval {
+  Duration? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CTimeInterval on Duration? {
+  _COptional_CTimeInterval _copyFromDartTo_COptional_CTimeInterval() {
+    final cOptional = _COptional_CTimeIntervalMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CTimeInterval();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - Closed
+
+/** Закрыто. */
+class Closed {
+  /**
+   Время до открытия.
+   Отсутствует, если организация закрыта навсегда.
+  */
+  final Duration? timeUntilOpen;
+  /** Причина, по которой организация закрыта. */
+  final ClosedReason reason;
+
+  const Closed({
+    required this.timeUntilOpen,
+    required this.reason
+  });
+
+  Closed copyWith({
+    Optional<Duration?>? timeUntilOpen,
+    ClosedReason? reason
+  }) {
+    return Closed(
+      timeUntilOpen: timeUntilOpen != null ? timeUntilOpen.value : this.timeUntilOpen,
+      reason: reason ?? this.reason
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Closed &&
+    other.runtimeType == runtimeType &&
+    other.timeUntilOpen == timeUntilOpen &&
+    other.reason == reason;
+
+  @override
+  int get hashCode {
+    return Object.hash(timeUntilOpen, reason);
+  }
+
+}
+final class _CClosed extends ffi.Struct {
+  external _COptional_CTimeInterval timeUntilOpen;
+
+  external _CClosedReason reason;
+
+}
+// MARK: - Closed <-> _CClosed
+
+extension _CClosedToDart on _CClosed {
+  Closed _toDart() {
+    return Closed(
+      timeUntilOpen: this.timeUntilOpen._toDart(),
+      reason: this.reason._toDart()
+    );
+  }
+}
+
+extension _DartTo_CClosed on Closed {
+  _CClosed _copyFromDartTo_CClosed() {
+    final res = _CClosedMakeDefault();
+    res.timeUntilOpen = this.timeUntilOpen._copyFromDartTo_COptional_CTimeInterval();
+    res.reason = this.reason._copyFromDartTo_CClosedReason();
+    return res;
+  }
+}
+extension _CClosedRelease on _CClosed {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - ClosingSoon
+
+/** Скоро закроется. */
+class ClosingSoon {
+  /** Время до закрытия. */
+  final Duration timeUntilClose;
+  /** Причина, по которой организация будет закрыта. */
+  final ClosedReason reason;
+
+  const ClosingSoon({
+    required this.timeUntilClose,
+    required this.reason
+  });
+
+  ClosingSoon copyWith({
+    Duration? timeUntilClose,
+    ClosedReason? reason
+  }) {
+    return ClosingSoon(
+      timeUntilClose: timeUntilClose ?? this.timeUntilClose,
+      reason: reason ?? this.reason
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is ClosingSoon &&
+    other.runtimeType == runtimeType &&
+    other.timeUntilClose == timeUntilClose &&
+    other.reason == reason;
+
+  @override
+  int get hashCode {
+    return Object.hash(timeUntilClose, reason);
+  }
+
+}
+final class _CClosingSoon extends ffi.Struct {
+  external _CTimeInterval timeUntilClose;
+
+  external _CClosedReason reason;
+
+}
+// MARK: - ClosingSoon <-> _CClosingSoon
+
+extension _CClosingSoonToDart on _CClosingSoon {
+  ClosingSoon _toDart() {
+    return ClosingSoon(
+      timeUntilClose: this.timeUntilClose._toDart(),
+      reason: this.reason._toDart()
+    );
+  }
+}
+
+extension _DartTo_CClosingSoon on ClosingSoon {
+  _CClosingSoon _copyFromDartTo_CClosingSoon() {
+    final res = _CClosingSoonMakeDefault();
+    res.timeUntilClose = this.timeUntilClose._copyFromDartTo_CTimeInterval();
+    res.reason = this.reason._copyFromDartTo_CClosedReason();
+    return res;
+  }
+}
+extension _CClosingSoonRelease on _CClosingSoon {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - Opened
+
+/** Открыто. */
+class Opened {
+  /**
+   Время до закрытия.
+   Отсутствует у круглосуточных организаций.
+  */
+  final Duration? timeUntilClose;
+
+  const Opened(this.timeUntilClose);
+
+  Opened copyWith({
+    Optional<Duration?>? timeUntilClose
+  }) {
+    return Opened(
+      timeUntilClose != null ? timeUntilClose.value : this.timeUntilClose
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Opened &&
+    other.runtimeType == runtimeType &&
+    other.timeUntilClose == timeUntilClose;
+
+  @override
+  int get hashCode {
+    return timeUntilClose.hashCode;
+  }
+
+}
+final class _COpened extends ffi.Struct {
+  external _COptional_CTimeInterval timeUntilClose;
+
+}
+// MARK: - Opened <-> _COpened
+
+extension _COpenedToDart on _COpened {
+  Opened _toDart() {
+    return Opened(
+      this.timeUntilClose._toDart()
+    );
+  }
+}
+
+extension _DartTo_COpened on Opened {
+  _COpened _copyFromDartTo_COpened() {
+    final res = _COpenedMakeDefault();
+    res.timeUntilClose = this.timeUntilClose._copyFromDartTo_COptional_CTimeInterval();
+    return res;
+  }
+}
+extension _COpenedRelease on _COpened {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - OpeningSoon
+
+/** Скоро откроется. */
+class OpeningSoon {
+  /** Время до открытия. */
+  final Duration timeUntilOpen;
+
+  const OpeningSoon(this.timeUntilOpen);
+
+  OpeningSoon copyWith({
+    Duration? timeUntilOpen
+  }) {
+    return OpeningSoon(
+      timeUntilOpen ?? this.timeUntilOpen
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is OpeningSoon &&
+    other.runtimeType == runtimeType &&
+    other.timeUntilOpen == timeUntilOpen;
+
+  @override
+  int get hashCode {
+    return timeUntilOpen.hashCode;
+  }
+
+}
+final class _COpeningSoon extends ffi.Struct {
+  external _CTimeInterval timeUntilOpen;
+
+}
+// MARK: - OpeningSoon <-> _COpeningSoon
+
+extension _COpeningSoonToDart on _COpeningSoon {
+  OpeningSoon _toDart() {
+    return OpeningSoon(
+      this.timeUntilOpen._toDart()
+    );
+  }
+}
+
+extension _DartTo_COpeningSoon on OpeningSoon {
+  _COpeningSoon _copyFromDartTo_COpeningSoon() {
+    final res = _COpeningSoonMakeDefault();
+    res.timeUntilOpen = this.timeUntilOpen._copyFromDartTo_CTimeInterval();
+    return res;
+  }
+}
+extension _COpeningSoonRelease on _COpeningSoon {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - OpenStatus
+
+final class OpenStatus {
+  final Object? _value;
+  final int _index;
+
+  OpenStatus._raw(this._value, this._index);
+
+  OpenStatus.opened(Opened value) : this._raw(value, 0);
+  OpenStatus.openingSoon(OpeningSoon value) : this._raw(value, 1);
+  OpenStatus.closingSoon(ClosingSoon value) : this._raw(value, 2);
+  OpenStatus.closed(Closed value) : this._raw(value, 3);
+
+  bool get isOpened => this._index == 0;
+  Opened? get asOpened => this.isOpened ? this._value as Opened : null;
+
+  bool get isOpeningSoon => this._index == 1;
+  OpeningSoon? get asOpeningSoon => this.isOpeningSoon ? this._value as OpeningSoon : null;
+
+  bool get isClosingSoon => this._index == 2;
+  ClosingSoon? get asClosingSoon => this.isClosingSoon ? this._value as ClosingSoon : null;
+
+  bool get isClosed => this._index == 3;
+  Closed? get asClosed => this.isClosed ? this._value as Closed : null;
+
+  T match<T>({
+    required T Function(Opened value) opened,
+    required T Function(OpeningSoon value) openingSoon,
+    required T Function(ClosingSoon value) closingSoon,
+    required T Function(Closed value) closed,
+  }) {
+    return switch (this._index) {
+      0 => opened(this._value as Opened),
+      1 => openingSoon(this._value as OpeningSoon),
+      2 => closingSoon(this._value as ClosingSoon),
+      3 => closed(this._value as Closed),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+
+  @override
+  String toString() => "OpenStatus(${this._value})";
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is OpenStatus &&
+    other.runtimeType == runtimeType &&
+    other._value == this._value && other._index == this._index;
+
+  @override
+  int get hashCode => Object.hash(this._index, this._value);
+}
+
+final class _COpenStatusImpl extends ffi.Union {
+  external _COpened _opened;
+  external _COpeningSoon _openingSoon;
+  external _CClosingSoon _closingSoon;
+  external _CClosed _closed;
+}
+
+final class _COpenStatus extends ffi.Struct {
+  external _COpenStatusImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _COpenStatusBasicFunctions on _COpenStatus {
+  void _releaseIntermediate() {
+    _COpenStatus_release(this);
+  }
+}
+	
+// MARK: - OpenStatus <-> COpenStatus
+
+extension _COpenStatusToDart on _COpenStatus {
+  OpenStatus _toDart() {
+    return switch (this._index) {
+      0 => OpenStatus.opened(this._impl._opened._toDart()),
+      1 => OpenStatus.openingSoon(this._impl._openingSoon._toDart()),
+      2 => OpenStatus.closingSoon(this._impl._closingSoon._toDart()),
+      3 => OpenStatus.closed(this._impl._closed._toDart()),
+      _ => throw NativeException("Unrecognized case index ${this._index}")
+    };
+  }
+}
+
+extension _DartTo_COpenStatus on OpenStatus {
+  _COpenStatus _copyFromDartTo_COpenStatus() {
+    var res = _COpenStatusMakeDefault();
+    this.match<void>(
+      opened: (Opened value) {
+        res._impl._opened = value._copyFromDartTo_COpened();
+        res._index = 0;
+      },
+      openingSoon: (OpeningSoon value) {
+        res._impl._openingSoon = value._copyFromDartTo_COpeningSoon();
+        res._index = 1;
+      },
+      closingSoon: (ClosingSoon value) {
+        res._impl._closingSoon = value._copyFromDartTo_CClosingSoon();
+        res._index = 2;
+      },
+      closed: (Closed value) {
+        res._impl._closed = value._copyFromDartTo_CClosed();
+        res._index = 3;
+      },
+    );
+    return res;
+  }
+}
+
 // MARK: - WorkStatus
 
 /** Статус работы. */
 class WorkStatus {
-  /** Открыто ли сейчас. */
+  /**
+   Открыто ли сейчас
+   Используйте open_status для получения более детального статуса работы организации.
+  */
   final bool isOpen;
   /**
    Текстовое описание.
    Например, "Открыто до 21:00", "Круглосуточно", "Закроется через 5 минут".
   */
   final String description;
+  /** Статус. */
+  final OpenStatus openStatus;
+  /**
+   Тескотовое подсказка по текущему статусу.
+   Например: "Откроется через 15 минут", "Сегодня 10:00–22:00", "Ежедневно 09:00–21:00", "Открыто", "Закроется
+   через 15 минут", "Закрыто", "Обед до 14:00", "Перерыв до 16:15".
+  */
+  final String openStatusHint;
+  /**
+   Текстовая подсказка по расписанию работы.
+   Например: "Сегодня 10:00–22:00", "Ежедневно 09:00–21:00", "Сегодня закрыто"
+  */
+  final String? scheduleHint;
+  /**
+   Текстовая подсказка о текущем или ближайшем перерыве.
+   Например: "Обед до 14:00", "Перерыв до 11:30".
+  */
+  final String? breakHint;
 
   const WorkStatus({
-    required this.isOpen,
-    required this.description
+    this.isOpen = false,
+    required this.description,
+    required this.openStatus,
+    required this.openStatusHint,
+    required this.scheduleHint,
+    required this.breakHint
   });
 
   WorkStatus copyWith({
     bool? isOpen,
-    String? description
+    String? description,
+    OpenStatus? openStatus,
+    String? openStatusHint,
+    Optional<String?>? scheduleHint,
+    Optional<String?>? breakHint
   }) {
     return WorkStatus(
       isOpen: isOpen ?? this.isOpen,
-      description: description ?? this.description
+      description: description ?? this.description,
+      openStatus: openStatus ?? this.openStatus,
+      openStatusHint: openStatusHint ?? this.openStatusHint,
+      scheduleHint: scheduleHint != null ? scheduleHint.value : this.scheduleHint,
+      breakHint: breakHint != null ? breakHint.value : this.breakHint
     );
   }
   @override
@@ -9618,11 +10889,15 @@ class WorkStatus {
     identical(this, other) || other is WorkStatus &&
     other.runtimeType == runtimeType &&
     other.isOpen == isOpen &&
-    other.description == description;
+    other.description == description &&
+    other.openStatus == openStatus &&
+    other.openStatusHint == openStatusHint &&
+    other.scheduleHint == scheduleHint &&
+    other.breakHint == breakHint;
 
   @override
   int get hashCode {
-    return Object.hash(isOpen, description);
+    return Object.hash(isOpen, description, openStatus, openStatusHint, scheduleHint, breakHint);
   }
 
 }
@@ -9632,6 +10907,14 @@ final class _CWorkStatus extends ffi.Struct {
 
   external _CString description;
 
+  external _COpenStatus openStatus;
+
+  external _CString openStatusHint;
+
+  external _COptional_CString scheduleHint;
+
+  external _COptional_CString breakHint;
+
 }
 // MARK: - WorkStatus <-> _CWorkStatus
 
@@ -9639,7 +10922,11 @@ extension _CWorkStatusToDart on _CWorkStatus {
   WorkStatus _toDart() {
     return WorkStatus(
       isOpen: this.isOpen,
-      description: this.description._toDart()
+      description: this.description._toDart(),
+      openStatus: this.openStatus._toDart(),
+      openStatusHint: this.openStatusHint._toDart(),
+      scheduleHint: this.scheduleHint._toDart(),
+      breakHint: this.breakHint._toDart()
     );
   }
 }
@@ -9649,12 +10936,19 @@ extension _DartTo_CWorkStatus on WorkStatus {
     final res = _CWorkStatusMakeDefault();
     res.isOpen = this.isOpen;
     res.description = this.description._copyFromDartTo_CString();
+    res.openStatus = this.openStatus._copyFromDartTo_COpenStatus();
+    res.openStatusHint = this.openStatusHint._copyFromDartTo_CString();
+    res.scheduleHint = this.scheduleHint._copyFromDartTo_COptional_CString();
+    res.breakHint = this.breakHint._copyFromDartTo_COptional_CString();
     return res;
   }
 }
 extension _CWorkStatusRelease on _CWorkStatus {
   void _releaseIntermediate() {
     description._releaseIntermediate();
+    openStatusHint._releaseIntermediate();
+    scheduleHint._releaseIntermediate();
+    breakHint._releaseIntermediate();
   }
 }
 
@@ -9913,6 +11207,11 @@ class PolylineGeometry extends Geometry implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PolylineGeometry.fromMessage(ClassMessage<PolylineGeometry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PolylineGeometry._create(ptr);
+  }
+
   factory PolylineGeometry(
     List<GeoPoint> points
   ) {
@@ -9934,6 +11233,13 @@ class PolylineGeometry extends Geometry implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PolylineGeometryToClassMessage on PolylineGeometry {
+  ClassMessage<PolylineGeometry> message() {
+    final res = (_CPolylineGeometryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PolylineGeometry>(res._impl.address, _CPolylineGeometry_release);
+  }
 }
 
 // MARK: - PolylineGeometry <-> CPolylineGeometry
@@ -12883,6 +14189,11 @@ class DirectoryObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectoryObject.fromMessage(ClassMessage<DirectoryObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectoryObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DirectoryObject &&
@@ -12922,6 +14233,13 @@ class DirectoryObject implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension DirectoryObjectToClassMessage on DirectoryObject {
+  ClassMessage<DirectoryObject> message() {
+    final res = (_CDirectoryObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectoryObject>(res._impl.address, _CDirectoryObject_release);
+  }
 }
 
 // MARK: - DirectoryObject <-> CDirectoryObject
@@ -13139,42 +14457,6 @@ extension _DartTo_COptional_CFormattedAddress on FormattedAddress? {
     final cOptional = _COptional_CFormattedAddressMakeDefault();
     if (this != null) {
       cOptional.value = this!._copyFromDartTo_CFormattedAddress();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - Duration? <-> _COptional_CTimeInterval
-
-final class _COptional_CTimeInterval extends ffi.Struct {
-  
-  external _CTimeInterval value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CTimeIntervalBasicFunctions on _COptional_CTimeInterval {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CTimeIntervalToDart on _COptional_CTimeInterval {
-  Duration? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CTimeInterval on Duration? {
-  _COptional_CTimeInterval _copyFromDartTo_COptional_CTimeInterval() {
-    final cOptional = _COptional_CTimeIntervalMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CTimeInterval();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -13952,6 +15234,11 @@ class Page implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Page.fromMessage(ClassMessage<Page> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Page._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Page &&
@@ -13994,6 +15281,13 @@ class Page implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension PageToClassMessage on Page {
+  ClassMessage<Page> message() {
+    final res = (_CPageMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Page>(res._impl.address, _CPage_release);
+  }
 }
 
 // MARK: - Page <-> CPage
@@ -14302,6 +15596,11 @@ class Widget implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Widget.fromMessage(ClassMessage<Widget> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Widget._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Widget &&
@@ -14314,6 +15613,13 @@ class Widget implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension WidgetToClassMessage on Widget {
+  ClassMessage<Widget> message() {
+    final res = (_CWidgetMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Widget>(res._impl.address, _CWidget_release);
+  }
 }
 
 // MARK: - Widget <-> CWidget
@@ -14428,6 +15734,11 @@ class Checkbox extends Widget implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Checkbox.fromMessage(ClassMessage<Checkbox> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Checkbox._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Checkbox &&
@@ -14440,6 +15751,13 @@ class Checkbox extends Widget implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CheckboxToClassMessage on Checkbox {
+  ClassMessage<Checkbox> message() {
+    final res = (_CCheckboxMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Checkbox>(res._impl.address, _CCheckbox_release);
+  }
 }
 
 // MARK: - Checkbox <-> CCheckbox
@@ -14470,49 +15788,6 @@ extension _DartToCCheckbox on Checkbox {
     return (_CCheckboxMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - List<String> <-> _CArray_CString
-
-final class _CArray_CString extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CStringToDart on _CArray_CString {
-  List<String> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CString on List<String> {
-  _CArray_CString _copyFromDartTo_CArray_CString() {
-    final cArray = _CArray_CStringmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CString();
-        _CArray_CStringaddElement(cArray, cItem);
-        cItem._releaseIntermediate();
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CStringBasicFunctions on _CArray_CString {
-  void _releaseIntermediate() {
-    _CArray_CString_release(this);
-  }
-
-  static final _listToFill = <String>[];
-
-  static void _iterate(_CString item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<String> _fillFromC() {
-    _forEach_CArray_CString(this, ffi.Pointer.fromFunction<ffi.Void Function(_CString)>(_iterate));
-    final result = List<String>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
 // MARK: - CheckableItemType
 
 /** Тип отмечаемого элемента. */
@@ -14589,6 +15864,11 @@ class CheckableItem implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CheckableItem.fromMessage(ClassMessage<CheckableItem> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CheckableItem._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CheckableItem &&
@@ -14601,6 +15881,13 @@ class CheckableItem implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CheckableItemToClassMessage on CheckableItem {
+  ClassMessage<CheckableItem> message() {
+    final res = (_CCheckableItemMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CheckableItem>(res._impl.address, _CCheckableItem_release);
+  }
 }
 
 // MARK: - CheckableItem <-> CCheckableItem
@@ -14694,6 +15981,11 @@ class CheckableGroupedItem implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CheckableGroupedItem.fromMessage(ClassMessage<CheckableGroupedItem> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CheckableGroupedItem._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CheckableGroupedItem &&
@@ -14706,6 +15998,13 @@ class CheckableGroupedItem implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CheckableGroupedItemToClassMessage on CheckableGroupedItem {
+  ClassMessage<CheckableGroupedItem> message() {
+    final res = (_CCheckableGroupedItemMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CheckableGroupedItem>(res._impl.address, _CCheckableGroupedItem_release);
+  }
 }
 
 // MARK: - CheckableGroupedItem <-> CCheckableGroupedItem
@@ -14761,6 +16060,11 @@ class CheckableItemsGroup extends Widget implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CheckableItemsGroup.fromMessage(ClassMessage<CheckableItemsGroup> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CheckableItemsGroup._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CheckableItemsGroup &&
@@ -14773,6 +16077,13 @@ class CheckableItemsGroup extends Widget implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CheckableItemsGroupToClassMessage on CheckableItemsGroup {
+  ClassMessage<CheckableItemsGroup> message() {
+    final res = (_CCheckableItemsGroupMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CheckableItemsGroup>(res._impl.address, _CCheckableItemsGroup_release);
+  }
 }
 
 // MARK: - CheckableItemsGroup <-> CCheckableItemsGroup
@@ -14896,6 +16207,11 @@ class SimpleCheckableItem extends CheckableItem implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SimpleCheckableItem.fromMessage(ClassMessage<SimpleCheckableItem> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SimpleCheckableItem._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SimpleCheckableItem &&
@@ -14908,6 +16224,13 @@ class SimpleCheckableItem extends CheckableItem implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SimpleCheckableItemToClassMessage on SimpleCheckableItem {
+  ClassMessage<SimpleCheckableItem> message() {
+    final res = (_CSimpleCheckableItemMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SimpleCheckableItem>(res._impl.address, _CSimpleCheckableItem_release);
+  }
 }
 
 // MARK: - SimpleCheckableItem <-> CSimpleCheckableItem
@@ -14963,6 +16286,11 @@ class GroupCheckableItem extends CheckableItem implements ffi.Finalizable {
     return classObject;
   }
 
+  factory GroupCheckableItem.fromMessage(ClassMessage<GroupCheckableItem> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GroupCheckableItem._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is GroupCheckableItem &&
@@ -14975,6 +16303,13 @@ class GroupCheckableItem extends CheckableItem implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension GroupCheckableItemToClassMessage on GroupCheckableItem {
+  ClassMessage<GroupCheckableItem> message() {
+    final res = (_CGroupCheckableItemMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GroupCheckableItem>(res._impl.address, _CGroupCheckableItem_release);
+  }
 }
 
 // MARK: - GroupCheckableItem <-> CGroupCheckableItem
@@ -15469,6 +16804,11 @@ class RangeWidget extends Widget implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RangeWidget.fromMessage(ClassMessage<RangeWidget> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RangeWidget._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RangeWidget &&
@@ -15497,6 +16837,13 @@ class RangeWidget extends Widget implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RangeWidgetToClassMessage on RangeWidget {
+  ClassMessage<RangeWidget> message() {
+    final res = (_CRangeWidgetMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RangeWidget>(res._impl.address, _CRangeWidget_release);
+  }
 }
 
 // MARK: - RangeWidget <-> CRangeWidget
@@ -15609,6 +16956,11 @@ class SearchResult implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchResult.fromMessage(ClassMessage<SearchResult> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchResult._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchResult &&
@@ -15643,6 +16995,13 @@ class SearchResult implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension SearchResultToClassMessage on SearchResult {
+  ClassMessage<SearchResult> message() {
+    final res = (_CSearchResultMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchResult>(res._impl.address, _CSearchResult_release);
+  }
 }
 
 // MARK: - SearchResult <-> CSearchResult
@@ -15748,6 +17107,11 @@ class Geometry implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Geometry.fromMessage(ClassMessage<Geometry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Geometry._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Geometry &&
@@ -15778,6 +17142,13 @@ class Geometry implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension GeometryToClassMessage on Geometry {
+  ClassMessage<Geometry> message() {
+    final res = (_CGeometryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Geometry>(res._impl.address, _CGeometry_release);
+  }
 }
 
 // MARK: - Geometry <-> CGeometry
@@ -16286,6 +17657,11 @@ class SearchQuery implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchQuery.fromMessage(ClassMessage<SearchQuery> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchQuery._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchQuery &&
@@ -16298,6 +17674,13 @@ class SearchQuery implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SearchQueryToClassMessage on SearchQuery {
+  ClassMessage<SearchQuery> message() {
+    final res = (_CSearchQueryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchQuery>(res._impl.address, _CSearchQuery_release);
+  }
 }
 
 // MARK: - SearchQuery <-> CSearchQuery
@@ -16351,6 +17734,11 @@ class SuggestObjectHandler implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SuggestObjectHandler.fromMessage(ClassMessage<SuggestObjectHandler> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SuggestObjectHandler._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SuggestObjectHandler &&
@@ -16363,6 +17751,13 @@ class SuggestObjectHandler implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SuggestObjectHandlerToClassMessage on SuggestObjectHandler {
+  ClassMessage<SuggestObjectHandler> message() {
+    final res = (_CSuggestObjectHandlerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SuggestObjectHandler>(res._impl.address, _CSuggestObjectHandler_release);
+  }
 }
 
 // MARK: - SuggestObjectHandler <-> CSuggestObjectHandler
@@ -16416,6 +17811,11 @@ class PerformSearchHandler implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PerformSearchHandler.fromMessage(ClassMessage<PerformSearchHandler> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PerformSearchHandler._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is PerformSearchHandler &&
@@ -16428,6 +17828,13 @@ class PerformSearchHandler implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PerformSearchHandlerToClassMessage on PerformSearchHandler {
+  ClassMessage<PerformSearchHandler> message() {
+    final res = (_CPerformSearchHandlerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PerformSearchHandler>(res._impl.address, _CPerformSearchHandler_release);
+  }
 }
 
 // MARK: - PerformSearchHandler <-> CPerformSearchHandler
@@ -16488,6 +17895,11 @@ class IncompleteTextHandler implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IncompleteTextHandler.fromMessage(ClassMessage<IncompleteTextHandler> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IncompleteTextHandler._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is IncompleteTextHandler &&
@@ -16500,6 +17912,13 @@ class IncompleteTextHandler implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension IncompleteTextHandlerToClassMessage on IncompleteTextHandler {
+  ClassMessage<IncompleteTextHandler> message() {
+    final res = (_CIncompleteTextHandlerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IncompleteTextHandler>(res._impl.address, _CIncompleteTextHandler_release);
+  }
 }
 
 // MARK: - IncompleteTextHandler <-> CIncompleteTextHandler
@@ -17004,6 +18423,11 @@ class Suggest implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Suggest.fromMessage(ClassMessage<Suggest> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Suggest._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Suggest &&
@@ -17016,6 +18440,13 @@ class Suggest implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SuggestToClassMessage on Suggest {
+  ClassMessage<Suggest> message() {
+    final res = (_CSuggestMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Suggest>(res._impl.address, _CSuggest_release);
+  }
 }
 
 // MARK: - Suggest <-> CSuggest
@@ -17073,6 +18504,11 @@ class SuggestResult implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SuggestResult.fromMessage(ClassMessage<SuggestResult> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SuggestResult._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SuggestResult &&
@@ -17085,6 +18521,13 @@ class SuggestResult implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SuggestResultToClassMessage on SuggestResult {
+  ClassMessage<SuggestResult> message() {
+    final res = (_CSuggestResultMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SuggestResult>(res._impl.address, _CSuggestResult_release);
+  }
 }
 
 // MARK: - SuggestResult <-> CSuggestResult
@@ -17173,6 +18616,11 @@ class SuggestQuery implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SuggestQuery.fromMessage(ClassMessage<SuggestQuery> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SuggestQuery._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SuggestQuery &&
@@ -17185,6 +18633,13 @@ class SuggestQuery implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SuggestQueryToClassMessage on SuggestQuery {
+  ClassMessage<SuggestQuery> message() {
+    final res = (_CSuggestQueryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SuggestQuery>(res._impl.address, _CSuggestQuery_release);
+  }
 }
 
 // MARK: - SuggestQuery <-> CSuggestQuery
@@ -17231,6 +18686,11 @@ class SearchManager implements ffi.Finalizable {
     final classObject = SearchManager._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory SearchManager.fromMessage(ClassMessage<SearchManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchManager._create(ptr);
   }
 
   @override
@@ -17413,6 +18873,13 @@ class SearchManager implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension SearchManagerToClassMessage on SearchManager {
+  ClassMessage<SearchManager> message() {
+    final res = (_CSearchManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchManager>(res._impl.address, _CSearchManager_release);
+  }
 }
 
 // MARK: - SearchManager <-> CSearchManager
@@ -17967,6 +19434,11 @@ class SearchQueryBuilder implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchQueryBuilder.fromMessage(ClassMessage<SearchQueryBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchQueryBuilder._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchQueryBuilder &&
@@ -18226,6 +19698,13 @@ class SearchQueryBuilder implements ffi.Finalizable {
 
 }
 
+extension SearchQueryBuilderToClassMessage on SearchQueryBuilder {
+  ClassMessage<SearchQueryBuilder> message() {
+    final res = (_CSearchQueryBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchQueryBuilder>(res._impl.address, _CSearchQueryBuilder_release);
+  }
+}
+
 // MARK: - SearchQueryBuilder <-> CSearchQueryBuilder
 
 final class _CSearchQueryBuilder extends ffi.Struct {
@@ -18375,6 +19854,11 @@ class SuggestQueryBuilder implements ffi.Finalizable {
     final classObject = SuggestQueryBuilder._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory SuggestQueryBuilder.fromMessage(ClassMessage<SuggestQueryBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SuggestQueryBuilder._create(ptr);
   }
 
   @override
@@ -18531,6 +20015,13 @@ class SuggestQueryBuilder implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension SuggestQueryBuilderToClassMessage on SuggestQueryBuilder {
+  ClassMessage<SuggestQueryBuilder> message() {
+    final res = (_CSuggestQueryBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SuggestQueryBuilder>(res._impl.address, _CSuggestQueryBuilder_release);
+  }
 }
 
 // MARK: - SuggestQueryBuilder <-> CSuggestQueryBuilder
@@ -18693,6 +20184,11 @@ class SearchQueryWithInfo implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchQueryWithInfo.fromMessage(ClassMessage<SearchQueryWithInfo> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchQueryWithInfo._create(ptr);
+  }
+
   factory SearchQueryWithInfo(
     SearchQuery searchQuery,
     String title,
@@ -18720,6 +20216,13 @@ class SearchQueryWithInfo implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SearchQueryWithInfoToClassMessage on SearchQueryWithInfo {
+  ClassMessage<SearchQueryWithInfo> message() {
+    final res = (_CSearchQueryWithInfoMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchQueryWithInfo>(res._impl.address, _CSearchQueryWithInfo_release);
+  }
 }
 
 // MARK: - SearchQueryWithInfo <-> CSearchQueryWithInfo
@@ -18856,6 +20359,11 @@ class _SearchHistoryKeyStrategyCpp extends SearchHistoryKeyStrategy implements f
     return classObject;
   }
 
+  factory _SearchHistoryKeyStrategyCpp.fromMessage(ClassMessage<_SearchHistoryKeyStrategyCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _SearchHistoryKeyStrategyCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _SearchHistoryKeyStrategyCpp &&
@@ -18882,6 +20390,13 @@ class _SearchHistoryKeyStrategyCpp extends SearchHistoryKeyStrategy implements f
     return t;
   }
 
+}
+
+extension _SearchHistoryKeyStrategyCppToClassMessage on _SearchHistoryKeyStrategyCpp {
+  ClassMessage<_SearchHistoryKeyStrategyCpp> message() {
+    final res = (_CSearchHistoryKeyStrategyCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_SearchHistoryKeyStrategyCpp>(res._impl.address, _CSearchHistoryKeyStrategyCpp_release);
+  }
 }
 
 // MARK: - _SearchHistoryKeyStrategyCpp <-> CSearchHistoryKeyStrategyCpp
@@ -19055,6 +20570,11 @@ class SearchHistoryResult implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchHistoryResult.fromMessage(ClassMessage<SearchHistoryResult> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchHistoryResult._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchHistoryResult &&
@@ -19067,6 +20587,13 @@ class SearchHistoryResult implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SearchHistoryResultToClassMessage on SearchHistoryResult {
+  ClassMessage<SearchHistoryResult> message() {
+    final res = (_CSearchHistoryResultMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchHistoryResult>(res._impl.address, _CSearchHistoryResult_release);
+  }
 }
 
 // MARK: - SearchHistoryResult <-> CSearchHistoryResult
@@ -19464,6 +20991,11 @@ class SearchHistory implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SearchHistory.fromMessage(ClassMessage<SearchHistory> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SearchHistory._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SearchHistory &&
@@ -19572,6 +21104,13 @@ class SearchHistory implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension SearchHistoryToClassMessage on SearchHistory {
+  ClassMessage<SearchHistory> message() {
+    final res = (_CSearchHistoryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SearchHistory>(res._impl.address, _CSearchHistory_release);
+  }
 }
 
 // MARK: - SearchHistory <-> CSearchHistory
@@ -19925,6 +21464,11 @@ class PackedSearchQuery implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PackedSearchQuery.fromMessage(ClassMessage<PackedSearchQuery> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PackedSearchQuery._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is PackedSearchQuery &&
@@ -19982,6 +21526,13 @@ class PackedSearchQuery implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension PackedSearchQueryToClassMessage on PackedSearchQuery {
+  ClassMessage<PackedSearchQuery> message() {
+    final res = (_CPackedSearchQueryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PackedSearchQuery>(res._impl.address, _CPackedSearchQuery_release);
+  }
 }
 
 // MARK: - PackedSearchQuery <-> CPackedSearchQuery
@@ -20233,6 +21784,11 @@ class PointGeometry extends Geometry implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PointGeometry.fromMessage(ClassMessage<PointGeometry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PointGeometry._create(ptr);
+  }
+
   factory PointGeometry(
     GeoPoint point
   ) {
@@ -20261,6 +21817,13 @@ class PointGeometry extends Geometry implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PointGeometryToClassMessage on PointGeometry {
+  ClassMessage<PointGeometry> message() {
+    final res = (_CPointGeometryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PointGeometry>(res._impl.address, _CPointGeometry_release);
+  }
 }
 
 // MARK: - PointGeometry <-> CPointGeometry
@@ -20311,6 +21874,11 @@ class PolygonGeometry extends Geometry implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PolygonGeometry.fromMessage(ClassMessage<PolygonGeometry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PolygonGeometry._create(ptr);
+  }
+
   factory PolygonGeometry(
     List<List<GeoPoint>> contours
   ) {
@@ -20332,6 +21900,13 @@ class PolygonGeometry extends Geometry implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PolygonGeometryToClassMessage on PolygonGeometry {
+  ClassMessage<PolygonGeometry> message() {
+    final res = (_CPolygonGeometryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PolygonGeometry>(res._impl.address, _CPolygonGeometry_release);
+  }
 }
 
 // MARK: - PolygonGeometry <-> CPolygonGeometry
@@ -20386,6 +21961,11 @@ class ComplexGeometry extends Geometry implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ComplexGeometry.fromMessage(ClassMessage<ComplexGeometry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ComplexGeometry._create(ptr);
+  }
+
   factory ComplexGeometry(
     List<Geometry> geometries
   ) {
@@ -20407,6 +21987,13 @@ class ComplexGeometry extends Geometry implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ComplexGeometryToClassMessage on ComplexGeometry {
+  ClassMessage<ComplexGeometry> message() {
+    final res = (_CComplexGeometryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ComplexGeometry>(res._impl.address, _CComplexGeometry_release);
+  }
 }
 
 // MARK: - ComplexGeometry <-> CComplexGeometry
@@ -21929,6 +23516,11 @@ class CameraTransactionGuard implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CameraTransactionGuard.fromMessage(ClassMessage<CameraTransactionGuard> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CameraTransactionGuard._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CameraTransactionGuard &&
@@ -21941,6 +23533,13 @@ class CameraTransactionGuard implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CameraTransactionGuardToClassMessage on CameraTransactionGuard {
+  ClassMessage<CameraTransactionGuard> message() {
+    final res = (_CCameraTransactionGuardMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CameraTransactionGuard>(res._impl.address, _CCameraTransactionGuard_release);
+  }
 }
 
 // MARK: - CameraTransactionGuard <-> CCameraTransactionGuard
@@ -22208,6 +23807,11 @@ class _CameraMoveControllerCpp extends CameraMoveController implements ffi.Final
     return classObject;
   }
 
+  factory _CameraMoveControllerCpp.fromMessage(ClassMessage<_CameraMoveControllerCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _CameraMoveControllerCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _CameraMoveControllerCpp &&
@@ -22248,6 +23852,13 @@ class _CameraMoveControllerCpp extends CameraMoveController implements ffi.Final
     return res._toDart();
   }
 
+}
+
+extension _CameraMoveControllerCppToClassMessage on _CameraMoveControllerCpp {
+  ClassMessage<_CameraMoveControllerCpp> message() {
+    final res = (_CCameraMoveControllerCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_CameraMoveControllerCpp>(res._impl.address, _CCameraMoveControllerCpp_release);
+  }
 }
 
 // MARK: - _CameraMoveControllerCpp <-> CCameraMoveControllerCpp
@@ -22433,6 +24044,11 @@ class NewValuesNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory NewValuesNotifier.fromMessage(ClassMessage<NewValuesNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return NewValuesNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is NewValuesNotifier &&
@@ -22453,6 +24069,13 @@ class NewValuesNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension NewValuesNotifierToClassMessage on NewValuesNotifier {
+  ClassMessage<NewValuesNotifier> message() {
+    final res = (_CNewValuesNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<NewValuesNotifier>(res._impl.address, _CNewValuesNotifier_release);
+  }
 }
 
 // MARK: - NewValuesNotifier <-> CNewValuesNotifier
@@ -22606,6 +24229,11 @@ class _CustomFollowControllerCpp extends CustomFollowController implements ffi.F
     return classObject;
   }
 
+  factory _CustomFollowControllerCpp.fromMessage(ClassMessage<_CustomFollowControllerCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _CustomFollowControllerCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _CustomFollowControllerCpp &&
@@ -22690,6 +24318,13 @@ class _CustomFollowControllerCpp extends CustomFollowController implements ffi.F
     return res._toDart();
   }
 
+}
+
+extension _CustomFollowControllerCppToClassMessage on _CustomFollowControllerCpp {
+  ClassMessage<_CustomFollowControllerCpp> message() {
+    final res = (_CCustomFollowControllerCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_CustomFollowControllerCpp>(res._impl.address, _CCustomFollowControllerCpp_release);
+  }
 }
 
 // MARK: - _CustomFollowControllerCpp <-> CCustomFollowControllerCpp
@@ -23267,6 +24902,11 @@ class Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Event.fromMessage(ClassMessage<Event> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Event._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Event &&
@@ -23279,6 +24919,13 @@ class Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension EventToClassMessage on Event {
+  ClassMessage<Event> message() {
+    final res = (_CEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Event>(res._impl.address, _CEvent_release);
+  }
 }
 
 // MARK: - Event <-> CEvent
@@ -23370,6 +25017,11 @@ class InputEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory InputEvent.fromMessage(ClassMessage<InputEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return InputEvent._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is InputEvent &&
@@ -23382,6 +25034,13 @@ class InputEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension InputEventToClassMessage on InputEvent {
+  ClassMessage<InputEvent> message() {
+    final res = (_CInputEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<InputEvent>(res._impl.address, _CInputEvent_release);
+  }
 }
 
 // MARK: - InputEvent <-> CInputEvent
@@ -23451,6 +25110,11 @@ class CancelEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CancelEvent.fromMessage(ClassMessage<CancelEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CancelEvent._create(ptr);
+  }
+
   factory CancelEvent() {
     _CCancelEvent res = _CCancelEvent_C_create();
     return CancelEvent._create(res._impl);
@@ -23468,6 +25132,13 @@ class CancelEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CancelEventToClassMessage on CancelEvent {
+  ClassMessage<CancelEvent> message() {
+    final res = (_CCancelEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CancelEvent>(res._impl.address, _CCancelEvent_release);
+  }
 }
 
 // MARK: - CancelEvent <-> CCancelEvent
@@ -23572,6 +25243,11 @@ class DirectMapControlBeginEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapControlBeginEvent.fromMessage(ClassMessage<DirectMapControlBeginEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapControlBeginEvent._create(ptr);
+  }
+
   factory DirectMapControlBeginEvent() {
     _CDirectMapControlBeginEvent res = _CDirectMapControlBeginEvent_C_create();
     return DirectMapControlBeginEvent._create(res._impl);
@@ -23589,6 +25265,13 @@ class DirectMapControlBeginEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapControlBeginEventToClassMessage on DirectMapControlBeginEvent {
+  ClassMessage<DirectMapControlBeginEvent> message() {
+    final res = (_CDirectMapControlBeginEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapControlBeginEvent>(res._impl.address, _CDirectMapControlBeginEvent_release);
+  }
 }
 
 // MARK: - DirectMapControlBeginEvent <-> CDirectMapControlBeginEvent
@@ -23636,6 +25319,11 @@ class DirectMapControlEndEvent extends InputEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapControlEndEvent.fromMessage(ClassMessage<DirectMapControlEndEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapControlEndEvent._create(ptr);
+  }
+
   factory DirectMapControlEndEvent(
     Duration timestamp
   ) {
@@ -23656,6 +25344,13 @@ class DirectMapControlEndEvent extends InputEvent implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapControlEndEventToClassMessage on DirectMapControlEndEvent {
+  ClassMessage<DirectMapControlEndEvent> message() {
+    final res = (_CDirectMapControlEndEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapControlEndEvent>(res._impl.address, _CDirectMapControlEndEvent_release);
+  }
 }
 
 // MARK: - DirectMapControlEndEvent <-> CDirectMapControlEndEvent
@@ -23710,6 +25405,11 @@ class DirectMapRotationEvent extends InputEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapRotationEvent.fromMessage(ClassMessage<DirectMapRotationEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapRotationEvent._create(ptr);
+  }
+
   /**
    - Parameter bearingDelta: изменение угла поворота карты, в градусах.
    Положительные значения соответствуют направлению вращения против часовой стрелки
@@ -23741,6 +25441,13 @@ class DirectMapRotationEvent extends InputEvent implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapRotationEventToClassMessage on DirectMapRotationEvent {
+  ClassMessage<DirectMapRotationEvent> message() {
+    final res = (_CDirectMapRotationEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapRotationEvent>(res._impl.address, _CDirectMapRotationEvent_release);
+  }
 }
 
 // MARK: - DirectMapRotationEvent <-> CDirectMapRotationEvent
@@ -23831,6 +25538,11 @@ class DirectMapScalingEvent extends InputEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapScalingEvent.fromMessage(ClassMessage<DirectMapScalingEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapScalingEvent._create(ptr);
+  }
+
   /**
    - Parameter zoomDelta: Величина, на которую изменится текущее значение масштаба.
    - Parameter timestamp: Время генерации системного события.
@@ -23860,6 +25572,13 @@ class DirectMapScalingEvent extends InputEvent implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapScalingEventToClassMessage on DirectMapScalingEvent {
+  ClassMessage<DirectMapScalingEvent> message() {
+    final res = (_CDirectMapScalingEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapScalingEvent>(res._impl.address, _CDirectMapScalingEvent_release);
+  }
 }
 
 // MARK: - DirectMapScalingEvent <-> CDirectMapScalingEvent
@@ -23914,6 +25633,11 @@ class DirectMapShiftEvent extends InputEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapShiftEvent.fromMessage(ClassMessage<DirectMapShiftEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapShiftEvent._create(ptr);
+  }
+
   /**
    - Parameter screenShift: Изменение экранной позиции карты относительно предыдущей, в пикселях.
    - Parameter shiftedPoint: Центральная точка, от которой производится смещение карты.
@@ -23943,6 +25667,13 @@ class DirectMapShiftEvent extends InputEvent implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapShiftEventToClassMessage on DirectMapShiftEvent {
+  ClassMessage<DirectMapShiftEvent> message() {
+    final res = (_CDirectMapShiftEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapShiftEvent>(res._impl.address, _CDirectMapShiftEvent_release);
+  }
 }
 
 // MARK: - DirectMapShiftEvent <-> CDirectMapShiftEvent
@@ -23992,6 +25723,11 @@ class DirectMapTiltEvent extends InputEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DirectMapTiltEvent.fromMessage(ClassMessage<DirectMapTiltEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DirectMapTiltEvent._create(ptr);
+  }
+
   /**
    - Parameter delta: Изменение угла наклона в градусах.
    - Parameter timestamp: Время генерации системного события.
@@ -24017,6 +25753,13 @@ class DirectMapTiltEvent extends InputEvent implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DirectMapTiltEventToClassMessage on DirectMapTiltEvent {
+  ClassMessage<DirectMapTiltEvent> message() {
+    final res = (_CDirectMapTiltEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DirectMapTiltEvent>(res._impl.address, _CDirectMapTiltEvent_release);
+  }
 }
 
 // MARK: - DirectMapTiltEvent <-> CDirectMapTiltEvent
@@ -24107,6 +25850,11 @@ class MapRotationBeginEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapRotationBeginEvent.fromMessage(ClassMessage<MapRotationBeginEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapRotationBeginEvent._create(ptr);
+  }
+
   factory MapRotationBeginEvent(
     MapRotationDirection direction
   ) {
@@ -24127,6 +25875,13 @@ class MapRotationBeginEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapRotationBeginEventToClassMessage on MapRotationBeginEvent {
+  ClassMessage<MapRotationBeginEvent> message() {
+    final res = (_CMapRotationBeginEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapRotationBeginEvent>(res._impl.address, _CMapRotationBeginEvent_release);
+  }
 }
 
 // MARK: - MapRotationBeginEvent <-> CMapRotationBeginEvent
@@ -24170,6 +25925,11 @@ class MapRotationEndEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapRotationEndEvent.fromMessage(ClassMessage<MapRotationEndEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapRotationEndEvent._create(ptr);
+  }
+
   factory MapRotationEndEvent() {
     _CMapRotationEndEvent res = _CMapRotationEndEvent_C_create();
     return MapRotationEndEvent._create(res._impl);
@@ -24187,6 +25947,13 @@ class MapRotationEndEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapRotationEndEventToClassMessage on MapRotationEndEvent {
+  ClassMessage<MapRotationEndEvent> message() {
+    final res = (_CMapRotationEndEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapRotationEndEvent>(res._impl.address, _CMapRotationEndEvent_release);
+  }
 }
 
 // MARK: - MapRotationEndEvent <-> CMapRotationEndEvent
@@ -24277,6 +26044,11 @@ class MapScalingBeginEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapScalingBeginEvent.fromMessage(ClassMessage<MapScalingBeginEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapScalingBeginEvent._create(ptr);
+  }
+
   factory MapScalingBeginEvent(
     MapScalingDirection direction
   ) {
@@ -24297,6 +26069,13 @@ class MapScalingBeginEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapScalingBeginEventToClassMessage on MapScalingBeginEvent {
+  ClassMessage<MapScalingBeginEvent> message() {
+    final res = (_CMapScalingBeginEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapScalingBeginEvent>(res._impl.address, _CMapScalingBeginEvent_release);
+  }
 }
 
 // MARK: - MapScalingBeginEvent <-> CMapScalingBeginEvent
@@ -24340,6 +26119,11 @@ class MapScalingEndEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapScalingEndEvent.fromMessage(ClassMessage<MapScalingEndEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapScalingEndEvent._create(ptr);
+  }
+
   factory MapScalingEndEvent() {
     _CMapScalingEndEvent res = _CMapScalingEndEvent_C_create();
     return MapScalingEndEvent._create(res._impl);
@@ -24357,6 +26141,13 @@ class MapScalingEndEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapScalingEndEventToClassMessage on MapScalingEndEvent {
+  ClassMessage<MapScalingEndEvent> message() {
+    final res = (_CMapScalingEndEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapScalingEndEvent>(res._impl.address, _CMapScalingEndEvent_release);
+  }
 }
 
 // MARK: - MapScalingEndEvent <-> CMapScalingEndEvent
@@ -24451,6 +26242,11 @@ class MapShiftBeginEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapShiftBeginEvent.fromMessage(ClassMessage<MapShiftBeginEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapShiftBeginEvent._create(ptr);
+  }
+
   factory MapShiftBeginEvent(
     MapShiftDirection direction
   ) {
@@ -24471,6 +26267,13 @@ class MapShiftBeginEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapShiftBeginEventToClassMessage on MapShiftBeginEvent {
+  ClassMessage<MapShiftBeginEvent> message() {
+    final res = (_CMapShiftBeginEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapShiftBeginEvent>(res._impl.address, _CMapShiftBeginEvent_release);
+  }
 }
 
 // MARK: - MapShiftBeginEvent <-> CMapShiftBeginEvent
@@ -24514,6 +26317,11 @@ class MapShiftEndEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapShiftEndEvent.fromMessage(ClassMessage<MapShiftEndEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapShiftEndEvent._create(ptr);
+  }
+
   factory MapShiftEndEvent() {
     _CMapShiftEndEvent res = _CMapShiftEndEvent_C_create();
     return MapShiftEndEvent._create(res._impl);
@@ -24531,6 +26339,13 @@ class MapShiftEndEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapShiftEndEventToClassMessage on MapShiftEndEvent {
+  ClassMessage<MapShiftEndEvent> message() {
+    final res = (_CMapShiftEndEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapShiftEndEvent>(res._impl.address, _CMapShiftEndEvent_release);
+  }
 }
 
 // MARK: - MapShiftEndEvent <-> CMapShiftEndEvent
@@ -24574,6 +26389,11 @@ class RotateMapToNorthEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RotateMapToNorthEvent.fromMessage(ClassMessage<RotateMapToNorthEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RotateMapToNorthEvent._create(ptr);
+  }
+
   factory RotateMapToNorthEvent() {
     _CRotateMapToNorthEvent res = _CRotateMapToNorthEvent_C_create();
     return RotateMapToNorthEvent._create(res._impl);
@@ -24591,6 +26411,13 @@ class RotateMapToNorthEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RotateMapToNorthEventToClassMessage on RotateMapToNorthEvent {
+  ClassMessage<RotateMapToNorthEvent> message() {
+    final res = (_CRotateMapToNorthEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RotateMapToNorthEvent>(res._impl.address, _CRotateMapToNorthEvent_release);
+  }
 }
 
 // MARK: - RotateMapToNorthEvent <-> CRotateMapToNorthEvent
@@ -24645,6 +26472,11 @@ class ScaleMapEvent extends Event implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ScaleMapEvent.fromMessage(ClassMessage<ScaleMapEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ScaleMapEvent._create(ptr);
+  }
+
   /**
    Конструктор события изменения масштаба.
   
@@ -24673,6 +26505,13 @@ class ScaleMapEvent extends Event implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ScaleMapEventToClassMessage on ScaleMapEvent {
+  ClassMessage<ScaleMapEvent> message() {
+    final res = (_CScaleMapEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ScaleMapEvent>(res._impl.address, _CScaleMapEvent_release);
+  }
 }
 
 // MARK: - ScaleMapEvent <-> CScaleMapEvent
@@ -25060,6 +26899,11 @@ class Attributes implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Attributes.fromMessage(ClassMessage<Attributes> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Attributes._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Attributes &&
@@ -25142,6 +26986,13 @@ class Attributes implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension AttributesToClassMessage on Attributes {
+  ClassMessage<Attributes> message() {
+    final res = (_CAttributesMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Attributes>(res._impl.address, _CAttributes_release);
+  }
 }
 
 // MARK: - Attributes <-> CAttributes
@@ -25359,6 +27210,11 @@ class AnimationSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory AnimationSettings.fromMessage(ClassMessage<AnimationSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return AnimationSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is AnimationSettings &&
@@ -25371,6 +27227,13 @@ class AnimationSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension AnimationSettingsToClassMessage on AnimationSettings {
+  ClassMessage<AnimationSettings> message() {
+    final res = (_CAnimationSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<AnimationSettings>(res._impl.address, _CAnimationSettings_release);
+  }
 }
 
 // MARK: - AnimationSettings <-> CAnimationSettings
@@ -25502,6 +27365,11 @@ class MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapObject.fromMessage(ClassMessage<MapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapObject &&
@@ -25514,6 +27382,13 @@ class MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapObjectToClassMessage on MapObject {
+  ClassMessage<MapObject> message() {
+    final res = (_CMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapObject>(res._impl.address, _CMapObject_release);
+  }
 }
 
 // MARK: - MapObject <-> CMapObject
@@ -25677,6 +27552,11 @@ class GeometryMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory GeometryMapObject.fromMessage(ClassMessage<GeometryMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GeometryMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is GeometryMapObject &&
@@ -25689,6 +27569,13 @@ class GeometryMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension GeometryMapObjectToClassMessage on GeometryMapObject {
+  ClassMessage<GeometryMapObject> message() {
+    final res = (_CGeometryMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GeometryMapObject>(res._impl.address, _CGeometryMapObject_release);
+  }
 }
 
 // MARK: - GeometryMapObject <-> CGeometryMapObject
@@ -25929,6 +27816,11 @@ class ClusterObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ClusterObject.fromMessage(ClassMessage<ClusterObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ClusterObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ClusterObject &&
@@ -25941,6 +27833,13 @@ class ClusterObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ClusterObjectToClassMessage on ClusterObject {
+  ClassMessage<ClusterObject> message() {
+    final res = (_CClusterObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ClusterObject>(res._impl.address, _CClusterObject_release);
+  }
 }
 
 // MARK: - ClusterObject <-> CClusterObject
@@ -26073,6 +27972,11 @@ class DgisMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DgisMapObject.fromMessage(ClassMessage<DgisMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DgisMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DgisMapObject &&
@@ -26085,6 +27989,13 @@ class DgisMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DgisMapObjectToClassMessage on DgisMapObject {
+  ClassMessage<DgisMapObject> message() {
+    final res = (_CDgisMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DgisMapObject>(res._impl.address, _CDgisMapObject_release);
+  }
 }
 
 // MARK: - DgisMapObject <-> CDgisMapObject
@@ -26147,6 +28058,11 @@ class Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Source.fromMessage(ClassMessage<Source> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Source._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Source &&
@@ -26159,6 +28075,13 @@ class Source implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SourceToClassMessage on Source {
+  ClassMessage<Source> message() {
+    final res = (_CSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Source>(res._impl.address, _CSource_release);
+  }
 }
 
 // MARK: - Source <-> CSource
@@ -26246,6 +28169,11 @@ class DgisSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DgisSource.fromMessage(ClassMessage<DgisSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DgisSource._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DgisSource &&
@@ -26311,6 +28239,13 @@ class DgisSource extends Source implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension DgisSourceToClassMessage on DgisSource {
+  ClassMessage<DgisSource> message() {
+    final res = (_CDgisSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DgisSource>(res._impl.address, _CDgisSource_release);
+  }
 }
 
 // MARK: - DgisSource <-> CDgisSource
@@ -26449,6 +28384,11 @@ class FollowController implements ffi.Finalizable {
     return classObject;
   }
 
+  factory FollowController.fromMessage(ClassMessage<FollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return FollowController._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is FollowController &&
@@ -26461,6 +28401,13 @@ class FollowController implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension FollowControllerToClassMessage on FollowController {
+  ClassMessage<FollowController> message() {
+    final res = (_CFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<FollowController>(res._impl.address, _CFollowController_release);
+  }
 }
 
 // MARK: - FollowController <-> CFollowController
@@ -26534,6 +28481,11 @@ class GeometryMapObjectSource extends Source implements ffi.Finalizable {
     final classObject = GeometryMapObjectSource._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory GeometryMapObjectSource.fromMessage(ClassMessage<GeometryMapObjectSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GeometryMapObjectSource._create(ptr);
   }
 
   @override
@@ -26643,6 +28595,13 @@ class GeometryMapObjectSource extends Source implements ffi.Finalizable {
 
 }
 
+extension GeometryMapObjectSourceToClassMessage on GeometryMapObjectSource {
+  ClassMessage<GeometryMapObjectSource> message() {
+    final res = (_CGeometryMapObjectSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GeometryMapObjectSource>(res._impl.address, _CGeometryMapObjectSource_release);
+  }
+}
+
 // MARK: - GeometryMapObjectSource <-> CGeometryMapObjectSource
 
 final class _CGeometryMapObjectSource extends ffi.Struct {
@@ -26729,6 +28688,11 @@ class Image implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Image.fromMessage(ClassMessage<Image> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Image._create(ptr);
+  }
+
   @internal
   factory Image(
     Context context,
@@ -26754,6 +28718,13 @@ class Image implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ImageToClassMessage on Image {
+  ClassMessage<Image> message() {
+    final res = (_CImageMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Image>(res._impl.address, _CImage_release);
+  }
 }
 
 // MARK: - Image <-> CImage
@@ -26798,6 +28769,11 @@ class _ImageLoaderCpp extends ImageLoader implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _ImageLoaderCpp.fromMessage(ClassMessage<_ImageLoaderCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _ImageLoaderCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _ImageLoaderCpp &&
@@ -26819,6 +28795,13 @@ class _ImageLoaderCpp extends ImageLoader implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension _ImageLoaderCppToClassMessage on _ImageLoaderCpp {
+  ClassMessage<_ImageLoaderCpp> message() {
+    final res = (_CImageLoaderCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_ImageLoaderCpp>(res._impl.address, _CImageLoaderCpp_release);
+  }
 }
 
 // MARK: - _ImageLoaderCpp <-> CImageLoaderCpp
@@ -27093,6 +29076,11 @@ class BearingFollowController extends FollowController implements ffi.Finalizabl
     return classObject;
   }
 
+  factory BearingFollowController.fromMessage(ClassMessage<BearingFollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return BearingFollowController._create(ptr);
+  }
+
   /**
    Создание контроллера слежения за направлением карты.
   
@@ -27124,6 +29112,13 @@ class BearingFollowController extends FollowController implements ffi.Finalizabl
     return identifier.hashCode;
   }
 
+}
+
+extension BearingFollowControllerToClassMessage on BearingFollowController {
+  ClassMessage<BearingFollowController> message() {
+    final res = (_CBearingFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<BearingFollowController>(res._impl.address, _CBearingFollowController_release);
+  }
 }
 
 // MARK: - BearingFollowController <-> CBearingFollowController
@@ -27167,6 +29162,11 @@ class CoordinatesFollowController extends FollowController implements ffi.Finali
     return classObject;
   }
 
+  factory CoordinatesFollowController.fromMessage(ClassMessage<CoordinatesFollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CoordinatesFollowController._create(ptr);
+  }
+
   /**
    Создание контроллера слежения за координатами позиции карты.
   
@@ -27195,6 +29195,13 @@ class CoordinatesFollowController extends FollowController implements ffi.Finali
     return identifier.hashCode;
   }
 
+}
+
+extension CoordinatesFollowControllerToClassMessage on CoordinatesFollowController {
+  ClassMessage<CoordinatesFollowController> message() {
+    final res = (_CCoordinatesFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CoordinatesFollowController>(res._impl.address, _CCoordinatesFollowController_release);
+  }
 }
 
 // MARK: - CoordinatesFollowController <-> CCoordinatesFollowController
@@ -27410,6 +29417,11 @@ class ModelData implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ModelData.fromMessage(ClassMessage<ModelData> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ModelData._create(ptr);
+  }
+
   @internal
   factory ModelData(
     Context context,
@@ -27435,6 +29447,13 @@ class ModelData implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ModelDataToClassMessage on ModelData {
+  ClassMessage<ModelData> message() {
+    final res = (_CModelDataMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ModelData>(res._impl.address, _CModelData_release);
+  }
 }
 
 // MARK: - ModelData <-> CModelData
@@ -27480,6 +29499,11 @@ class _ModelDataLoaderCpp extends ModelDataLoader implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _ModelDataLoaderCpp.fromMessage(ClassMessage<_ModelDataLoaderCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _ModelDataLoaderCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _ModelDataLoaderCpp &&
@@ -27501,6 +29525,13 @@ class _ModelDataLoaderCpp extends ModelDataLoader implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension _ModelDataLoaderCppToClassMessage on _ModelDataLoaderCpp {
+  ClassMessage<_ModelDataLoaderCpp> message() {
+    final res = (_CModelDataLoaderCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_ModelDataLoaderCpp>(res._impl.address, _CModelDataLoaderCpp_release);
+  }
 }
 
 // MARK: - _ModelDataLoaderCpp <-> CModelDataLoaderCpp
@@ -27673,6 +29704,11 @@ class MyLocationMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MyLocationMapObject.fromMessage(ClassMessage<MyLocationMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MyLocationMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MyLocationMapObject &&
@@ -27697,6 +29733,13 @@ class MyLocationMapObject extends MapObject implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension MyLocationMapObjectToClassMessage on MyLocationMapObject {
+  ClassMessage<MyLocationMapObject> message() {
+    final res = (_CMyLocationMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MyLocationMapObject>(res._impl.address, _CMyLocationMapObject_release);
+  }
 }
 
 // MARK: - MyLocationMapObject <-> CMyLocationMapObject
@@ -27784,6 +29827,11 @@ class MyLocationMapObjectSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MyLocationMapObjectSource.fromMessage(ClassMessage<MyLocationMapObjectSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MyLocationMapObjectSource._create(ptr);
+  }
+
   /** Создать источник маркера геопозиции. */
   factory MyLocationMapObjectSource(
     Context context,
@@ -27810,6 +29858,13 @@ class MyLocationMapObjectSource extends Source implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MyLocationMapObjectSourceToClassMessage on MyLocationMapObjectSource {
+  ClassMessage<MyLocationMapObjectSource> message() {
+    final res = (_CMyLocationMapObjectSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MyLocationMapObjectSource>(res._impl.address, _CMyLocationMapObjectSource_release);
+  }
 }
 
 // MARK: - MyLocationMapObjectSource <-> CMyLocationMapObjectSource
@@ -27872,6 +29927,11 @@ class RoadEventMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventMapObject.fromMessage(ClassMessage<RoadEventMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventMapObject &&
@@ -27884,6 +29944,13 @@ class RoadEventMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RoadEventMapObjectToClassMessage on RoadEventMapObject {
+  ClassMessage<RoadEventMapObject> message() {
+    final res = (_CRoadEventMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventMapObject>(res._impl.address, _CRoadEventMapObject_release);
+  }
 }
 
 // MARK: - RoadEventMapObject <-> CRoadEventMapObject
@@ -28075,6 +30142,11 @@ class RoadEvent implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEvent.fromMessage(ClassMessage<RoadEvent> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEvent._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEvent &&
@@ -28097,6 +30169,13 @@ class RoadEvent implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadEventToClassMessage on RoadEvent {
+  ClassMessage<RoadEvent> message() {
+    final res = (_CRoadEventMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEvent>(res._impl.address, _CRoadEvent_release);
+  }
 }
 
 // MARK: - RoadEvent <-> CRoadEvent
@@ -29195,6 +31274,11 @@ class RoadEventPhoto implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventPhoto.fromMessage(ClassMessage<RoadEventPhoto> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventPhoto._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventPhoto &&
@@ -29232,6 +31316,13 @@ class RoadEventPhoto implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadEventPhotoToClassMessage on RoadEventPhoto {
+  ClassMessage<RoadEventPhoto> message() {
+    final res = (_CRoadEventPhotoMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventPhoto>(res._impl.address, _CRoadEventPhoto_release);
+  }
 }
 
 // MARK: - RoadEventPhoto <-> CRoadEventPhoto
@@ -29419,6 +31510,11 @@ class Remover implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Remover.fromMessage(ClassMessage<Remover> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Remover._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Remover &&
@@ -29445,6 +31541,13 @@ class Remover implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RemoverToClassMessage on Remover {
+  ClassMessage<Remover> message() {
+    final res = (_CRemoverMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Remover>(res._impl.address, _CRemover_release);
+  }
 }
 
 // MARK: - Remover <-> CRemover
@@ -29639,6 +31742,11 @@ class RoadEventAction implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventAction.fromMessage(ClassMessage<RoadEventAction> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventAction._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventAction &&
@@ -29680,6 +31788,13 @@ class RoadEventAction implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadEventActionToClassMessage on RoadEventAction {
+  ClassMessage<RoadEventAction> message() {
+    final res = (_CRoadEventActionMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventAction>(res._impl.address, _CRoadEventAction_release);
+  }
 }
 
 // MARK: - RoadEventAction <-> CRoadEventAction
@@ -29962,6 +32077,11 @@ class Style implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Style.fromMessage(ClassMessage<Style> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Style._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Style &&
@@ -29974,6 +32094,13 @@ class Style implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension StyleToClassMessage on Style {
+  ClassMessage<Style> message() {
+    final res = (_CStyleMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Style>(res._impl.address, _CStyle_release);
+  }
 }
 
 // MARK: - Style <-> CStyle
@@ -30015,6 +32142,11 @@ class StyleZoomFollowController extends FollowController implements ffi.Finaliza
     final classObject = StyleZoomFollowController._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory StyleZoomFollowController.fromMessage(ClassMessage<StyleZoomFollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return StyleZoomFollowController._create(ptr);
   }
 
   /** Создание контроллера слежения за стилевым уровнем масштабирования карты. */
@@ -30062,6 +32194,13 @@ class StyleZoomFollowController extends FollowController implements ffi.Finaliza
 
 }
 
+extension StyleZoomFollowControllerToClassMessage on StyleZoomFollowController {
+  ClassMessage<StyleZoomFollowController> message() {
+    final res = (_CStyleZoomFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<StyleZoomFollowController>(res._impl.address, _CStyleZoomFollowController_release);
+  }
+}
+
 // MARK: - StyleZoomFollowController <-> CStyleZoomFollowController
 
 final class _CStyleZoomFollowController extends ffi.Struct {
@@ -30105,6 +32244,11 @@ class _StyleZoomToTiltRelationCpp extends StyleZoomToTiltRelation implements ffi
     return classObject;
   }
 
+  factory _StyleZoomToTiltRelationCpp.fromMessage(ClassMessage<_StyleZoomToTiltRelationCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _StyleZoomToTiltRelationCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _StyleZoomToTiltRelationCpp &&
@@ -30135,6 +32279,13 @@ class _StyleZoomToTiltRelationCpp extends StyleZoomToTiltRelation implements ffi
     return res._toDart();
   }
 
+}
+
+extension _StyleZoomToTiltRelationCppToClassMessage on _StyleZoomToTiltRelationCpp {
+  ClassMessage<_StyleZoomToTiltRelationCpp> message() {
+    final res = (_CStyleZoomToTiltRelationCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_StyleZoomToTiltRelationCpp>(res._impl.address, _CStyleZoomToTiltRelationCpp_release);
+  }
 }
 
 // MARK: - _StyleZoomToTiltRelationCpp <-> CStyleZoomToTiltRelationCpp
@@ -30295,6 +32446,11 @@ class TiltFollowController extends FollowController implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TiltFollowController.fromMessage(ClassMessage<TiltFollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TiltFollowController._create(ptr);
+  }
+
   /**
    Создание контроллера слежения за углом наклона карты.
   
@@ -30321,6 +32477,13 @@ class TiltFollowController extends FollowController implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TiltFollowControllerToClassMessage on TiltFollowController {
+  ClassMessage<TiltFollowController> message() {
+    final res = (_CTiltFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TiltFollowController>(res._impl.address, _CTiltFollowController_release);
+  }
 }
 
 // MARK: - TiltFollowController <-> CTiltFollowController
@@ -30364,6 +32527,11 @@ class TrafficSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficSource.fromMessage(ClassMessage<TrafficSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficSource._create(ptr);
+  }
+
   factory TrafficSource(
     Context context
   ) {
@@ -30385,6 +32553,13 @@ class TrafficSource extends Source implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TrafficSourceToClassMessage on TrafficSource {
+  ClassMessage<TrafficSource> message() {
+    final res = (_CTrafficSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficSource>(res._impl.address, _CTrafficSource_release);
+  }
 }
 
 // MARK: - TrafficSource <-> CTrafficSource
@@ -30557,6 +32732,11 @@ class _RoadEventFilterCpp extends RoadEventFilter implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _RoadEventFilterCpp.fromMessage(ClassMessage<_RoadEventFilterCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _RoadEventFilterCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _RoadEventFilterCpp &&
@@ -30579,6 +32759,13 @@ class _RoadEventFilterCpp extends RoadEventFilter implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension _RoadEventFilterCppToClassMessage on _RoadEventFilterCpp {
+  ClassMessage<_RoadEventFilterCpp> message() {
+    final res = (_CRoadEventFilterCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_RoadEventFilterCpp>(res._impl.address, _CRoadEventFilterCpp_release);
+  }
 }
 
 // MARK: - _RoadEventFilterCpp <-> CRoadEventFilterCpp
@@ -30776,6 +32963,11 @@ class RoadEventSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventSource.fromMessage(ClassMessage<RoadEventSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventSource._create(ptr);
+  }
+
   /** Создание источника, отображающего дорожные события на карте. */
   factory RoadEventSource(
     Context context
@@ -30817,6 +33009,13 @@ class RoadEventSource extends Source implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RoadEventSourceToClassMessage on RoadEventSource {
+  ClassMessage<RoadEventSource> message() {
+    final res = (_CRoadEventSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventSource>(res._impl.address, _CRoadEventSource_release);
+  }
 }
 
 // MARK: - RoadEventSource <-> CRoadEventSource
@@ -31087,6 +33286,11 @@ class DefaultRoadEventFilter implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DefaultRoadEventFilter.fromMessage(ClassMessage<DefaultRoadEventFilter> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DefaultRoadEventFilter._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DefaultRoadEventFilter &&
@@ -31128,6 +33332,13 @@ class DefaultRoadEventFilter implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension DefaultRoadEventFilterToClassMessage on DefaultRoadEventFilter {
+  ClassMessage<DefaultRoadEventFilter> message() {
+    final res = (_CDefaultRoadEventFilterMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DefaultRoadEventFilter>(res._impl.address, _CDefaultRoadEventFilter_release);
+  }
 }
 
 // MARK: - DefaultRoadEventFilter <-> CDefaultRoadEventFilter
@@ -32547,6 +34758,11 @@ class GeometryMapObjectBuilder implements ffi.Finalizable {
     return classObject;
   }
 
+  factory GeometryMapObjectBuilder.fromMessage(ClassMessage<GeometryMapObjectBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GeometryMapObjectBuilder._create(ptr);
+  }
+
   factory GeometryMapObjectBuilder() {
     _CGeometryMapObjectBuilder res = _CGeometryMapObjectBuilder_C_create();
     return GeometryMapObjectBuilder._create(res._impl);
@@ -32668,6 +34884,13 @@ class GeometryMapObjectBuilder implements ffi.Finalizable {
 
 }
 
+extension GeometryMapObjectBuilderToClassMessage on GeometryMapObjectBuilder {
+  ClassMessage<GeometryMapObjectBuilder> message() {
+    final res = (_CGeometryMapObjectBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GeometryMapObjectBuilder>(res._impl.address, _CGeometryMapObjectBuilder_release);
+  }
+}
+
 // MARK: - GeometryMapObjectBuilder <-> CGeometryMapObjectBuilder
 
 final class _CGeometryMapObjectBuilder extends ffi.Struct {
@@ -32708,6 +34931,11 @@ class GeometryMapObjectSourceBuilder implements ffi.Finalizable {
     final classObject = GeometryMapObjectSourceBuilder._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory GeometryMapObjectSourceBuilder.fromMessage(ClassMessage<GeometryMapObjectSourceBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GeometryMapObjectSourceBuilder._create(ptr);
   }
 
   factory GeometryMapObjectSourceBuilder(
@@ -32806,6 +35034,13 @@ class GeometryMapObjectSourceBuilder implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension GeometryMapObjectSourceBuilderToClassMessage on GeometryMapObjectSourceBuilder {
+  ClassMessage<GeometryMapObjectSourceBuilder> message() {
+    final res = (_CGeometryMapObjectSourceBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GeometryMapObjectSourceBuilder>(res._impl.address, _CGeometryMapObjectSourceBuilder_release);
+  }
 }
 
 // MARK: - GeometryMapObjectSourceBuilder <-> CGeometryMapObjectSourceBuilder
@@ -33095,6 +35330,11 @@ class IndoorBuilding implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IndoorBuilding.fromMessage(ClassMessage<IndoorBuilding> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IndoorBuilding._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is IndoorBuilding &&
@@ -33127,6 +35367,13 @@ class IndoorBuilding implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension IndoorBuildingToClassMessage on IndoorBuilding {
+  ClassMessage<IndoorBuilding> message() {
+    final res = (_CIndoorBuildingMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IndoorBuilding>(res._impl.address, _CIndoorBuilding_release);
+  }
 }
 
 // MARK: - IndoorBuilding <-> CIndoorBuilding
@@ -33408,6 +35655,11 @@ class IndoorManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IndoorManager.fromMessage(ClassMessage<IndoorManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IndoorManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is IndoorManager &&
@@ -33431,6 +35683,13 @@ class IndoorManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension IndoorManagerToClassMessage on IndoorManager {
+  ClassMessage<IndoorManager> message() {
+    final res = (_CIndoorManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IndoorManager>(res._impl.address, _CIndoorManager_release);
+  }
 }
 
 // MARK: - IndoorManager <-> CIndoorManager
@@ -33649,6 +35908,11 @@ class IndoorControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IndoorControlModel.fromMessage(ClassMessage<IndoorControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IndoorControlModel._create(ptr);
+  }
+
   factory IndoorControlModel(
     Map map
   ) {
@@ -33680,6 +35944,13 @@ class IndoorControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension IndoorControlModelToClassMessage on IndoorControlModel {
+  ClassMessage<IndoorControlModel> message() {
+    final res = (_CIndoorControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IndoorControlModel>(res._impl.address, _CIndoorControlModel_release);
+  }
 }
 
 // MARK: - IndoorControlModel <-> CIndoorControlModel
@@ -34195,6 +36466,11 @@ class Map implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Map.fromMessage(ClassMessage<Map> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Map._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Map &&
@@ -34336,6 +36612,13 @@ extension MapInternalMethods on Map {
 
 }
 
+extension MapToClassMessage on Map {
+  ClassMessage<Map> message() {
+    final res = (_CMapMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Map>(res._impl.address, _CMap_release);
+  }
+}
+
 // MARK: - Map <-> CMap
 
 final class _CMap extends ffi.Struct {
@@ -34386,6 +36669,11 @@ class Camera extends BaseCamera implements ffi.Finalizable {
     final classObject = Camera._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory Camera.fromMessage(ClassMessage<Camera> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Camera._create(ptr);
   }
 
   @override
@@ -34532,6 +36820,13 @@ class Camera extends BaseCamera implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension CameraToClassMessage on Camera {
+  ClassMessage<Camera> message() {
+    final res = (_CCameraMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Camera>(res._impl.address, _CCamera_release);
+  }
 }
 
 // MARK: - Camera <-> CCamera
@@ -35748,6 +38043,11 @@ class Projection implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Projection.fromMessage(ClassMessage<Projection> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Projection._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Projection &&
@@ -35857,6 +38157,13 @@ class Projection implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension ProjectionToClassMessage on Projection {
+  ClassMessage<Projection> message() {
+    final res = (_CProjectionMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Projection>(res._impl.address, _CProjection_release);
+  }
 }
 
 // MARK: - Projection <-> CProjection
@@ -36088,6 +38395,11 @@ class BaseCamera implements ffi.Finalizable {
     return classObject;
   }
 
+  factory BaseCamera.fromMessage(ClassMessage<BaseCamera> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return BaseCamera._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is BaseCamera &&
@@ -36150,6 +38462,13 @@ extension BaseCameraInternalMethods on BaseCamera {
     return t;
   }
 
+}
+
+extension BaseCameraToClassMessage on BaseCamera {
+  ClassMessage<BaseCamera> message() {
+    final res = (_CBaseCameraMakeDefault().._impl=_self)._retain();
+    return ClassMessage<BaseCamera>(res._impl.address, _CBaseCamera_release);
+  }
 }
 
 // MARK: - BaseCamera <-> CBaseCamera
@@ -36385,6 +38704,11 @@ class SimpleMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SimpleMapObject.fromMessage(ClassMessage<SimpleMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SimpleMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SimpleMapObject &&
@@ -36397,6 +38721,13 @@ class SimpleMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SimpleMapObjectToClassMessage on SimpleMapObject {
+  ClassMessage<SimpleMapObject> message() {
+    final res = (_CSimpleMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SimpleMapObject>(res._impl.address, _CSimpleMapObject_release);
+  }
 }
 
 // MARK: - SimpleMapObject <-> CSimpleMapObject
@@ -36472,6 +38803,11 @@ class MapObjectManager implements ffi.Finalizable {
     final classObject = MapObjectManager._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory MapObjectManager.fromMessage(ClassMessage<MapObjectManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapObjectManager._create(ptr);
   }
 
   /**
@@ -36652,6 +38988,13 @@ class MapObjectManager implements ffi.Finalizable {
 
 }
 
+extension MapObjectManagerToClassMessage on MapObjectManager {
+  ClassMessage<MapObjectManager> message() {
+    final res = (_CMapObjectManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapObjectManager>(res._impl.address, _CMapObjectManager_release);
+  }
+}
+
 // MARK: - MapObjectManager <-> CMapObjectManager
 
 final class _CMapObjectManager extends ffi.Struct {
@@ -36738,6 +39081,11 @@ class _SimpleClusterRendererCpp extends SimpleClusterRenderer implements ffi.Fin
     return classObject;
   }
 
+  factory _SimpleClusterRendererCpp.fromMessage(ClassMessage<_SimpleClusterRendererCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _SimpleClusterRendererCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _SimpleClusterRendererCpp &&
@@ -36769,6 +39117,13 @@ class _SimpleClusterRendererCpp extends SimpleClusterRenderer implements ffi.Fin
     return t;
   }
 
+}
+
+extension _SimpleClusterRendererCppToClassMessage on _SimpleClusterRendererCpp {
+  ClassMessage<_SimpleClusterRendererCpp> message() {
+    final res = (_CSimpleClusterRendererCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_SimpleClusterRendererCpp>(res._impl.address, _CSimpleClusterRendererCpp_release);
+  }
 }
 
 // MARK: - _SimpleClusterRendererCpp <-> CSimpleClusterRendererCpp
@@ -37207,6 +39562,11 @@ class SimpleClusterObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SimpleClusterObject.fromMessage(ClassMessage<SimpleClusterObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SimpleClusterObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SimpleClusterObject &&
@@ -37231,6 +39591,13 @@ class SimpleClusterObject extends MapObject implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension SimpleClusterObjectToClassMessage on SimpleClusterObject {
+  ClassMessage<SimpleClusterObject> message() {
+    final res = (_CSimpleClusterObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SimpleClusterObject>(res._impl.address, _CSimpleClusterObject_release);
+  }
 }
 
 // MARK: - SimpleClusterObject <-> CSimpleClusterObject
@@ -37528,6 +39895,11 @@ class Marker extends SimpleMapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Marker.fromMessage(ClassMessage<Marker> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Marker._create(ptr);
+  }
+
   factory Marker(
     MarkerOptions options
   ) {
@@ -37549,6 +39921,13 @@ class Marker extends SimpleMapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MarkerToClassMessage on Marker {
+  ClassMessage<Marker> message() {
+    final res = (_CMarkerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Marker>(res._impl.address, _CMarker_release);
+  }
 }
 
 // MARK: - Marker <-> CMarker
@@ -38126,6 +40505,11 @@ class ModelMapObject extends SimpleMapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ModelMapObject.fromMessage(ClassMessage<ModelMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ModelMapObject._create(ptr);
+  }
+
   factory ModelMapObject(
     ModelMapObjectOptions options
   ) {
@@ -38147,6 +40531,13 @@ class ModelMapObject extends SimpleMapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ModelMapObjectToClassMessage on ModelMapObject {
+  ClassMessage<ModelMapObject> message() {
+    final res = (_CModelMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ModelMapObject>(res._impl.address, _CModelMapObject_release);
+  }
 }
 
 // MARK: - ModelMapObject <-> CModelMapObject
@@ -38360,6 +40751,11 @@ class Circle extends SimpleMapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Circle.fromMessage(ClassMessage<Circle> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Circle._create(ptr);
+  }
+
   factory Circle(
     CircleOptions options
   ) {
@@ -38381,6 +40777,13 @@ class Circle extends SimpleMapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CircleToClassMessage on Circle {
+  ClassMessage<Circle> message() {
+    final res = (_CCircleMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Circle>(res._impl.address, _CCircle_release);
+  }
 }
 
 // MARK: - Circle <-> CCircle
@@ -38686,6 +41089,11 @@ class Polygon extends SimpleMapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Polygon.fromMessage(ClassMessage<Polygon> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Polygon._create(ptr);
+  }
+
   /**
    Cоздание полигона на основе параметров.
   
@@ -38712,6 +41120,13 @@ class Polygon extends SimpleMapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PolygonToClassMessage on Polygon {
+  ClassMessage<Polygon> message() {
+    final res = (_CPolygonMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Polygon>(res._impl.address, _CPolygon_release);
+  }
 }
 
 // MARK: - Polygon <-> CPolygon
@@ -39216,6 +41631,11 @@ class Polyline extends SimpleMapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Polyline.fromMessage(ClassMessage<Polyline> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Polyline._create(ptr);
+  }
+
   factory Polyline(
     PolylineOptions options
   ) {
@@ -39237,6 +41657,13 @@ class Polyline extends SimpleMapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension PolylineToClassMessage on Polyline {
+  ClassMessage<Polyline> message() {
+    final res = (_CPolylineMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Polyline>(res._impl.address, _CPolyline_release);
+  }
 }
 
 // MARK: - Polyline <-> CPolyline
@@ -39626,6 +42053,11 @@ class MyLocationControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MyLocationControlModel.fromMessage(ClassMessage<MyLocationControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MyLocationControlModel._create(ptr);
+  }
+
   factory MyLocationControlModel(
     Map map
   ) {
@@ -39654,6 +42086,13 @@ class MyLocationControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension MyLocationControlModelToClassMessage on MyLocationControlModel {
+  ClassMessage<MyLocationControlModel> message() {
+    final res = (_CMyLocationControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MyLocationControlModel>(res._impl.address, _CMyLocationControlModel_release);
+  }
 }
 
 // MARK: - MyLocationControlModel <-> CMyLocationControlModel
@@ -39802,6 +42241,11 @@ class CompassControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CompassControlModel.fromMessage(ClassMessage<CompassControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CompassControlModel._create(ptr);
+  }
+
   factory CompassControlModel(
     Map map
   ) {
@@ -39830,6 +42274,13 @@ class CompassControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension CompassControlModelToClassMessage on CompassControlModel {
+  ClassMessage<CompassControlModel> message() {
+    final res = (_CCompassControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CompassControlModel>(res._impl.address, _CCompassControlModel_release);
+  }
 }
 
 // MARK: - CompassControlModel <-> CCompassControlModel
@@ -40004,6 +42455,11 @@ class ZoomControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ZoomControlModel.fromMessage(ClassMessage<ZoomControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ZoomControlModel._create(ptr);
+  }
+
   factory ZoomControlModel(
     Map map
   ) {
@@ -40046,6 +42502,13 @@ class ZoomControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension ZoomControlModelToClassMessage on ZoomControlModel {
+  ClassMessage<ZoomControlModel> message() {
+    final res = (_CZoomControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ZoomControlModel>(res._impl.address, _CZoomControlModel_release);
+  }
 }
 
 // MARK: - ZoomControlModel <-> CZoomControlModel
@@ -40452,6 +42915,11 @@ class GeoPointRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory GeoPointRouteAttribute.fromMessage(ClassMessage<GeoPointRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GeoPointRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is GeoPointRouteAttribute &&
@@ -40543,6 +43011,13 @@ class GeoPointRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension GeoPointRouteAttributeToClassMessage on GeoPointRouteAttribute {
+  ClassMessage<GeoPointRouteAttribute> message() {
+    final res = (_CGeoPointRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GeoPointRouteAttribute>(res._impl.address, _CGeoPointRouteAttribute_release);
+  }
 }
 
 // MARK: - GeoPointRouteAttribute <-> CGeoPointRouteAttribute
@@ -41172,6 +43647,11 @@ class RasterTileSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RasterTileSource.fromMessage(ClassMessage<RasterTileSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RasterTileSource._create(ptr);
+  }
+
   /**
    Создание источника, получающего растровые тайлы.
   
@@ -41220,6 +43700,13 @@ class RasterTileSource extends Source implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RasterTileSourceToClassMessage on RasterTileSource {
+  ClassMessage<RasterTileSource> message() {
+    final res = (_CRasterTileSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RasterTileSource>(res._impl.address, _CRasterTileSource_release);
+  }
 }
 
 // MARK: - RasterTileSource <-> CRasterTileSource
@@ -41288,6 +43775,11 @@ class ParkingControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ParkingControlModel.fromMessage(ClassMessage<ParkingControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ParkingControlModel._create(ptr);
+  }
+
   /**
    Функция создания модели элемента управления парковками.
   
@@ -41326,6 +43818,13 @@ class ParkingControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension ParkingControlModelToClassMessage on ParkingControlModel {
+  ClassMessage<ParkingControlModel> message() {
+    final res = (_CParkingControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ParkingControlModel>(res._impl.address, _CParkingControlModel_release);
+  }
 }
 
 // MARK: - ParkingControlModel <-> CParkingControlModel
@@ -41399,6 +43898,11 @@ class PackedMapState implements ffi.Finalizable {
     final classObject = PackedMapState._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
+  }
+
+  factory PackedMapState.fromMessage(ClassMessage<PackedMapState> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PackedMapState._create(ptr);
   }
 
   @override
@@ -41481,6 +43985,13 @@ class PackedMapState implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension PackedMapStateToClassMessage on PackedMapState {
+  ClassMessage<PackedMapState> message() {
+    final res = (_CPackedMapStateMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PackedMapState>(res._impl.address, _CPackedMapState_release);
+  }
 }
 
 // MARK: - PackedMapState <-> CPackedMapState
@@ -42150,6 +44661,11 @@ class ScalingGestureSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ScalingGestureSettings.fromMessage(ClassMessage<ScalingGestureSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ScalingGestureSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ScalingGestureSettings &&
@@ -42162,6 +44678,13 @@ class ScalingGestureSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ScalingGestureSettingsToClassMessage on ScalingGestureSettings {
+  ClassMessage<ScalingGestureSettings> message() {
+    final res = (_CScalingGestureSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ScalingGestureSettings>(res._impl.address, _CScalingGestureSettings_release);
+  }
 }
 
 // MARK: - ScalingGestureSettings <-> CScalingGestureSettings
@@ -42481,6 +45004,11 @@ class RotationGestureSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RotationGestureSettings.fromMessage(ClassMessage<RotationGestureSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RotationGestureSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RotationGestureSettings &&
@@ -42493,6 +45021,13 @@ class RotationGestureSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RotationGestureSettingsToClassMessage on RotationGestureSettings {
+  ClassMessage<RotationGestureSettings> message() {
+    final res = (_CRotationGestureSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RotationGestureSettings>(res._impl.address, _CRotationGestureSettings_release);
+  }
 }
 
 // MARK: - RotationGestureSettings <-> CRotationGestureSettings
@@ -42607,6 +45142,11 @@ class MultiTouchGestureSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MultiTouchGestureSettings.fromMessage(ClassMessage<MultiTouchGestureSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MultiTouchGestureSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MultiTouchGestureSettings &&
@@ -42619,6 +45159,13 @@ class MultiTouchGestureSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MultiTouchGestureSettingsToClassMessage on MultiTouchGestureSettings {
+  ClassMessage<MultiTouchGestureSettings> message() {
+    final res = (_CMultiTouchGestureSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MultiTouchGestureSettings>(res._impl.address, _CMultiTouchGestureSettings_release);
+  }
 }
 
 // MARK: - MultiTouchGestureSettings <-> CMultiTouchGestureSettings
@@ -42928,6 +45475,11 @@ class TiltGestureSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TiltGestureSettings.fromMessage(ClassMessage<TiltGestureSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TiltGestureSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TiltGestureSettings &&
@@ -42940,6 +45492,13 @@ class TiltGestureSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TiltGestureSettingsToClassMessage on TiltGestureSettings {
+  ClassMessage<TiltGestureSettings> message() {
+    final res = (_CTiltGestureSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TiltGestureSettings>(res._impl.address, _CTiltGestureSettings_release);
+  }
 }
 
 // MARK: - TiltGestureSettings <-> CTiltGestureSettings
@@ -43052,6 +45611,11 @@ class CommonGestureSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CommonGestureSettings.fromMessage(ClassMessage<CommonGestureSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CommonGestureSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CommonGestureSettings &&
@@ -43064,6 +45628,13 @@ class CommonGestureSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CommonGestureSettingsToClassMessage on CommonGestureSettings {
+  ClassMessage<CommonGestureSettings> message() {
+    final res = (_CCommonGestureSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CommonGestureSettings>(res._impl.address, _CCommonGestureSettings_release);
+  }
 }
 
 // MARK: - CommonGestureSettings <-> CCommonGestureSettings
@@ -43149,6 +45720,11 @@ class GestureManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory GestureManager.fromMessage(ClassMessage<GestureManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return GestureManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is GestureManager &&
@@ -43206,6 +45782,13 @@ class GestureManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension GestureManagerToClassMessage on GestureManager {
+  ClassMessage<GestureManager> message() {
+    final res = (_CGestureManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<GestureManager>(res._impl.address, _CGestureManager_release);
+  }
 }
 
 // MARK: - GestureManager <-> CGestureManager
@@ -43566,6 +46149,11 @@ class MapGestureRecognizer implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapGestureRecognizer.fromMessage(ClassMessage<MapGestureRecognizer> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapGestureRecognizer._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapGestureRecognizer &&
@@ -43625,6 +46213,13 @@ class MapGestureRecognizer implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension MapGestureRecognizerToClassMessage on MapGestureRecognizer {
+  ClassMessage<MapGestureRecognizer> message() {
+    final res = (_CMapGestureRecognizerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapGestureRecognizer>(res._impl.address, _CMapGestureRecognizer_release);
+  }
 }
 
 // MARK: - MapGestureRecognizer <-> CMapGestureRecognizer
@@ -44001,6 +46596,11 @@ class IndoorRouteLevelsGetter implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IndoorRouteLevelsGetter.fromMessage(ClassMessage<IndoorRouteLevelsGetter> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IndoorRouteLevelsGetter._create(ptr);
+  }
+
   factory IndoorRouteLevelsGetter(
     Map map
   ) {
@@ -44022,6 +46622,13 @@ class IndoorRouteLevelsGetter implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension IndoorRouteLevelsGetterToClassMessage on IndoorRouteLevelsGetter {
+  ClassMessage<IndoorRouteLevelsGetter> message() {
+    final res = (_CIndoorRouteLevelsGetterMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IndoorRouteLevelsGetter>(res._impl.address, _CIndoorRouteLevelsGetter_release);
+  }
 }
 
 // MARK: - IndoorRouteLevelsGetter <-> CIndoorRouteLevelsGetter
@@ -44622,6 +47229,11 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteMapObject.fromMessage(ClassMessage<RouteMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteMapObject._create(ptr);
+  }
+
   factory RouteMapObject(
     TrafficRoute trafficRoute,
     bool isActive,
@@ -44654,6 +47266,13 @@ class RouteMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteMapObjectToClassMessage on RouteMapObject {
+  ClassMessage<RouteMapObject> message() {
+    final res = (_CRouteMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteMapObject>(res._impl.address, _CRouteMapObject_release);
+  }
 }
 
 // MARK: - RouteMapObject <-> CRouteMapObject
@@ -45334,6 +47953,11 @@ class TrafficRoute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficRoute.fromMessage(ClassMessage<TrafficRoute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficRoute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TrafficRoute &&
@@ -45367,6 +47991,13 @@ class TrafficRoute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TrafficRouteToClassMessage on TrafficRoute {
+  ClassMessage<TrafficRoute> message() {
+    final res = (_CTrafficRouteMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficRoute>(res._impl.address, _CTrafficRoute_release);
+  }
 }
 
 // MARK: - TrafficRoute <-> CTrafficRoute
@@ -45658,6 +48289,11 @@ class Route implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Route.fromMessage(ClassMessage<Route> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Route._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Route &&
@@ -45670,6 +48306,13 @@ class Route implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteToClassMessage on Route {
+  ClassMessage<Route> message() {
+    final res = (_CRouteMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Route>(res._impl.address, _CRoute_release);
+  }
 }
 
 // MARK: - Route <-> CRoute
@@ -45750,6 +48393,11 @@ class InstructionRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory InstructionRouteAttribute.fromMessage(ClassMessage<InstructionRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return InstructionRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is InstructionRouteAttribute &&
@@ -45813,6 +48461,13 @@ class InstructionRouteAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension InstructionRouteAttributeToClassMessage on InstructionRouteAttribute {
+  ClassMessage<InstructionRouteAttribute> message() {
+    final res = (_CInstructionRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<InstructionRouteAttribute>(res._impl.address, _CInstructionRouteAttribute_release);
+  }
 }
 
 // MARK: - InstructionRouteAttribute <-> CInstructionRouteAttribute
@@ -48155,6 +50810,11 @@ class DoubleRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DoubleRouteAttribute.fromMessage(ClassMessage<DoubleRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DoubleRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DoubleRouteAttribute &&
@@ -48214,6 +50874,13 @@ class DoubleRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension DoubleRouteAttributeToClassMessage on DoubleRouteAttribute {
+  ClassMessage<DoubleRouteAttribute> message() {
+    final res = (_CDoubleRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DoubleRouteAttribute>(res._impl.address, _CDoubleRouteAttribute_release);
+  }
 }
 
 // MARK: - DoubleRouteAttribute <-> CDoubleRouteAttribute
@@ -48436,6 +51103,11 @@ class BoolRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory BoolRouteLongAttribute.fromMessage(ClassMessage<BoolRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return BoolRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is BoolRouteLongAttribute &&
@@ -48476,6 +51148,13 @@ class BoolRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension BoolRouteLongAttributeToClassMessage on BoolRouteLongAttribute {
+  ClassMessage<BoolRouteLongAttribute> message() {
+    final res = (_CBoolRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<BoolRouteLongAttribute>(res._impl.address, _CBoolRouteLongAttribute_release);
+  }
 }
 
 // MARK: - BoolRouteLongAttribute <-> CBoolRouteLongAttribute
@@ -48705,6 +51384,11 @@ class ObstacleInfoRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ObstacleInfoRouteAttribute.fromMessage(ClassMessage<ObstacleInfoRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ObstacleInfoRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ObstacleInfoRouteAttribute &&
@@ -48764,6 +51448,13 @@ class ObstacleInfoRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension ObstacleInfoRouteAttributeToClassMessage on ObstacleInfoRouteAttribute {
+  ClassMessage<ObstacleInfoRouteAttribute> message() {
+    final res = (_CObstacleInfoRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ObstacleInfoRouteAttribute>(res._impl.address, _CObstacleInfoRouteAttribute_release);
+  }
 }
 
 // MARK: - ObstacleInfoRouteAttribute <-> CObstacleInfoRouteAttribute
@@ -49154,6 +51845,11 @@ class StringRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory StringRouteLongAttribute.fromMessage(ClassMessage<StringRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return StringRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is StringRouteLongAttribute &&
@@ -49196,6 +51892,13 @@ class StringRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension StringRouteLongAttributeToClassMessage on StringRouteLongAttribute {
+  ClassMessage<StringRouteLongAttribute> message() {
+    final res = (_CStringRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<StringRouteLongAttribute>(res._impl.address, _CStringRouteLongAttribute_release);
+  }
 }
 
 // MARK: - StringRouteLongAttribute <-> CStringRouteLongAttribute
@@ -49427,6 +52130,11 @@ class SettlementRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SettlementRouteLongAttribute.fromMessage(ClassMessage<SettlementRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SettlementRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SettlementRouteLongAttribute &&
@@ -49467,6 +52175,13 @@ class SettlementRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension SettlementRouteLongAttributeToClassMessage on SettlementRouteLongAttribute {
+  ClassMessage<SettlementRouteLongAttribute> message() {
+    final res = (_CSettlementRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SettlementRouteLongAttribute>(res._impl.address, _CSettlementRouteLongAttribute_release);
+  }
 }
 
 // MARK: - SettlementRouteLongAttribute <-> CSettlementRouteLongAttribute
@@ -49740,6 +52455,11 @@ class TransportTypeRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TransportTypeRouteLongAttribute.fromMessage(ClassMessage<TransportTypeRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TransportTypeRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TransportTypeRouteLongAttribute &&
@@ -49780,6 +52500,13 @@ class TransportTypeRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TransportTypeRouteLongAttributeToClassMessage on TransportTypeRouteLongAttribute {
+  ClassMessage<TransportTypeRouteLongAttribute> message() {
+    final res = (_CTransportTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TransportTypeRouteLongAttribute>(res._impl.address, _CTransportTypeRouteLongAttribute_release);
+  }
 }
 
 // MARK: - TransportTypeRouteLongAttribute <-> CTransportTypeRouteLongAttribute
@@ -50061,6 +52788,11 @@ class CrossingTypeRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CrossingTypeRouteLongAttribute.fromMessage(ClassMessage<CrossingTypeRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CrossingTypeRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CrossingTypeRouteLongAttribute &&
@@ -50101,6 +52833,13 @@ class CrossingTypeRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension CrossingTypeRouteLongAttributeToClassMessage on CrossingTypeRouteLongAttribute {
+  ClassMessage<CrossingTypeRouteLongAttribute> message() {
+    final res = (_CCrossingTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CrossingTypeRouteLongAttribute>(res._impl.address, _CCrossingTypeRouteLongAttribute_release);
+  }
 }
 
 // MARK: - CrossingTypeRouteLongAttribute <-> CCrossingTypeRouteLongAttribute
@@ -50378,6 +53117,11 @@ class RouteTollPaymentPointInfoRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteTollPaymentPointInfoRouteAttribute.fromMessage(ClassMessage<RouteTollPaymentPointInfoRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteTollPaymentPointInfoRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteTollPaymentPointInfoRouteAttribute &&
@@ -50441,6 +53185,13 @@ class RouteTollPaymentPointInfoRouteAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RouteTollPaymentPointInfoRouteAttributeToClassMessage on RouteTollPaymentPointInfoRouteAttribute {
+  ClassMessage<RouteTollPaymentPointInfoRouteAttribute> message() {
+    final res = (_CRouteTollPaymentPointInfoRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteTollPaymentPointInfoRouteAttribute>(res._impl.address, _CRouteTollPaymentPointInfoRouteAttribute_release);
+  }
 }
 
 // MARK: - RouteTollPaymentPointInfoRouteAttribute <-> CRouteTollPaymentPointInfoRouteAttribute
@@ -50839,6 +53590,11 @@ class CameraRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CameraRouteAttribute.fromMessage(ClassMessage<CameraRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CameraRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is CameraRouteAttribute &&
@@ -50898,6 +53654,13 @@ class CameraRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension CameraRouteAttributeToClassMessage on CameraRouteAttribute {
+  ClassMessage<CameraRouteAttribute> message() {
+    final res = (_CCameraRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CameraRouteAttribute>(res._impl.address, _CCameraRouteAttribute_release);
+  }
 }
 
 // MARK: - CameraRouteAttribute <-> CCameraRouteAttribute
@@ -51518,6 +54281,11 @@ class DoubleRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DoubleRouteLongAttribute.fromMessage(ClassMessage<DoubleRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DoubleRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DoubleRouteLongAttribute &&
@@ -51558,6 +54326,13 @@ class DoubleRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension DoubleRouteLongAttributeToClassMessage on DoubleRouteLongAttribute {
+  ClassMessage<DoubleRouteLongAttribute> message() {
+    final res = (_CDoubleRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DoubleRouteLongAttribute>(res._impl.address, _CDoubleRouteLongAttribute_release);
+  }
 }
 
 // MARK: - DoubleRouteLongAttribute <-> CDoubleRouteLongAttribute
@@ -51791,6 +54566,11 @@ class RouteExitSignRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteExitSignRouteAttribute.fromMessage(ClassMessage<RouteExitSignRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteExitSignRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteExitSignRouteAttribute &&
@@ -51854,6 +54634,13 @@ class RouteExitSignRouteAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RouteExitSignRouteAttributeToClassMessage on RouteExitSignRouteAttribute {
+  ClassMessage<RouteExitSignRouteAttribute> message() {
+    final res = (_CRouteExitSignRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteExitSignRouteAttribute>(res._impl.address, _CRouteExitSignRouteAttribute_release);
+  }
 }
 
 // MARK: - RouteExitSignRouteAttribute <-> CRouteExitSignRouteAttribute
@@ -52348,6 +55135,11 @@ class VoidRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory VoidRouteAttribute.fromMessage(ClassMessage<VoidRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return VoidRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is VoidRouteAttribute &&
@@ -52407,6 +55199,13 @@ class VoidRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension VoidRouteAttributeToClassMessage on VoidRouteAttribute {
+  ClassMessage<VoidRouteAttribute> message() {
+    final res = (_CVoidRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<VoidRouteAttribute>(res._impl.address, _CVoidRouteAttribute_release);
+  }
 }
 
 // MARK: - VoidRouteAttribute <-> CVoidRouteAttribute
@@ -52532,6 +55331,11 @@ class LaneSignRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LaneSignRouteLongAttribute.fromMessage(ClassMessage<LaneSignRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LaneSignRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LaneSignRouteLongAttribute &&
@@ -52574,6 +55378,13 @@ class LaneSignRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension LaneSignRouteLongAttributeToClassMessage on LaneSignRouteLongAttribute {
+  ClassMessage<LaneSignRouteLongAttribute> message() {
+    final res = (_CLaneSignRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LaneSignRouteLongAttribute>(res._impl.address, _CLaneSignRouteLongAttribute_release);
+  }
 }
 
 // MARK: - LaneSignRouteLongAttribute <-> CLaneSignRouteLongAttribute
@@ -53295,6 +56106,11 @@ class RouteLevelInfoRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteLevelInfoRouteLongAttribute.fromMessage(ClassMessage<RouteLevelInfoRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteLevelInfoRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteLevelInfoRouteLongAttribute &&
@@ -53337,6 +56153,13 @@ class RouteLevelInfoRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RouteLevelInfoRouteLongAttributeToClassMessage on RouteLevelInfoRouteLongAttribute {
+  ClassMessage<RouteLevelInfoRouteLongAttribute> message() {
+    final res = (_CRouteLevelInfoRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteLevelInfoRouteLongAttribute>(res._impl.address, _CRouteLevelInfoRouteLongAttribute_release);
+  }
 }
 
 // MARK: - RouteLevelInfoRouteLongAttribute <-> CRouteLevelInfoRouteLongAttribute
@@ -53654,6 +56477,11 @@ class FloatRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory FloatRouteLongAttribute.fromMessage(ClassMessage<FloatRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return FloatRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is FloatRouteLongAttribute &&
@@ -53694,6 +56522,13 @@ class FloatRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension FloatRouteLongAttributeToClassMessage on FloatRouteLongAttribute {
+  ClassMessage<FloatRouteLongAttribute> message() {
+    final res = (_CFloatRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<FloatRouteLongAttribute>(res._impl.address, _CFloatRouteLongAttribute_release);
+  }
 }
 
 // MARK: - FloatRouteLongAttribute <-> CFloatRouteLongAttribute
@@ -53925,6 +56760,11 @@ class RoadRuleRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadRuleRouteLongAttribute.fromMessage(ClassMessage<RoadRuleRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadRuleRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadRuleRouteLongAttribute &&
@@ -53965,6 +56805,13 @@ class RoadRuleRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadRuleRouteLongAttributeToClassMessage on RoadRuleRouteLongAttribute {
+  ClassMessage<RoadRuleRouteLongAttribute> message() {
+    final res = (_CRoadRuleRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadRuleRouteLongAttribute>(res._impl.address, _CRoadRuleRouteLongAttribute_release);
+  }
 }
 
 // MARK: - RoadRuleRouteLongAttribute <-> CRoadRuleRouteLongAttribute
@@ -54238,6 +57085,11 @@ class RoadSubtypeRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadSubtypeRouteLongAttribute.fromMessage(ClassMessage<RoadSubtypeRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadSubtypeRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadSubtypeRouteLongAttribute &&
@@ -54278,6 +57130,13 @@ class RoadSubtypeRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadSubtypeRouteLongAttributeToClassMessage on RoadSubtypeRouteLongAttribute {
+  ClassMessage<RoadSubtypeRouteLongAttribute> message() {
+    final res = (_CRoadSubtypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadSubtypeRouteLongAttribute>(res._impl.address, _CRoadSubtypeRouteLongAttribute_release);
+  }
 }
 
 // MARK: - RoadSubtypeRouteLongAttribute <-> CRoadSubtypeRouteLongAttribute
@@ -54585,6 +57444,11 @@ class RoadSurfaceRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadSurfaceRouteLongAttribute.fromMessage(ClassMessage<RoadSurfaceRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadSurfaceRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadSurfaceRouteLongAttribute &&
@@ -54625,6 +57489,13 @@ class RoadSurfaceRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadSurfaceRouteLongAttributeToClassMessage on RoadSurfaceRouteLongAttribute {
+  ClassMessage<RoadSurfaceRouteLongAttribute> message() {
+    final res = (_CRoadSurfaceRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadSurfaceRouteLongAttribute>(res._impl.address, _CRoadSurfaceRouteLongAttribute_release);
+  }
 }
 
 // MARK: - RoadSurfaceRouteLongAttribute <-> CRoadSurfaceRouteLongAttribute
@@ -54902,6 +57773,11 @@ class RoadTypeRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadTypeRouteLongAttribute.fromMessage(ClassMessage<RoadTypeRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadTypeRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadTypeRouteLongAttribute &&
@@ -54942,6 +57818,13 @@ class RoadTypeRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadTypeRouteLongAttributeToClassMessage on RoadTypeRouteLongAttribute {
+  ClassMessage<RoadTypeRouteLongAttribute> message() {
+    final res = (_CRoadTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadTypeRouteLongAttribute>(res._impl.address, _CRoadTypeRouteLongAttribute_release);
+  }
 }
 
 // MARK: - RoadTypeRouteLongAttribute <-> CRoadTypeRouteLongAttribute
@@ -55231,6 +58114,11 @@ class TruckPassZoneIdRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TruckPassZoneIdRouteLongAttribute.fromMessage(ClassMessage<TruckPassZoneIdRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TruckPassZoneIdRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TruckPassZoneIdRouteLongAttribute &&
@@ -55271,6 +58159,13 @@ class TruckPassZoneIdRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TruckPassZoneIdRouteLongAttributeToClassMessage on TruckPassZoneIdRouteLongAttribute {
+  ClassMessage<TruckPassZoneIdRouteLongAttribute> message() {
+    final res = (_CTruckPassZoneIdRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TruckPassZoneIdRouteLongAttribute>(res._impl.address, _CTruckPassZoneIdRouteLongAttribute_release);
+  }
 }
 
 // MARK: - TruckPassZoneIdRouteLongAttribute <-> CTruckPassZoneIdRouteLongAttribute
@@ -55560,6 +58455,11 @@ class StringRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory StringRouteAttribute.fromMessage(ClassMessage<StringRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return StringRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is StringRouteAttribute &&
@@ -55623,6 +58523,13 @@ class StringRouteAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension StringRouteAttributeToClassMessage on StringRouteAttribute {
+  ClassMessage<StringRouteAttribute> message() {
+    final res = (_CStringRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<StringRouteAttribute>(res._impl.address, _CStringRouteAttribute_release);
+  }
 }
 
 // MARK: - StringRouteAttribute <-> CStringRouteAttribute
@@ -55849,6 +58756,11 @@ class PublicTransportTransferRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PublicTransportTransferRouteLongAttribute.fromMessage(ClassMessage<PublicTransportTransferRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PublicTransportTransferRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is PublicTransportTransferRouteLongAttribute &&
@@ -55891,6 +58803,13 @@ class PublicTransportTransferRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension PublicTransportTransferRouteLongAttributeToClassMessage on PublicTransportTransferRouteLongAttribute {
+  ClassMessage<PublicTransportTransferRouteLongAttribute> message() {
+    final res = (_CPublicTransportTransferRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PublicTransportTransferRouteLongAttribute>(res._impl.address, _CPublicTransportTransferRouteLongAttribute_release);
+  }
 }
 
 // MARK: - PublicTransportTransferRouteLongAttribute <-> CPublicTransportTransferRouteLongAttribute
@@ -57054,6 +59973,11 @@ class Traffic implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Traffic.fromMessage(ClassMessage<Traffic> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Traffic._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Traffic &&
@@ -57066,6 +59990,13 @@ class Traffic implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TrafficToClassMessage on Traffic {
+  ClassMessage<Traffic> message() {
+    final res = (_CTrafficMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Traffic>(res._impl.address, _CTraffic_release);
+  }
 }
 
 // MARK: - Traffic <-> CTraffic
@@ -57147,6 +60078,11 @@ class MillisecondsRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MillisecondsRouteAttribute.fromMessage(ClassMessage<MillisecondsRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MillisecondsRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MillisecondsRouteAttribute &&
@@ -57224,6 +60160,13 @@ class MillisecondsRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension MillisecondsRouteAttributeToClassMessage on MillisecondsRouteAttribute {
+  ClassMessage<MillisecondsRouteAttribute> message() {
+    final res = (_CMillisecondsRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MillisecondsRouteAttribute>(res._impl.address, _CMillisecondsRouteAttribute_release);
+  }
 }
 
 // MARK: - MillisecondsRouteAttribute <-> CMillisecondsRouteAttribute
@@ -57445,6 +60388,11 @@ class TrafficSpeedColorRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficSpeedColorRouteLongAttribute.fromMessage(ClassMessage<TrafficSpeedColorRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficSpeedColorRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TrafficSpeedColorRouteLongAttribute &&
@@ -57485,6 +60433,13 @@ class TrafficSpeedColorRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TrafficSpeedColorRouteLongAttributeToClassMessage on TrafficSpeedColorRouteLongAttribute {
+  ClassMessage<TrafficSpeedColorRouteLongAttribute> message() {
+    final res = (_CTrafficSpeedColorRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficSpeedColorRouteLongAttribute>(res._impl.address, _CTrafficSpeedColorRouteLongAttribute_release);
+  }
 }
 
 // MARK: - TrafficSpeedColorRouteLongAttribute <-> CTrafficSpeedColorRouteLongAttribute
@@ -57870,6 +60825,11 @@ class PackedNavigationState implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PackedNavigationState.fromMessage(ClassMessage<PackedNavigationState> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PackedNavigationState._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is PackedNavigationState &&
@@ -57945,6 +60905,13 @@ class PackedNavigationState implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension PackedNavigationStateToClassMessage on PackedNavigationState {
+  ClassMessage<PackedNavigationState> message() {
+    final res = (_CPackedNavigationStateMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PackedNavigationState>(res._impl.address, _CPackedNavigationState_release);
+  }
 }
 
 // MARK: - PackedNavigationState <-> CPackedNavigationState
@@ -59929,6 +62896,11 @@ class Model implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Model.fromMessage(ClassMessage<Model> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Model._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Model &&
@@ -59952,6 +62924,13 @@ class Model implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension ModelToClassMessage on Model {
+  ClassMessage<Model> message() {
+    final res = (_CModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Model>(res._impl.address, _CModel_release);
+  }
 }
 
 // MARK: - Model <-> CModel
@@ -60567,6 +63546,11 @@ class RoadEventRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventRouteAttribute.fromMessage(ClassMessage<RoadEventRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventRouteAttribute &&
@@ -60626,6 +63610,13 @@ class RoadEventRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension RoadEventRouteAttributeToClassMessage on RoadEventRouteAttribute {
+  ClassMessage<RoadEventRouteAttribute> message() {
+    final res = (_CRoadEventRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventRouteAttribute>(res._impl.address, _CRoadEventRouteAttribute_release);
+  }
 }
 
 // MARK: - RoadEventRouteAttribute <-> CRoadEventRouteAttribute
@@ -62114,6 +65105,11 @@ class RoadEventMapObjectRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventMapObjectRouteAttribute.fromMessage(ClassMessage<RoadEventMapObjectRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventMapObjectRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventMapObjectRouteAttribute &&
@@ -62177,6 +65173,13 @@ class RoadEventMapObjectRouteAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadEventMapObjectRouteAttributeToClassMessage on RoadEventMapObjectRouteAttribute {
+  ClassMessage<RoadEventMapObjectRouteAttribute> message() {
+    final res = (_CRoadEventMapObjectRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventMapObjectRouteAttribute>(res._impl.address, _CRoadEventMapObjectRouteAttribute_release);
+  }
 }
 
 // MARK: - RoadEventMapObjectRouteAttribute <-> CRoadEventMapObjectRouteAttribute
@@ -62401,6 +65404,11 @@ class RouteSourceSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteSourceSettings.fromMessage(ClassMessage<RouteSourceSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteSourceSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteSourceSettings &&
@@ -62533,6 +65541,13 @@ class RouteSourceSettings implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RouteSourceSettingsToClassMessage on RouteSourceSettings {
+  ClassMessage<RouteSourceSettings> message() {
+    final res = (_CRouteSourceSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteSourceSettings>(res._impl.address, _CRouteSourceSettings_release);
+  }
 }
 
 // MARK: - RouteSourceSettings <-> CRouteSourceSettings
@@ -62682,6 +65697,11 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteEditorSource.fromMessage(ClassMessage<RouteEditorSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteEditorSource._create(ptr);
+  }
+
   /**
    Функция создания IRouteEditorSource.
   
@@ -62753,6 +65773,13 @@ class RouteEditorSource extends Source implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RouteEditorSourceToClassMessage on RouteEditorSource {
+  ClassMessage<RouteEditorSource> message() {
+    final res = (_CRouteEditorSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteEditorSource>(res._impl.address, _CRouteEditorSource_release);
+  }
 }
 
 // MARK: - RouteEditorSource <-> CRouteEditorSource
@@ -62885,6 +65912,11 @@ class RouteEditor implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteEditor.fromMessage(ClassMessage<RouteEditor> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteEditor._create(ptr);
+  }
+
   /**
    Функция создания редактора маршрута.
   
@@ -62946,6 +65978,13 @@ class RouteEditor implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension RouteEditorToClassMessage on RouteEditor {
+  ClassMessage<RouteEditor> message() {
+    final res = (_CRouteEditorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteEditor>(res._impl.address, _CRouteEditor_release);
+  }
 }
 
 // MARK: - RouteEditor <-> CRouteEditor
@@ -63714,6 +66753,11 @@ class TrafficRouter implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficRouter.fromMessage(ClassMessage<TrafficRouter> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficRouter._create(ptr);
+  }
+
   /**
    - Throws: Exception, если отсутствует системный контекст или если из него
    невозможно получить ITrafficRouterPtr
@@ -63824,6 +66868,13 @@ class TrafficRouter implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TrafficRouterToClassMessage on TrafficRouter {
+  ClassMessage<TrafficRouter> message() {
+    final res = (_CTrafficRouterMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficRouter>(res._impl.address, _CTrafficRouter_release);
+  }
 }
 
 // MARK: - TrafficRouter <-> CTrafficRouter
@@ -65451,6 +68502,11 @@ class RouteMapObjectSource extends Source implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteMapObjectSource.fromMessage(ClassMessage<RouteMapObjectSource> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteMapObjectSource._create(ptr);
+  }
+
   /**
    Функция создания IRouteMapObjectSource.
   
@@ -65544,6 +68600,13 @@ class RouteMapObjectSource extends Source implements ffi.Finalizable {
 
 }
 
+extension RouteMapObjectSourceToClassMessage on RouteMapObjectSource {
+  ClassMessage<RouteMapObjectSource> message() {
+    final res = (_CRouteMapObjectSourceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteMapObjectSource>(res._impl.address, _CRouteMapObjectSource_release);
+  }
+}
+
 // MARK: - RouteMapObjectSource <-> CRouteMapObjectSource
 
 final class _CRouteMapObjectSource extends ffi.Struct {
@@ -65603,6 +68666,11 @@ class RouteInfoCalloutMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteInfoCalloutMapObject.fromMessage(ClassMessage<RouteInfoCalloutMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteInfoCalloutMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteInfoCalloutMapObject &&
@@ -65615,6 +68683,13 @@ class RouteInfoCalloutMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteInfoCalloutMapObjectToClassMessage on RouteInfoCalloutMapObject {
+  ClassMessage<RouteInfoCalloutMapObject> message() {
+    final res = (_CRouteInfoCalloutMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteInfoCalloutMapObject>(res._impl.address, _CRouteInfoCalloutMapObject_release);
+  }
 }
 
 // MARK: - RouteInfoCalloutMapObject <-> CRouteInfoCalloutMapObject
@@ -65791,6 +68866,11 @@ class RoutePointMapObject extends MapObject implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoutePointMapObject.fromMessage(ClassMessage<RoutePointMapObject> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoutePointMapObject._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoutePointMapObject &&
@@ -65803,6 +68883,13 @@ class RoutePointMapObject extends MapObject implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RoutePointMapObjectToClassMessage on RoutePointMapObject {
+  ClassMessage<RoutePointMapObject> message() {
+    final res = (_CRoutePointMapObjectMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoutePointMapObject>(res._impl.address, _CRoutePointMapObject_release);
+  }
 }
 
 // MARK: - RoutePointMapObject <-> CRoutePointMapObject
@@ -65995,6 +69082,11 @@ class MapSurfaceProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapSurfaceProvider.fromMessage(ClassMessage<MapSurfaceProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapSurfaceProvider._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapSurfaceProvider &&
@@ -66071,6 +69163,13 @@ class MapSurfaceProvider implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension MapSurfaceProviderToClassMessage on MapSurfaceProvider {
+  ClassMessage<MapSurfaceProvider> message() {
+    final res = (_CMapSurfaceProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapSurfaceProvider>(res._impl.address, _CMapSurfaceProvider_release);
+  }
 }
 
 // MARK: - MapSurfaceProvider <-> CMapSurfaceProvider
@@ -66237,6 +69336,11 @@ class MapRenderer implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapRenderer.fromMessage(ClassMessage<MapRenderer> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapRenderer._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapRenderer &&
@@ -66298,6 +69402,13 @@ class MapRenderer implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension MapRendererToClassMessage on MapRenderer {
+  ClassMessage<MapRenderer> message() {
+    final res = (_CMapRendererMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapRenderer>(res._impl.address, _CMapRenderer_release);
+  }
 }
 
 // MARK: - MapRenderer <-> CMapRenderer
@@ -66566,6 +69677,11 @@ class MapBuilder implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapBuilder.fromMessage(ClassMessage<MapBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapBuilder._create(ptr);
+  }
+
   factory MapBuilder() {
     _CMapBuilder res = _CMapBuilder_C_create();
     return MapBuilder._create(res._impl);
@@ -66756,6 +69872,17 @@ class MapBuilder implements ffi.Finalizable {
     return t;
   }
 
+  MapBuilder setContextObserver(
+    ContextObserver? contextObserver
+  )  {
+    var _a1 = contextObserver._copyFromDartTo_COptional_CContextObserver();
+    _CMapBuilder res = _CMapBuilder_setContextObserver_COptional_CContextObserver(_CMapBuilderMakeDefault().._impl=_self, _a1);
+    _a1._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
   MapBuilder addSource(
     Source source
   )  {
@@ -66778,6 +69905,13 @@ class MapBuilder implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension MapBuilderToClassMessage on MapBuilder {
+  ClassMessage<MapBuilder> message() {
+    final res = (_CMapBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapBuilder>(res._impl.address, _CMapBuilder_release);
+  }
 }
 
 // MARK: - MapBuilder <-> CMapBuilder
@@ -66806,6 +69940,42 @@ extension _CMapBuilderToDart on _CMapBuilder {
 extension _DartToCMapBuilder on MapBuilder {
   _CMapBuilder _copyFromDartTo_CMapBuilder() {
     return (_CMapBuilderMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - ContextObserver? <-> _COptional_CContextObserver
+
+final class _COptional_CContextObserver extends ffi.Struct {
+  
+  external _CContextObserver value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CContextObserverBasicFunctions on _COptional_CContextObserver {
+  void _releaseIntermediate() {
+    _COptional_CContextObserver_release(this);
+  }
+}
+
+extension _COptional_CContextObserverToDart on _COptional_CContextObserver {
+  ContextObserver? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CContextObserver on ContextObserver? {
+  _COptional_CContextObserver _copyFromDartTo_COptional_CContextObserver() {
+    final cOptional = _COptional_CContextObserverMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CContextObserver();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
   }
 }
 // MARK: - CancelableOperation<Map> <-> _CFuture_CMap
@@ -66924,6 +70094,11 @@ class StyleBuilder implements ffi.Finalizable {
     return classObject;
   }
 
+  factory StyleBuilder.fromMessage(ClassMessage<StyleBuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return StyleBuilder._create(ptr);
+  }
+
   factory StyleBuilder(
     Context context
   ) {
@@ -66981,6 +70156,13 @@ class StyleBuilder implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension StyleBuilderToClassMessage on StyleBuilder {
+  ClassMessage<StyleBuilder> message() {
+    final res = (_CStyleBuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<StyleBuilder>(res._impl.address, _CStyleBuilder_release);
+  }
 }
 
 // MARK: - StyleBuilder <-> CStyleBuilder
@@ -67140,6 +70322,11 @@ class IndoorDetector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IndoorDetector.fromMessage(ClassMessage<IndoorDetector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IndoorDetector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is IndoorDetector &&
@@ -67152,6 +70339,13 @@ class IndoorDetector implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension IndoorDetectorToClassMessage on IndoorDetector {
+  ClassMessage<IndoorDetector> message() {
+    final res = (_CIndoorDetectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IndoorDetector>(res._impl.address, _CIndoorDetector_release);
+  }
 }
 
 // MARK: - IndoorDetector <-> CIndoorDetector
@@ -67222,6 +70416,11 @@ class NavigationFollowController implements ffi.Finalizable {
     return classObject;
   }
 
+  factory NavigationFollowController.fromMessage(ClassMessage<NavigationFollowController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return NavigationFollowController._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is NavigationFollowController &&
@@ -67244,6 +70443,13 @@ class NavigationFollowController implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension NavigationFollowControllerToClassMessage on NavigationFollowController {
+  ClassMessage<NavigationFollowController> message() {
+    final res = (_CNavigationFollowControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<NavigationFollowController>(res._impl.address, _CNavigationFollowController_release);
+  }
 }
 
 // MARK: - NavigationFollowController <-> CNavigationFollowController
@@ -67308,6 +70514,11 @@ class MapLocationController implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapLocationController.fromMessage(ClassMessage<MapLocationController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapLocationController._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapLocationController &&
@@ -67320,6 +70531,13 @@ class MapLocationController implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MapLocationControllerToClassMessage on MapLocationController {
+  ClassMessage<MapLocationController> message() {
+    final res = (_CMapLocationControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapLocationController>(res._impl.address, _CMapLocationController_release);
+  }
 }
 
 // MARK: - MapLocationController <-> CMapLocationController
@@ -67365,6 +70583,11 @@ class MapManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MapManager.fromMessage(ClassMessage<MapManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MapManager &&
@@ -67397,6 +70620,13 @@ class MapManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension MapManagerToClassMessage on MapManager {
+  ClassMessage<MapManager> message() {
+    final res = (_CMapManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapManager>(res._impl.address, _CMapManager_release);
+  }
 }
 
 // MARK: - MapManager <-> CMapManager
@@ -67897,6 +71127,11 @@ class ZoomFollowSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ZoomFollowSettings.fromMessage(ClassMessage<ZoomFollowSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ZoomFollowSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ZoomFollowSettings &&
@@ -67909,6 +71144,13 @@ class ZoomFollowSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ZoomFollowSettingsToClassMessage on ZoomFollowSettings {
+  ClassMessage<ZoomFollowSettings> message() {
+    final res = (_CZoomFollowSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ZoomFollowSettings>(res._impl.address, _CZoomFollowSettings_release);
+  }
 }
 
 // MARK: - ZoomFollowSettings <-> CZoomFollowSettings
@@ -68050,6 +71292,11 @@ class RouteMapSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteMapSettings.fromMessage(ClassMessage<RouteMapSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteMapSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteMapSettings &&
@@ -68062,6 +71309,13 @@ class RouteMapSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteMapSettingsToClassMessage on RouteMapSettings {
+  ClassMessage<RouteMapSettings> message() {
+    final res = (_CRouteMapSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteMapSettings>(res._impl.address, _CRouteMapSettings_release);
+  }
 }
 
 // MARK: - RouteMapSettings <-> CRouteMapSettings
@@ -68122,6 +71376,11 @@ class RouteMapObjectsProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteMapObjectsProvider.fromMessage(ClassMessage<RouteMapObjectsProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteMapObjectsProvider._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteMapObjectsProvider &&
@@ -68134,6 +71393,13 @@ class RouteMapObjectsProvider implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteMapObjectsProviderToClassMessage on RouteMapObjectsProvider {
+  ClassMessage<RouteMapObjectsProvider> message() {
+    final res = (_CRouteMapObjectsProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteMapObjectsProvider>(res._impl.address, _CRouteMapObjectsProvider_release);
+  }
 }
 
 // MARK: - RouteMapObjectsProvider <-> CRouteMapObjectsProvider
@@ -68473,6 +71739,11 @@ class SimulationSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SimulationSettings.fromMessage(ClassMessage<SimulationSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SimulationSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SimulationSettings &&
@@ -68485,6 +71756,13 @@ class SimulationSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SimulationSettingsToClassMessage on SimulationSettings {
+  ClassMessage<SimulationSettings> message() {
+    final res = (_CSimulationSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SimulationSettings>(res._impl.address, _CSimulationSettings_release);
+  }
 }
 
 // MARK: - SimulationSettings <-> CSimulationSettings
@@ -68530,6 +71808,11 @@ class NavigationVoice implements ffi.Finalizable {
     return classObject;
   }
 
+  factory NavigationVoice.fromMessage(ClassMessage<NavigationVoice> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return NavigationVoice._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is NavigationVoice &&
@@ -68542,6 +71825,13 @@ class NavigationVoice implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension NavigationVoiceToClassMessage on NavigationVoice {
+  ClassMessage<NavigationVoice> message() {
+    final res = (_CNavigationVoiceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<NavigationVoice>(res._impl.address, _CNavigationVoice_release);
+  }
 }
 
 // MARK: - NavigationVoice <-> CNavigationVoice
@@ -68601,6 +71891,11 @@ class VoiceSelector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory VoiceSelector.fromMessage(ClassMessage<VoiceSelector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return VoiceSelector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is VoiceSelector &&
@@ -68613,6 +71908,13 @@ class VoiceSelector implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension VoiceSelectorToClassMessage on VoiceSelector {
+  ClassMessage<VoiceSelector> message() {
+    final res = (_CVoiceSelectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<VoiceSelector>(res._impl.address, _CVoiceSelector_release);
+  }
 }
 
 // MARK: - VoiceSelector <-> CVoiceSelector
@@ -68713,6 +72015,11 @@ class ExceedSpeedLimitSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ExceedSpeedLimitSettings.fromMessage(ClassMessage<ExceedSpeedLimitSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ExceedSpeedLimitSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ExceedSpeedLimitSettings &&
@@ -68725,6 +72032,13 @@ class ExceedSpeedLimitSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ExceedSpeedLimitSettingsToClassMessage on ExceedSpeedLimitSettings {
+  ClassMessage<ExceedSpeedLimitSettings> message() {
+    final res = (_CExceedSpeedLimitSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ExceedSpeedLimitSettings>(res._impl.address, _CExceedSpeedLimitSettings_release);
+  }
 }
 
 // MARK: - ExceedSpeedLimitSettings <-> CExceedSpeedLimitSettings
@@ -68781,6 +72095,11 @@ class DynamicRouteInfoSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DynamicRouteInfoSettings.fromMessage(ClassMessage<DynamicRouteInfoSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DynamicRouteInfoSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DynamicRouteInfoSettings &&
@@ -68793,6 +72112,13 @@ class DynamicRouteInfoSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DynamicRouteInfoSettingsToClassMessage on DynamicRouteInfoSettings {
+  ClassMessage<DynamicRouteInfoSettings> message() {
+    final res = (_CDynamicRouteInfoSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DynamicRouteInfoSettings>(res._impl.address, _CDynamicRouteInfoSettings_release);
+  }
 }
 
 // MARK: - DynamicRouteInfoSettings <-> CDynamicRouteInfoSettings
@@ -68863,7 +72189,7 @@ enum SoundCategory {
   routeEnd(131072),
   /** Маршрут лучше. */
   betterRoute(262144),
-  /** Лежачие полицейские. */
+  /** Искуcственные неровности. */
   humps(524288),
   ;
 
@@ -68928,6 +72254,11 @@ class SoundNotificationSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory SoundNotificationSettings.fromMessage(ClassMessage<SoundNotificationSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SoundNotificationSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is SoundNotificationSettings &&
@@ -68940,6 +72271,13 @@ class SoundNotificationSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension SoundNotificationSettingsToClassMessage on SoundNotificationSettings {
+  ClassMessage<SoundNotificationSettings> message() {
+    final res = (_CSoundNotificationSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SoundNotificationSettings>(res._impl.address, _CSoundNotificationSettings_release);
+  }
 }
 
 // MARK: - SoundNotificationSettings <-> CSoundNotificationSettings
@@ -69217,6 +72555,11 @@ class FreeRoamSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory FreeRoamSettings.fromMessage(ClassMessage<FreeRoamSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return FreeRoamSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is FreeRoamSettings &&
@@ -69229,6 +72572,13 @@ class FreeRoamSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension FreeRoamSettingsToClassMessage on FreeRoamSettings {
+  ClassMessage<FreeRoamSettings> message() {
+    final res = (_CFreeRoamSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<FreeRoamSettings>(res._impl.address, _CFreeRoamSettings_release);
+  }
 }
 
 // MARK: - FreeRoamSettings <-> CFreeRoamSettings
@@ -69348,6 +72698,11 @@ class AlternativeRoutesProviderSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory AlternativeRoutesProviderSettings.fromMessage(ClassMessage<AlternativeRoutesProviderSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return AlternativeRoutesProviderSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is AlternativeRoutesProviderSettings &&
@@ -69360,6 +72715,13 @@ class AlternativeRoutesProviderSettings implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension AlternativeRoutesProviderSettingsToClassMessage on AlternativeRoutesProviderSettings {
+  ClassMessage<AlternativeRoutesProviderSettings> message() {
+    final res = (_CAlternativeRoutesProviderSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<AlternativeRoutesProviderSettings>(res._impl.address, _CAlternativeRoutesProviderSettings_release);
+  }
 }
 
 // MARK: - AlternativeRoutesProviderSettings <-> CAlternativeRoutesProviderSettings
@@ -69405,6 +72767,11 @@ class AlternativeRouteSelector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory AlternativeRouteSelector.fromMessage(ClassMessage<AlternativeRouteSelector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return AlternativeRouteSelector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is AlternativeRouteSelector &&
@@ -69437,6 +72804,13 @@ class AlternativeRouteSelector implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension AlternativeRouteSelectorToClassMessage on AlternativeRouteSelector {
+  ClassMessage<AlternativeRouteSelector> message() {
+    final res = (_CAlternativeRouteSelectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<AlternativeRouteSelector>(res._impl.address, _CAlternativeRouteSelector_release);
+  }
 }
 
 // MARK: - AlternativeRouteSelector <-> CAlternativeRouteSelector
@@ -69577,6 +72951,11 @@ class TrafficJamDetector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficJamDetector.fromMessage(ClassMessage<TrafficJamDetector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficJamDetector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TrafficJamDetector &&
@@ -69589,6 +72968,13 @@ class TrafficJamDetector implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TrafficJamDetectorToClassMessage on TrafficJamDetector {
+  ClassMessage<TrafficJamDetector> message() {
+    final res = (_CTrafficJamDetectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficJamDetector>(res._impl.address, _CTrafficJamDetector_release);
+  }
 }
 
 // MARK: - TrafficJamDetector <-> CTrafficJamDetector
@@ -69764,6 +73150,11 @@ class MyLocationMapObjectSourceProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MyLocationMapObjectSourceProvider.fromMessage(ClassMessage<MyLocationMapObjectSourceProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MyLocationMapObjectSourceProvider._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is MyLocationMapObjectSourceProvider &&
@@ -69776,6 +73167,13 @@ class MyLocationMapObjectSourceProvider implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MyLocationMapObjectSourceProviderToClassMessage on MyLocationMapObjectSourceProvider {
+  ClassMessage<MyLocationMapObjectSourceProvider> message() {
+    final res = (_CMyLocationMapObjectSourceProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MyLocationMapObjectSourceProvider>(res._impl.address, _CMyLocationMapObjectSourceProvider_release);
+  }
 }
 
 // MARK: - MyLocationMapObjectSourceProvider <-> CMyLocationMapObjectSourceProvider
@@ -69830,6 +73228,11 @@ class RouteRebuilder implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RouteRebuilder.fromMessage(ClassMessage<RouteRebuilder> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RouteRebuilder._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RouteRebuilder &&
@@ -69842,6 +73245,13 @@ class RouteRebuilder implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension RouteRebuilderToClassMessage on RouteRebuilder {
+  ClassMessage<RouteRebuilder> message() {
+    final res = (_CRouteRebuilderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RouteRebuilder>(res._impl.address, _CRouteRebuilder_release);
+  }
 }
 
 // MARK: - RouteRebuilder <-> CRouteRebuilder
@@ -69896,6 +73306,11 @@ class FreeRoamSelector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory FreeRoamSelector.fromMessage(ClassMessage<FreeRoamSelector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return FreeRoamSelector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is FreeRoamSelector &&
@@ -69908,6 +73323,13 @@ class FreeRoamSelector implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension FreeRoamSelectorToClassMessage on FreeRoamSelector {
+  ClassMessage<FreeRoamSelector> message() {
+    final res = (_CFreeRoamSelectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<FreeRoamSelector>(res._impl.address, _CFreeRoamSelector_release);
+  }
 }
 
 // MARK: - FreeRoamSelector <-> CFreeRoamSelector
@@ -70042,6 +73464,11 @@ class DataPrefetcher implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DataPrefetcher.fromMessage(ClassMessage<DataPrefetcher> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DataPrefetcher._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DataPrefetcher &&
@@ -70054,6 +73481,13 @@ class DataPrefetcher implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension DataPrefetcherToClassMessage on DataPrefetcher {
+  ClassMessage<DataPrefetcher> message() {
+    final res = (_CDataPrefetcherMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DataPrefetcher>(res._impl.address, _CDataPrefetcher_release);
+  }
 }
 
 // MARK: - DataPrefetcher <-> CDataPrefetcher
@@ -70143,6 +73577,11 @@ class FinishDetector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory FinishDetector.fromMessage(ClassMessage<FinishDetector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return FinishDetector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is FinishDetector &&
@@ -70155,6 +73594,13 @@ class FinishDetector implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension FinishDetectorToClassMessage on FinishDetector {
+  ClassMessage<FinishDetector> message() {
+    final res = (_CFinishDetectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<FinishDetector>(res._impl.address, _CFinishDetector_release);
+  }
 }
 
 // MARK: - FinishDetector <-> CFinishDetector
@@ -70362,6 +73808,11 @@ class NavigationManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory NavigationManager.fromMessage(ClassMessage<NavigationManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return NavigationManager._create(ptr);
+  }
+
   /**
    Точка входа в API навигатора, используемая в SDK по умолчанию.
   
@@ -70460,6 +73911,13 @@ class NavigationManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension NavigationManagerToClassMessage on NavigationManager {
+  ClassMessage<NavigationManager> message() {
+    final res = (_CNavigationManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<NavigationManager>(res._impl.address, _CNavigationManager_release);
+  }
 }
 
 // MARK: - NavigationManager <-> CNavigationManager
@@ -71007,6 +74465,11 @@ class Voice extends Package implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Voice.fromMessage(ClassMessage<Voice> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Voice._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Voice &&
@@ -71033,6 +74496,13 @@ class Voice extends Package implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension VoiceToClassMessage on Voice {
+  ClassMessage<Voice> message() {
+    final res = (_CVoiceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Voice>(res._impl.address, _CVoice_release);
+  }
 }
 
 // MARK: - Voice <-> CVoice
@@ -71219,6 +74689,11 @@ class VoiceManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory VoiceManager.fromMessage(ClassMessage<VoiceManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return VoiceManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is VoiceManager &&
@@ -71245,6 +74720,13 @@ class VoiceManager implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension VoiceManagerToClassMessage on VoiceManager {
+  ClassMessage<VoiceManager> message() {
+    final res = (_CVoiceManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<VoiceManager>(res._impl.address, _CVoiceManager_release);
+  }
 }
 
 // MARK: - VoiceManager <-> CVoiceManager
@@ -71479,6 +74961,11 @@ class ActivityTracker implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ActivityTracker.fromMessage(ClassMessage<ActivityTracker> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ActivityTracker._create(ptr);
+  }
+
   /**
    Расширение навигатора, которое отслеживает активность пользователя и выдает сигнал,
    когда пользователь перестал пользоваться навигатором и его можно выключить.
@@ -71522,6 +75009,13 @@ class ActivityTracker implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension ActivityTrackerToClassMessage on ActivityTracker {
+  ClassMessage<ActivityTracker> message() {
+    final res = (_CActivityTrackerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ActivityTracker>(res._impl.address, _CActivityTracker_release);
+  }
 }
 
 // MARK: - ActivityTracker <-> CActivityTracker
@@ -71657,6 +75151,11 @@ class CameraNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory CameraNotifier.fromMessage(ClassMessage<CameraNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return CameraNotifier._create(ptr);
+  }
+
   /**
    Расширение навигатора, которое предупреждает о попадании в зону действия дорожной камеры.
   
@@ -71684,6 +75183,13 @@ class CameraNotifier implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension CameraNotifierToClassMessage on CameraNotifier {
+  ClassMessage<CameraNotifier> message() {
+    final res = (_CCameraNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<CameraNotifier>(res._impl.address, _CCameraNotifier_release);
+  }
 }
 
 // MARK: - CameraNotifier <-> CCameraNotifier
@@ -71855,6 +75361,11 @@ class MiniMapControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory MiniMapControlModel.fromMessage(ClassMessage<MiniMapControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MiniMapControlModel._create(ptr);
+  }
+
   factory MiniMapControlModel(
     Context context,
     Model model,
@@ -71882,6 +75393,13 @@ class MiniMapControlModel implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension MiniMapControlModelToClassMessage on MiniMapControlModel {
+  ClassMessage<MiniMapControlModel> message() {
+    final res = (_CMiniMapControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MiniMapControlModel>(res._impl.address, _CMiniMapControlModel_release);
+  }
 }
 
 // MARK: - MiniMapControlModel <-> CMiniMapControlModel
@@ -72038,6 +75556,11 @@ class HttpCacheManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory HttpCacheManager.fromMessage(ClassMessage<HttpCacheManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return HttpCacheManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is HttpCacheManager &&
@@ -72072,6 +75595,13 @@ class HttpCacheManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension HttpCacheManagerToClassMessage on HttpCacheManager {
+  ClassMessage<HttpCacheManager> message() {
+    final res = (_CHttpCacheManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<HttpCacheManager>(res._impl.address, _CHttpCacheManager_release);
+  }
 }
 
 // MARK: - HttpCacheManager <-> CHttpCacheManager
@@ -72153,6 +75683,11 @@ class LocaleChangeNotifier implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LocaleChangeNotifier.fromMessage(ClassMessage<LocaleChangeNotifier> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LocaleChangeNotifier._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LocaleChangeNotifier &&
@@ -72176,6 +75711,13 @@ class LocaleChangeNotifier implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension LocaleChangeNotifierToClassMessage on LocaleChangeNotifier {
+  ClassMessage<LocaleChangeNotifier> message() {
+    final res = (_CLocaleChangeNotifierMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LocaleChangeNotifier>(res._impl.address, _CLocaleChangeNotifier_release);
+  }
 }
 
 // MARK: - LocaleChangeNotifier <-> CLocaleChangeNotifier
@@ -72303,6 +75845,11 @@ class LocaleManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LocaleManager.fromMessage(ClassMessage<LocaleManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LocaleManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LocaleManager &&
@@ -72341,6 +75888,13 @@ class LocaleManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension LocaleManagerToClassMessage on LocaleManager {
+  ClassMessage<LocaleManager> message() {
+    final res = (_CLocaleManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LocaleManager>(res._impl.address, _CLocaleManager_release);
+  }
 }
 
 // MARK: - LocaleManager <-> CLocaleManager
@@ -72472,6 +76026,11 @@ class _PlatformLocaleManagerCpp extends PlatformLocaleManager implements ffi.Fin
     return classObject;
   }
 
+  factory _PlatformLocaleManagerCpp.fromMessage(ClassMessage<_PlatformLocaleManagerCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _PlatformLocaleManagerCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _PlatformLocaleManagerCpp &&
@@ -72527,6 +76086,13 @@ class _PlatformLocaleManagerCpp extends PlatformLocaleManager implements ffi.Fin
     return res;
   }
 
+}
+
+extension _PlatformLocaleManagerCppToClassMessage on _PlatformLocaleManagerCpp {
+  ClassMessage<_PlatformLocaleManagerCpp> message() {
+    final res = (_CPlatformLocaleManagerCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_PlatformLocaleManagerCpp>(res._impl.address, _CPlatformLocaleManagerCpp_release);
+  }
 }
 
 // MARK: - _PlatformLocaleManagerCpp <-> CPlatformLocaleManagerCpp
@@ -72880,6 +76446,11 @@ class AudioSettings implements ffi.Finalizable {
     return classObject;
   }
 
+  factory AudioSettings.fromMessage(ClassMessage<AudioSettings> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return AudioSettings._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is AudioSettings &&
@@ -72906,6 +76477,13 @@ class AudioSettings implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension AudioSettingsToClassMessage on AudioSettings {
+  ClassMessage<AudioSettings> message() {
+    final res = (_CAudioSettingsMakeDefault().._impl=_self)._retain();
+    return ClassMessage<AudioSettings>(res._impl.address, _CAudioSettings_release);
+  }
 }
 
 // MARK: - AudioSettings <-> CAudioSettings
@@ -72987,6 +76565,11 @@ class LocationService implements ffi.Finalizable {
     return classObject;
   }
 
+  factory LocationService.fromMessage(ClassMessage<LocationService> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return LocationService._create(ptr);
+  }
+
   factory LocationService(
     Context context
   ) {
@@ -73034,6 +76617,13 @@ class LocationService implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension LocationServiceToClassMessage on LocationService {
+  ClassMessage<LocationService> message() {
+    final res = (_CLocationServiceMakeDefault().._impl=_self)._retain();
+    return ClassMessage<LocationService>(res._impl.address, _CLocationService_release);
+  }
 }
 
 // MARK: - LocationService <-> CLocationService
@@ -73223,6 +76813,11 @@ class RoadEventManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory RoadEventManager.fromMessage(ClassMessage<RoadEventManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return RoadEventManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is RoadEventManager &&
@@ -73374,6 +76969,13 @@ class RoadEventManager implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension RoadEventManagerToClassMessage on RoadEventManager {
+  ClassMessage<RoadEventManager> message() {
+    final res = (_CRoadEventManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<RoadEventManager>(res._impl.address, _CRoadEventManager_release);
+  }
 }
 
 // MARK: - RoadEventManager <-> CRoadEventManager
@@ -73551,6 +77153,11 @@ class IntRouteAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory IntRouteAttribute.fromMessage(ClassMessage<IntRouteAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return IntRouteAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is IntRouteAttribute &&
@@ -73610,6 +77217,13 @@ class IntRouteAttribute implements ffi.Finalizable {
     return res._toDart();
   }
 
+}
+
+extension IntRouteAttributeToClassMessage on IntRouteAttribute {
+  ClassMessage<IntRouteAttribute> message() {
+    final res = (_CIntRouteAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<IntRouteAttribute>(res._impl.address, _CIntRouteAttribute_release);
+  }
 }
 
 // MARK: - IntRouteAttribute <-> CIntRouteAttribute
@@ -73832,6 +77446,11 @@ class ObstacleInfoRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory ObstacleInfoRouteLongAttribute.fromMessage(ClassMessage<ObstacleInfoRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return ObstacleInfoRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is ObstacleInfoRouteLongAttribute &&
@@ -73872,6 +77491,13 @@ class ObstacleInfoRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension ObstacleInfoRouteLongAttributeToClassMessage on ObstacleInfoRouteLongAttribute {
+  ClassMessage<ObstacleInfoRouteLongAttribute> message() {
+    final res = (_CObstacleInfoRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<ObstacleInfoRouteLongAttribute>(res._impl.address, _CObstacleInfoRouteLongAttribute_release);
+  }
 }
 
 // MARK: - ObstacleInfoRouteLongAttribute <-> CObstacleInfoRouteLongAttribute
@@ -74102,6 +77728,11 @@ class TraversalTypeRouteLongAttribute implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TraversalTypeRouteLongAttribute.fromMessage(ClassMessage<TraversalTypeRouteLongAttribute> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TraversalTypeRouteLongAttribute._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TraversalTypeRouteLongAttribute &&
@@ -74142,6 +77773,13 @@ class TraversalTypeRouteLongAttribute implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TraversalTypeRouteLongAttributeToClassMessage on TraversalTypeRouteLongAttribute {
+  ClassMessage<TraversalTypeRouteLongAttribute> message() {
+    final res = (_CTraversalTypeRouteLongAttributeMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TraversalTypeRouteLongAttribute>(res._impl.address, _CTraversalTypeRouteLongAttribute_release);
+  }
 }
 
 // MARK: - TraversalTypeRouteLongAttribute <-> CTraversalTypeRouteLongAttribute
@@ -74339,6 +77977,11 @@ class TerritoriesAlongRouteProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TerritoriesAlongRouteProvider.fromMessage(ClassMessage<TerritoriesAlongRouteProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TerritoriesAlongRouteProvider._create(ptr);
+  }
+
   /**
    Создание объекта для получения списка территорий вдоль маршрута из контекста.
   
@@ -74383,6 +78026,13 @@ class TerritoriesAlongRouteProvider implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TerritoriesAlongRouteProviderToClassMessage on TerritoriesAlongRouteProvider {
+  ClassMessage<TerritoriesAlongRouteProvider> message() {
+    final res = (_CTerritoriesAlongRouteProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TerritoriesAlongRouteProvider>(res._impl.address, _CTerritoriesAlongRouteProvider_release);
+  }
 }
 
 // MARK: - TerritoriesAlongRouteProvider <-> CTerritoriesAlongRouteProvider
@@ -74576,6 +78226,11 @@ class Territory extends Package implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Territory.fromMessage(ClassMessage<Territory> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Territory._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Territory &&
@@ -74588,6 +78243,13 @@ class Territory extends Package implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TerritoryToClassMessage on Territory {
+  ClassMessage<Territory> message() {
+    final res = (_CTerritoryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Territory>(res._impl.address, _CTerritory_release);
+  }
 }
 
 // MARK: - Territory <-> CTerritory
@@ -74700,6 +78362,11 @@ class TrafficCollector implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficCollector.fromMessage(ClassMessage<TrafficCollector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficCollector._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TrafficCollector &&
@@ -74734,6 +78401,13 @@ class TrafficCollector implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension TrafficCollectorToClassMessage on TrafficCollector {
+  ClassMessage<TrafficCollector> message() {
+    final res = (_CTrafficCollectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficCollector>(res._impl.address, _CTrafficCollector_release);
+  }
 }
 
 // MARK: - TrafficCollector <-> CTrafficCollector
@@ -74912,6 +78586,11 @@ class TrafficScoreProvider implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficScoreProvider.fromMessage(ClassMessage<TrafficScoreProvider> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficScoreProvider._create(ptr);
+  }
+
   factory TrafficScoreProvider(
     Map map
   ) {
@@ -74944,6 +78623,13 @@ class TrafficScoreProvider implements ffi.Finalizable {
     return identifier.hashCode;
   }
 
+}
+
+extension TrafficScoreProviderToClassMessage on TrafficScoreProvider {
+  ClassMessage<TrafficScoreProvider> message() {
+    final res = (_CTrafficScoreProviderMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficScoreProvider>(res._impl.address, _CTrafficScoreProvider_release);
+  }
 }
 
 // MARK: - TrafficScoreProvider <-> CTrafficScoreProvider
@@ -75221,6 +78907,11 @@ class TrafficControlModel implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TrafficControlModel.fromMessage(ClassMessage<TrafficControlModel> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficControlModel._create(ptr);
+  }
+
   /**
    Функция создания модели элемента управления пробками.
   
@@ -75259,6 +78950,13 @@ class TrafficControlModel implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension TrafficControlModelToClassMessage on TrafficControlModel {
+  ClassMessage<TrafficControlModel> message() {
+    final res = (_CTrafficControlModelMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficControlModel>(res._impl.address, _CTrafficControlModel_release);
+  }
 }
 
 // MARK: - TrafficControlModel <-> CTrafficControlModel
@@ -75736,6 +79434,11 @@ class Package implements ffi.Finalizable {
     return classObject;
   }
 
+  factory Package.fromMessage(ClassMessage<Package> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return Package._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is Package &&
@@ -75782,6 +79485,13 @@ class Package implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension PackageToClassMessage on Package {
+  ClassMessage<Package> message() {
+    final res = (_CPackageMakeDefault().._impl=_self)._retain();
+    return ClassMessage<Package>(res._impl.address, _CPackage_release);
+  }
 }
 
 // MARK: - Package <-> CPackage
@@ -76010,6 +79720,11 @@ class _InstallFallbackCpp extends InstallFallback implements ffi.Finalizable {
     return classObject;
   }
 
+  factory _InstallFallbackCpp.fromMessage(ClassMessage<_InstallFallbackCpp> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return _InstallFallbackCpp._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is _InstallFallbackCpp &&
@@ -76034,6 +79749,13 @@ class _InstallFallbackCpp extends InstallFallback implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension _InstallFallbackCppToClassMessage on _InstallFallbackCpp {
+  ClassMessage<_InstallFallbackCpp> message() {
+    final res = (_CInstallFallbackCppMakeDefault().._impl=_self)._retain();
+    return ClassMessage<_InstallFallbackCpp>(res._impl.address, _CInstallFallbackCpp_release);
+  }
 }
 
 // MARK: - _InstallFallbackCpp <-> CInstallFallbackCpp
@@ -76200,6 +79922,11 @@ class DefaultInstallFallback implements ffi.Finalizable {
     return classObject;
   }
 
+  factory DefaultInstallFallback.fromMessage(ClassMessage<DefaultInstallFallback> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return DefaultInstallFallback._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is DefaultInstallFallback &&
@@ -76236,6 +79963,13 @@ class DefaultInstallFallback implements ffi.Finalizable {
     return t;
   }
 
+}
+
+extension DefaultInstallFallbackToClassMessage on DefaultInstallFallback {
+  ClassMessage<DefaultInstallFallback> message() {
+    final res = (_CDefaultInstallFallbackMakeDefault().._impl=_self)._retain();
+    return ClassMessage<DefaultInstallFallback>(res._impl.address, _CDefaultInstallFallback_release);
+  }
 }
 
 // MARK: - DefaultInstallFallback <-> CDefaultInstallFallback
@@ -76318,6 +80052,11 @@ class PackageManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory PackageManager.fromMessage(ClassMessage<PackageManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return PackageManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is PackageManager &&
@@ -76352,6 +80091,13 @@ class PackageManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension PackageManagerToClassMessage on PackageManager {
+  ClassMessage<PackageManager> message() {
+    final res = (_CPackageManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<PackageManager>(res._impl.address, _CPackageManager_release);
+  }
 }
 
 // MARK: - PackageManager <-> CPackageManager
@@ -76559,6 +80305,11 @@ class TerritoryManager implements ffi.Finalizable {
     return classObject;
   }
 
+  factory TerritoryManager.fromMessage(ClassMessage<TerritoryManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TerritoryManager._create(ptr);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is TerritoryManager &&
@@ -76632,6 +80383,13 @@ class TerritoryManager implements ffi.Finalizable {
     return res;
   }
 
+}
+
+extension TerritoryManagerToClassMessage on TerritoryManager {
+  ClassMessage<TerritoryManager> message() {
+    final res = (_CTerritoryManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TerritoryManager>(res._impl.address, _CTerritoryManager_release);
+  }
 }
 
 // MARK: - TerritoryManager <-> CTerritoryManager
@@ -77168,6 +80926,71 @@ late final _CWeekTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWeekT
 late final _CWeekTimeIntervalMakeDefault = _CWeekTimeIntervalMakeDefaultPtr.asFunction<_CWeekTimeInterval Function()>();
 
 
+late final _CArray_CStringmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CString Function()>>('CArray_CString_makeEmpty');
+late final _CArray_CStringmakeEmpty = _CArray_CStringmakeEmptyPtr.asFunction<_CArray_CString Function()>();
+late final _CArray_CStringaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CString, _CString)>>('CArray_CString_addElement');
+late final _CArray_CStringaddElement = _CArray_CStringaddElementPtr.asFunction<void Function(_CArray_CString, _CString)>();
+late final _forEach_CArray_CStringPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CString, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CString)>>)
+>>('CArray_CString_forEachWithFunctionPointer');
+late final _forEach_CArray_CString = _forEach_CArray_CStringPtr.asFunction<
+  void Function(_CArray_CString, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CString)
+>>)>();
+late final _CArray_CString_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CString)>>('CArray_CString_release');
+late final _CArray_CString_release = _CArray_CString_releasePtr.asFunction<void Function(_CArray_CString)>();
+
+late final _CContextTaggedPointerSnapshotMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContextTaggedPointerSnapshot Function()>>('CContextTaggedPointerSnapshotMakeDefault');
+late final _CContextTaggedPointerSnapshotMakeDefault = _CContextTaggedPointerSnapshotMakeDefaultPtr.asFunction<_CContextTaggedPointerSnapshot Function()>();
+
+
+late final _CContextTaggedPointersProvider_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CContextTaggedPointersProvider_cg_objectIdentifier');
+late final _CContextTaggedPointersProvider_cg_objectIdentifier = _CContextTaggedPointersProvider_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CContextTaggedPointersProvider_pointersSnapshotPtr = _lookup<ffi.NativeFunction<_CArray_CContextTaggedPointerSnapshot Function(_CContextTaggedPointersProvider)>>('CContextTaggedPointersProvider_pointersSnapshot');
+late final _CContextTaggedPointersProvider_pointersSnapshot = _CContextTaggedPointersProvider_pointersSnapshotPtr.asFunction<_CArray_CContextTaggedPointerSnapshot Function(_CContextTaggedPointersProvider)>();
+
+late final _CContextTaggedPointersProvider_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CContextTaggedPointersProvider_release');
+late final _CContextTaggedPointersProvider_release = _CContextTaggedPointersProvider_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CContextTaggedPointersProvider_retainPtr = _lookup<ffi.NativeFunction<_CContextTaggedPointersProvider Function(ffi.Pointer<ffi.Void>)>>('CContextTaggedPointersProvider_retain');
+late final _CContextTaggedPointersProvider_retain = _CContextTaggedPointersProvider_retainPtr.asFunction<_CContextTaggedPointersProvider Function(ffi.Pointer<ffi.Void>)>();
+late final _CContextTaggedPointersProviderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContextTaggedPointersProvider Function()>>('CContextTaggedPointersProviderMakeDefault');
+late final _CContextTaggedPointersProviderMakeDefault = _CContextTaggedPointersProviderMakeDefaultPtr.asFunction<_CContextTaggedPointersProvider Function()>();
+
+
+late final _CArray_CContextTaggedPointerSnapshotmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CContextTaggedPointerSnapshot Function()>>('CArray_CContextTaggedPointerSnapshot_makeEmpty');
+late final _CArray_CContextTaggedPointerSnapshotmakeEmpty = _CArray_CContextTaggedPointerSnapshotmakeEmptyPtr.asFunction<_CArray_CContextTaggedPointerSnapshot Function()>();
+late final _CArray_CContextTaggedPointerSnapshotaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CContextTaggedPointerSnapshot, _CContextTaggedPointerSnapshot)>>('CArray_CContextTaggedPointerSnapshot_addElement');
+late final _CArray_CContextTaggedPointerSnapshotaddElement = _CArray_CContextTaggedPointerSnapshotaddElementPtr.asFunction<void Function(_CArray_CContextTaggedPointerSnapshot, _CContextTaggedPointerSnapshot)>();
+late final _forEach_CArray_CContextTaggedPointerSnapshotPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CContextTaggedPointerSnapshot, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CContextTaggedPointerSnapshot)>>)
+>>('CArray_CContextTaggedPointerSnapshot_forEachWithFunctionPointer');
+late final _forEach_CArray_CContextTaggedPointerSnapshot = _forEach_CArray_CContextTaggedPointerSnapshotPtr.asFunction<
+  void Function(_CArray_CContextTaggedPointerSnapshot, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CContextTaggedPointerSnapshot)
+>>)>();
+late final _CArray_CContextTaggedPointerSnapshot_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CContextTaggedPointerSnapshot)>>('CArray_CContextTaggedPointerSnapshot_release');
+late final _CArray_CContextTaggedPointerSnapshot_release = _CArray_CContextTaggedPointerSnapshot_releasePtr.asFunction<void Function(_CArray_CContextTaggedPointerSnapshot)>();
+
+late final _CContextObserverCpp_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CContextObserverCpp_cg_objectIdentifier');
+late final _CContextObserverCpp_cg_objectIdentifier = _CContextObserverCpp_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CContextObserverCpp_onContextCreatedPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CContextObserverCpp)>>('CContextObserverCpp_onContextCreated');
+late final _CContextObserverCpp_onContextCreated = _CContextObserverCpp_onContextCreatedPtr.asFunction<void Function(_CContextObserverCpp)>();
+late final _CContextObserverCpp_onContextDestroyed_CContextTaggedPointersProviderPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CContextObserverCpp, _CContextTaggedPointersProvider)>>('CContextObserverCpp_onContextDestroyed_CContextTaggedPointersProvider');
+late final _CContextObserverCpp_onContextDestroyed_CContextTaggedPointersProvider = _CContextObserverCpp_onContextDestroyed_CContextTaggedPointersProviderPtr.asFunction<void Function(_CContextObserverCpp, _CContextTaggedPointersProvider)>();
+
+late final _CContextObserverCpp_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CContextObserverCpp_release');
+late final _CContextObserverCpp_release = _CContextObserverCpp_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CContextObserverCpp_retainPtr = _lookup<ffi.NativeFunction<_CContextObserverCpp Function(ffi.Pointer<ffi.Void>)>>('CContextObserverCpp_retain');
+late final _CContextObserverCpp_retain = _CContextObserverCpp_retainPtr.asFunction<_CContextObserverCpp Function(ffi.Pointer<ffi.Void>)>();
+late final _CContextObserverCppMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContextObserverCpp Function()>>('CContextObserverCppMakeDefault');
+late final _CContextObserverCppMakeDefault = _CContextObserverCppMakeDefaultPtr.asFunction<_CContextObserverCpp Function()>();
+
+
+late final _CContextObserverMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContextObserver Function()>>('CContextObserverMakeDefault');
+late final _CContextObserverMakeDefault = _CContextObserverMakeDefaultPtr.asFunction<_CContextObserver Function()>();
+late final _CContextObserver_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CContextObserver)>>('CContextObserver_release');
+late final _CContextObserver_release = _CContextObserver_releasePtr.asFunction<void Function(_CContextObserver)>();
+
 late final _CFile_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CFile_cg_objectIdentifier');
 late final _CFile_cg_objectIdentifier = _CFile_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
@@ -77521,6 +81344,13 @@ late final _COptional_CTradeLicenseMakeDefault = _COptional_CTradeLicenseMakeDef
 late final _COptional_CTradeLicense_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CTradeLicense)>>('COptional_CTradeLicense_release');
 late final _COptional_CTradeLicense_release = _COptional_CTradeLicense_releasePtr.asFunction<void Function(_COptional_CTradeLicense)>();
 
+late final _CClosedReasonMakeDefaultPtr = _lookup<ffi.NativeFunction<_CClosedReason Function()>>('CClosedReasonMakeDefault');
+late final _CClosedReasonMakeDefault = _CClosedReasonMakeDefaultPtr.asFunction<_CClosedReason Function()>();
+
+late final _CClosingHoursMakeDefaultPtr = _lookup<ffi.NativeFunction<_CClosingHours Function()>>('CClosingHoursMakeDefault');
+late final _CClosingHoursMakeDefault = _CClosingHoursMakeDefaultPtr.asFunction<_CClosingHours Function()>();
+
+
 late final _CArray_CArray_CWeekTimeIntervalmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CArray_CWeekTimeInterval Function()>>('CArray_CArray_CWeekTimeInterval_makeEmpty');
 late final _CArray_CArray_CWeekTimeIntervalmakeEmpty = _CArray_CArray_CWeekTimeIntervalmakeEmptyPtr.asFunction<_CArray_CArray_CWeekTimeInterval Function()>();
 late final _CArray_CArray_CWeekTimeIntervaladdElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CArray_CWeekTimeInterval, _CArray_CWeekTimeInterval)>>('CArray_CArray_CWeekTimeInterval_addElement');
@@ -77533,6 +81363,19 @@ late final _forEach_CArray_CArray_CWeekTimeInterval = _forEach_CArray_CArray_CWe
 >>)>();
 late final _CArray_CArray_CWeekTimeInterval_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CArray_CWeekTimeInterval)>>('CArray_CArray_CWeekTimeInterval_release');
 late final _CArray_CArray_CWeekTimeInterval_release = _CArray_CArray_CWeekTimeInterval_releasePtr.asFunction<void Function(_CArray_CArray_CWeekTimeInterval)>();
+
+late final _CArray_CArray_CClosingHoursmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CArray_CClosingHours Function()>>('CArray_CArray_CClosingHours_makeEmpty');
+late final _CArray_CArray_CClosingHoursmakeEmpty = _CArray_CArray_CClosingHoursmakeEmptyPtr.asFunction<_CArray_CArray_CClosingHours Function()>();
+late final _CArray_CArray_CClosingHoursaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CArray_CClosingHours, _CArray_CClosingHours)>>('CArray_CArray_CClosingHours_addElement');
+late final _CArray_CArray_CClosingHoursaddElement = _CArray_CArray_CClosingHoursaddElementPtr.asFunction<void Function(_CArray_CArray_CClosingHours, _CArray_CClosingHours)>();
+late final _forEach_CArray_CArray_CClosingHoursPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CArray_CClosingHours, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CClosingHours)>>)
+>>('CArray_CArray_CClosingHours_forEachWithFunctionPointer');
+late final _forEach_CArray_CArray_CClosingHours = _forEach_CArray_CArray_CClosingHoursPtr.asFunction<
+  void Function(_CArray_CArray_CClosingHours, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CArray_CClosingHours)
+>>)>();
+late final _CArray_CArray_CClosingHours_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CArray_CClosingHours)>>('CArray_CArray_CClosingHours_release');
+late final _CArray_CArray_CClosingHours_release = _CArray_CArray_CClosingHours_releasePtr.asFunction<void Function(_CArray_CArray_CClosingHours)>();
 
 late final _COpeningHoursMakeDefaultPtr = _lookup<ffi.NativeFunction<_COpeningHours Function()>>('COpeningHoursMakeDefault');
 late final _COpeningHoursMakeDefault = _COpeningHoursMakeDefaultPtr.asFunction<_COpeningHours Function()>();
@@ -77550,6 +81393,19 @@ late final _forEach_CArray_CWeekTimeInterval = _forEach_CArray_CWeekTimeInterval
 >>)>();
 late final _CArray_CWeekTimeInterval_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CWeekTimeInterval)>>('CArray_CWeekTimeInterval_release');
 late final _CArray_CWeekTimeInterval_release = _CArray_CWeekTimeInterval_releasePtr.asFunction<void Function(_CArray_CWeekTimeInterval)>();
+
+late final _CArray_CClosingHoursmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CClosingHours Function()>>('CArray_CClosingHours_makeEmpty');
+late final _CArray_CClosingHoursmakeEmpty = _CArray_CClosingHoursmakeEmptyPtr.asFunction<_CArray_CClosingHours Function()>();
+late final _CArray_CClosingHoursaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CClosingHours, _CClosingHours)>>('CArray_CClosingHours_addElement');
+late final _CArray_CClosingHoursaddElement = _CArray_CClosingHoursaddElementPtr.asFunction<void Function(_CArray_CClosingHours, _CClosingHours)>();
+late final _forEach_CArray_CClosingHoursPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CClosingHours, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CClosingHours)>>)
+>>('CArray_CClosingHours_forEachWithFunctionPointer');
+late final _forEach_CArray_CClosingHours = _forEach_CArray_CClosingHoursPtr.asFunction<
+  void Function(_CArray_CClosingHours, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CClosingHours)
+>>)>();
+late final _CArray_CClosingHours_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CClosingHours)>>('CArray_CClosingHours_release');
+late final _CArray_CClosingHours_release = _CArray_CClosingHours_releasePtr.asFunction<void Function(_CArray_CClosingHours)>();
 
 late final _COrgIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COrgId Function()>>('COrgIdMakeDefault');
 late final _COrgIdMakeDefault = _COrgIdMakeDefaultPtr.asFunction<_COrgId Function()>();
@@ -77628,6 +81484,30 @@ late final _CSortingTypeMakeDefault = _CSortingTypeMakeDefaultPtr.asFunction<_CS
 late final _CUIMarkerInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CUIMarkerInfo Function()>>('CUIMarkerInfoMakeDefault');
 late final _CUIMarkerInfoMakeDefault = _CUIMarkerInfoMakeDefaultPtr.asFunction<_CUIMarkerInfo Function()>();
 
+
+late final _COptional_CTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTimeInterval Function()>>('COptional_CTimeIntervalMakeDefault');
+late final _COptional_CTimeIntervalMakeDefault = _COptional_CTimeIntervalMakeDefaultPtr.asFunction<_COptional_CTimeInterval Function()>();
+
+late final _CClosedMakeDefaultPtr = _lookup<ffi.NativeFunction<_CClosed Function()>>('CClosedMakeDefault');
+late final _CClosedMakeDefault = _CClosedMakeDefaultPtr.asFunction<_CClosed Function()>();
+
+
+late final _CClosingSoonMakeDefaultPtr = _lookup<ffi.NativeFunction<_CClosingSoon Function()>>('CClosingSoonMakeDefault');
+late final _CClosingSoonMakeDefault = _CClosingSoonMakeDefaultPtr.asFunction<_CClosingSoon Function()>();
+
+
+late final _COpenedMakeDefaultPtr = _lookup<ffi.NativeFunction<_COpened Function()>>('COpenedMakeDefault');
+late final _COpenedMakeDefault = _COpenedMakeDefaultPtr.asFunction<_COpened Function()>();
+
+
+late final _COpeningSoonMakeDefaultPtr = _lookup<ffi.NativeFunction<_COpeningSoon Function()>>('COpeningSoonMakeDefault');
+late final _COpeningSoonMakeDefault = _COpeningSoonMakeDefaultPtr.asFunction<_COpeningSoon Function()>();
+
+
+late final _COpenStatus_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COpenStatus)>>('COpenStatus_release');
+late final _COpenStatus_release = _COpenStatus_releasePtr.asFunction<void Function(_COpenStatus)>();
+late final _COpenStatusMakeDefaultPtr = _lookup<ffi.NativeFunction<_COpenStatus Function()>>('COpenStatusMakeDefault');
+late final _COpenStatusMakeDefault = _COpenStatusMakeDefaultPtr.asFunction<_COpenStatus Function()>();
 
 late final _CWorkStatusMakeDefaultPtr = _lookup<ffi.NativeFunction<_CWorkStatus Function()>>('CWorkStatusMakeDefault');
 late final _CWorkStatusMakeDefault = _CWorkStatusMakeDefaultPtr.asFunction<_CWorkStatus Function()>();
@@ -78117,9 +81997,6 @@ late final _COptional_CFormattedAddressMakeDefault = _COptional_CFormattedAddres
 late final _COptional_CFormattedAddress_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CFormattedAddress)>>('COptional_CFormattedAddress_release');
 late final _COptional_CFormattedAddress_release = _COptional_CFormattedAddress_releasePtr.asFunction<void Function(_COptional_CFormattedAddress)>();
 
-late final _COptional_CTimeIntervalMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CTimeInterval Function()>>('COptional_CTimeIntervalMakeDefault');
-late final _COptional_CTimeIntervalMakeDefault = _COptional_CTimeIntervalMakeDefaultPtr.asFunction<_COptional_CTimeInterval Function()>();
-
 late final _COptional_COpeningHoursMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_COpeningHours Function()>>('COptional_COpeningHoursMakeDefault');
 late final _COptional_COpeningHoursMakeDefault = _COptional_COpeningHoursMakeDefaultPtr.asFunction<_COptional_COpeningHours Function()>();
 
@@ -78397,19 +82274,6 @@ late final _CCheckbox_retain = _CCheckbox_retainPtr.asFunction<_CCheckbox Functi
 late final _CCheckboxMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCheckbox Function()>>('CCheckboxMakeDefault');
 late final _CCheckboxMakeDefault = _CCheckboxMakeDefaultPtr.asFunction<_CCheckbox Function()>();
 
-
-late final _CArray_CStringmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CString Function()>>('CArray_CString_makeEmpty');
-late final _CArray_CStringmakeEmpty = _CArray_CStringmakeEmptyPtr.asFunction<_CArray_CString Function()>();
-late final _CArray_CStringaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CString, _CString)>>('CArray_CString_addElement');
-late final _CArray_CStringaddElement = _CArray_CStringaddElementPtr.asFunction<void Function(_CArray_CString, _CString)>();
-late final _forEach_CArray_CStringPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CString, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CString)>>)
->>('CArray_CString_forEachWithFunctionPointer');
-late final _forEach_CArray_CString = _forEach_CArray_CStringPtr.asFunction<
-  void Function(_CArray_CString, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CString)
->>)>();
-late final _CArray_CString_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CString)>>('CArray_CString_release');
-late final _CArray_CString_release = _CArray_CString_releasePtr.asFunction<void Function(_CArray_CString)>();
 
 late final _CCheckableItemTypeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCheckableItemType Function()>>('CCheckableItemTypeMakeDefault');
 late final _CCheckableItemTypeMakeDefault = _CCheckableItemTypeMakeDefaultPtr.asFunction<_CCheckableItemType Function()>();
@@ -86048,6 +89912,8 @@ late final _CMapBuilder_setVisibilityState_CMapVisibilityStatePtr = _lookup<ffi.
 late final _CMapBuilder_setVisibilityState_CMapVisibilityState = _CMapBuilder_setVisibilityState_CMapVisibilityStatePtr.asFunction<_CMapBuilder Function(_CMapBuilder, _CMapVisibilityState)>();
 late final _CMapBuilder_setGraphicsPreset_CGraphicsPresetPtr = _lookup<ffi.NativeFunction<_CMapBuilder Function(_CMapBuilder, _CGraphicsPreset)>>('CMapBuilder_setGraphicsPreset_CGraphicsPreset');
 late final _CMapBuilder_setGraphicsPreset_CGraphicsPreset = _CMapBuilder_setGraphicsPreset_CGraphicsPresetPtr.asFunction<_CMapBuilder Function(_CMapBuilder, _CGraphicsPreset)>();
+late final _CMapBuilder_setContextObserver_COptional_CContextObserverPtr = _lookup<ffi.NativeFunction<_CMapBuilder Function(_CMapBuilder, _COptional_CContextObserver)>>('CMapBuilder_setContextObserver_COptional_CContextObserver');
+late final _CMapBuilder_setContextObserver_COptional_CContextObserver = _CMapBuilder_setContextObserver_COptional_CContextObserverPtr.asFunction<_CMapBuilder Function(_CMapBuilder, _COptional_CContextObserver)>();
 late final _CMapBuilder_addSource_CSourcePtr = _lookup<ffi.NativeFunction<_CMapBuilder Function(_CMapBuilder, _CSource)>>('CMapBuilder_addSource_CSource');
 late final _CMapBuilder_addSource_CSource = _CMapBuilder_addSource_CSourcePtr.asFunction<_CMapBuilder Function(_CMapBuilder, _CSource)>();
 late final _CMapBuilder_createMap_CContextPtr = _lookup<ffi.NativeFunction<_CFuture_CMap Function(_CMapBuilder, _CContext)>>('CMapBuilder_createMap_CContext');
@@ -86062,6 +89928,12 @@ late final _CMapBuilder_retain = _CMapBuilder_retainPtr.asFunction<_CMapBuilder 
 late final _CMapBuilderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapBuilder Function()>>('CMapBuilderMakeDefault');
 late final _CMapBuilderMakeDefault = _CMapBuilderMakeDefaultPtr.asFunction<_CMapBuilder Function()>();
 
+
+late final _COptional_CContextObserverMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CContextObserver Function()>>('COptional_CContextObserverMakeDefault');
+late final _COptional_CContextObserverMakeDefault = _COptional_CContextObserverMakeDefaultPtr.asFunction<_COptional_CContextObserver Function()>();
+
+late final _COptional_CContextObserver_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CContextObserver)>>('COptional_CContextObserver_release');
+late final _COptional_CContextObserver_release = _COptional_CContextObserver_releasePtr.asFunction<void Function(_COptional_CContextObserver)>();
 
 late final _CFuture_CMapMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CMap Function()>>('CFuture_CMapMakeDefault');
 late final _CFuture_CMapMakeDefault = _CFuture_CMapMakeDefaultPtr.asFunction<_CFuture_CMap Function()>();
@@ -87813,4 +91685,4 @@ late final _CStatefulChannel_CArray_CTerritoryConnect = _CStatefulChannel_CArray
   )
 >();
 
-//ApplicationState, BaseCameraInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, toLocaleManager
+//ApplicationState, BaseCameraInternalMethods, ContextObserver, ContextTaggedPointerSnapshot, ContextTaggedPointersProvider, ContextTaggedPointersProviderInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, toLocaleManager

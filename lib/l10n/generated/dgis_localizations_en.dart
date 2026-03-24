@@ -281,9 +281,6 @@ class DgisLocalizationsEn extends DgisLocalizations {
   String get dgis_navi_view_route => 'View route';
 
   @override
-  String get dgis_navi_show_minimap => 'Show minimap';
-
-  @override
   String get dgis_navi_continue_the_trip => 'Continue the trip';
 
   @override
@@ -327,4 +324,129 @@ class DgisLocalizationsEn extends DgisLocalizations {
   String dgis_charging_available_places_count(num free, num total) {
     return '$free of $total available';
   }
+
+  @override
+  String dgis_entrances_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entrances',
+      one: '1 entrance',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dgis_building_porches_prefix => 'Entrances:';
+
+  @override
+  String get dgis_apartments_suffix => 'apt.';
+
+  @override
+  String get dgis_porches => 'Porches';
+
+  @override
+  String get dgis_entrances => 'Entrances';
+
+  @override
+  String get dgis_contacts_more => 'More';
+
+  @override
+  String get dgis_write_to => 'Write to';
+
+  @override
+  String get dgis_copy => 'Copy';
+
+  @override
+  String get dgis_contacts_title => 'Contacts';
+
+  @override
+  String get dgis_websites_social_networks_title =>
+      'Websites and social networks';
+
+  @override
+  String get dgis_navi_show_minimap => 'Show minimap';
+
+  @override
+  String get dgis_working_hours_24_7 => 'Open 24/7';
+
+  @override
+  String get dgis_working_hours_daily => 'Daily';
+
+  @override
+  String get dgis_working_hours_today => 'Today';
+
+  @override
+  String get dgis_working_hours_schedule => 'Schedule';
+
+  @override
+  String get dgis_working_hours_closed => 'Closed';
+
+  @override
+  String dgis_working_hours_closed_until(String time) {
+    return 'Closed until $time';
+  }
+
+  @override
+  String get dgis_working_hours_closes_in => 'Closes in';
+
+  @override
+  String get dgis_working_hours_opens_in => 'Opens in';
+
+  @override
+  String get dgis_working_hours_min_short => 'min';
+
+  @override
+  String get dgis_working_hours_tomorrow => 'tomorrow';
+
+  @override
+  String get dgis_working_hours_lunch => 'Lunch';
+
+  @override
+  String get dgis_working_hours_break => 'Break';
+
+  @override
+  String get dgis_working_hours_weekdays_label => 'Weekdays';
+
+  @override
+  String get dgis_working_hours_weekday_short_mon => 'Mon';
+
+  @override
+  String get dgis_working_hours_weekday_short_tue => 'Tue';
+
+  @override
+  String get dgis_working_hours_weekday_short_wed => 'Wed';
+
+  @override
+  String get dgis_working_hours_weekday_short_thu => 'Thu';
+
+  @override
+  String get dgis_working_hours_weekday_short_fri => 'Fri';
+
+  @override
+  String get dgis_working_hours_weekday_short_sat => 'Sat';
+
+  @override
+  String get dgis_working_hours_weekday_short_sun => 'Sun';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_mon => 'Monday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_tue => 'Tuesday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_wed => 'Wednesday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_thu => 'Thursday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_fri => 'Friday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_sat => 'Saturday';
+
+  @override
+  String get dgis_working_hours_weekday_closed_to_sun => 'Sunday';
 }

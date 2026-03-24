@@ -2,10 +2,15 @@
 // ignore: unnecessary_library_directive
 library dgis_mobile_sdk;
 
+export 'src/generated/class_message.dart';
 export 'src/generated/dart_bindings.dart'
     hide
         ApplicationState,
         BaseCameraInternalMethods,
+        ContextObserver,
+        ContextTaggedPointerSnapshot,
+        ContextTaggedPointersProvider,
+        ContextTaggedPointersProviderInternalMethods,
         ImageLoader,
         LocaleChangeNotifier,
         MapBuilder,
@@ -37,6 +42,12 @@ export 'src/platform/map/model_loader.dart';
 export 'src/platform/map/touch_events_observer.dart';
 export 'src/util/stateful_channel_listenable.dart';
 export 'src/widgets/common/rounded_corners.dart';
+export 'src/widgets/directory/directory_object_widget/directory_object_models.dart';
+export 'src/widgets/directory/directory_object_widget/directory_object_view_model.dart';
+export 'src/widgets/directory/directory_object_widget/directory_object_widget.dart';
+export 'src/widgets/directory/directory_object_widget/directory_object_widget_builder.dart';
+export 'src/widgets/directory/directory_object_widget/directory_object_widget_theme.dart';
+export 'src/widgets/directory/directory_object_widget/working_hours_factory.dart';
 export 'src/widgets/directory/search.dart'
     show DgisSearchWidget, SearchResultBuilder;
 export 'src/widgets/directory/search_result_item/search_result_item_builder.dart';

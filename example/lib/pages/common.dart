@@ -4,15 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:permission_handler/permission_handler.dart';
 
-Future<void> checkLocationPermissions(
-  sdk.LocationService locationService,
-) async {
-  final permission = await Permission.location.request();
-  if (permission.isGranted) {
-    locationService.onPermissionGranted();
-  }
-}
-
 Text buildPageTitle(String content) {
   return Text(
     content,
@@ -43,5 +34,20 @@ class AppContainer {
       ),
     );
     return _sdkContext!;
+  }
+}
+
+Future<void> checkLocationPermissions(
+  sdk.LocationService locationService,
+) async {
+  final permission = await Permission.location.status;
+
+  if (permission.isGranted) {
+    locationService.onPermissionGranted();
+  } else {
+    final result = await Permission.location.request();
+    if (result.isGranted) {
+      locationService.onPermissionGranted();
+    }
   }
 }
