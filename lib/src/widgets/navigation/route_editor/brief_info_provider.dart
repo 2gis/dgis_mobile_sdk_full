@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import './route_editor_controller.dart';
 import 'transport_mode.dart';
 
@@ -186,8 +187,9 @@ class ActiveRouteBriefInfoProvider extends BriefInfoProvider {
   void initialize(RouteEditorController controller) {
     this.controller = controller;
 
-    _routesInfoSubscription = controller.routeEditor.routesInfoChannel
-        .listen((_) => _updateBriefInfo());
+    _routesInfoSubscription = withBssEventsSourceFromSdk(
+      () => controller.routeEditor.routesInfoChannel,
+    ).listen((_) => _updateBriefInfo());
     controller.routePoints.addListener(_onRoutePointsChanged);
     _updateBriefInfo();
   }

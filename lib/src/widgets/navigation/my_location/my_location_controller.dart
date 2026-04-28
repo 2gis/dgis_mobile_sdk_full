@@ -63,6 +63,7 @@ enum _Behaviour {
 /// ```
 class MyLocationController {
   final sdk.Map map;
+  final VoidCallback? onTapped;
 
   late final StreamSubscription<sdk.CameraChange> _cameraChangeSubscription;
   late final ValueNotifier<MyLocationModel> _model;
@@ -77,7 +78,7 @@ class MyLocationController {
   /// The current state of location tracking as a [ValueNotifier]
   ValueNotifier<MyLocationModel> get state => _model;
 
-  MyLocationController({required this.map}) {
+  MyLocationController({required this.map, this.onTapped}) {
     _init();
   }
 
@@ -129,6 +130,7 @@ class MyLocationController {
   /// * Handles hideable state
   /// * Updates button icon based on current mode
   void processTap() {
+    onTapped?.call();
     if ((!_isHideable &&
             _currentBehaviour == _Behaviour.withoutBearing.value) ||
         !_isFollowPositionMode) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import 'compass_model.dart';
 
 /// Controller for managing map compass functionality and bearing state.
@@ -62,7 +63,8 @@ class CompassController {
   }
 
   void _init() {
-    _compassModel = sdk.CompassControlModel(map);
+    _compassModel =
+        withBssEventsSourceFromSdk(() => sdk.CompassControlModel(map));
     _previousAngle = _compassModel.bearing.value;
     _bearingSubscription = _compassModel.bearingChannel.listen((bearing) {
       if ((bearing.value - _previousAngle).abs() > 1.0) {

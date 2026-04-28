@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import './brief_info_provider.dart';
 import './route_point_ui.dart';
 import 'transport_mode.dart';
@@ -104,7 +105,9 @@ class RouteEditorController {
   ///
   /// Throws an exception if the route editor fails to set the index.
   void setActiveRouteIndex(int index) {
-    routeEditor.setActiveRouteIndex(sdk.RouteIndex(index));
+    withBssEventsSourceFromSdk(
+      () => routeEditor.setActiveRouteIndex(sdk.RouteIndex(index)),
+    );
   }
 
   (sdk.RouteSearchPoint?, sdk.RouteSearchPoint?, List<sdk.RouteSearchPoint>)
@@ -136,7 +139,7 @@ class RouteEditorController {
       routeSearchOptions: options,
     );
 
-    routeEditor.setRouteParams(newParams);
+    withBssEventsSourceFromSdk(() => routeEditor.setRouteParams(newParams));
   }
 
   /// Changes the active transport type and recalculates the route.
@@ -182,7 +185,7 @@ class RouteEditorController {
       routeSearchOptions: options,
     );
 
-    routeEditor.setRouteParams(params);
+    withBssEventsSourceFromSdk(() => routeEditor.setRouteParams(params));
   }
 
   /// Disposes of the controller and releases all resources.

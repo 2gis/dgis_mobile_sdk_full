@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
+import '../../platform/bss_events_source.dart';
 import '../../util/plugin_name.dart';
 import '../moving_segment_progress_indicator.dart';
 import '../widget_shadows.dart';
@@ -68,7 +69,7 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
 
   @override
   void onAttachedToMap(sdk.Map map) {
-    model = sdk.TrafficControlModel(map);
+    model = withBssEventsSourceFromSdk(() => sdk.TrafficControlModel(map));
     stateSubscription = model.stateChannel.listen((newState) {
       state.value = newState;
     });
@@ -92,7 +93,7 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
           visible: currentState != null &&
               currentState.status != sdk.TrafficControlStatus.hidden,
           child: GestureDetector(
-            onTap: () => model.onClicked(),
+            onTap: () => withBssEventsSourceFromSdk(model.onClicked),
             child: Stack(
               children: [
                 Container(

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
 import '../../generated/stateful_channel.dart';
+import '../../platform/bss_events_source.dart';
 import '../../util/plugin_name.dart';
 import '../common/dgis_color_scheme.dart';
 import 'map_widget_color_scheme.dart';
@@ -46,7 +47,7 @@ class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
 
   @override
   void onAttachedToMap(sdk.Map map) {
-    model = sdk.CompassControlModel(map);
+    model = withBssEventsSourceFromSdk(() => sdk.CompassControlModel(map));
     bearingSubscription = model.bearingChannel;
   }
 

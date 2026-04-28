@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../l10n/generated/dgis_localizations.dart';
 import '../../../l10n/generated/dgis_localizations_en.dart';
 import '../../generated/dart_bindings.dart' as sdk;
+import '../../platform/dgis.dart';
 import '../either.dart';
 import 'object_card.dart';
 import 'search_bar.dart';
@@ -153,6 +154,8 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
 
   Future<void> _getSuggetions(String query) async {
     if (query.isNotEmpty) {
+      // ignore: unused_local_variable
+      final guard = sdk.setupBssEventsSourceFromSdk(DGis().context);
       final suggestions = await widget._searchManager
           .suggest(widget._suggestQueryProvider(Right(query)))
           .value;
@@ -171,6 +174,8 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
   }
 
   Future<void> _performSearch(sdk.SearchQuery query) async {
+    // ignore: unused_local_variable
+    final guard = sdk.setupBssEventsSourceFromSdk(DGis().context);
     final result = await widget._searchManager
         .search(widget._searchQueryProvider(Left(query)))
         .value;

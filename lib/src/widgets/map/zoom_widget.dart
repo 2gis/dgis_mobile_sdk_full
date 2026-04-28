@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import '../../generated/dart_bindings.dart' as sdk;
+import '../../platform/bss_events_source.dart';
 import '../../util/plugin_name.dart';
 import 'map_widget_color_scheme.dart';
 import 'themed_map_controlling_widget.dart';
@@ -53,7 +54,7 @@ class _ZoomWidgetState
 
   @override
   void onAttachedToMap(sdk.Map map) {
-    model = sdk.ZoomControlModel(map);
+    model = withBssEventsSourceFromSdk(() => sdk.ZoomControlModel(map));
 
     zoomInSubscription = model.isEnabled(sdk.ZoomControlButton.zoomIn).listen(
           (isEnabled) => isZoomInEnabled.value = isEnabled,

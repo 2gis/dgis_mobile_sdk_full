@@ -249,26 +249,11 @@ class _MapObjectsIdentificationFullState
       },
     );
 
-    showModalBottomSheet<void>(
+    sdk.DirectoryObjectWidget.showAsBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          maxChildSize: 0.9,
-          snap: true,
-          snapSizes: const [0.25, 0.5, 0.9],
-          expand: false,
-          builder: (context, scrollController) {
-            return sdk.DirectoryObjectWidget(
-              viewModel: viewModel,
-              theme: theme,
-              startExpanded: true,
-              scrollController: scrollController,
-            );
-          },
-        );
-      },
+      viewModel: viewModel,
+      theme: theme,
+      startExpanded: true,
     );
   }
 

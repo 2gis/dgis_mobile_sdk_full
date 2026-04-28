@@ -32,4 +32,17 @@ class WidgetShadows {
       spreadRadius: 0.5,
     ),
   ];
+
+  // Используется как BoxShadow в modern-виджетах карты.
+  static const modernMapWidgetBoxShadows = [
+    BoxShadow(
+      color: Color(0x14000000),
+      offset: Offset(0, 1),
+      blurRadius: 4,
+    ),
+    BoxShadow(
+      color: Color(0x0A000000),
+      spreadRadius: 0.5,
+    ),
+  ];
 }

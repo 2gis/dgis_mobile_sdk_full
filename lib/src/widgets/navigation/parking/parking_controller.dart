@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import './parking_model.dart';
 
 /// Controller for managing parking locations visibility and state on the map.
@@ -55,7 +56,8 @@ class ParkingController {
   }
 
   void _init() {
-    _parkingControlModel = sdk.ParkingControlModel(map);
+    _parkingControlModel =
+        withBssEventsSourceFromSdk(() => sdk.ParkingControlModel(map));
     _model =
         ValueNotifier(ParkingModel(isActive: _parkingControlModel.isEnabled));
     _stateSubscription =

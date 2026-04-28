@@ -7,6 +7,7 @@ export 'src/generated/dart_bindings.dart'
     hide
         ApplicationState,
         BaseCameraInternalMethods,
+        BssEventsSourceClearGuard,
         ContextObserver,
         ContextTaggedPointerSnapshot,
         ContextTaggedPointersProvider,
@@ -28,6 +29,7 @@ export 'src/generated/dart_bindings.dart'
         makeSystemContext,
         move,
         releaseContext,
+        setupBssEventsSourceFromSdk,
         toLocaleManager;
 export 'src/generated/enum_set.dart';
 export 'src/generated/native_exception.dart';
@@ -63,6 +65,17 @@ export 'src/widgets/map/indoor_widget.dart';
 export 'src/widgets/map/map_widget.dart' show MapWidget, MapWidgetController;
 export 'src/widgets/map/map_widget_color_scheme.dart';
 export 'src/widgets/map/mini_map_widget.dart' show MiniMapWidget;
+export 'src/widgets/map/modern/compass/modern_compass_widget.dart'
+    show ModernCompassWidget;
+export 'src/widgets/map/modern/indoor/indoor_widget.dart';
+export 'src/widgets/map/modern/my_location/modern_my_location_controller.dart';
+export 'src/widgets/map/modern/my_location/modern_my_location_model.dart';
+export 'src/widgets/map/modern/my_location/modern_my_location_widget.dart';
+export 'src/widgets/map/modern/my_location/modern_my_location_widget_color_scheme.dart';
+export 'src/widgets/map/modern/traffic/modern_traffic_widget.dart'
+    show ModernTrafficWidget;
+export 'src/widgets/map/modern/zoom/modern_zoom_widget.dart'
+    show ModernZoomWidget, ModernZoomWidgetColorScheme;
 export 'src/widgets/map/my_location_widget.dart';
 export 'src/widgets/map/themed_map_controlling_widget.dart';
 export 'src/widgets/map/themed_map_controlling_widget_state.dart';

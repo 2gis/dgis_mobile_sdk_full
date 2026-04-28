@@ -30,6 +30,7 @@ class SpeedometerTheme extends MapWidgetColorScheme {
       color: DgisColorScheme.surfaceDark,
       fontWeight: FontWeight.w600,
       fontSize: 28,
+      letterSpacing: -0.67,
     ),
     shadows: WidgetShadows.naviWidgetBoxShadowsLight,
   );
@@ -44,6 +45,7 @@ class SpeedometerTheme extends MapWidgetColorScheme {
       color: DgisColorScheme.surfaceLight,
       fontWeight: FontWeight.w600,
       fontSize: 28,
+      letterSpacing: -0.67,
     ),
     shadows: WidgetShadows.naviWidgetBoxShadowsDark,
   );

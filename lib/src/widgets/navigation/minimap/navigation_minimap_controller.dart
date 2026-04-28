@@ -1,4 +1,5 @@
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import '../../../platform/dgis.dart';
 
 /// Controller for the navigation mini-map.
@@ -33,10 +34,12 @@ class NavigationMiniMapController {
 
     _miniMap = map;
 
-    _controlModel = sdk.MiniMapControlModel(
-      DGis().context,
-      navigationManager.uiModel,
-      map,
+    _controlModel = withBssEventsSourceFromSdk(
+      () => sdk.MiniMapControlModel(
+        DGis().context,
+        navigationManager.uiModel,
+        map,
+      ),
     );
 
     navigationManager.mapManager.addMap(map);

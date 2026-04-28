@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
+import '../../platform/bss_events_source.dart';
+import '../../platform/dgis.dart';
 import '../shadow_gradient.dart';
 
 import 'map_widget_color_scheme.dart';
@@ -68,6 +70,8 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
 
   @override
   void onAttachedToMap(sdk.Map map) {
+    // ignore: unused_local_variable
+    final guard = sdk.setupBssEventsSourceFromSdk(DGis().context);
     model = sdk.IndoorControlModel(map);
     activeLevelSubscription = model.activeLevelIndexChannel.listen((idx) {
       if (idx != activeLevel.value) {
@@ -142,7 +146,9 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                               type: MaterialType.transparency,
                               child: ListTile(
                                 onTap: () {
-                                  model.activeLevelIndex = index;
+                                  withBssEventsSourceFromSdk(
+                                    () => model.activeLevelIndex = index,
+                                  );
                                   scrollToShowLevel(
                                     index,
                                     singleElementHeight,
@@ -167,7 +173,9 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                                 visualDensity: VisualDensity.compact,
                               ),
                             ),
-                            if (model.isLevelMarked(index))
+                            if (withBssEventsSourceFromSdk(
+                              () => model.isLevelMarked(index),
+                            ))
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Padding(

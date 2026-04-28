@@ -684,7 +684,14 @@ class _NavigationLayoutWidgetState
     );
     maneuverController =
         ManeuverController(navigationManager: widget.navigationManager);
-    myLocationController = MyLocationController(map: map);
+    myLocationController = MyLocationController(
+      map: map,
+      onTapped: () {
+        if (dashboardController.isRouteViewMode) {
+          dashboardController.returnToNavigation();
+        }
+      },
+    );
     parkingController = ParkingController(map: map);
     zoomController = ZoomController(map: map);
     speedLimitController =

@@ -40,6 +40,22 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
   @override
   void onDetachedFromMap() {}
 
+  bool _isLongSpeedLimitValue(double speedLimit) {
+    return '${speedLimit.floor()}'.length >= 3;
+  }
+
+  TextStyle _speedLimitTextStyle(double speedLimit, bool exceeding) {
+    final isLong = _isLongSpeedLimitValue(speedLimit);
+    if (exceeding) {
+      return isLong
+          ? colorScheme.speedLimitTheme.smallExceededTextStyle
+          : colorScheme.speedLimitTheme.exceededTextStyle;
+    }
+    return isLong
+        ? colorScheme.speedLimitTheme.smallTextStyle
+        : colorScheme.speedLimitTheme.textStyle;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -167,10 +183,10 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                             child: Center(
                               child: Text(
                                 '${state.speedLimit!.floor()}',
-                                style: state.exceeding
-                                    ? colorScheme
-                                        .speedLimitTheme.exceededTextStyle
-                                    : colorScheme.speedLimitTheme.textStyle,
+                                style: _speedLimitTextStyle(
+                                  state.speedLimit!,
+                                  state.exceeding,
+                                ),
                               ),
                             ),
                           ),

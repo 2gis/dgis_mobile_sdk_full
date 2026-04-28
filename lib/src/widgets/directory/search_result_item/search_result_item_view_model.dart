@@ -1,5 +1,6 @@
 import '../../../../../l10n/generated/dgis_localizations.dart';
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/dgis.dart';
 
 /// View model for displaying search result item data.
 ///
@@ -106,6 +107,9 @@ class SearchResultItemViewModel {
     required void Function(sdk.DirectoryObject) onTap,
     String? formattedDistance,
   }) {
+    // ignore: unused_local_variable
+    final guard = sdk.setupBssEventsSourceFromSdk(DGis().context);
+
     final title = object.title;
     final subtitle = object.subtitle;
 

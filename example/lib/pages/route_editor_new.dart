@@ -62,6 +62,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   final pinIntermediatePath = 'assets/icons/pin64.png';
   final pinFinishPath = 'assets/icons/pinb64.png';
 
+  final _stackKey = GlobalKey();
   final _cameraPadding = 32;
 
   @override
@@ -130,6 +131,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         title: Text(widget.title),
       ),
       body: Stack(
+        key: _stackKey,
         children: [
           sdk.MapWidget(
             sdkContext: sdkContext,
@@ -394,19 +396,29 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   Future<void> _confirmLocationSelection() async {
-    if (sdkMap == null) return;
+    if (sdkMap == null) {
+      return;
+    }
 
     final selectedPoint = sdkMap!.camera.position.point;
 
-    final screenSize = MediaQuery.of(context).size;
+    if (_stackKey.currentContext == null) {
+      return;
+    }
+
+    final renderBox = _stackKey.currentContext!.findRenderObject();
+    if (renderBox == null || renderBox is! RenderBox) {
+      return;
+    }
+
+    final size = renderBox.size;
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final centerX = (screenSize.width / 2) * devicePixelRatio;
-    final centerY = (screenSize.height / 2) * devicePixelRatio;
+    final centerX = (size.width / 2) * devicePixelRatio;
+    final centerY = (size.height / 2) * devicePixelRatio;
 
     final renderedObjects = await sdkMap!
         .getRenderedObjects(
           sdk.ScreenPoint(x: centerX, y: centerY),
-          const sdk.ScreenDistance(10),
         )
         .value;
 
@@ -417,14 +429,13 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     for (final objectInfo in renderedObjects) {
       final object = objectInfo.item.item;
       if (object is sdk.DgisMapObject) {
+        coordinates = objectInfo.closestMapPoint.point;
         final objectId = object.id;
         if (searchManager != null) {
           final directoryObject =
               await searchManager!.searchByDirectoryObjectId(objectId).value;
           if (directoryObject != null) {
             label = directoryObject.title;
-            coordinates =
-                directoryObject.markerPosition?.point ?? selectedPoint;
           }
         }
         break;

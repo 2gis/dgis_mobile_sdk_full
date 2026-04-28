@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 
+import '../../../platform/bss_events_source.dart';
 import './../../../generated/dart_bindings.dart' as sdk;
 import './finish_route_model.dart';
 
@@ -61,7 +62,8 @@ class FinishRouteController {
   }
 
   void _init() {
-    _parkingControlModel = sdk.ParkingControlModel(map);
+    _parkingControlModel =
+        withBssEventsSourceFromSdk(() => sdk.ParkingControlModel(map));
     _isParkingsEnabledSubscription =
         _parkingControlModel.isEnabledChannel.listen((isEnabled) {
       _model.value = _model.value.copyWith(isParkingEnabled: isEnabled);

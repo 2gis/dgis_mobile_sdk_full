@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../../l10n/generated/dgis_localizations.dart';
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/dgis.dart';
 import './directory_object_models.dart';
 import './working_hours_factory.dart';
 
@@ -127,6 +128,9 @@ class DirectoryObjectViewModel {
     void Function(List<sdk.EntranceInfo>)? onShowEntrances,
     String? formattedDistance,
   }) {
+    // ignore: unused_local_variable
+    final guard = sdk.setupBssEventsSourceFromSdk(DGis().context);
+
     final title = object.title;
     final titleAddition = object.titleAddition;
     final subtitle = object.subtitle;

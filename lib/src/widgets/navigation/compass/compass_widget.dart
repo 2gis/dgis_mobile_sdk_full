@@ -32,7 +32,7 @@ class NavigationCompassWidget
 
   /// Widget color scheme for default dark mode.
   static const defaultDarkColorScheme = NavigationCompassWidgetTheme(
-    surfaceColor: DgisColorScheme.blackSixPercent,
+    surfaceColor: DgisColorScheme.blackFiftyPercent,
   );
 
   // ignore: prefer_constructors_over_static_methods

@@ -23,346 +23,74 @@ ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) get _lookup
   <T extends ffi.NativeType>(String symbolName) {
     return libraryProvider.sdkLibrary.lookup<T>(symbolName);
   };
-// MARK: - BuildingId
+// MARK: - BssEventsSourceClearGuard
 
-/** Идентификатор здания. */
-class BuildingId {
-  final int value;
-
-  const BuildingId([this.value = 0]);
-
-  BuildingId copyWith({
-    int? value
-  }) {
-    return BuildingId(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is BuildingId &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CBuildingId extends ffi.Struct {
-  @ffi.Uint64()
-  external int value;
-
-}
-// MARK: - BuildingId <-> _CBuildingId
-
-extension _CBuildingIdToDart on _CBuildingId {
-  BuildingId _toDart() {
-    return BuildingId(
-      this.value
-    );
-  }
-}
-
-extension _DartTo_CBuildingId on BuildingId {
-  _CBuildingId _copyFromDartTo_CBuildingId() {
-    final res = _CBuildingIdMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CBuildingIdRelease on _CBuildingId {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - Color
-
-/** Цвет */
-class Color {
-  final int argb;
-
-  const Color([this.argb = 4278190080]);
-
-  Color copyWith({
-    int? argb
-  }) {
-    return Color(
-      argb ?? this.argb
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is Color &&
-    other.runtimeType == runtimeType &&
-    other.argb == argb;
-
-  @override
-  int get hashCode {
-    return argb.hashCode;
-  }
-
-}
-final class _CColor extends ffi.Struct {
-  @ffi.Uint32()
-  external int argb;
-
-}
-// MARK: - Color <-> _CColor
-
-extension _CColorToDart on _CColor {
-  Color _toDart() {
-    return Color(
-      this.argb
-    );
-  }
-}
-
-extension _DartTo_CColor on Color {
-  _CColor _copyFromDartTo_CColor() {
-    final res = _CColorMakeDefault();
-    res.argb = this.argb;
-    return res;
-  }
-}
-extension _CColorRelease on _CColor {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - DayTime
-
-/** Момент времени внутри дня. */
-class DayTime {
-  /** Часы, 0-23. */
-  final int hours;
-  /** Минуты, 0-59. */
-  final int minutes;
-
-  const DayTime({
-    required this.hours,
-    required this.minutes
-  });
-
-  DayTime copyWith({
-    int? hours,
-    int? minutes
-  }) {
-    return DayTime(
-      hours: hours ?? this.hours,
-      minutes: minutes ?? this.minutes
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is DayTime &&
-    other.runtimeType == runtimeType &&
-    other.hours == hours &&
-    other.minutes == minutes;
-
-  @override
-  int get hashCode {
-    return Object.hash(hours, minutes);
-  }
-
-}
-final class _CDayTime extends ffi.Struct {
-  @ffi.Uint8()
-  external int hours;
-
-  @ffi.Uint8()
-  external int minutes;
-
-}
-// MARK: - DayTime <-> _CDayTime
-
-extension _CDayTimeToDart on _CDayTime {
-  DayTime _toDart() {
-    return DayTime(
-      hours: this.hours,
-      minutes: this.minutes
-    );
-  }
-}
-
-extension _DartTo_CDayTime on DayTime {
-  _CDayTime _copyFromDartTo_CDayTime() {
-    final res = _CDayTimeMakeDefault();
-    res.hours = this.hours;
-    res.minutes = this.minutes;
-    return res;
-  }
-}
-extension _CDayTimeRelease on _CDayTime {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - DgisObjectId
-
-class DgisObjectId {
-  /**
-   Стабильный числовой идентификатор объекта.
-  
-   - Note: Нулевой идентификатор не соответствует ни одному объекту.
-  */
-  final int objectId;
-  /**
-   Стабильный числовой идентификатор входа/подъезда для объекта object_id.
-  
-   - Note: Нулевой идентификатор означает что вход/подъезд не задан.
-  */
-  final int entranceId;
-
-  const DgisObjectId({
-    this.objectId = 0,
-    this.entranceId = 0
-  });
-
-  DgisObjectId copyWith({
-    int? objectId,
-    int? entranceId
-  }) {
-    return DgisObjectId(
-      objectId: objectId ?? this.objectId,
-      entranceId: entranceId ?? this.entranceId
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is DgisObjectId &&
-    other.runtimeType == runtimeType &&
-    other.objectId == objectId &&
-    other.entranceId == entranceId;
-
-  @override
-  int get hashCode {
-    return Object.hash(objectId, entranceId);
-  }
-
-}
-final class _CDgisObjectId extends ffi.Struct {
-  @ffi.Uint64()
-  external int objectId;
-
-  @ffi.Uint64()
-  external int entranceId;
-
-}
-// MARK: - DgisObjectId <-> _CDgisObjectId
-
-extension _CDgisObjectIdToDart on _CDgisObjectId {
-  DgisObjectId _toDart() {
-    return DgisObjectId(
-      objectId: this.objectId,
-      entranceId: this.entranceId
-    );
-  }
-}
-
-extension _DartTo_CDgisObjectId on DgisObjectId {
-  _CDgisObjectId _copyFromDartTo_CDgisObjectId() {
-    final res = _CDgisObjectIdMakeDefault();
-    res.objectId = this.objectId;
-    res.entranceId = this.entranceId;
-    return res;
-  }
-}
-extension _CDgisObjectIdRelease on _CDgisObjectId {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - SystemMemoryManager
-
-/** Интерфейс управления использованием системной памяти. */
-class SystemMemoryManager implements ffi.Finalizable {
+/** Гуард, по уничтожении которого источник статистики переключается на исходное состояние User. */
+@internal
+class BssEventsSourceClearGuard implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
-  static final _finalizer = ffi.NativeFinalizer(_CSystemMemoryManager_releasePtr);
+  static final _finalizer = ffi.NativeFinalizer(_CBssEventsSourceClearGuard_releasePtr);
 
-  SystemMemoryManager._raw(this._self);
-  factory SystemMemoryManager._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = SystemMemoryManager._raw(self);
+  BssEventsSourceClearGuard._raw(this._self);
+  factory BssEventsSourceClearGuard._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = BssEventsSourceClearGuard._raw(self);
     _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
     return classObject;
   }
 
-  factory SystemMemoryManager.fromMessage(ClassMessage<SystemMemoryManager> message) {
+  factory BssEventsSourceClearGuard.fromMessage(ClassMessage<BssEventsSourceClearGuard> message) {
     final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
-    return SystemMemoryManager._create(ptr);
+    return BssEventsSourceClearGuard._create(ptr);
   }
 
   @override
   bool operator ==(Object other) =>
-    identical(this, other) || other is SystemMemoryManager &&
+    identical(this, other) || other is BssEventsSourceClearGuard &&
     other.runtimeType == runtimeType &&
-    _CSystemMemoryManager_cg_objectIdentifier(this._self) == _CSystemMemoryManager_cg_objectIdentifier(other._self);
+    _CBssEventsSourceClearGuard_cg_objectIdentifier(this._self) == _CBssEventsSourceClearGuard_cg_objectIdentifier(other._self);
 
   @override
   int get hashCode {
-    final identifier = _CSystemMemoryManager_cg_objectIdentifier(this._self);
+    final identifier = _CBssEventsSourceClearGuard_cg_objectIdentifier(this._self);
     return identifier.hashCode;
   }
 
-  // MARK: CSystemMemoryManager: Static Methods
-
-  /** Получение объекта для управления использованием системной памяти. */
-  static SystemMemoryManager instance(
-    Context context
-  )  {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CSystemMemoryManager res = _CSystemMemoryManager_S_instance_CContext(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  // MARK: SystemMemoryManager: Methods
-
-  /** Уменьшение использования памяти путём очистки всевозможных кешей и буферов. */
-  void reduceMemoryUsage()  {
-    void res = _CSystemMemoryManager_reduceMemoryUsage(_CSystemMemoryManagerMakeDefault().._impl=_self);
-    return res;
-  }
-
 }
 
-extension SystemMemoryManagerToClassMessage on SystemMemoryManager {
-  ClassMessage<SystemMemoryManager> message() {
-    final res = (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
-    return ClassMessage<SystemMemoryManager>(res._impl.address, _CSystemMemoryManager_release);
+extension BssEventsSourceClearGuardToClassMessage on BssEventsSourceClearGuard {
+  ClassMessage<BssEventsSourceClearGuard> message() {
+    final res = (_CBssEventsSourceClearGuardMakeDefault().._impl=_self)._retain();
+    return ClassMessage<BssEventsSourceClearGuard>(res._impl.address, _CBssEventsSourceClearGuard_release);
   }
 }
 
-// MARK: - SystemMemoryManager <-> CSystemMemoryManager
+// MARK: - BssEventsSourceClearGuard <-> CBssEventsSourceClearGuard
 
-final class _CSystemMemoryManager extends ffi.Struct {
+final class _CBssEventsSourceClearGuard extends ffi.Struct {
   external ffi.Pointer<ffi.Void> _impl;
 }
 
-extension _CSystemMemoryManagerBasicFunctions on _CSystemMemoryManager {
+extension _CBssEventsSourceClearGuardBasicFunctions on _CBssEventsSourceClearGuard {
   void _releaseIntermediate() {
-    _CSystemMemoryManager_release(_impl);
+    _CBssEventsSourceClearGuard_release(_impl);
   }
 
-  _CSystemMemoryManager _retain() {
-    return _CSystemMemoryManager_retain(_impl);
-  }
-}
-
-extension _CSystemMemoryManagerToDart on _CSystemMemoryManager {
-  SystemMemoryManager _toDart() {
-    return SystemMemoryManager._create(_retain()._impl);
+  _CBssEventsSourceClearGuard _retain() {
+    return _CBssEventsSourceClearGuard_retain(_impl);
   }
 }
 
+extension _CBssEventsSourceClearGuardToDart on _CBssEventsSourceClearGuard {
+  BssEventsSourceClearGuard _toDart() {
+    return BssEventsSourceClearGuard._create(_retain()._impl);
+  }
+}
 
-extension _DartToCSystemMemoryManager on SystemMemoryManager {
-  _CSystemMemoryManager _copyFromDartTo_CSystemMemoryManager() {
-    return (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
+
+extension _DartToCBssEventsSourceClearGuard on BssEventsSourceClearGuard {
+  _CBssEventsSourceClearGuard _copyFromDartTo_CBssEventsSourceClearGuard() {
+    return (_CBssEventsSourceClearGuardMakeDefault().._impl=_self)._retain();
   }
 }
 // MARK: - Context
@@ -434,357 +162,21 @@ extension _DartToCContext on Context {
     return (_CContextMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - LevelId
+// MARK: - setupBssEventsSourceFromSdk
 
-/** Идентификатор этажного плана. */
-class LevelId {
-  final int value;
-
-  const LevelId([this.value = 0]);
-
-  LevelId copyWith({
-    int? value
-  }) {
-    return LevelId(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is LevelId &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CLevelId extends ffi.Struct {
-  @ffi.Uint64()
-  external int value;
-
-}
-// MARK: - LevelId <-> _CLevelId
-
-extension _CLevelIdToDart on _CLevelId {
-  LevelId _toDart() {
-    return LevelId(
-      this.value
-    );
-  }
+/** Переключение источника статистики. */
+@internal
+BssEventsSourceClearGuard setupBssEventsSourceFromSdk(
+  Context context
+){
+  var _a0 = context._copyFromDartTo_CContext();
+  _CBssEventsSourceClearGuard res = _CFunction_G_setupBssEventsSourceFromSdk_With_CContext(_a0);
+  _a0._releaseIntermediate();
+  final t = res._toDart();
+  res._releaseIntermediate();
+  return t;
 }
 
-extension _DartTo_CLevelId on LevelId {
-  _CLevelId _copyFromDartTo_CLevelId() {
-    final res = _CLevelIdMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CLevelIdRelease on _CLevelId {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - LevelId? <-> _COptional_CLevelId
-
-final class _COptional_CLevelId extends ffi.Struct {
-  
-  external _CLevelId value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CLevelIdBasicFunctions on _COptional_CLevelId {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CLevelIdToDart on _COptional_CLevelId {
-  LevelId? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CLevelId on LevelId? {
-  _COptional_CLevelId _copyFromDartTo_COptional_CLevelId() {
-    final cOptional = _COptional_CLevelIdMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CLevelId();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - String <-> _CString
-
-final class _CString extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-_CString _CStringCreateWithData(
-  int size,
-  ffi.Pointer<ffi_package.Utf8> utf8Data
-) {
-  return _CStringCreateWithDataPrivate(size, utf8Data);
-}
-
-extension _CStringBasicFunctions on _CString {
-  int _getSize() {
-    return _GetSizeWith_CString(this);
-  }
-
-  ffi.Pointer<ffi_package.Utf8> _getData() {
-    return _GetDataWith_CString(this);
-  }
-
-  void _releaseIntermediate() {
-    _CString_release(this);
-  }
-}
-
-extension _CStringToDart on _CString {
-  String _toDart() {
-    return _getData().toDartString(length: _getSize());
-  }
-}
-
-extension _DartTo_CString on String {
-  _CString _copyFromDartTo_CString() {
-    // Adapted from https://pub.dev/documentation/ffi/latest/ffi/StringUtf8Pointer/toNativeUtf8.html
-    final units = utf8.encode(this);
-    final result = ffi_package.malloc<ffi.Uint8>(units.length);
-    final nativeString = result.asTypedList(units.length);
-    nativeString.setAll(0, units);
-    return _CStringCreateWithData(units.length, result.cast());
-  }
-}
-
-
-// MARK: - List<LevelId> <-> _CArray_CLevelId
-
-final class _CArray_CLevelId extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CArray_CLevelIdToDart on _CArray_CLevelId {
-  List<LevelId> _toDart() {
-    return _fillFromC();
-  }
-}
-
-extension _DartTo_CArray_CLevelId on List<LevelId> {
-  _CArray_CLevelId _copyFromDartTo_CArray_CLevelId() {
-    final cArray = _CArray_CLevelIdmakeEmpty();
-    forEach((item) {
-        final cItem = item._copyFromDartTo_CLevelId();
-        _CArray_CLevelIdaddElement(cArray, cItem);
-        
-    });
-    return cArray;
-  }
-}
-
-extension _CArray_CLevelIdBasicFunctions on _CArray_CLevelId {
-  void _releaseIntermediate() {
-    _CArray_CLevelId_release(this);
-  }
-
-  static final _listToFill = <LevelId>[];
-
-  static void _iterate(_CLevelId item) {
-    _listToFill.add(item._toDart());
-  }
-
-  List<LevelId> _fillFromC() {
-    _forEach_CArray_CLevelId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CLevelId)>(_iterate));
-    final result = List<LevelId>.from(_listToFill);
-    _listToFill.clear();
-    return result;
-  }
-}
-	
-// MARK: - LevelInfo
-
-/** Информация об этаже здания. */
-class LevelInfo {
-  /** Идентификатор этажного плана. */
-  final LevelId? id;
-  /** Название этажа. */
-  final String name;
-  /** Идентификаторы связанных этажных планов. */
-  final List<LevelId> linkedLevelIds;
-
-  const LevelInfo({
-    required this.id,
-    required this.name,
-    required this.linkedLevelIds
-  });
-
-  LevelInfo copyWith({
-    Optional<LevelId?>? id,
-    String? name,
-    List<LevelId>? linkedLevelIds
-  }) {
-    return LevelInfo(
-      id: id != null ? id.value : this.id,
-      name: name ?? this.name,
-      linkedLevelIds: linkedLevelIds ?? this.linkedLevelIds
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is LevelInfo &&
-    other.runtimeType == runtimeType &&
-    other.id == id &&
-    other.name == name &&
-    other.linkedLevelIds == linkedLevelIds;
-
-  @override
-  int get hashCode {
-    return Object.hash(id, name, linkedLevelIds);
-  }
-
-}
-final class _CLevelInfo extends ffi.Struct {
-  external _COptional_CLevelId id;
-
-  external _CString name;
-
-  external _CArray_CLevelId linkedLevelIds;
-
-}
-// MARK: - LevelInfo <-> _CLevelInfo
-
-extension _CLevelInfoToDart on _CLevelInfo {
-  LevelInfo _toDart() {
-    return LevelInfo(
-      id: this.id._toDart(),
-      name: this.name._toDart(),
-      linkedLevelIds: this.linkedLevelIds._toDart()
-    );
-  }
-}
-
-extension _DartTo_CLevelInfo on LevelInfo {
-  _CLevelInfo _copyFromDartTo_CLevelInfo() {
-    final res = _CLevelInfoMakeDefault();
-    res.id = this.id._copyFromDartTo_COptional_CLevelId();
-    res.name = this.name._copyFromDartTo_CString();
-    res.linkedLevelIds = this.linkedLevelIds._copyFromDartTo_CArray_CLevelId();
-    return res;
-  }
-}
-extension _CLevelInfoRelease on _CLevelInfo {
-  void _releaseIntermediate() {
-    name._releaseIntermediate();
-    linkedLevelIds._releaseIntermediate();
-  }
-}
-
-// MARK: - Meter
-
-/** Длина/расстояние в метрах. */
-class Meter {
-  final double value;
-
-  const Meter([this.value = 0]);
-
-  Meter copyWith({
-    double? value
-  }) {
-    return Meter(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is Meter &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CMeter extends ffi.Struct {
-  @ffi.Float()
-  external double value;
-
-}
-// MARK: - Meter <-> _CMeter
-
-extension _CMeterToDart on _CMeter {
-  Meter _toDart() {
-    return Meter(
-      this.value
-    );
-  }
-}
-
-extension _DartTo_CMeter on Meter {
-  _CMeter _copyFromDartTo_CMeter() {
-    final res = _CMeterMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CMeterRelease on _CMeter {
-  void _releaseIntermediate() {
-  }
-}
-
-// MARK: - PersonalDataCollectionConsent
-
-/** Статус согласия пользователя на сбор и отправку персональных данных. */
-enum PersonalDataCollectionConsent {
-  /** Пользователь согласен. */
-  granted(0),
-  /** Пользователь не согласен. */
-  denied(1),
-  ;
-
-  const PersonalDataCollectionConsent(this.rawValue);
-  final int rawValue;
-
-  static PersonalDataCollectionConsent getByValue(int value) {
-    return PersonalDataCollectionConsent.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CPersonalDataCollectionConsent extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CPersonalDataCollectionConsentBasicFunctions on _CPersonalDataCollectionConsent {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CPersonalDataCollectionConsentToDart on _CPersonalDataCollectionConsent {
-  PersonalDataCollectionConsent _toDart() {
-    return PersonalDataCollectionConsent.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CPersonalDataCollectionConsent on PersonalDataCollectionConsent {
-  _CPersonalDataCollectionConsent _copyFromDartTo_CPersonalDataCollectionConsent() {
-    return _CPersonalDataCollectionConsentMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - releaseContext
 
 /**
@@ -864,6 +256,47 @@ extension _CResult_CEmptyToDart on _CResult_CEmpty {
     if (this._index == 1) {
       throw this._impl._error._toDart();
     }
+  }
+}
+	
+// MARK: - PersonalDataCollectionConsent
+
+/** Статус согласия пользователя на сбор и отправку персональных данных. */
+enum PersonalDataCollectionConsent {
+  /** Пользователь согласен. */
+  granted(0),
+  /** Пользователь не согласен. */
+  denied(1),
+  ;
+
+  const PersonalDataCollectionConsent(this.rawValue);
+  final int rawValue;
+
+  static PersonalDataCollectionConsent getByValue(int value) {
+    return PersonalDataCollectionConsent.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CPersonalDataCollectionConsent extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CPersonalDataCollectionConsentBasicFunctions on _CPersonalDataCollectionConsent {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CPersonalDataCollectionConsentToDart on _CPersonalDataCollectionConsent {
+  PersonalDataCollectionConsent _toDart() {
+    return PersonalDataCollectionConsent.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CPersonalDataCollectionConsent on PersonalDataCollectionConsent {
+  _CPersonalDataCollectionConsent _copyFromDartTo_CPersonalDataCollectionConsent() {
+    return _CPersonalDataCollectionConsentMakeDefault()..rawValue = this.rawValue;
   }
 }
 	
@@ -950,6 +383,51 @@ extension _CResult_CContextToDart on _CResult_CContext {
   }
 }
 	
+// MARK: - String <-> _CString
+
+final class _CString extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+_CString _CStringCreateWithData(
+  int size,
+  ffi.Pointer<ffi_package.Utf8> utf8Data
+) {
+  return _CStringCreateWithDataPrivate(size, utf8Data);
+}
+
+extension _CStringBasicFunctions on _CString {
+  int _getSize() {
+    return _GetSizeWith_CString(this);
+  }
+
+  ffi.Pointer<ffi_package.Utf8> _getData() {
+    return _GetDataWith_CString(this);
+  }
+
+  void _releaseIntermediate() {
+    _CString_release(this);
+  }
+}
+
+extension _CStringToDart on _CString {
+  String _toDart() {
+    return _getData().toDartString(length: _getSize());
+  }
+}
+
+extension _DartTo_CString on String {
+  _CString _copyFromDartTo_CString() {
+    // Adapted from https://pub.dev/documentation/ffi/latest/ffi/StringUtf8Pointer/toNativeUtf8.html
+    final units = utf8.encode(this);
+    final result = ffi_package.malloc<ffi.Uint8>(units.length);
+    final nativeString = result.asTypedList(units.length);
+    nativeString.setAll(0, units);
+    return _CStringCreateWithData(units.length, result.cast());
+  }
+}
+
+
 // MARK: - KeyFromAsset
 
 /**
@@ -4112,6 +3590,613 @@ extension _DartTo_COptional_CHeadingAvailableNotifier on HeadingAvailableNotifie
     return cOptional;
   }
 }
+// MARK: - BuildingId
+
+/** Идентификатор здания. */
+class BuildingId {
+  final int value;
+
+  const BuildingId([this.value = 0]);
+
+  BuildingId copyWith({
+    int? value
+  }) {
+    return BuildingId(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is BuildingId &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CBuildingId extends ffi.Struct {
+  @ffi.Uint64()
+  external int value;
+
+}
+// MARK: - BuildingId <-> _CBuildingId
+
+extension _CBuildingIdToDart on _CBuildingId {
+  BuildingId _toDart() {
+    return BuildingId(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CBuildingId on BuildingId {
+  _CBuildingId _copyFromDartTo_CBuildingId() {
+    final res = _CBuildingIdMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CBuildingIdRelease on _CBuildingId {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - Color
+
+/** Цвет */
+class Color {
+  final int argb;
+
+  const Color([this.argb = 4278190080]);
+
+  Color copyWith({
+    int? argb
+  }) {
+    return Color(
+      argb ?? this.argb
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Color &&
+    other.runtimeType == runtimeType &&
+    other.argb == argb;
+
+  @override
+  int get hashCode {
+    return argb.hashCode;
+  }
+
+}
+final class _CColor extends ffi.Struct {
+  @ffi.Uint32()
+  external int argb;
+
+}
+// MARK: - Color <-> _CColor
+
+extension _CColorToDart on _CColor {
+  Color _toDart() {
+    return Color(
+      this.argb
+    );
+  }
+}
+
+extension _DartTo_CColor on Color {
+  _CColor _copyFromDartTo_CColor() {
+    final res = _CColorMakeDefault();
+    res.argb = this.argb;
+    return res;
+  }
+}
+extension _CColorRelease on _CColor {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - DayTime
+
+/** Момент времени внутри дня. */
+class DayTime {
+  /** Часы, 0-23. */
+  final int hours;
+  /** Минуты, 0-59. */
+  final int minutes;
+
+  const DayTime({
+    required this.hours,
+    required this.minutes
+  });
+
+  DayTime copyWith({
+    int? hours,
+    int? minutes
+  }) {
+    return DayTime(
+      hours: hours ?? this.hours,
+      minutes: minutes ?? this.minutes
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DayTime &&
+    other.runtimeType == runtimeType &&
+    other.hours == hours &&
+    other.minutes == minutes;
+
+  @override
+  int get hashCode {
+    return Object.hash(hours, minutes);
+  }
+
+}
+final class _CDayTime extends ffi.Struct {
+  @ffi.Uint8()
+  external int hours;
+
+  @ffi.Uint8()
+  external int minutes;
+
+}
+// MARK: - DayTime <-> _CDayTime
+
+extension _CDayTimeToDart on _CDayTime {
+  DayTime _toDart() {
+    return DayTime(
+      hours: this.hours,
+      minutes: this.minutes
+    );
+  }
+}
+
+extension _DartTo_CDayTime on DayTime {
+  _CDayTime _copyFromDartTo_CDayTime() {
+    final res = _CDayTimeMakeDefault();
+    res.hours = this.hours;
+    res.minutes = this.minutes;
+    return res;
+  }
+}
+extension _CDayTimeRelease on _CDayTime {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - DgisObjectId
+
+class DgisObjectId {
+  /**
+   Стабильный числовой идентификатор объекта.
+  
+   - Note: Нулевой идентификатор не соответствует ни одному объекту.
+  */
+  final int objectId;
+  /**
+   Стабильный числовой идентификатор входа/подъезда для объекта object_id.
+  
+   - Note: Нулевой идентификатор означает что вход/подъезд не задан.
+  */
+  final int entranceId;
+
+  const DgisObjectId({
+    this.objectId = 0,
+    this.entranceId = 0
+  });
+
+  DgisObjectId copyWith({
+    int? objectId,
+    int? entranceId
+  }) {
+    return DgisObjectId(
+      objectId: objectId ?? this.objectId,
+      entranceId: entranceId ?? this.entranceId
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is DgisObjectId &&
+    other.runtimeType == runtimeType &&
+    other.objectId == objectId &&
+    other.entranceId == entranceId;
+
+  @override
+  int get hashCode {
+    return Object.hash(objectId, entranceId);
+  }
+
+}
+final class _CDgisObjectId extends ffi.Struct {
+  @ffi.Uint64()
+  external int objectId;
+
+  @ffi.Uint64()
+  external int entranceId;
+
+}
+// MARK: - DgisObjectId <-> _CDgisObjectId
+
+extension _CDgisObjectIdToDart on _CDgisObjectId {
+  DgisObjectId _toDart() {
+    return DgisObjectId(
+      objectId: this.objectId,
+      entranceId: this.entranceId
+    );
+  }
+}
+
+extension _DartTo_CDgisObjectId on DgisObjectId {
+  _CDgisObjectId _copyFromDartTo_CDgisObjectId() {
+    final res = _CDgisObjectIdMakeDefault();
+    res.objectId = this.objectId;
+    res.entranceId = this.entranceId;
+    return res;
+  }
+}
+extension _CDgisObjectIdRelease on _CDgisObjectId {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - SystemMemoryManager
+
+/** Интерфейс управления использованием системной памяти. */
+class SystemMemoryManager implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CSystemMemoryManager_releasePtr);
+
+  SystemMemoryManager._raw(this._self);
+  factory SystemMemoryManager._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = SystemMemoryManager._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory SystemMemoryManager.fromMessage(ClassMessage<SystemMemoryManager> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return SystemMemoryManager._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is SystemMemoryManager &&
+    other.runtimeType == runtimeType &&
+    _CSystemMemoryManager_cg_objectIdentifier(this._self) == _CSystemMemoryManager_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CSystemMemoryManager_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CSystemMemoryManager: Static Methods
+
+  /** Получение объекта для управления использованием системной памяти. */
+  static SystemMemoryManager instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CSystemMemoryManager res = _CSystemMemoryManager_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  // MARK: SystemMemoryManager: Methods
+
+  /** Уменьшение использования памяти путём очистки всевозможных кешей и буферов. */
+  void reduceMemoryUsage()  {
+    void res = _CSystemMemoryManager_reduceMemoryUsage(_CSystemMemoryManagerMakeDefault().._impl=_self);
+    return res;
+  }
+
+}
+
+extension SystemMemoryManagerToClassMessage on SystemMemoryManager {
+  ClassMessage<SystemMemoryManager> message() {
+    final res = (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<SystemMemoryManager>(res._impl.address, _CSystemMemoryManager_release);
+  }
+}
+
+// MARK: - SystemMemoryManager <-> CSystemMemoryManager
+
+final class _CSystemMemoryManager extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CSystemMemoryManagerBasicFunctions on _CSystemMemoryManager {
+  void _releaseIntermediate() {
+    _CSystemMemoryManager_release(_impl);
+  }
+
+  _CSystemMemoryManager _retain() {
+    return _CSystemMemoryManager_retain(_impl);
+  }
+}
+
+extension _CSystemMemoryManagerToDart on _CSystemMemoryManager {
+  SystemMemoryManager _toDart() {
+    return SystemMemoryManager._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCSystemMemoryManager on SystemMemoryManager {
+  _CSystemMemoryManager _copyFromDartTo_CSystemMemoryManager() {
+    return (_CSystemMemoryManagerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - LevelId
+
+/** Идентификатор этажного плана. */
+class LevelId {
+  final int value;
+
+  const LevelId([this.value = 0]);
+
+  LevelId copyWith({
+    int? value
+  }) {
+    return LevelId(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is LevelId &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CLevelId extends ffi.Struct {
+  @ffi.Uint64()
+  external int value;
+
+}
+// MARK: - LevelId <-> _CLevelId
+
+extension _CLevelIdToDart on _CLevelId {
+  LevelId _toDart() {
+    return LevelId(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CLevelId on LevelId {
+  _CLevelId _copyFromDartTo_CLevelId() {
+    final res = _CLevelIdMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CLevelIdRelease on _CLevelId {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - LevelId? <-> _COptional_CLevelId
+
+final class _COptional_CLevelId extends ffi.Struct {
+  
+  external _CLevelId value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CLevelIdBasicFunctions on _COptional_CLevelId {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CLevelIdToDart on _COptional_CLevelId {
+  LevelId? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CLevelId on LevelId? {
+  _COptional_CLevelId _copyFromDartTo_COptional_CLevelId() {
+    final cOptional = _COptional_CLevelIdMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CLevelId();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - List<LevelId> <-> _CArray_CLevelId
+
+final class _CArray_CLevelId extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CArray_CLevelIdToDart on _CArray_CLevelId {
+  List<LevelId> _toDart() {
+    return _fillFromC();
+  }
+}
+
+extension _DartTo_CArray_CLevelId on List<LevelId> {
+  _CArray_CLevelId _copyFromDartTo_CArray_CLevelId() {
+    final cArray = _CArray_CLevelIdmakeEmpty();
+    forEach((item) {
+        final cItem = item._copyFromDartTo_CLevelId();
+        _CArray_CLevelIdaddElement(cArray, cItem);
+        
+    });
+    return cArray;
+  }
+}
+
+extension _CArray_CLevelIdBasicFunctions on _CArray_CLevelId {
+  void _releaseIntermediate() {
+    _CArray_CLevelId_release(this);
+  }
+
+  static final _listToFill = <LevelId>[];
+
+  static void _iterate(_CLevelId item) {
+    _listToFill.add(item._toDart());
+  }
+
+  List<LevelId> _fillFromC() {
+    _forEach_CArray_CLevelId(this, ffi.Pointer.fromFunction<ffi.Void Function(_CLevelId)>(_iterate));
+    final result = List<LevelId>.from(_listToFill);
+    _listToFill.clear();
+    return result;
+  }
+}
+	
+// MARK: - LevelInfo
+
+/** Информация об этаже здания. */
+class LevelInfo {
+  /** Идентификатор этажного плана. */
+  final LevelId? id;
+  /** Название этажа. */
+  final String name;
+  /** Идентификаторы связанных этажных планов. */
+  final List<LevelId> linkedLevelIds;
+
+  const LevelInfo({
+    required this.id,
+    required this.name,
+    required this.linkedLevelIds
+  });
+
+  LevelInfo copyWith({
+    Optional<LevelId?>? id,
+    String? name,
+    List<LevelId>? linkedLevelIds
+  }) {
+    return LevelInfo(
+      id: id != null ? id.value : this.id,
+      name: name ?? this.name,
+      linkedLevelIds: linkedLevelIds ?? this.linkedLevelIds
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is LevelInfo &&
+    other.runtimeType == runtimeType &&
+    other.id == id &&
+    other.name == name &&
+    other.linkedLevelIds == linkedLevelIds;
+
+  @override
+  int get hashCode {
+    return Object.hash(id, name, linkedLevelIds);
+  }
+
+}
+final class _CLevelInfo extends ffi.Struct {
+  external _COptional_CLevelId id;
+
+  external _CString name;
+
+  external _CArray_CLevelId linkedLevelIds;
+
+}
+// MARK: - LevelInfo <-> _CLevelInfo
+
+extension _CLevelInfoToDart on _CLevelInfo {
+  LevelInfo _toDart() {
+    return LevelInfo(
+      id: this.id._toDart(),
+      name: this.name._toDart(),
+      linkedLevelIds: this.linkedLevelIds._toDart()
+    );
+  }
+}
+
+extension _DartTo_CLevelInfo on LevelInfo {
+  _CLevelInfo _copyFromDartTo_CLevelInfo() {
+    final res = _CLevelInfoMakeDefault();
+    res.id = this.id._copyFromDartTo_COptional_CLevelId();
+    res.name = this.name._copyFromDartTo_CString();
+    res.linkedLevelIds = this.linkedLevelIds._copyFromDartTo_CArray_CLevelId();
+    return res;
+  }
+}
+extension _CLevelInfoRelease on _CLevelInfo {
+  void _releaseIntermediate() {
+    name._releaseIntermediate();
+    linkedLevelIds._releaseIntermediate();
+  }
+}
+
+// MARK: - Meter
+
+/** Длина/расстояние в метрах. */
+class Meter {
+  final double value;
+
+  const Meter([this.value = 0]);
+
+  Meter copyWith({
+    double? value
+  }) {
+    return Meter(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Meter &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CMeter extends ffi.Struct {
+  @ffi.Float()
+  external double value;
+
+}
+// MARK: - Meter <-> _CMeter
+
+extension _CMeterToDart on _CMeter {
+  Meter _toDart() {
+    return Meter(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CMeter on Meter {
+  _CMeter _copyFromDartTo_CMeter() {
+    final res = _CMeterMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CMeterRelease on _CMeter {
+  void _releaseIntermediate() {
+  }
+}
+
 // MARK: - ScreenDistance
 
 /**
@@ -35880,7 +35965,7 @@ class IndoorControlModel implements ffi.Finalizable {
   }
   /**
    Названия этажей.
-   Пусто, если на карте не отображается здание с этажными планами, или у здания всего один этаж.
+   Пусто, если на карте не отображается здание с этажными планами.
   */
   StatefulChannel<List<String>> get levelNamesChannel {
     _CStatefulChannel_CArray_CString res = _CIndoorControlModel_levelNamesChannel(_CIndoorControlModelMakeDefault().._impl=_self);
@@ -35890,7 +35975,7 @@ class IndoorControlModel implements ffi.Finalizable {
   }
   /**
    Названия этажей.
-   Пусто, если на карте не отображается здание с этажными планами, или у здания всего один этаж.
+   Пусто, если на карте не отображается здание с этажными планами.
   */
   List<String> get levelNames {
     _CArray_CString res = _CIndoorControlModel_levelNames(_CIndoorControlModelMakeDefault().._impl=_self);
@@ -42012,6 +42097,47 @@ extension _DartTo_CCameraFollowState on CameraFollowState {
   }
 }
 	
+// MARK: - LocationQuality
+
+/** Качество определения текущего местоположения. */
+enum LocationQuality {
+  /** Точная геопозиция. */
+  accurate(0),
+  /** Неточная геопозиция. */
+  degraded(1),
+  ;
+
+  const LocationQuality(this.rawValue);
+  final int rawValue;
+
+  static LocationQuality getByValue(int value) {
+    return LocationQuality.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CLocationQuality extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CLocationQualityBasicFunctions on _CLocationQuality {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CLocationQualityToDart on _CLocationQuality {
+  LocationQuality _toDart() {
+    return LocationQuality.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CLocationQuality on LocationQuality {
+  _CLocationQuality _copyFromDartTo_CLocationQuality() {
+    return _CLocationQualityMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
 // MARK: - MyLocationControlModel
 
 /**
@@ -42023,24 +42149,40 @@ extension _DartTo_CCameraFollowState on CameraFollowState {
 class MyLocationControlModel implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
+  /** Состояние элемента перелета к местоположению пользователя. */
   StatefulChannel<bool> get isEnabledChannel {
     _CStatefulChannel_bool res = _CMyLocationControlModel_isEnabledChannel(_CMyLocationControlModelMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
   }
+  /** Состояние элемента перелета к местоположению пользователя. */
   bool get isEnabled {
     bool res = _CMyLocationControlModel_isEnabled(_CMyLocationControlModelMakeDefault().._impl=_self);
     return res;
   }
+  /** Состояние слежения камеры за текущим местоположением пользователя. */
   StatefulChannel<CameraFollowState> get followStateChannel {
     _CStatefulChannel_CCameraFollowState res = _CMyLocationControlModel_followStateChannel(_CMyLocationControlModelMakeDefault().._impl=_self);
     final t = res._toDart();
     res._releaseIntermediate();
     return t;
   }
+  /** Состояние слежения камеры за текущим местоположением пользователя. */
   CameraFollowState get followState {
     _CCameraFollowState res = _CMyLocationControlModel_followState(_CMyLocationControlModelMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  /** Качество определения текущего местоположения. */
+  StatefulChannel<LocationQuality> get locationQualityChannel {
+    _CStatefulChannel_CLocationQuality res = _CMyLocationControlModel_locationQualityChannel(_CMyLocationControlModelMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Качество определения текущего местоположения. */
+  LocationQuality get locationQuality {
+    _CLocationQuality res = _CMyLocationControlModel_locationQuality(_CMyLocationControlModelMakeDefault().._impl=_self);
     return res._toDart();
   }
 
@@ -42206,6 +42348,92 @@ extension _CStatefulChannel_CCameraFollowStateToDart on _CStatefulChannel_CCamer
 extension _DartTo_CStatefulChannel_CCameraFollowState on StatefulChannel<CameraFollowState> {
   _CStatefulChannel_CCameraFollowState _copyFromDartTo_CStatefulChannel_CCameraFollowState() {
     return _CStatefulChannel_CCameraFollowStateMakeDefault();
+  }
+}
+	
+// MARK: - StatefulChannel<LocationQuality> <-> _CStatefulChannel_CLocationQuality
+
+class _CStatefulChannel_CLocationQualityImpl extends StatefulChannel<LocationQuality> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<LocationQuality>>{};
+
+  final _CStatefulChannel_CLocationQuality _channel;
+
+  _CStatefulChannel_CLocationQualityImpl(this._channel);
+
+  @override
+  LocationQuality get value {
+    return this._channel._getter();
+  }
+
+  static void valueFunction(_CLocationQuality cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    
+  }
+
+  @override
+  StreamSubscription<LocationQuality> listen(void onData(LocationQuality event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CLocationQuality, ffi.Int64)>.listener(valueFunction);
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    final cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    final streamController = new StreamController<LocationQuality>(
+      onCancel: () {
+        cancellable._cancel();
+        instanceMap.remove(instanceId);
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CStatefulChannel_CLocationQuality extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStatefulChannel_CLocationQualityBasicFunctions on _CStatefulChannel_CLocationQuality {
+  void _releaseIntermediate() {
+    _CStatefulChannel_CLocationQuality_release(this);
+  }
+
+  _CStatefulChannel_CLocationQuality _retain() {
+    return _CStatefulChannel_CLocationQuality_retain(this);
+  }
+
+  LocationQuality _getter() {
+    final cValue = _CStatefulChannel_CLocationQualityGetCurrentValue(this);
+    final res = cValue._toDart();
+    
+    return res;
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CLocationQuality, ffi.Int64)> callback) {
+    return _CStatefulChannel_CLocationQualityConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CStatefulChannel_CLocationQualityToDart on _CStatefulChannel_CLocationQuality {
+  StatefulChannel<LocationQuality> _toDart() {
+    return _CStatefulChannel_CLocationQualityImpl(this._retain());
+  }
+}
+
+extension _DartTo_CStatefulChannel_CLocationQuality on StatefulChannel<LocationQuality> {
+  _CStatefulChannel_CLocationQuality _copyFromDartTo_CStatefulChannel_CLocationQuality() {
+    return _CStatefulChannel_CLocationQualityMakeDefault();
   }
 }
 	
@@ -76579,6 +76807,17 @@ class LocationService implements ffi.Finalizable {
     return LocationService._create(res._impl);
   }
 
+  factory LocationService.withDesiredAccuracy(
+    Context context,
+    DesiredAccuracy desiredAccuracy
+  ) {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = desiredAccuracy._copyFromDartTo_CDesiredAccuracy();
+    _CLocationService res = _CLocationService_C_createWith_CContext_CDesiredAccuracy(_a0, _a1);
+    _a0._releaseIntermediate();
+    return LocationService._create(res._impl);
+  }
+
   @override
   bool operator ==(Object other) =>
     identical(this, other) || other is LocationService &&
@@ -80509,36 +80748,16 @@ extension _DartTo_CStatefulChannel_CArray_CTerritory on StatefulChannel<List<Ter
 // MARK: Private functions and pointers
 
 
-late final _CBuildingIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBuildingId Function()>>('CBuildingIdMakeDefault');
-late final _CBuildingIdMakeDefault = _CBuildingIdMakeDefaultPtr.asFunction<_CBuildingId Function()>();
+late final _CBssEventsSourceClearGuard_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CBssEventsSourceClearGuard_cg_objectIdentifier');
+late final _CBssEventsSourceClearGuard_cg_objectIdentifier = _CBssEventsSourceClearGuard_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
 
-late final _CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CColor Function()>>('CColorMakeDefault');
-late final _CColorMakeDefault = _CColorMakeDefaultPtr.asFunction<_CColor Function()>();
-
-
-late final _CDayTimeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDayTime Function()>>('CDayTimeMakeDefault');
-late final _CDayTimeMakeDefault = _CDayTimeMakeDefaultPtr.asFunction<_CDayTime Function()>();
-
-
-late final _CDgisObjectIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDgisObjectId Function()>>('CDgisObjectIdMakeDefault');
-late final _CDgisObjectIdMakeDefault = _CDgisObjectIdMakeDefaultPtr.asFunction<_CDgisObjectId Function()>();
-
-
-late final _CSystemMemoryManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_cg_objectIdentifier');
-late final _CSystemMemoryManager_cg_objectIdentifier = _CSystemMemoryManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CSystemMemoryManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(_CContext)>>('CSystemMemoryManager_S_instance_CContext');
-late final _CSystemMemoryManager_S_instance_CContext = _CSystemMemoryManager_S_instance_CContextPtr.asFunction<_CSystemMemoryManager Function(_CContext)>();
-late final _CSystemMemoryManager_reduceMemoryUsagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSystemMemoryManager)>>('CSystemMemoryManager_reduceMemoryUsage');
-late final _CSystemMemoryManager_reduceMemoryUsage = _CSystemMemoryManager_reduceMemoryUsagePtr.asFunction<void Function(_CSystemMemoryManager)>();
-
-late final _CSystemMemoryManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_release');
-late final _CSystemMemoryManager_release = _CSystemMemoryManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CSystemMemoryManager_retainPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_retain');
-late final _CSystemMemoryManager_retain = _CSystemMemoryManager_retainPtr.asFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>();
-late final _CSystemMemoryManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function()>>('CSystemMemoryManagerMakeDefault');
-late final _CSystemMemoryManagerMakeDefault = _CSystemMemoryManagerMakeDefaultPtr.asFunction<_CSystemMemoryManager Function()>();
+late final _CBssEventsSourceClearGuard_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CBssEventsSourceClearGuard_release');
+late final _CBssEventsSourceClearGuard_release = _CBssEventsSourceClearGuard_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CBssEventsSourceClearGuard_retainPtr = _lookup<ffi.NativeFunction<_CBssEventsSourceClearGuard Function(ffi.Pointer<ffi.Void>)>>('CBssEventsSourceClearGuard_retain');
+late final _CBssEventsSourceClearGuard_retain = _CBssEventsSourceClearGuard_retainPtr.asFunction<_CBssEventsSourceClearGuard Function(ffi.Pointer<ffi.Void>)>();
+late final _CBssEventsSourceClearGuardMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBssEventsSourceClearGuard Function()>>('CBssEventsSourceClearGuardMakeDefault');
+late final _CBssEventsSourceClearGuardMakeDefault = _CBssEventsSourceClearGuardMakeDefaultPtr.asFunction<_CBssEventsSourceClearGuard Function()>();
 
 
 late final _CContext_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CContext_cg_objectIdentifier');
@@ -80552,46 +80771,8 @@ late final _CContext_retain = _CContext_retainPtr.asFunction<_CContext Function(
 late final _CContextMakeDefaultPtr = _lookup<ffi.NativeFunction<_CContext Function()>>('CContextMakeDefault');
 late final _CContextMakeDefault = _CContextMakeDefaultPtr.asFunction<_CContext Function()>();
 
-
-late final _CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelId Function()>>('CLevelIdMakeDefault');
-late final _CLevelIdMakeDefault = _CLevelIdMakeDefaultPtr.asFunction<_CLevelId Function()>();
-
-
-late final _COptional_CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CLevelId Function()>>('COptional_CLevelIdMakeDefault');
-late final _COptional_CLevelIdMakeDefault = _COptional_CLevelIdMakeDefaultPtr.asFunction<_COptional_CLevelId Function()>();
-
-late final _CStringCreateWithDataPtr = _lookup<ffi.NativeFunction<_CString Function(ffi.Size size, ffi.Pointer<ffi_package.Utf8>)>>('CString_createWithData');
-late final _CStringCreateWithDataPrivate = _CStringCreateWithDataPtr.asFunction<_CString Function(int, ffi.Pointer<ffi_package.Utf8>)>();
-late final _GetSizeWith_CStringPtr = _lookup<ffi.NativeFunction<ffi.Size Function(_CString)>>('CString_getSize');
-late final _GetSizeWith_CString = _GetSizeWith_CStringPtr.asFunction<int Function(_CString)>();
-late final _GetDataWith_CStringPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_package.Utf8> Function(_CString)>>('CString_getData');
-late final _GetDataWith_CString = _GetDataWith_CStringPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CString)>();
-late final _CString_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CString)>>('CString_release');
-late final _CString_release = _CString_releasePtr.asFunction<void Function(_CString)>();
-
-late final _CArray_CLevelIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CLevelId Function()>>('CArray_CLevelId_makeEmpty');
-late final _CArray_CLevelIdmakeEmpty = _CArray_CLevelIdmakeEmptyPtr.asFunction<_CArray_CLevelId Function()>();
-late final _CArray_CLevelIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId, _CLevelId)>>('CArray_CLevelId_addElement');
-late final _CArray_CLevelIdaddElement = _CArray_CLevelIdaddElementPtr.asFunction<void Function(_CArray_CLevelId, _CLevelId)>();
-late final _forEach_CArray_CLevelIdPtr = _lookup<ffi.NativeFunction<
-  ffi.Void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)>>)
->>('CArray_CLevelId_forEachWithFunctionPointer');
-late final _forEach_CArray_CLevelId = _forEach_CArray_CLevelIdPtr.asFunction<
-  void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)
->>)>();
-late final _CArray_CLevelId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId)>>('CArray_CLevelId_release');
-late final _CArray_CLevelId_release = _CArray_CLevelId_releasePtr.asFunction<void Function(_CArray_CLevelId)>();
-
-late final _CLevelInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelInfo Function()>>('CLevelInfoMakeDefault');
-late final _CLevelInfoMakeDefault = _CLevelInfoMakeDefaultPtr.asFunction<_CLevelInfo Function()>();
-
-
-late final _CMeterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMeter Function()>>('CMeterMakeDefault');
-late final _CMeterMakeDefault = _CMeterMakeDefaultPtr.asFunction<_CMeter Function()>();
-
-
-late final _CPersonalDataCollectionConsentMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPersonalDataCollectionConsent Function()>>('CPersonalDataCollectionConsentMakeDefault');
-late final _CPersonalDataCollectionConsentMakeDefault = _CPersonalDataCollectionConsentMakeDefaultPtr.asFunction<_CPersonalDataCollectionConsent Function()>();
+late final _CFunction_G_setupBssEventsSourceFromSdk_With_CContextPtr = _lookup<ffi.NativeFunction<_CBssEventsSourceClearGuard Function(_CContext)>>('CFunction_G_setupBssEventsSourceFromSdk_With_CContext');
+late final _CFunction_G_setupBssEventsSourceFromSdk_With_CContext = _CFunction_G_setupBssEventsSourceFromSdk_With_CContextPtr.asFunction<_CBssEventsSourceClearGuard Function(_CContext)>();
 late final _CFunction_G_releaseContext_With_CContextPtr = _lookup<ffi.NativeFunction<_CResult_CEmpty Function(_CContext)>>('CFunction_G_releaseContext_With_CContext');
 late final _CFunction_G_releaseContext_With_CContext = _CFunction_G_releaseContext_With_CContextPtr.asFunction<_CResult_CEmpty Function(_CContext)>();
 
@@ -80606,11 +80787,23 @@ late final _CErrorGetDescription = _CErrorGetDescriptionPtr.asFunction<ffi.Point
 
 late final _CResult_CEmpty_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CEmpty)>>('CResult_CEmpty_release');
 late final _CResult_CEmpty_release = _CResult_CEmpty_releasePtr.asFunction<void Function(_CResult_CEmpty)>();
+
+late final _CPersonalDataCollectionConsentMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPersonalDataCollectionConsent Function()>>('CPersonalDataCollectionConsentMakeDefault');
+late final _CPersonalDataCollectionConsentMakeDefault = _CPersonalDataCollectionConsentMakeDefaultPtr.asFunction<_CPersonalDataCollectionConsent Function()>();
 late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr = _lookup<ffi.NativeFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>>('CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider');
 late final _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProvider = _CFunction_G_makeSystemContext_With_CKeySource_CHttpOptions_CLogOptions_CPersonalDataCollectionConsent_CVendorConfig_COptional_CLocationProvider_COptional_CHeadingProviderPtr.asFunction<_CResult_CContext Function(_CKeySource, _CHttpOptions, _CLogOptions, _CPersonalDataCollectionConsent, _CVendorConfig, _COptional_CLocationProvider, _COptional_CHeadingProvider)>();
 
 late final _CResult_CContext_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CContext)>>('CResult_CContext_release');
 late final _CResult_CContext_release = _CResult_CContext_releasePtr.asFunction<void Function(_CResult_CContext)>();
+
+late final _CStringCreateWithDataPtr = _lookup<ffi.NativeFunction<_CString Function(ffi.Size size, ffi.Pointer<ffi_package.Utf8>)>>('CString_createWithData');
+late final _CStringCreateWithDataPrivate = _CStringCreateWithDataPtr.asFunction<_CString Function(int, ffi.Pointer<ffi_package.Utf8>)>();
+late final _GetSizeWith_CStringPtr = _lookup<ffi.NativeFunction<ffi.Size Function(_CString)>>('CString_getSize');
+late final _GetSizeWith_CString = _GetSizeWith_CStringPtr.asFunction<int Function(_CString)>();
+late final _GetDataWith_CStringPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi_package.Utf8> Function(_CString)>>('CString_getData');
+late final _GetDataWith_CString = _GetDataWith_CStringPtr.asFunction<ffi.Pointer<ffi_package.Utf8> Function(_CString)>();
+late final _CString_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CString)>>('CString_release');
+late final _CString_release = _CString_releasePtr.asFunction<void Function(_CString)>();
 
 late final _CKeyFromAssetMakeDefaultPtr = _lookup<ffi.NativeFunction<_CKeyFromAsset Function()>>('CKeyFromAssetMakeDefault');
 late final _CKeyFromAssetMakeDefault = _CKeyFromAssetMakeDefaultPtr.asFunction<_CKeyFromAsset Function()>();
@@ -80898,6 +81091,66 @@ late final _COptional_CHeadingAvailableNotifierMakeDefault = _COptional_CHeading
 
 late final _COptional_CHeadingAvailableNotifier_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CHeadingAvailableNotifier)>>('COptional_CHeadingAvailableNotifier_release');
 late final _COptional_CHeadingAvailableNotifier_release = _COptional_CHeadingAvailableNotifier_releasePtr.asFunction<void Function(_COptional_CHeadingAvailableNotifier)>();
+
+late final _CBuildingIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CBuildingId Function()>>('CBuildingIdMakeDefault');
+late final _CBuildingIdMakeDefault = _CBuildingIdMakeDefaultPtr.asFunction<_CBuildingId Function()>();
+
+
+late final _CColorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CColor Function()>>('CColorMakeDefault');
+late final _CColorMakeDefault = _CColorMakeDefaultPtr.asFunction<_CColor Function()>();
+
+
+late final _CDayTimeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDayTime Function()>>('CDayTimeMakeDefault');
+late final _CDayTimeMakeDefault = _CDayTimeMakeDefaultPtr.asFunction<_CDayTime Function()>();
+
+
+late final _CDgisObjectIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDgisObjectId Function()>>('CDgisObjectIdMakeDefault');
+late final _CDgisObjectIdMakeDefault = _CDgisObjectIdMakeDefaultPtr.asFunction<_CDgisObjectId Function()>();
+
+
+late final _CSystemMemoryManager_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_cg_objectIdentifier');
+late final _CSystemMemoryManager_cg_objectIdentifier = _CSystemMemoryManager_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CSystemMemoryManager_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(_CContext)>>('CSystemMemoryManager_S_instance_CContext');
+late final _CSystemMemoryManager_S_instance_CContext = _CSystemMemoryManager_S_instance_CContextPtr.asFunction<_CSystemMemoryManager Function(_CContext)>();
+late final _CSystemMemoryManager_reduceMemoryUsagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CSystemMemoryManager)>>('CSystemMemoryManager_reduceMemoryUsage');
+late final _CSystemMemoryManager_reduceMemoryUsage = _CSystemMemoryManager_reduceMemoryUsagePtr.asFunction<void Function(_CSystemMemoryManager)>();
+
+late final _CSystemMemoryManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_release');
+late final _CSystemMemoryManager_release = _CSystemMemoryManager_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CSystemMemoryManager_retainPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>>('CSystemMemoryManager_retain');
+late final _CSystemMemoryManager_retain = _CSystemMemoryManager_retainPtr.asFunction<_CSystemMemoryManager Function(ffi.Pointer<ffi.Void>)>();
+late final _CSystemMemoryManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSystemMemoryManager Function()>>('CSystemMemoryManagerMakeDefault');
+late final _CSystemMemoryManagerMakeDefault = _CSystemMemoryManagerMakeDefaultPtr.asFunction<_CSystemMemoryManager Function()>();
+
+
+late final _CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelId Function()>>('CLevelIdMakeDefault');
+late final _CLevelIdMakeDefault = _CLevelIdMakeDefaultPtr.asFunction<_CLevelId Function()>();
+
+
+late final _COptional_CLevelIdMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CLevelId Function()>>('COptional_CLevelIdMakeDefault');
+late final _COptional_CLevelIdMakeDefault = _COptional_CLevelIdMakeDefaultPtr.asFunction<_COptional_CLevelId Function()>();
+
+late final _CArray_CLevelIdmakeEmptyPtr = _lookup<ffi.NativeFunction<_CArray_CLevelId Function()>>('CArray_CLevelId_makeEmpty');
+late final _CArray_CLevelIdmakeEmpty = _CArray_CLevelIdmakeEmptyPtr.asFunction<_CArray_CLevelId Function()>();
+late final _CArray_CLevelIdaddElementPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId, _CLevelId)>>('CArray_CLevelId_addElement');
+late final _CArray_CLevelIdaddElement = _CArray_CLevelIdaddElementPtr.asFunction<void Function(_CArray_CLevelId, _CLevelId)>();
+late final _forEach_CArray_CLevelIdPtr = _lookup<ffi.NativeFunction<
+  ffi.Void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)>>)
+>>('CArray_CLevelId_forEachWithFunctionPointer');
+late final _forEach_CArray_CLevelId = _forEach_CArray_CLevelIdPtr.asFunction<
+  void Function(_CArray_CLevelId, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLevelId)
+>>)>();
+late final _CArray_CLevelId_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CLevelId)>>('CArray_CLevelId_release');
+late final _CArray_CLevelId_release = _CArray_CLevelId_releasePtr.asFunction<void Function(_CArray_CLevelId)>();
+
+late final _CLevelInfoMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLevelInfo Function()>>('CLevelInfoMakeDefault');
+late final _CLevelInfoMakeDefault = _CLevelInfoMakeDefaultPtr.asFunction<_CLevelInfo Function()>();
+
+
+late final _CMeterMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMeter Function()>>('CMeterMakeDefault');
+late final _CMeterMakeDefault = _CMeterMakeDefaultPtr.asFunction<_CMeter Function()>();
+
 
 late final _CScreenDistanceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CScreenDistance Function()>>('CScreenDistanceMakeDefault');
 late final _CScreenDistanceMakeDefault = _CScreenDistanceMakeDefaultPtr.asFunction<_CScreenDistance Function()>();
@@ -86090,6 +86343,9 @@ late final _CResult_CPolyline_release = _CResult_CPolyline_releasePtr.asFunction
 
 late final _CCameraFollowStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCameraFollowState Function()>>('CCameraFollowStateMakeDefault');
 late final _CCameraFollowStateMakeDefault = _CCameraFollowStateMakeDefaultPtr.asFunction<_CCameraFollowState Function()>();
+
+late final _CLocationQualityMakeDefaultPtr = _lookup<ffi.NativeFunction<_CLocationQuality Function()>>('CLocationQualityMakeDefault');
+late final _CLocationQualityMakeDefault = _CLocationQualityMakeDefaultPtr.asFunction<_CLocationQuality Function()>();
 late final _CMyLocationControlModel_isEnabledChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_bool Function(_CMyLocationControlModel)>>('CMyLocationControlModel_isEnabledChannel');
 late final _CMyLocationControlModel_isEnabledChannel = _CMyLocationControlModel_isEnabledChannelPtr.asFunction<_CStatefulChannel_bool Function(_CMyLocationControlModel)>();
 late final _CMyLocationControlModel_isEnabledPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CMyLocationControlModel)>>('CMyLocationControlModel_isEnabled');
@@ -86098,6 +86354,10 @@ late final _CMyLocationControlModel_followStateChannelPtr = _lookup<ffi.NativeFu
 late final _CMyLocationControlModel_followStateChannel = _CMyLocationControlModel_followStateChannelPtr.asFunction<_CStatefulChannel_CCameraFollowState Function(_CMyLocationControlModel)>();
 late final _CMyLocationControlModel_followStatePtr = _lookup<ffi.NativeFunction<_CCameraFollowState Function(_CMyLocationControlModel)>>('CMyLocationControlModel_followState');
 late final _CMyLocationControlModel_followState = _CMyLocationControlModel_followStatePtr.asFunction<_CCameraFollowState Function(_CMyLocationControlModel)>();
+late final _CMyLocationControlModel_locationQualityChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CLocationQuality Function(_CMyLocationControlModel)>>('CMyLocationControlModel_locationQualityChannel');
+late final _CMyLocationControlModel_locationQualityChannel = _CMyLocationControlModel_locationQualityChannelPtr.asFunction<_CStatefulChannel_CLocationQuality Function(_CMyLocationControlModel)>();
+late final _CMyLocationControlModel_locationQualityPtr = _lookup<ffi.NativeFunction<_CLocationQuality Function(_CMyLocationControlModel)>>('CMyLocationControlModel_locationQuality');
+late final _CMyLocationControlModel_locationQuality = _CMyLocationControlModel_locationQualityPtr.asFunction<_CLocationQuality Function(_CMyLocationControlModel)>();
 
 late final _CMyLocationControlModel_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMyLocationControlModel_cg_objectIdentifier');
 late final _CMyLocationControlModel_cg_objectIdentifier = _CMyLocationControlModel_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -86135,6 +86395,29 @@ late final _CStatefulChannel_CCameraFollowStateConnect = _CStatefulChannel_CCame
     _CStatefulChannel_CCameraFollowState,
     int,
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CCameraFollowState, ffi.Int64)>>
+  )
+>();
+
+late final _CStatefulChannel_CLocationQualityMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CLocationQuality Function()>>('CStatefulChannel_CLocationQualityMakeDefault');
+late final _CStatefulChannel_CLocationQualityMakeDefault = _CStatefulChannel_CLocationQualityMakeDefaultPtr.asFunction<_CStatefulChannel_CLocationQuality Function()>();
+late final _CStatefulChannel_CLocationQuality_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CLocationQuality)>>('CStatefulChannel_CLocationQuality_release');
+late final _CStatefulChannel_CLocationQuality_release = _CStatefulChannel_CLocationQuality_releasePtr.asFunction<void Function(_CStatefulChannel_CLocationQuality)>();
+late final _CStatefulChannel_CLocationQuality_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CLocationQuality Function(_CStatefulChannel_CLocationQuality)>>('CStatefulChannel_CLocationQuality_retain');
+late final _CStatefulChannel_CLocationQuality_retain = _CStatefulChannel_CLocationQuality_retainPtr.asFunction<_CStatefulChannel_CLocationQuality Function(_CStatefulChannel_CLocationQuality)>();
+late final _CStatefulChannel_CLocationQualityGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CLocationQuality Function(_CStatefulChannel_CLocationQuality)>>('CStatefulChannel_CLocationQuality_getCurrentValue');
+late final _CStatefulChannel_CLocationQualityGetCurrentValue = _CStatefulChannel_CLocationQualityGetCurrentValuePtr.asFunction<_CLocationQuality Function(_CStatefulChannel_CLocationQuality)>();
+late final _CStatefulChannel_CLocationQualityConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CLocationQuality,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLocationQuality, ffi.Int64)>>
+  )
+>>('CStatefulChannel_CLocationQuality_connect');
+late final _CStatefulChannel_CLocationQualityConnect = _CStatefulChannel_CLocationQualityConnectPtr.asFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CLocationQuality,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CLocationQuality, ffi.Int64)>>
   )
 >();
 late final _CCompassControlModel_bearingChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CBearing Function(_CCompassControlModel)>>('CCompassControlModel_bearingChannel');
@@ -91058,6 +91341,8 @@ late final _CLocationService_onPermissionGrantedPtr = _lookup<ffi.NativeFunction
 late final _CLocationService_onPermissionGranted = _CLocationService_onPermissionGrantedPtr.asFunction<void Function(_CLocationService)>();
 late final _CLocationService_C_createWith_CContextPtr = _lookup<ffi.NativeFunction<_CLocationService Function(_CContext)>>('CLocationService_C_createWith_CContext');
 late final _CLocationService_C_createWith_CContext = _CLocationService_C_createWith_CContextPtr.asFunction<_CLocationService Function(_CContext)>();
+late final _CLocationService_C_createWith_CContext_CDesiredAccuracyPtr = _lookup<ffi.NativeFunction<_CLocationService Function(_CContext, _CDesiredAccuracy)>>('CLocationService_C_createWith_CContext_CDesiredAccuracy');
+late final _CLocationService_C_createWith_CContext_CDesiredAccuracy = _CLocationService_C_createWith_CContext_CDesiredAccuracyPtr.asFunction<_CLocationService Function(_CContext, _CDesiredAccuracy)>();
 
 late final _CLocationService_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CLocationService_release');
 late final _CLocationService_release = _CLocationService_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
@@ -91685,4 +91970,4 @@ late final _CStatefulChannel_CArray_CTerritoryConnect = _CStatefulChannel_CArray
   )
 >();
 
-//ApplicationState, BaseCameraInternalMethods, ContextObserver, ContextTaggedPointerSnapshot, ContextTaggedPointersProvider, ContextTaggedPointersProviderInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, toLocaleManager
+//ApplicationState, BaseCameraInternalMethods, BssEventsSourceClearGuard, ContextObserver, ContextTaggedPointerSnapshot, ContextTaggedPointersProvider, ContextTaggedPointersProviderInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, setupBssEventsSourceFromSdk, toLocaleManager

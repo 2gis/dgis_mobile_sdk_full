@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
+import '../../../platform/bss_events_source.dart';
 import './traffic_model.dart';
 
 // Controller for managing traffic visualization and traffic intensity monitoring on the map.
@@ -63,7 +64,8 @@ class TrafficController {
   }
 
   void _init() {
-    _trafficModel = sdk.TrafficControlModel(map);
+    _trafficModel =
+        withBssEventsSourceFromSdk(() => sdk.TrafficControlModel(map));
     _model = ValueNotifier(
       TrafficModel(
         score: _trafficModel.state.score,
@@ -77,7 +79,7 @@ class TrafficController {
   }
 
   void toggleTraffic() {
-    _trafficModel.onClicked();
+    withBssEventsSourceFromSdk(_trafficModel.onClicked);
   }
 
   void dispose() {

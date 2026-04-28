@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
+import '../../platform/bss_events_source.dart';
 import '../../util/plugin_name.dart';
 import '../widget_shadows.dart';
 
@@ -59,7 +60,7 @@ class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
 
   @override
   void onAttachedToMap(sdk.Map map) {
-    model = sdk.MyLocationControlModel(map);
+    model = withBssEventsSourceFromSdk(() => sdk.MyLocationControlModel(map));
     isEnabledSuscription =
         model.isEnabledChannel.listen((state) => isEnabled.value = state);
     followStateSubscription =
