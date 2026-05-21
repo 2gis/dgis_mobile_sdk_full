@@ -28,13 +28,13 @@ class ModernCompassWidget
   /// Default color scheme of the UI element for light mode.
   static const ModernCompassWidgetColorScheme defaultLightColorScheme =
       ModernCompassWidgetColorScheme(
-    surfaceColor: Color(0xFFFFFFFF),
+    surfaceColor: Color(0x80FFFFFF),
   );
 
   /// Default color scheme of the UI element for dark mode.
   static const ModernCompassWidgetColorScheme defaultDarkColorScheme =
       ModernCompassWidgetColorScheme(
-    surfaceColor: Color(0xFF141414),
+    surfaceColor: Color(0x80141414),
   );
 
   @override

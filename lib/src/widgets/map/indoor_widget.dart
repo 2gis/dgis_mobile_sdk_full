@@ -144,7 +144,7 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                           children: [
                             Material(
                               type: MaterialType.transparency,
-                              child: ListTile(
+                              child: InkWell(
                                 onTap: () {
                                   withBssEventsSourceFromSdk(
                                     () => model.activeLevelIndex = index,
@@ -154,23 +154,24 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
                                     singleElementHeight,
                                   );
                                 },
-                                contentPadding: EdgeInsets.zero,
-                                textColor: colorScheme.floorTextColor,
                                 splashColor: colorScheme.selectedFloorColor,
-                                selectedColor: colorScheme.floorTextColor,
-                                selected: isSelected,
-                                minTileHeight: singleElementHeight,
-                                tileColor: Colors.transparent,
-                                selectedTileColor:
-                                    colorScheme.selectedFloorColor,
-                                title: Align(
-                                  child: Text(
-                                    maxLines: 1,
-                                    softWrap: true,
-                                    levels[index],
+                                child: Container(
+                                  width: widgetWidth,
+                                  height: singleElementHeight,
+                                  color: isSelected
+                                      ? colorScheme.selectedFloorColor
+                                      : Colors.transparent,
+                                  child: Center(
+                                    child: Text(
+                                      levels[index],
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        color: colorScheme.floorTextColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                visualDensity: VisualDensity.compact,
                               ),
                             ),
                             if (withBssEventsSourceFromSdk(

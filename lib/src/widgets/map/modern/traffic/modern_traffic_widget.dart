@@ -39,24 +39,24 @@ class ModernTrafficWidget
     loaderColor: DgisColorScheme.trafficGreen,
     trafficColor: ColorRamp(
       colors: [
-        ColorMark(color: DgisColorScheme.trafficGreen, maxValue: 3),
-        ColorMark(color: DgisColorScheme.trafficYellow, maxValue: 6),
-        ColorMark(color: DgisColorScheme.trafficRed, maxValue: 999),
+        ColorMark(color: DgisColorScheme.modernTrafficGreenLight, maxValue: 3),
+        ColorMark(color: DgisColorScheme.modernTrafficYellowLight, maxValue: 6),
+        ColorMark(color: DgisColorScheme.modernTrafficRedLight, maxValue: 999),
       ],
     ),
     scoreTextStyle: TextStyle(
       leadingDistribution: TextLeadingDistribution.even,
       height: 1,
       color: Color(0xFF141414),
-      fontSize: 19,
+      fontSize: 16,
     ),
     scoreTextStyleEnabled: TextStyle(
       leadingDistribution: TextLeadingDistribution.even,
       height: 1,
       color: Color(0xFFFFFFFF),
-      fontSize: 19,
+      fontSize: 16,
     ),
-    scoreStrokeSize: Size(24, 24),
+    scoreStrokeSize: Size(28, 28),
     borderWidth: 2,
     iconSize: 24,
   );
@@ -72,24 +72,24 @@ class ModernTrafficWidget
     loaderColor: DgisColorScheme.trafficGreen,
     trafficColor: ColorRamp(
       colors: [
-        ColorMark(color: DgisColorScheme.trafficGreen, maxValue: 3),
-        ColorMark(color: DgisColorScheme.trafficYellow, maxValue: 6),
-        ColorMark(color: DgisColorScheme.trafficRed, maxValue: 999),
+        ColorMark(color: DgisColorScheme.modernTrafficGreenDark, maxValue: 3),
+        ColorMark(color: DgisColorScheme.modernTrafficYellowDark, maxValue: 6),
+        ColorMark(color: DgisColorScheme.modernTrafficRedDark, maxValue: 999),
       ],
     ),
     scoreTextStyle: TextStyle(
       leadingDistribution: TextLeadingDistribution.even,
       height: 1,
       color: Color(0xFFFFFFFF),
-      fontSize: 19,
+      fontSize: 16,
     ),
     scoreTextStyleEnabled: TextStyle(
       leadingDistribution: TextLeadingDistribution.even,
       height: 1,
       color: Color(0xFF141414),
-      fontSize: 19,
+      fontSize: 16,
     ),
-    scoreStrokeSize: Size(24, 24),
+    scoreStrokeSize: Size(28, 28),
     borderWidth: 2,
     iconSize: 24,
   );
@@ -220,6 +220,12 @@ class _ModernTrafficWidgetState extends ThemedMapControllingWidgetState<
         child: Text(
           currentState!.score.toString(),
           textAlign: TextAlign.center,
+          strutStyle: const StrutStyle(
+            forceStrutHeight: true,
+            height: 1,
+            fontSize: 16,
+            leading: 0,
+          ),
           style: currentState.status == sdk.TrafficControlStatus.enabled
               ? colorScheme.scoreTextStyleEnabled
               : colorScheme.scoreTextStyle,

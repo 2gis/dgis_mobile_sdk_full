@@ -40,4 +40,10 @@ class DgisColorScheme {
   static const Color whiteSevenPercent = Color(0xFF3b3b3b);
   static const Color veryDimmedGray = Color(0xFFF1F1F1);
   static const Color veryDarkGrey = Color(0xFF212121);
+  static const Color modernTrafficGreenLight = Color(0xFF1BA136);
+  static const Color modernTrafficYellowLight = Color(0xFFEFA701);
+  static const Color modernTrafficRedLight = Color(0xFFF5373C);
+  static const Color modernTrafficGreenDark = Color(0xFF26C947);
+  static const Color modernTrafficYellowDark = Color(0xFFFFC94D);
+  static const Color modernTrafficRedDark = Color(0xFFF95357);
 }
