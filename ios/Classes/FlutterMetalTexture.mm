@@ -26,6 +26,7 @@
 	{
 		_flutterTextureRegistry = flutterTextureRegistry;
 		_lock = lock;
+		_flutterTextureId = NSNotFound;
 	}
 	return self;
 }
@@ -39,15 +40,24 @@
 
 - (void)present
 {
-	[self.lock lock];
-	NSInteger textureId = _flutterTextureId;
-	id<FlutterTextureRegistry> registry = _flutterTextureRegistry;
-	[self.lock unlock];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive)
+		{
+			return;
+		}
 
-	if (registry && textureId != NSNotFound)
-	{
+		[self.lock lock];
+		NSInteger textureId = self.flutterTextureId;
+		id<FlutterTextureRegistry> registry = self.flutterTextureRegistry;
+		[self.lock unlock];
+
+		if (!registry || textureId == NSNotFound)
+		{
+			return;
+		}
+
 		[registry textureFrameAvailable:textureId];
-	}
+	});
 }
 
 @end
@@ -98,6 +108,11 @@
 		_metalLayerProvider,
 		static_cast<unsigned>(width),
 		static_cast<unsigned>(height));
+}
+
+- (void)invalidateFlutterTextureId
+{
+	[_presenter setFlutterTextureId:NSNotFound];
 }
 
 @end

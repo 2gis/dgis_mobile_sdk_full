@@ -79,14 +79,13 @@ NSInteger const kDefaultSize = 100;
 																				 height:kDefaultSize];
 
 			NSInteger textureId = [self.flutterTextureRegistry registerTexture:texture];
-			texture.flutterTextureId = textureId;
 
 			[texture setMetalTextureToMapWithSurfaceId:mapSurfaceIdInt
 									  flutterTextureId:textureId
 												 width:kDefaultSize
 												height:kDefaultSize];
 
-			NSNumber * registeredTextureId = @(texture.flutterTextureId);
+			NSNumber * registeredTextureId = @(textureId);
 			self.renders[registeredTextureId] = texture;
 			result(registeredTextureId);
 		}
@@ -109,9 +108,7 @@ NSInteger const kDefaultSize = 100;
 				FlutterMetalTexture * texture = self.renders[textureId];
 				if (texture)
 				{
-					[texture.lock lock];
-					texture.flutterTextureId = NSNotFound;
-					[texture.lock unlock];
+					[texture invalidateFlutterTextureId];
 				}
 
 				[self.renders removeObjectForKey:textureId];

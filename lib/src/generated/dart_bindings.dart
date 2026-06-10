@@ -15266,8 +15266,12 @@ extension _CFuture_COptional_CPublicTransportDirectoryScheduleInfoToDart on _CFu
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -15574,8 +15578,12 @@ extension _CFuture_COptional_CPageToDart on _CFuture_COptional_CPage {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -17445,8 +17453,12 @@ extension _CFuture_COptional_CArray_CItemMarkerInfoToDart on _CFuture_COptional_
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -17668,8 +17680,12 @@ extension _CFuture_CArray_CUIMarkerInfoToDart on _CFuture_CArray_CUIMarkerInfo {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -19161,8 +19177,12 @@ extension _CFuture_CSuggestResultToDart on _CFuture_CSuggestResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -19262,8 +19282,12 @@ extension _CFuture_CSearchResultToDart on _CFuture_CSearchResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -19363,8 +19387,12 @@ extension _CFuture_COptional_CDirectoryObjectToDart on _CFuture_COptional_CDirec
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -21515,8 +21543,12 @@ extension _CFuture_CSearchHistoryResultToDart on _CFuture_CSearchHistoryResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -21588,16 +21620,21 @@ class _CChannel_CChangeTypeImpl extends Channel<ChangeType> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CChangeType, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<ChangeType>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -22440,8 +22477,12 @@ extension _CFuture_CDataToDart on _CFuture_CData {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -27315,16 +27356,21 @@ class _CChannel_CArray_CStringImpl extends Channel<List<String>> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CString, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<String>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -27903,16 +27949,21 @@ class _CStatefulChannel_CGeometryImpl extends StatefulChannel<Geometry> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CGeometry, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<Geometry>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -27989,16 +28040,21 @@ class _CStatefulChannel_boolImpl extends StatefulChannel<bool> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<bool>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -28573,16 +28629,21 @@ class _CStatefulChannel_CArray_CDgisObjectIdImpl extends StatefulChannel<List<Dg
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CDgisObjectId, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<DgisObjectId>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -31439,8 +31500,12 @@ extension _CFuture_CArray_CRoadEventPhotoToDart on _CFuture_CArray_CRoadEventPho
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -31750,8 +31815,12 @@ extension _CFuture_CActionResultToDart on _CFuture_CActionResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -32122,16 +32191,21 @@ class _CStatefulChannel_CRoadEventActionInfoImpl extends StatefulChannel<RoadEve
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRoadEventActionInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RoadEventActionInfo>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -34955,7 +35029,7 @@ class CameraZoomRestrictions {
   final Zoom maxZoom;
 
   const CameraZoomRestrictions({
-    this.minZoom = const Zoom(0),
+    this.minZoom = const Zoom(2),
     this.maxZoom = const Zoom(20)
   });
 
@@ -35701,16 +35775,21 @@ class _CStatefulChannel_uint64_tImpl extends StatefulChannel<int> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Uint64, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<int>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -35787,16 +35866,21 @@ class _CStatefulChannel_CIndoorBuildingModeImpl extends StatefulChannel<IndoorBu
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CIndoorBuildingMode, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<IndoorBuildingMode>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -36017,16 +36101,21 @@ class _CStatefulChannel_COptional_CIndoorBuildingImpl extends StatefulChannel<In
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CIndoorBuilding, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<IndoorBuilding?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -36278,16 +36367,21 @@ class _CStatefulChannel_COptional_uint64_tImpl extends StatefulChannel<int?> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_uint64_t, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<int?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -36407,16 +36501,21 @@ class _CStatefulChannel_CArray_CStringImpl extends StatefulChannel<List<String>>
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CString, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<String>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37213,8 +37312,12 @@ extension _CFuture_CCameraAnimatedMoveResultToDart on _CFuture_CCameraAnimatedMo
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -37255,16 +37358,21 @@ class _CStatefulChannel_CMapDataLoadingStateImpl extends StatefulChannel<MapData
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CMapDataLoadingState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<MapDataLoadingState>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37341,16 +37449,21 @@ class _CStatefulChannel_CStyleImpl extends StatefulChannel<Style> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CStyle, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<Style>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37427,16 +37540,21 @@ class _CStatefulChannel_floatImpl extends StatefulChannel<double> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Float, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<double>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37615,8 +37733,12 @@ extension _CFuture_CArray_CRenderedObjectInfoToDart on _CFuture_CArray_CRendered
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -37777,16 +37899,21 @@ class _CStatefulChannel_CMapVisibilityStateImpl extends StatefulChannel<MapVisib
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CMapVisibilityState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<MapVisibilityState>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37858,16 +37985,21 @@ class _CChannel_boolImpl extends Channel<bool> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<bool>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -37937,16 +38069,21 @@ class _CStatefulChannel_CProductTypeImpl extends StatefulChannel<ProductType> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CProductType, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<ProductType>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -38061,16 +38198,21 @@ class _CStatefulChannel_COptional_CGraphicsPresetImpl extends StatefulChannel<Gr
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CGraphicsPreset, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<GraphicsPreset?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -38242,8 +38384,12 @@ extension _CFuture_COptional_CRenderedObjectInfoToDart on _CFuture_COptional_CRe
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -38871,16 +39017,21 @@ class _CChannel_CCameraChangeImpl extends Channel<CameraChange> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraChange, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<CameraChange>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -42641,16 +42792,21 @@ class _CStatefulChannel_CCameraFollowStateImpl extends StatefulChannel<CameraFol
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CCameraFollowState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<CameraFollowState>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -42727,16 +42883,21 @@ class _CStatefulChannel_CLocationQualityImpl extends StatefulChannel<LocationQua
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CLocationQuality, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<LocationQuality>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -42915,16 +43076,21 @@ class _CStatefulChannel_CBearingImpl extends StatefulChannel<Bearing> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CBearing, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<Bearing>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -44751,6 +44917,738 @@ extension _CResult_CPackedMapStateToDart on _CResult_CPackedMapState {
     } else {
       throw this._impl._error._toDart();
     }
+  }
+}
+	
+// MARK: - Fps
+
+/** Frames per second, частота кадров. */
+class Fps {
+  final int value;
+
+  const Fps([this.value = 0]);
+
+  Fps copyWith({
+    int? value
+  }) {
+    return Fps(
+      value ?? this.value
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is Fps &&
+    other.runtimeType == runtimeType &&
+    other.value == value;
+
+  @override
+  int get hashCode {
+    return value.hashCode;
+  }
+
+}
+final class _CFps extends ffi.Struct {
+  @ffi.Uint32()
+  external int value;
+
+}
+// MARK: - Fps <-> _CFps
+
+extension _CFpsToDart on _CFps {
+  Fps _toDart() {
+    return Fps(
+      this.value
+    );
+  }
+}
+
+extension _DartTo_CFps on Fps {
+  _CFps _copyFromDartTo_CFps() {
+    final res = _CFpsMakeDefault();
+    res.value = this.value;
+    return res;
+  }
+}
+extension _CFpsRelease on _CFps {
+  void _releaseIntermediate() {
+  }
+}
+
+// MARK: - CameraPosition? <-> _COptional_CCameraPosition
+
+final class _COptional_CCameraPosition extends ffi.Struct {
+  
+  external _CCameraPosition value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CCameraPositionBasicFunctions on _COptional_CCameraPosition {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CCameraPositionToDart on _COptional_CCameraPosition {
+  CameraPosition? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CCameraPosition on CameraPosition? {
+  _COptional_CCameraPosition _copyFromDartTo_COptional_CCameraPosition() {
+    final cOptional = _COptional_CCameraPositionMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CCameraPosition();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - Fps? <-> _COptional_CFps
+
+final class _COptional_CFps extends ffi.Struct {
+  
+  external _CFps value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CFpsBasicFunctions on _COptional_CFps {
+  void _releaseIntermediate() {
+    
+  }
+}
+
+extension _COptional_CFpsToDart on _COptional_CFps {
+  Fps? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CFps on Fps? {
+  _COptional_CFps _copyFromDartTo_COptional_CFps() {
+    final cOptional = _COptional_CFpsMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CFps();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - MapControllerOptions
+
+class MapControllerOptions {
+  /** Начальная позиция камеры. Не задано: позиция по умолчанию. */
+  final CameraPosition? position;
+  /** Источники данных, добавляемые на карту при создании. */
+  final List<Source> sources;
+  /** Атрибуты карты, применяемые при создании. */
+  final core.Map<String, AttributeValue> attributes;
+  /** Множитель размера иконок и шрифтов. Не задано: множитель не применяется. */
+  final double? fontIconSizeMultiplier;
+  /** Графический пресет качества. Не задано: пресет по умолчанию. */
+  final GraphicsPreset? graphicsPreset;
+  /** Ограничение частоты кадров. Не задано: ограничения нет. */
+  final Fps? maxFps;
+  /** Ограничение частоты кадров в режиме энергосбережения. Не задано: ограничения нет. */
+  final Fps? powerSavingMaxFps;
+
+  const MapControllerOptions({
+    this.position = null,
+    this.sources = const [],
+    this.attributes = const {},
+    this.fontIconSizeMultiplier = null,
+    this.graphicsPreset = null,
+    this.maxFps = null,
+    this.powerSavingMaxFps = null
+  });
+
+  MapControllerOptions copyWith({
+    Optional<CameraPosition?>? position,
+    List<Source>? sources,
+    core.Map<String, AttributeValue>? attributes,
+    Optional<double?>? fontIconSizeMultiplier,
+    Optional<GraphicsPreset?>? graphicsPreset,
+    Optional<Fps?>? maxFps,
+    Optional<Fps?>? powerSavingMaxFps
+  }) {
+    return MapControllerOptions(
+      position: position != null ? position.value : this.position,
+      sources: sources ?? this.sources,
+      attributes: attributes ?? this.attributes,
+      fontIconSizeMultiplier: fontIconSizeMultiplier != null ? fontIconSizeMultiplier.value : this.fontIconSizeMultiplier,
+      graphicsPreset: graphicsPreset != null ? graphicsPreset.value : this.graphicsPreset,
+      maxFps: maxFps != null ? maxFps.value : this.maxFps,
+      powerSavingMaxFps: powerSavingMaxFps != null ? powerSavingMaxFps.value : this.powerSavingMaxFps
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MapControllerOptions &&
+    other.runtimeType == runtimeType &&
+    other.position == position &&
+    other.sources == sources &&
+    other.attributes == attributes &&
+    other.fontIconSizeMultiplier == fontIconSizeMultiplier &&
+    other.graphicsPreset == graphicsPreset &&
+    other.maxFps == maxFps &&
+    other.powerSavingMaxFps == powerSavingMaxFps;
+
+  @override
+  int get hashCode {
+    return Object.hash(position, sources, attributes, fontIconSizeMultiplier, graphicsPreset, maxFps, powerSavingMaxFps);
+  }
+
+}
+final class _CMapControllerOptions extends ffi.Struct {
+  external _COptional_CCameraPosition position;
+
+  external _CArray_CSource sources;
+
+  external _CDictionary_CString_CAttributeValue attributes;
+
+  external _COptional_float fontIconSizeMultiplier;
+
+  external _COptional_CGraphicsPreset graphicsPreset;
+
+  external _COptional_CFps maxFps;
+
+  external _COptional_CFps powerSavingMaxFps;
+
+}
+// MARK: - MapControllerOptions <-> _CMapControllerOptions
+
+extension _CMapControllerOptionsToDart on _CMapControllerOptions {
+  MapControllerOptions _toDart() {
+    return MapControllerOptions(
+      position: this.position._toDart(),
+      sources: this.sources._toDart(),
+      attributes: this.attributes._toDart(),
+      fontIconSizeMultiplier: this.fontIconSizeMultiplier._toDart(),
+      graphicsPreset: this.graphicsPreset._toDart(),
+      maxFps: this.maxFps._toDart(),
+      powerSavingMaxFps: this.powerSavingMaxFps._toDart()
+    );
+  }
+}
+
+extension _DartTo_CMapControllerOptions on MapControllerOptions {
+  _CMapControllerOptions _copyFromDartTo_CMapControllerOptions() {
+    final res = _CMapControllerOptionsMakeDefault();
+    res.position = this.position._copyFromDartTo_COptional_CCameraPosition();
+    res.sources = this.sources._copyFromDartTo_CArray_CSource();
+    res.attributes = this.attributes._copyFromDartTo_CDictionary_CString_CAttributeValue();
+    res.fontIconSizeMultiplier = this.fontIconSizeMultiplier._copyFromDartTo_COptional_float();
+    res.graphicsPreset = this.graphicsPreset._copyFromDartTo_COptional_CGraphicsPreset();
+    res.maxFps = this.maxFps._copyFromDartTo_COptional_CFps();
+    res.powerSavingMaxFps = this.powerSavingMaxFps._copyFromDartTo_COptional_CFps();
+    return res;
+  }
+}
+extension _CMapControllerOptionsRelease on _CMapControllerOptions {
+  void _releaseIntermediate() {
+    sources._releaseIntermediate();
+    attributes._releaseIntermediate();
+  }
+}
+
+// MARK: - MapRenderer
+
+/** Создание этого объекта приводит к началу рисования карты. */
+class MapRenderer implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  Fps? get maxFps {
+    _COptional_CFps res = _CMapRenderer_maxFps(_CMapRendererMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  Fps? get powerSavingMaxFps {
+    _COptional_CFps res = _CMapRenderer_powerSavingMaxFps(_CMapRendererMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+  StatefulChannel<Fps> get fpsChannel {
+    _CStatefulChannel_CFps res = _CMapRenderer_fpsChannel(_CMapRendererMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  Fps get fps {
+    _CFps res = _CMapRenderer_fps(_CMapRendererMakeDefault().._impl=_self);
+    return res._toDart();
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CMapRenderer_releasePtr);
+
+  MapRenderer._raw(this._self);
+  factory MapRenderer._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MapRenderer._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory MapRenderer.fromMessage(ClassMessage<MapRenderer> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapRenderer._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MapRenderer &&
+    other.runtimeType == runtimeType &&
+    _CMapRenderer_cg_objectIdentifier(this._self) == _CMapRenderer_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMapRenderer_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CMapRenderer: Static Methods
+
+  @internal
+  static MapRenderer create(
+    Map map
+  )  {
+    var _a0 = map._copyFromDartTo_CMap();
+    _CMapRenderer res = _CMapRenderer_S_create_CMap(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  // MARK: MapRenderer: Methods
+
+  void setMaxFps(
+    Fps? maxFps,
+    Fps? powerSavingMaxFps
+  )  {
+    var _a1 = maxFps._copyFromDartTo_COptional_CFps();
+    var _a2 = powerSavingMaxFps._copyFromDartTo_COptional_CFps();
+    void res = _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps(_CMapRendererMakeDefault().._impl=_self, _a1, _a2);
+    return res;
+  }
+
+  CancelableOperation<ImageData> takeSnapshot(
+    Alignment copyrightAlign
+  )  {
+    var _a1 = copyrightAlign._copyFromDartTo_CAlignment();
+    _CFuture_CImageData res = _CMapRenderer_takeSnapshot_CAlignment(_CMapRendererMakeDefault().._impl=_self, _a1);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+@internal
+extension MapRendererInternalMethods on MapRenderer {
+  @internal
+  CancelableOperation<bool> waitForLoading()  {
+    _CFuture_bool res = _CMapRenderer_waitForLoading(_CMapRendererMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  @internal
+  CancelableOperation<bool> waitForRendering()  {
+    _CFuture_bool res = _CMapRenderer_waitForRendering(_CMapRendererMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+extension MapRendererToClassMessage on MapRenderer {
+  ClassMessage<MapRenderer> message() {
+    final res = (_CMapRendererMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapRenderer>(res._impl.address, _CMapRenderer_release);
+  }
+}
+
+// MARK: - MapRenderer <-> CMapRenderer
+
+final class _CMapRenderer extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMapRendererBasicFunctions on _CMapRenderer {
+  void _releaseIntermediate() {
+    _CMapRenderer_release(_impl);
+  }
+
+  _CMapRenderer _retain() {
+    return _CMapRenderer_retain(_impl);
+  }
+}
+
+extension _CMapRendererToDart on _CMapRenderer {
+  MapRenderer _toDart() {
+    return MapRenderer._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMapRenderer on MapRenderer {
+  _CMapRenderer _copyFromDartTo_CMapRenderer() {
+    return (_CMapRendererMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - StatefulChannel<Fps> <-> _CStatefulChannel_CFps
+
+class _CStatefulChannel_CFpsImpl extends StatefulChannel<Fps> {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, StreamController<Fps>>{};
+
+  final _CStatefulChannel_CFps _channel;
+
+  _CStatefulChannel_CFpsImpl(this._channel);
+
+  @override
+  Fps get value {
+    return this._channel._getter();
+  }
+
+  static void valueFunction(_CFps cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.add(cValue._toDart());
+    }
+    
+  }
+
+  @override
+  StreamSubscription<Fps> listen(void onData(Fps event)?,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CFps, ffi.Int64)>.listener(valueFunction);
+    late final _CCancellable cancellable;
+    final streamController = new StreamController<Fps>(
+      onCancel: () {
+        instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
+      },
+    );
+    instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
+    return streamController.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError
+    );
+  }
+}
+
+final class _CStatefulChannel_CFps extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CStatefulChannel_CFpsBasicFunctions on _CStatefulChannel_CFps {
+  void _releaseIntermediate() {
+    _CStatefulChannel_CFps_release(this);
+  }
+
+  _CStatefulChannel_CFps _retain() {
+    return _CStatefulChannel_CFps_retain(this);
+  }
+
+  Fps _getter() {
+    final cValue = _CStatefulChannel_CFpsGetCurrentValue(this);
+    final res = cValue._toDart();
+    
+    return res;
+  }
+
+  _CCancellable _connect(int instanceId,
+      ffi.NativeCallable<ffi.Void Function(_CFps, ffi.Int64)> callback) {
+    return _CStatefulChannel_CFpsConnect(this, instanceId, callback.nativeFunction);
+  }
+}
+
+extension _CStatefulChannel_CFpsToDart on _CStatefulChannel_CFps {
+  StatefulChannel<Fps> _toDart() {
+    return _CStatefulChannel_CFpsImpl(this._retain());
+  }
+}
+
+extension _DartTo_CStatefulChannel_CFps on StatefulChannel<Fps> {
+  _CStatefulChannel_CFps _copyFromDartTo_CStatefulChannel_CFps() {
+    return _CStatefulChannel_CFpsMakeDefault();
+  }
+}
+	
+// MARK: - CancelableOperation<bool> <-> _CFuture_bool
+
+final class _CFuture_bool extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_bool_Cancellable {
+  final Completer<bool> completer;
+  final _CFuture_bool _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_bool_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_boolBasicFunctions on _CFuture_bool {
+  void _releaseIntermediate() {
+    _CFuture_bool_release(this);
+  }
+
+  _CFuture_bool _retain() {
+    return _CFuture_bool_retain(this);
+  }
+}
+
+extension _CFuture_boolToDart on _CFuture_bool {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_bool_Cancellable>{};
+
+  static void valueFunction(bool cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue);
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<bool> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<bool>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_boolReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_bool_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_bool on CancelableOperation<bool> {
+  _CFuture_bool _copyFromDartTo_CFuture_bool() {
+    return _CFuture_boolMakeDefault();
+  }
+}
+	
+// MARK: - CancelableOperation<ImageData> <-> _CFuture_CImageData
+
+final class _CFuture_CImageData extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_CImageData_Cancellable {
+  final Completer<ImageData> completer;
+  final _CFuture_CImageData _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_CImageData, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_CImageData_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_CImageDataBasicFunctions on _CFuture_CImageData {
+  void _releaseIntermediate() {
+    _CFuture_CImageData_release(this);
+  }
+
+  _CFuture_CImageData _retain() {
+    return _CFuture_CImageData_retain(this);
+  }
+}
+
+extension _CFuture_CImageDataToDart on _CFuture_CImageData {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_CImageData_Cancellable>{};
+
+  static void valueFunction(_CImageData cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<ImageData> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<ImageData>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CImageData, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_CImageDataReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_CImageData_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_CImageData on CancelableOperation<ImageData> {
+  _CFuture_CImageData _copyFromDartTo_CFuture_CImageData() {
+    return _CFuture_CImageDataMakeDefault();
+  }
+}
+	
+// MARK: - TouchPointState
+
+/** Тип состояния точки прикосновения. */
+@internal
+enum TouchPointState {
+  /** Точка нажата. */
+  pressed(1),
+  /** Точка нажата. */
+  released(2),
+  /** Точка переместилась или осталась на месте. */
+  moved(4),
+  ;
+
+  const TouchPointState(this.rawValue);
+  final int rawValue;
+
+  static TouchPointState getByValue(int value) {
+    return TouchPointState.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CTouchPointState extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CTouchPointStateBasicFunctions on _CTouchPointState {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CTouchPointStateToDart on _CTouchPointState {
+  TouchPointState _toDart() {
+    return TouchPointState.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CTouchPointState on TouchPointState {
+  _CTouchPointState _copyFromDartTo_CTouchPointState() {
+    return _CTouchPointStateMakeDefault()..rawValue = this.rawValue;
   }
 }
 	
@@ -46741,50 +47639,6 @@ extension _CArray_COptionSet_CTransformGestureBasicFunctions on _CArray_COptionS
   }
 }
 	
-// MARK: - TouchPointState
-
-/** Тип состояния точки прикосновения. */
-@internal
-enum TouchPointState {
-  /** Точка нажата. */
-  pressed(1),
-  /** Точка нажата. */
-  released(2),
-  /** Точка переместилась или осталась на месте. */
-  moved(4),
-  ;
-
-  const TouchPointState(this.rawValue);
-  final int rawValue;
-
-  static TouchPointState getByValue(int value) {
-    return TouchPointState.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CTouchPointState extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CTouchPointStateBasicFunctions on _CTouchPointState {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CTouchPointStateToDart on _CTouchPointState {
-  TouchPointState _toDart() {
-    return TouchPointState.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CTouchPointState on TouchPointState {
-  _CTouchPointState _copyFromDartTo_CTouchPointState() {
-    return _CTouchPointStateMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - MapGestureRecognizer
 
 /**
@@ -46793,7 +47647,6 @@ extension _DartTo_CTouchPointState on TouchPointState {
  * Добавляется несколько точек - add_touch_point
  * Точки обрабатываются - process_touch_event
 */
-@internal
 class MapGestureRecognizer implements ffi.Finalizable {
   final ffi.Pointer<ffi.Void> _self;
 
@@ -46862,6 +47715,7 @@ class MapGestureRecognizer implements ffi.Finalizable {
 
   // MARK: CMapGestureRecognizer: Static Methods
 
+  @internal
   static MapGestureRecognizer create(
     Map map
   )  {
@@ -46875,6 +47729,11 @@ class MapGestureRecognizer implements ffi.Finalizable {
 
   // MARK: MapGestureRecognizer: Methods
 
+}
+
+@internal
+extension MapGestureRecognizerInternalMethods on MapGestureRecognizer {
+  @internal
   void addTouchPoint(
     ScreenPoint point,
     TouchPointState state,
@@ -46886,6 +47745,7 @@ class MapGestureRecognizer implements ffi.Finalizable {
     return res;
   }
 
+  @internal
   bool processTouchEvent(
     Duration timestamp
   )  {
@@ -46894,11 +47754,13 @@ class MapGestureRecognizer implements ffi.Finalizable {
     return res;
   }
 
+  @internal
   void cancel()  {
     void res = _CMapGestureRecognizer_cancel(_CMapGestureRecognizerMakeDefault().._impl=_self);
     return res;
   }
 
+  @internal
   void onDevicePpiChanged(
     DevicePpi devicePpi
   )  {
@@ -46968,16 +47830,21 @@ class _CChannel_CDragBeginDataImpl extends Channel<DragBeginData> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDragBeginData, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<DragBeginData>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -47042,16 +47909,21 @@ class _CChannel_CScreenPointImpl extends Channel<ScreenPoint> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CScreenPoint, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<ScreenPoint>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -47121,6 +47993,373 @@ extension _DartTo_COptional_CGestureManager on GestureManager? {
     final cOptional = _COptional_CGestureManagerMakeDefault();
     if (this != null) {
       cOptional.value = this!._copyFromDartTo_CGestureManager();
+      cOptional.hasValue = true;
+    } else {
+      cOptional.hasValue = false;
+    }
+    return cOptional;
+  }
+}
+// MARK: - MapController
+
+/** Готовая к показу карта вместе с рендерером и распознавателем жестов. */
+class MapController implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /** Карта, управляемая этим контроллером. */
+  Map get map {
+    _CMap res = _CMapController_map(_CMapControllerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Рендерер карты. */
+  MapRenderer get renderer {
+    _CMapRenderer res = _CMapController_renderer(_CMapControllerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+  /** Распознаватель жестов карты. */
+  MapGestureRecognizer get gestureRecognizer {
+    _CMapGestureRecognizer res = _CMapController_gestureRecognizer(_CMapControllerMakeDefault().._impl=_self);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CMapController_releasePtr);
+
+  MapController._raw(this._self);
+  factory MapController._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MapController._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory MapController.fromMessage(ClassMessage<MapController> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapController._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MapController &&
+    other.runtimeType == runtimeType &&
+    _CMapController_cg_objectIdentifier(this._self) == _CMapController_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMapController_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CMapController: Static Methods
+
+  /**
+   Создаёт карту с параметрами из options.
+  
+   - Parameter context: контекст SDK. Должен быть валиден на время создания карты.
+   - Parameter options: параметры начального состояния карты.
+   - Returns: future с готовым MapController либо с ошибкой создания.
+  */
+  static CancelableOperation<MapController> create(
+    Context context,
+    MapControllerOptions options
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = options._copyFromDartTo_CMapControllerOptions();
+    _CFuture_CMapController res = _CMapController_S_create_CContext_CMapControllerOptions(_a0, _a1);
+    _a1._releaseIntermediate();
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+extension MapControllerToClassMessage on MapController {
+  ClassMessage<MapController> message() {
+    final res = (_CMapControllerMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapController>(res._impl.address, _CMapController_release);
+  }
+}
+
+// MARK: - MapController <-> CMapController
+
+final class _CMapController extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMapControllerBasicFunctions on _CMapController {
+  void _releaseIntermediate() {
+    _CMapController_release(_impl);
+  }
+
+  _CMapController _retain() {
+    return _CMapController_retain(_impl);
+  }
+}
+
+extension _CMapControllerToDart on _CMapController {
+  MapController _toDart() {
+    return MapController._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMapController on MapController {
+  _CMapController _copyFromDartTo_CMapController() {
+    return (_CMapControllerMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - CancelableOperation<MapController> <-> _CFuture_CMapController
+
+final class _CFuture_CMapController extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+class _CFuture_CMapController_Cancellable {
+  final Completer<MapController> completer;
+  final _CFuture_CMapController _futureInstance;
+  final _CCancellable _cancellable;
+  final ffi.NativeCallable<ffi.Void Function(_CMapController, ffi.Int64)> valueFunctionCallable;
+  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+
+  _CFuture_CMapController_Cancellable(
+    this.completer,
+    this._futureInstance,
+    this._cancellable,
+    this.valueFunctionCallable,
+    this.failureCallable
+  );
+
+  void cancel() {
+    this._cancellable._cancel();
+    this._futureInstance._releaseIntermediate();
+    this.valueFunctionCallable.close();
+    this.failureCallable.close();
+  }
+}
+
+extension _CFuture_CMapControllerBasicFunctions on _CFuture_CMapController {
+  void _releaseIntermediate() {
+    _CFuture_CMapController_release(this);
+  }
+
+  _CFuture_CMapController _retain() {
+    return _CFuture_CMapController_retain(this);
+  }
+}
+
+extension _CFuture_CMapControllerToDart on _CFuture_CMapController {
+  static int instanceCounter = 0;
+  static final instanceMap = <int, _CFuture_CMapController_Cancellable>{};
+
+  static void valueFunction(_CMapController cValue, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.complete(cValue._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cValue._releaseIntermediate();
+  }
+
+  static void failure(_CError cError, int instanceId) {
+    final instance = instanceMap[instanceId];
+    if (instance != null) {
+      instance.completer.completeError(cError._toDart());
+      instance.cancel();
+      instanceMap.remove(instanceId);
+    }
+    cError._releaseIntermediate();
+  }
+
+  CancelableOperation<MapController> _toDart() {
+    final futureInstance = this._retain();
+    final instanceId = instanceCounter;
+    instanceCounter += 1;
+    final completer = new Completer<MapController>();
+    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CMapController, ffi.Int64)>.listener(valueFunction);
+    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
+    final cCancel = _CFuture_CMapControllerReceive(
+      futureInstance,
+      instanceId,
+      valueFunctionCallable.nativeFunction,
+      failureCallable.nativeFunction
+    );
+    final cancellable = cCancel._retain();
+    instanceMap[instanceId] = _CFuture_CMapController_Cancellable(
+      completer,
+      futureInstance,
+      cancellable,
+      valueFunctionCallable,
+      failureCallable
+    );
+    cCancel._releaseIntermediate();
+    return CancelableOperation.fromFuture(
+      completer.future,
+      onCancel: () {
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
+      },
+    );
+  }
+}
+
+extension _DartTo_CFuture_CMapController on CancelableOperation<MapController> {
+  _CFuture_CMapController _copyFromDartTo_CFuture_CMapController() {
+    return _CFuture_CMapControllerMakeDefault();
+  }
+}
+	
+// MARK: - MapControllerRegistry
+
+/**
+ MapController создаётся на одной платформе, а используется на другой: например,
+ создан в React Native и передаётся в Android или iOS. Напрямую между
+ платформами нативный объект не передать. C++ — общий для всех платформ слой, поэтому
+ реестр в нём служит единой точкой обмена: одна сторона кладёт сюда MapController,
+ другая забирает его по идентификатору карты.
+
+ Реестр не владеет MapController: хранит weak и время его жизни не продлевает.
+ Если MapController отпустили до того, как его забрали, take вернёт пусто, а
+ протухшая запись будет вычищена при следующем put.
+*/
+@internal
+class MapControllerRegistry implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  static final _finalizer = ffi.NativeFinalizer(_CMapControllerRegistry_releasePtr);
+
+  MapControllerRegistry._raw(this._self);
+  factory MapControllerRegistry._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = MapControllerRegistry._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory MapControllerRegistry.fromMessage(ClassMessage<MapControllerRegistry> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return MapControllerRegistry._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is MapControllerRegistry &&
+    other.runtimeType == runtimeType &&
+    _CMapControllerRegistry_cg_objectIdentifier(this._self) == _CMapControllerRegistry_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CMapControllerRegistry_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CMapControllerRegistry: Static Methods
+
+  /**
+   Кладёт MapController в реестр.
+  
+   - Parameter controller: сохраняемый MapController.
+  */
+  static void put(
+    MapController controller
+  )  {
+    var _a0 = controller._copyFromDartTo_CMapController();
+    void res = _CMapControllerRegistry_S_put_CMapController(_a0);
+    _a0._releaseIntermediate();
+    return res;
+  }
+
+  /**
+   Забирает MapController по идентификатору карты, удаляя запись.
+  
+   - Parameter id: идентификатор карты из map.id().
+   - Returns: MapController, либо пусто, если карту не клали или уже отпустили.
+  */
+  static MapController? take(
+    MapId id
+  )  {
+    var _a0 = id._copyFromDartTo_CMapId();
+    _COptional_CMapController res = _CMapControllerRegistry_S_take_CMapId(_a0);
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+extension MapControllerRegistryToClassMessage on MapControllerRegistry {
+  ClassMessage<MapControllerRegistry> message() {
+    final res = (_CMapControllerRegistryMakeDefault().._impl=_self)._retain();
+    return ClassMessage<MapControllerRegistry>(res._impl.address, _CMapControllerRegistry_release);
+  }
+}
+
+// MARK: - MapControllerRegistry <-> CMapControllerRegistry
+
+final class _CMapControllerRegistry extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CMapControllerRegistryBasicFunctions on _CMapControllerRegistry {
+  void _releaseIntermediate() {
+    _CMapControllerRegistry_release(_impl);
+  }
+
+  _CMapControllerRegistry _retain() {
+    return _CMapControllerRegistry_retain(_impl);
+  }
+}
+
+extension _CMapControllerRegistryToDart on _CMapControllerRegistry {
+  MapControllerRegistry _toDart() {
+    return MapControllerRegistry._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCMapControllerRegistry on MapControllerRegistry {
+  _CMapControllerRegistry _copyFromDartTo_CMapControllerRegistry() {
+    return (_CMapControllerRegistryMakeDefault().._impl=_self)._retain();
+  }
+}
+// MARK: - MapController? <-> _COptional_CMapController
+
+final class _COptional_CMapController extends ffi.Struct {
+  
+  external _CMapController value;
+  @ffi.Bool()
+  external bool hasValue;
+}
+
+extension _COptional_CMapControllerBasicFunctions on _COptional_CMapController {
+  void _releaseIntermediate() {
+    _COptional_CMapController_release(this);
+  }
+}
+
+extension _COptional_CMapControllerToDart on _COptional_CMapController {
+  MapController? _toDart() {
+    if (!this.hasValue) {
+      return null;
+    }
+    return this.value._toDart();
+  }
+}
+
+extension _DartTo_COptional_CMapController on MapController? {
+  _COptional_CMapController _copyFromDartTo_COptional_CMapController() {
+    final cOptional = _COptional_CMapControllerMakeDefault();
+    if (this != null) {
+      cOptional.value = this!._copyFromDartTo_CMapController();
       cOptional.hasValue = true;
     } else {
       cOptional.hasValue = false;
@@ -47382,16 +48621,21 @@ class _CStatefulChannel_CSet_CLevelIdImpl extends StatefulChannel<Set<LevelId>> 
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CSet_CLevelId, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<Set<LevelId>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -48026,16 +49270,21 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl exte
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_COptionSet_CRouteMapObjectDisplayFlag, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<EnumSet<RouteMapObjectDisplayFlag>?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -48333,16 +49582,21 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<EnumSet<RouteMapObjectPermanentDisplayFlag>?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -63684,16 +64938,21 @@ class _CStatefulChannel_CStateImpl extends StatefulChannel<State> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<State>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -63770,16 +65029,21 @@ class _CStatefulChannel_COptional_CLocationImpl extends StatefulChannel<Location
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CLocation, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<Location?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -63856,16 +65120,21 @@ class _CStatefulChannel_CRouteInfoImpl extends StatefulChannel<RouteInfo> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRouteInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteInfo>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -64137,16 +65406,21 @@ class _CStatefulChannel_CDynamicRouteInfoImpl extends StatefulChannel<DynamicRou
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CDynamicRouteInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<DynamicRouteInfo>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -64666,16 +65940,21 @@ class _CStatefulChannel_COptional_CRoutePointImpl extends StatefulChannel<RouteP
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CRoutePoint, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RoutePoint?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -64752,16 +66031,21 @@ class _CStatefulChannel_COptional_CBetterRouteInfoImpl extends StatefulChannel<B
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CBetterRouteInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<BetterRouteInfo?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -64998,16 +66282,21 @@ class _CStatefulChannel_CRouteDistanceImpl extends StatefulChannel<RouteDistance
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRouteDistance, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteDistance>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -65084,16 +66373,21 @@ class _CStatefulChannel_CRouteMapObjectPassedDistanceVisualizationImpl extends S
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRouteMapObjectPassedDistanceVisualization, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteMapObjectPassedDistanceVisualization>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -65170,16 +66464,21 @@ class _CStatefulChannel_CArray_CCalloutMapPositionImpl extends StatefulChannel<L
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CCalloutMapPosition, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<CalloutMapPosition>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -65299,16 +66598,21 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_COptionSet_CRouteMapObjectCalloutLabelFlag, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<EnumSet<RouteMapObjectCalloutLabelFlag>?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -65606,16 +66910,21 @@ class _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayModeImpl extends State
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRouteMapObjectCalloutLabelDisplayMode, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteMapObjectCalloutLabelDisplayMode>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -65692,16 +67001,21 @@ class _CStatefulChannel_CRoadEventMapObjectRouteAttributeImpl extends StatefulCh
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRoadEventMapObjectRouteAttribute, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RoadEventMapObjectRouteAttribute>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -66738,16 +68052,21 @@ class _CStatefulChannel_CRouteEditorRoutesInfoImpl extends StatefulChannel<Route
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CRouteEditorRoutesInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteEditorRoutesInfo>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -67283,16 +68602,21 @@ class _CStatefulChannel_COptional_CRouteIndexImpl extends StatefulChannel<RouteI
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CRouteIndex, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<RouteIndex?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -67743,8 +69067,12 @@ extension _CFuture_CArray_CTrafficRouteToDart on _CFuture_CArray_CTrafficRoute {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -67844,8 +69172,12 @@ extension _CFuture_CSharedRouteDataToDart on _CFuture_CSharedRouteData {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -68044,8 +69376,12 @@ extension _CFuture_CArray_CTruckPassZonePassToDart on _CFuture_CArray_CTruckPass
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -68309,8 +69645,12 @@ extension _CFuture_CArray_COptional_CBriefRouteInfoToDart on _CFuture_CArray_COp
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -69863,16 +71203,21 @@ class _CStatefulChannel_CGeoPointImpl extends StatefulChannel<GeoPoint> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CGeoPoint, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<GeoPoint>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -69920,60 +71265,6 @@ extension _DartTo_CStatefulChannel_CGeoPoint on StatefulChannel<GeoPoint> {
   }
 }
 	
-// MARK: - Fps
-
-/** Frames per second, частота кадров. */
-class Fps {
-  final int value;
-
-  const Fps([this.value = 0]);
-
-  Fps copyWith({
-    int? value
-  }) {
-    return Fps(
-      value ?? this.value
-    );
-  }
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is Fps &&
-    other.runtimeType == runtimeType &&
-    other.value == value;
-
-  @override
-  int get hashCode {
-    return value.hashCode;
-  }
-
-}
-final class _CFps extends ffi.Struct {
-  @ffi.Uint32()
-  external int value;
-
-}
-// MARK: - Fps <-> _CFps
-
-extension _CFpsToDart on _CFps {
-  Fps _toDart() {
-    return Fps(
-      this.value
-    );
-  }
-}
-
-extension _DartTo_CFps on Fps {
-  _CFps _copyFromDartTo_CFps() {
-    final res = _CFpsMakeDefault();
-    res.value = this.value;
-    return res;
-  }
-}
-extension _CFpsRelease on _CFps {
-  void _releaseIntermediate() {
-  }
-}
-
 // MARK: - MapSurfaceProvider
 
 /** Передача нативной поверхности от платформы для рендеринга карты. */
@@ -70114,468 +71405,6 @@ extension _DartToCMapSurfaceProvider on MapSurfaceProvider {
     return (_CMapSurfaceProviderMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - CancelableOperation<bool> <-> _CFuture_bool
-
-final class _CFuture_bool extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-class _CFuture_bool_Cancellable {
-  final Completer<bool> completer;
-  final _CFuture_bool _futureInstance;
-  final _CCancellable _cancellable;
-  final ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)> valueFunctionCallable;
-  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
-
-  _CFuture_bool_Cancellable(
-    this.completer,
-    this._futureInstance,
-    this._cancellable,
-    this.valueFunctionCallable,
-    this.failureCallable
-  );
-
-  void cancel() {
-    this._cancellable._cancel();
-    this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
-  }
-}
-
-extension _CFuture_boolBasicFunctions on _CFuture_bool {
-  void _releaseIntermediate() {
-    _CFuture_bool_release(this);
-  }
-
-  _CFuture_bool _retain() {
-    return _CFuture_bool_retain(this);
-  }
-}
-
-extension _CFuture_boolToDart on _CFuture_bool {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, _CFuture_bool_Cancellable>{};
-
-  static void valueFunction(bool cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.complete(cValue);
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    
-  }
-
-  static void failure(_CError cError, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.completeError(cError._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cError._releaseIntermediate();
-  }
-
-  CancelableOperation<bool> _toDart() {
-    final futureInstance = this._retain();
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final completer = new Completer<bool>();
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)>.listener(valueFunction);
-    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
-    final cCancel = _CFuture_boolReceive(
-      futureInstance,
-      instanceId,
-      valueFunctionCallable.nativeFunction,
-      failureCallable.nativeFunction
-    );
-    final cancellable = cCancel._retain();
-    instanceMap[instanceId] = _CFuture_bool_Cancellable(
-      completer,
-      futureInstance,
-      cancellable,
-      valueFunctionCallable,
-      failureCallable
-    );
-    cCancel._releaseIntermediate();
-    return CancelableOperation.fromFuture(
-      completer.future,
-      onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-  }
-}
-
-extension _DartTo_CFuture_bool on CancelableOperation<bool> {
-  _CFuture_bool _copyFromDartTo_CFuture_bool() {
-    return _CFuture_boolMakeDefault();
-  }
-}
-	
-// MARK: - MapRenderer
-
-/** Создание этого объекта приводит к началу рисования карты. */
-@internal
-class MapRenderer implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  Fps? get maxFps {
-    _COptional_CFps res = _CMapRenderer_maxFps(_CMapRendererMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  Fps? get powerSavingMaxFps {
-    _COptional_CFps res = _CMapRenderer_powerSavingMaxFps(_CMapRendererMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-  StatefulChannel<Fps> get fpsChannel {
-    _CStatefulChannel_CFps res = _CMapRenderer_fpsChannel(_CMapRendererMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-  Fps get fps {
-    _CFps res = _CMapRenderer_fps(_CMapRendererMakeDefault().._impl=_self);
-    return res._toDart();
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CMapRenderer_releasePtr);
-
-  MapRenderer._raw(this._self);
-  factory MapRenderer._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = MapRenderer._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  factory MapRenderer.fromMessage(ClassMessage<MapRenderer> message) {
-    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
-    return MapRenderer._create(ptr);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is MapRenderer &&
-    other.runtimeType == runtimeType &&
-    _CMapRenderer_cg_objectIdentifier(this._self) == _CMapRenderer_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CMapRenderer_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: CMapRenderer: Static Methods
-
-  static MapRenderer create(
-    Map map
-  )  {
-    var _a0 = map._copyFromDartTo_CMap();
-    _CMapRenderer res = _CMapRenderer_S_create_CMap(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  // MARK: MapRenderer: Methods
-
-  void setMaxFps(
-    Fps? maxFps,
-    Fps? powerSavingMaxFps
-  )  {
-    var _a1 = maxFps._copyFromDartTo_COptional_CFps();
-    var _a2 = powerSavingMaxFps._copyFromDartTo_COptional_CFps();
-    void res = _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps(_CMapRendererMakeDefault().._impl=_self, _a1, _a2);
-    return res;
-  }
-
-  CancelableOperation<bool> waitForLoading()  {
-    _CFuture_bool res = _CMapRenderer_waitForLoading(_CMapRendererMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  CancelableOperation<bool> waitForRendering()  {
-    _CFuture_bool res = _CMapRenderer_waitForRendering(_CMapRendererMakeDefault().._impl=_self);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-  CancelableOperation<ImageData> takeSnapshot(
-    Alignment copyrightAlign
-  )  {
-    var _a1 = copyrightAlign._copyFromDartTo_CAlignment();
-    _CFuture_CImageData res = _CMapRenderer_takeSnapshot_CAlignment(_CMapRendererMakeDefault().._impl=_self, _a1);
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-extension MapRendererToClassMessage on MapRenderer {
-  ClassMessage<MapRenderer> message() {
-    final res = (_CMapRendererMakeDefault().._impl=_self)._retain();
-    return ClassMessage<MapRenderer>(res._impl.address, _CMapRenderer_release);
-  }
-}
-
-// MARK: - MapRenderer <-> CMapRenderer
-
-final class _CMapRenderer extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CMapRendererBasicFunctions on _CMapRenderer {
-  void _releaseIntermediate() {
-    _CMapRenderer_release(_impl);
-  }
-
-  _CMapRenderer _retain() {
-    return _CMapRenderer_retain(_impl);
-  }
-}
-
-extension _CMapRendererToDart on _CMapRenderer {
-  MapRenderer _toDart() {
-    return MapRenderer._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCMapRenderer on MapRenderer {
-  _CMapRenderer _copyFromDartTo_CMapRenderer() {
-    return (_CMapRendererMakeDefault().._impl=_self)._retain();
-  }
-}
-// MARK: - Fps? <-> _COptional_CFps
-
-final class _COptional_CFps extends ffi.Struct {
-  
-  external _CFps value;
-  @ffi.Bool()
-  external bool hasValue;
-}
-
-extension _COptional_CFpsBasicFunctions on _COptional_CFps {
-  void _releaseIntermediate() {
-    
-  }
-}
-
-extension _COptional_CFpsToDart on _COptional_CFps {
-  Fps? _toDart() {
-    if (!this.hasValue) {
-      return null;
-    }
-    return this.value._toDart();
-  }
-}
-
-extension _DartTo_COptional_CFps on Fps? {
-  _COptional_CFps _copyFromDartTo_COptional_CFps() {
-    final cOptional = _COptional_CFpsMakeDefault();
-    if (this != null) {
-      cOptional.value = this!._copyFromDartTo_CFps();
-      cOptional.hasValue = true;
-    } else {
-      cOptional.hasValue = false;
-    }
-    return cOptional;
-  }
-}
-// MARK: - StatefulChannel<Fps> <-> _CStatefulChannel_CFps
-
-class _CStatefulChannel_CFpsImpl extends StatefulChannel<Fps> {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, StreamController<Fps>>{};
-
-  final _CStatefulChannel_CFps _channel;
-
-  _CStatefulChannel_CFpsImpl(this._channel);
-
-  @override
-  Fps get value {
-    return this._channel._getter();
-  }
-
-  static void valueFunction(_CFps cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.add(cValue._toDart());
-    }
-    
-  }
-
-  @override
-  StreamSubscription<Fps> listen(void onData(Fps event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CFps, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
-    final streamController = new StreamController<Fps>(
-      onCancel: () {
-        cancellable._cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-    instanceMap[instanceId] = streamController;
-    return streamController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError
-    );
-  }
-}
-
-final class _CStatefulChannel_CFps extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CStatefulChannel_CFpsBasicFunctions on _CStatefulChannel_CFps {
-  void _releaseIntermediate() {
-    _CStatefulChannel_CFps_release(this);
-  }
-
-  _CStatefulChannel_CFps _retain() {
-    return _CStatefulChannel_CFps_retain(this);
-  }
-
-  Fps _getter() {
-    final cValue = _CStatefulChannel_CFpsGetCurrentValue(this);
-    final res = cValue._toDart();
-    
-    return res;
-  }
-
-  _CCancellable _connect(int instanceId,
-      ffi.NativeCallable<ffi.Void Function(_CFps, ffi.Int64)> callback) {
-    return _CStatefulChannel_CFpsConnect(this, instanceId, callback.nativeFunction);
-  }
-}
-
-extension _CStatefulChannel_CFpsToDart on _CStatefulChannel_CFps {
-  StatefulChannel<Fps> _toDart() {
-    return _CStatefulChannel_CFpsImpl(this._retain());
-  }
-}
-
-extension _DartTo_CStatefulChannel_CFps on StatefulChannel<Fps> {
-  _CStatefulChannel_CFps _copyFromDartTo_CStatefulChannel_CFps() {
-    return _CStatefulChannel_CFpsMakeDefault();
-  }
-}
-	
-// MARK: - CancelableOperation<ImageData> <-> _CFuture_CImageData
-
-final class _CFuture_CImageData extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-class _CFuture_CImageData_Cancellable {
-  final Completer<ImageData> completer;
-  final _CFuture_CImageData _futureInstance;
-  final _CCancellable _cancellable;
-  final ffi.NativeCallable<ffi.Void Function(_CImageData, ffi.Int64)> valueFunctionCallable;
-  final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
-
-  _CFuture_CImageData_Cancellable(
-    this.completer,
-    this._futureInstance,
-    this._cancellable,
-    this.valueFunctionCallable,
-    this.failureCallable
-  );
-
-  void cancel() {
-    this._cancellable._cancel();
-    this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
-  }
-}
-
-extension _CFuture_CImageDataBasicFunctions on _CFuture_CImageData {
-  void _releaseIntermediate() {
-    _CFuture_CImageData_release(this);
-  }
-
-  _CFuture_CImageData _retain() {
-    return _CFuture_CImageData_retain(this);
-  }
-}
-
-extension _CFuture_CImageDataToDart on _CFuture_CImageData {
-  static int instanceCounter = 0;
-  static final instanceMap = <int, _CFuture_CImageData_Cancellable>{};
-
-  static void valueFunction(_CImageData cValue, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.complete(cValue._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cValue._releaseIntermediate();
-  }
-
-  static void failure(_CError cError, int instanceId) {
-    final instance = instanceMap[instanceId];
-    if (instance != null) {
-      instance.completer.completeError(cError._toDart());
-      instance.cancel();
-      instanceMap.remove(instanceId);
-    }
-    cError._releaseIntermediate();
-  }
-
-  CancelableOperation<ImageData> _toDart() {
-    final futureInstance = this._retain();
-    final instanceId = instanceCounter;
-    instanceCounter += 1;
-    final completer = new Completer<ImageData>();
-    final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CImageData, ffi.Int64)>.listener(valueFunction);
-    final failureCallable = ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)>.listener(failure);
-    final cCancel = _CFuture_CImageDataReceive(
-      futureInstance,
-      instanceId,
-      valueFunctionCallable.nativeFunction,
-      failureCallable.nativeFunction
-    );
-    final cancellable = cCancel._retain();
-    instanceMap[instanceId] = _CFuture_CImageData_Cancellable(
-      completer,
-      futureInstance,
-      cancellable,
-      valueFunctionCallable,
-      failureCallable
-    );
-    cCancel._releaseIntermediate();
-    return CancelableOperation.fromFuture(
-      completer.future,
-      onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
-      },
-    );
-  }
-}
-
-extension _DartTo_CFuture_CImageData on CancelableOperation<ImageData> {
-  _CFuture_CImageData _copyFromDartTo_CFuture_CImageData() {
-    return _CFuture_CImageDataMakeDefault();
-  }
-}
-	
 // MARK: - MapBuilder
 
 @internal
@@ -70980,8 +71809,12 @@ extension _CFuture_CMapToDart on _CFuture_CMap {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -71195,8 +72028,12 @@ extension _CFuture_CStyleToDart on _CFuture_CStyle {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -72373,16 +73210,21 @@ class _CStatefulChannel_CArray_CRouteMapObjectImpl extends StatefulChannel<List<
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CRouteMapObject, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<RouteMapObject>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -73948,16 +74790,21 @@ class _CStatefulChannel_COptional_CTrafficJamInfoImpl extends StatefulChannel<Tr
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CTrafficJamInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<TrafficJamInfo?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -75535,8 +76382,12 @@ extension _CFuture_voidToDart on _CFuture_void {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -75700,16 +76551,21 @@ class _CStatefulChannel_CArray_CVoiceImpl extends StatefulChannel<List<Voice>> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CVoice, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<Voice>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -76163,16 +77019,21 @@ class _CStatefulChannel_COptional_CCameraProgressInfoImpl extends StatefulChanne
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_COptional_CCameraProgressInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<CameraProgressInfo?>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -76868,16 +77729,21 @@ class _CStatefulChannel_CArray_CLocaleImpl extends StatefulChannel<List<Locale>>
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CLocale, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<Locale>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -78019,8 +78885,12 @@ extension _CFuture_CAddEventResultToDart on _CFuture_CAddEventResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -79076,8 +79946,12 @@ extension _CFuture_CArray_CTerritoryToDart on _CFuture_CArray_CTerritory {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        instanceMap[instanceId]?.cancel();
-        instanceMap.remove(instanceId);
+        try {
+          instanceMap[instanceId]?.cancel();
+          instanceMap.remove(instanceId);
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
   }
@@ -79614,16 +80488,21 @@ class _CStatefulChannel_CTrafficScoreImpl extends StatefulChannel<TrafficScore> 
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CTrafficScore, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<TrafficScore>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -79941,16 +80820,21 @@ class _CStatefulChannel_CTrafficControlStateImpl extends StatefulChannel<Traffic
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CTrafficControlState, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<TrafficControlState>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -80487,16 +81371,21 @@ class _CStatefulChannel_CPackageInfoImpl extends StatefulChannel<PackageInfo> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CPackageInfo, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<PackageInfo>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -80573,16 +81462,21 @@ class _CStatefulChannel_uint8_tImpl extends StatefulChannel<int> {
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(ffi.Uint8, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<int>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -81082,16 +81976,21 @@ class _CStatefulChannel_CArray_CPackageImpl extends StatefulChannel<List<Package
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CPackage, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<Package>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -81374,16 +82273,21 @@ class _CStatefulChannel_CArray_CTerritoryImpl extends StatefulChannel<List<Terri
     final instanceId = instanceCounter;
     instanceCounter += 1;
     final valueFunctionCallable = ffi.NativeCallable<ffi.Void Function(_CArray_CTerritory, ffi.Int64)>.listener(valueFunction);
-    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
-    final cancellable = cCancel._retain();
-    cCancel._releaseIntermediate();
+    late final _CCancellable cancellable;
     final streamController = new StreamController<List<Territory>>(
       onCancel: () {
-        cancellable._cancel();
         instanceMap.remove(instanceId);
+        try {
+          cancellable._cancel();
+        } finally {
+          valueFunctionCallable.close();
+        }
       },
     );
     instanceMap[instanceId] = streamController;
+    final cCancel = this._channel._connect(instanceId, valueFunctionCallable);
+    cancellable = cCancel._retain();
+    cCancel._releaseIntermediate();
     return streamController.stream.listen(
       onData,
       onError: onError,
@@ -87424,6 +88328,122 @@ late final _CPackedMapStateMakeDefault = _CPackedMapStateMakeDefaultPtr.asFuncti
 late final _CResult_CPackedMapState_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CPackedMapState)>>('CResult_CPackedMapState_release');
 late final _CResult_CPackedMapState_release = _CResult_CPackedMapState_releasePtr.asFunction<void Function(_CResult_CPackedMapState)>();
 
+late final _CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFps Function()>>('CFpsMakeDefault');
+late final _CFpsMakeDefault = _CFpsMakeDefaultPtr.asFunction<_CFps Function()>();
+
+
+late final _COptional_CCameraPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CCameraPosition Function()>>('COptional_CCameraPositionMakeDefault');
+late final _COptional_CCameraPositionMakeDefault = _COptional_CCameraPositionMakeDefaultPtr.asFunction<_COptional_CCameraPosition Function()>();
+
+late final _COptional_CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function()>>('COptional_CFpsMakeDefault');
+late final _COptional_CFpsMakeDefault = _COptional_CFpsMakeDefaultPtr.asFunction<_COptional_CFps Function()>();
+
+late final _CMapControllerOptionsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapControllerOptions Function()>>('CMapControllerOptionsMakeDefault');
+late final _CMapControllerOptionsMakeDefault = _CMapControllerOptionsMakeDefaultPtr.asFunction<_CMapControllerOptions Function()>();
+
+late final _CMapRenderer_maxFpsPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function(_CMapRenderer)>>('CMapRenderer_maxFps');
+late final _CMapRenderer_maxFps = _CMapRenderer_maxFpsPtr.asFunction<_COptional_CFps Function(_CMapRenderer)>();
+late final _CMapRenderer_powerSavingMaxFpsPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function(_CMapRenderer)>>('CMapRenderer_powerSavingMaxFps');
+late final _CMapRenderer_powerSavingMaxFps = _CMapRenderer_powerSavingMaxFpsPtr.asFunction<_COptional_CFps Function(_CMapRenderer)>();
+late final _CMapRenderer_fpsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function(_CMapRenderer)>>('CMapRenderer_fpsChannel');
+late final _CMapRenderer_fpsChannel = _CMapRenderer_fpsChannelPtr.asFunction<_CStatefulChannel_CFps Function(_CMapRenderer)>();
+late final _CMapRenderer_fpsPtr = _lookup<ffi.NativeFunction<_CFps Function(_CMapRenderer)>>('CMapRenderer_fps');
+late final _CMapRenderer_fps = _CMapRenderer_fpsPtr.asFunction<_CFps Function(_CMapRenderer)>();
+
+late final _CMapRenderer_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_cg_objectIdentifier');
+late final _CMapRenderer_cg_objectIdentifier = _CMapRenderer_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CMapRenderer_S_create_CMapPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function(_CMap)>>('CMapRenderer_S_create_CMap');
+late final _CMapRenderer_S_create_CMap = _CMapRenderer_S_create_CMapPtr.asFunction<_CMapRenderer Function(_CMap)>();
+late final _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFpsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapRenderer, _COptional_CFps, _COptional_CFps)>>('CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps');
+late final _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps = _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFpsPtr.asFunction<void Function(_CMapRenderer, _COptional_CFps, _COptional_CFps)>();
+late final _CMapRenderer_takeSnapshot_CAlignmentPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function(_CMapRenderer, _CAlignment)>>('CMapRenderer_takeSnapshot_CAlignment');
+late final _CMapRenderer_takeSnapshot_CAlignment = _CMapRenderer_takeSnapshot_CAlignmentPtr.asFunction<_CFuture_CImageData Function(_CMapRenderer, _CAlignment)>();
+late final _CMapRenderer_waitForLoadingPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CMapRenderer)>>('CMapRenderer_waitForLoading');
+late final _CMapRenderer_waitForLoading = _CMapRenderer_waitForLoadingPtr.asFunction<_CFuture_bool Function(_CMapRenderer)>();
+late final _CMapRenderer_waitForRenderingPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CMapRenderer)>>('CMapRenderer_waitForRendering');
+late final _CMapRenderer_waitForRendering = _CMapRenderer_waitForRenderingPtr.asFunction<_CFuture_bool Function(_CMapRenderer)>();
+
+late final _CMapRenderer_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_release');
+late final _CMapRenderer_release = _CMapRenderer_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapRenderer_retainPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_retain');
+late final _CMapRenderer_retain = _CMapRenderer_retainPtr.asFunction<_CMapRenderer Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapRendererMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function()>>('CMapRendererMakeDefault');
+late final _CMapRendererMakeDefault = _CMapRendererMakeDefaultPtr.asFunction<_CMapRenderer Function()>();
+
+
+late final _CStatefulChannel_CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function()>>('CStatefulChannel_CFpsMakeDefault');
+late final _CStatefulChannel_CFpsMakeDefault = _CStatefulChannel_CFpsMakeDefaultPtr.asFunction<_CStatefulChannel_CFps Function()>();
+late final _CStatefulChannel_CFps_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_release');
+late final _CStatefulChannel_CFps_release = _CStatefulChannel_CFps_releasePtr.asFunction<void Function(_CStatefulChannel_CFps)>();
+late final _CStatefulChannel_CFps_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_retain');
+late final _CStatefulChannel_CFps_retain = _CStatefulChannel_CFps_retainPtr.asFunction<_CStatefulChannel_CFps Function(_CStatefulChannel_CFps)>();
+late final _CStatefulChannel_CFpsGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CFps Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_getCurrentValue');
+late final _CStatefulChannel_CFpsGetCurrentValue = _CStatefulChannel_CFpsGetCurrentValuePtr.asFunction<_CFps Function(_CStatefulChannel_CFps)>();
+late final _CStatefulChannel_CFpsConnectPtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CFps,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CFps, ffi.Int64)>>
+  )
+>>('CStatefulChannel_CFps_connect');
+late final _CStatefulChannel_CFpsConnect = _CStatefulChannel_CFpsConnectPtr.asFunction<
+  _CCancellable Function(
+    _CStatefulChannel_CFps,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CFps, ffi.Int64)>>
+  )
+>();
+
+late final _CFuture_boolMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function()>>('CFuture_boolMakeDefault');
+late final _CFuture_boolMakeDefault = _CFuture_boolMakeDefaultPtr.asFunction<_CFuture_bool Function()>();
+late final _CFuture_bool_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_bool)>>('CFuture_bool_release');
+late final _CFuture_bool_release = _CFuture_bool_releasePtr.asFunction<void Function(_CFuture_bool)>();
+late final _CFuture_bool_retainPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CFuture_bool)>>('CFuture_bool_retain');
+late final _CFuture_bool_retain = _CFuture_bool_retainPtr.asFunction<_CFuture_bool Function(_CFuture_bool)>();
+late final _CFuture_boolReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_bool,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Bool, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_bool_receive');
+late final _CFuture_boolReceive = _CFuture_boolReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_bool,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Bool, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CFuture_CImageDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function()>>('CFuture_CImageDataMakeDefault');
+late final _CFuture_CImageDataMakeDefault = _CFuture_CImageDataMakeDefaultPtr.asFunction<_CFuture_CImageData Function()>();
+late final _CFuture_CImageData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CImageData)>>('CFuture_CImageData_release');
+late final _CFuture_CImageData_release = _CFuture_CImageData_releasePtr.asFunction<void Function(_CFuture_CImageData)>();
+late final _CFuture_CImageData_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function(_CFuture_CImageData)>>('CFuture_CImageData_retain');
+late final _CFuture_CImageData_retain = _CFuture_CImageData_retainPtr.asFunction<_CFuture_CImageData Function(_CFuture_CImageData)>();
+late final _CFuture_CImageDataReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_CImageData,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CImageData, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_CImageData_receive');
+late final _CFuture_CImageDataReceive = _CFuture_CImageDataReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_CImageData,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CImageData, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CTouchPointStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTouchPointState Function()>>('CTouchPointStateMakeDefault');
+late final _CTouchPointStateMakeDefault = _CTouchPointStateMakeDefaultPtr.asFunction<_CTouchPointState Function()>();
+
 late final _CDragBeginDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDragBeginData Function()>>('CDragBeginDataMakeDefault');
 late final _CDragBeginDataMakeDefault = _CDragBeginDataMakeDefaultPtr.asFunction<_CDragBeginData Function()>();
 
@@ -87633,9 +88653,6 @@ late final _forEach_CArray_COptionSet_CTransformGesture = _forEach_CArray_COptio
 >>)>();
 late final _CArray_COptionSet_CTransformGesture_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_COptionSet_CTransformGesture)>>('CArray_COptionSet_CTransformGesture_release');
 late final _CArray_COptionSet_CTransformGesture_release = _CArray_COptionSet_CTransformGesture_releasePtr.asFunction<void Function(_CArray_COptionSet_CTransformGesture)>();
-
-late final _CTouchPointStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTouchPointState Function()>>('CTouchPointStateMakeDefault');
-late final _CTouchPointStateMakeDefault = _CTouchPointStateMakeDefaultPtr.asFunction<_CTouchPointState Function()>();
 late final _CMapGestureRecognizer_dragBeginPtr = _lookup<ffi.NativeFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragBegin');
 late final _CMapGestureRecognizer_dragBegin = _CMapGestureRecognizer_dragBeginPtr.asFunction<_CChannel_CDragBeginData Function(_CMapGestureRecognizer)>();
 late final _CMapGestureRecognizer_dragEndPtr = _lookup<ffi.NativeFunction<_CChannel_bool Function(_CMapGestureRecognizer)>>('CMapGestureRecognizer_dragEnd');
@@ -87718,6 +88735,71 @@ late final _COptional_CGestureManagerMakeDefault = _COptional_CGestureManagerMak
 
 late final _COptional_CGestureManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CGestureManager)>>('COptional_CGestureManager_release');
 late final _COptional_CGestureManager_release = _COptional_CGestureManager_releasePtr.asFunction<void Function(_COptional_CGestureManager)>();
+late final _CMapController_mapPtr = _lookup<ffi.NativeFunction<_CMap Function(_CMapController)>>('CMapController_map');
+late final _CMapController_map = _CMapController_mapPtr.asFunction<_CMap Function(_CMapController)>();
+late final _CMapController_rendererPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function(_CMapController)>>('CMapController_renderer');
+late final _CMapController_renderer = _CMapController_rendererPtr.asFunction<_CMapRenderer Function(_CMapController)>();
+late final _CMapController_gestureRecognizerPtr = _lookup<ffi.NativeFunction<_CMapGestureRecognizer Function(_CMapController)>>('CMapController_gestureRecognizer');
+late final _CMapController_gestureRecognizer = _CMapController_gestureRecognizerPtr.asFunction<_CMapGestureRecognizer Function(_CMapController)>();
+
+late final _CMapController_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapController_cg_objectIdentifier');
+late final _CMapController_cg_objectIdentifier = _CMapController_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CMapController_S_create_CContext_CMapControllerOptionsPtr = _lookup<ffi.NativeFunction<_CFuture_CMapController Function(_CContext, _CMapControllerOptions)>>('CMapController_S_create_CContext_CMapControllerOptions');
+late final _CMapController_S_create_CContext_CMapControllerOptions = _CMapController_S_create_CContext_CMapControllerOptionsPtr.asFunction<_CFuture_CMapController Function(_CContext, _CMapControllerOptions)>();
+
+late final _CMapController_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapController_release');
+late final _CMapController_release = _CMapController_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapController_retainPtr = _lookup<ffi.NativeFunction<_CMapController Function(ffi.Pointer<ffi.Void>)>>('CMapController_retain');
+late final _CMapController_retain = _CMapController_retainPtr.asFunction<_CMapController Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapControllerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapController Function()>>('CMapControllerMakeDefault');
+late final _CMapControllerMakeDefault = _CMapControllerMakeDefaultPtr.asFunction<_CMapController Function()>();
+
+
+late final _CFuture_CMapControllerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CMapController Function()>>('CFuture_CMapControllerMakeDefault');
+late final _CFuture_CMapControllerMakeDefault = _CFuture_CMapControllerMakeDefaultPtr.asFunction<_CFuture_CMapController Function()>();
+late final _CFuture_CMapController_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CMapController)>>('CFuture_CMapController_release');
+late final _CFuture_CMapController_release = _CFuture_CMapController_releasePtr.asFunction<void Function(_CFuture_CMapController)>();
+late final _CFuture_CMapController_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CMapController Function(_CFuture_CMapController)>>('CFuture_CMapController_retain');
+late final _CFuture_CMapController_retain = _CFuture_CMapController_retainPtr.asFunction<_CFuture_CMapController Function(_CFuture_CMapController)>();
+late final _CFuture_CMapControllerReceivePtr = _lookup<ffi.NativeFunction<
+  _CCancellable Function(
+    _CFuture_CMapController,
+    ffi.Int64,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CMapController, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>>('CFuture_CMapController_receive');
+late final _CFuture_CMapControllerReceive = _CFuture_CMapControllerReceivePtr.asFunction<
+  _CCancellable Function(
+    _CFuture_CMapController,
+    int,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CMapController, ffi.Int64)>>,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
+  )
+>();
+
+late final _CMapControllerRegistry_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapControllerRegistry_cg_objectIdentifier');
+late final _CMapControllerRegistry_cg_objectIdentifier = _CMapControllerRegistry_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CMapControllerRegistry_S_put_CMapControllerPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapController)>>('CMapControllerRegistry_S_put_CMapController');
+late final _CMapControllerRegistry_S_put_CMapController = _CMapControllerRegistry_S_put_CMapControllerPtr.asFunction<void Function(_CMapController)>();
+late final _CMapControllerRegistry_S_take_CMapIdPtr = _lookup<ffi.NativeFunction<_COptional_CMapController Function(_CMapId)>>('CMapControllerRegistry_S_take_CMapId');
+late final _CMapControllerRegistry_S_take_CMapId = _CMapControllerRegistry_S_take_CMapIdPtr.asFunction<_COptional_CMapController Function(_CMapId)>();
+
+late final _CMapControllerRegistry_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapControllerRegistry_release');
+late final _CMapControllerRegistry_release = _CMapControllerRegistry_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapControllerRegistry_retainPtr = _lookup<ffi.NativeFunction<_CMapControllerRegistry Function(ffi.Pointer<ffi.Void>)>>('CMapControllerRegistry_retain');
+late final _CMapControllerRegistry_retain = _CMapControllerRegistry_retainPtr.asFunction<_CMapControllerRegistry Function(ffi.Pointer<ffi.Void>)>();
+late final _CMapControllerRegistryMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapControllerRegistry Function()>>('CMapControllerRegistryMakeDefault');
+late final _CMapControllerRegistryMakeDefault = _CMapControllerRegistryMakeDefaultPtr.asFunction<_CMapControllerRegistry Function()>();
+
+
+late final _COptional_CMapControllerMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CMapController Function()>>('COptional_CMapControllerMakeDefault');
+late final _COptional_CMapControllerMakeDefault = _COptional_CMapControllerMakeDefaultPtr.asFunction<_COptional_CMapController Function()>();
+
+late final _COptional_CMapController_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CMapController)>>('COptional_CMapController_release');
+late final _COptional_CMapController_release = _COptional_CMapController_releasePtr.asFunction<void Function(_COptional_CMapController)>();
 
 late final _CCalloutMapPositionMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCalloutMapPosition Function()>>('CCalloutMapPositionMakeDefault');
 late final _CCalloutMapPositionMakeDefault = _CCalloutMapPositionMakeDefaultPtr.asFunction<_CCalloutMapPosition Function()>();
@@ -90796,10 +91878,6 @@ late final _CStatefulChannel_CGeoPointConnect = _CStatefulChannel_CGeoPointConne
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CGeoPoint, ffi.Int64)>>
   )
 >();
-
-late final _CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFps Function()>>('CFpsMakeDefault');
-late final _CFpsMakeDefault = _CFpsMakeDefaultPtr.asFunction<_CFps Function()>();
-
 late final _CMapSurfaceProvider_idPtr = _lookup<ffi.NativeFunction<ffi.Uint64 Function(_CMapSurfaceProvider)>>('CMapSurfaceProvider_id');
 late final _CMapSurfaceProvider_id = _CMapSurfaceProvider_idPtr.asFunction<int Function(_CMapSurfaceProvider)>();
 
@@ -90826,108 +91904,6 @@ late final _CMapSurfaceProvider_retain = _CMapSurfaceProvider_retainPtr.asFuncti
 late final _CMapSurfaceProviderMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapSurfaceProvider Function()>>('CMapSurfaceProviderMakeDefault');
 late final _CMapSurfaceProviderMakeDefault = _CMapSurfaceProviderMakeDefaultPtr.asFunction<_CMapSurfaceProvider Function()>();
 
-
-late final _CFuture_boolMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function()>>('CFuture_boolMakeDefault');
-late final _CFuture_boolMakeDefault = _CFuture_boolMakeDefaultPtr.asFunction<_CFuture_bool Function()>();
-late final _CFuture_bool_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_bool)>>('CFuture_bool_release');
-late final _CFuture_bool_release = _CFuture_bool_releasePtr.asFunction<void Function(_CFuture_bool)>();
-late final _CFuture_bool_retainPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CFuture_bool)>>('CFuture_bool_retain');
-late final _CFuture_bool_retain = _CFuture_bool_retainPtr.asFunction<_CFuture_bool Function(_CFuture_bool)>();
-late final _CFuture_boolReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_bool,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Bool, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_bool_receive');
-late final _CFuture_boolReceive = _CFuture_boolReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_bool,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Bool, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
-late final _CMapRenderer_maxFpsPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function(_CMapRenderer)>>('CMapRenderer_maxFps');
-late final _CMapRenderer_maxFps = _CMapRenderer_maxFpsPtr.asFunction<_COptional_CFps Function(_CMapRenderer)>();
-late final _CMapRenderer_powerSavingMaxFpsPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function(_CMapRenderer)>>('CMapRenderer_powerSavingMaxFps');
-late final _CMapRenderer_powerSavingMaxFps = _CMapRenderer_powerSavingMaxFpsPtr.asFunction<_COptional_CFps Function(_CMapRenderer)>();
-late final _CMapRenderer_fpsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function(_CMapRenderer)>>('CMapRenderer_fpsChannel');
-late final _CMapRenderer_fpsChannel = _CMapRenderer_fpsChannelPtr.asFunction<_CStatefulChannel_CFps Function(_CMapRenderer)>();
-late final _CMapRenderer_fpsPtr = _lookup<ffi.NativeFunction<_CFps Function(_CMapRenderer)>>('CMapRenderer_fps');
-late final _CMapRenderer_fps = _CMapRenderer_fpsPtr.asFunction<_CFps Function(_CMapRenderer)>();
-
-late final _CMapRenderer_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_cg_objectIdentifier');
-late final _CMapRenderer_cg_objectIdentifier = _CMapRenderer_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CMapRenderer_S_create_CMapPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function(_CMap)>>('CMapRenderer_S_create_CMap');
-late final _CMapRenderer_S_create_CMap = _CMapRenderer_S_create_CMapPtr.asFunction<_CMapRenderer Function(_CMap)>();
-late final _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFpsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CMapRenderer, _COptional_CFps, _COptional_CFps)>>('CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps');
-late final _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFps = _CMapRenderer_setMaxFps_COptional_CFps_COptional_CFpsPtr.asFunction<void Function(_CMapRenderer, _COptional_CFps, _COptional_CFps)>();
-late final _CMapRenderer_waitForLoadingPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CMapRenderer)>>('CMapRenderer_waitForLoading');
-late final _CMapRenderer_waitForLoading = _CMapRenderer_waitForLoadingPtr.asFunction<_CFuture_bool Function(_CMapRenderer)>();
-late final _CMapRenderer_waitForRenderingPtr = _lookup<ffi.NativeFunction<_CFuture_bool Function(_CMapRenderer)>>('CMapRenderer_waitForRendering');
-late final _CMapRenderer_waitForRendering = _CMapRenderer_waitForRenderingPtr.asFunction<_CFuture_bool Function(_CMapRenderer)>();
-late final _CMapRenderer_takeSnapshot_CAlignmentPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function(_CMapRenderer, _CAlignment)>>('CMapRenderer_takeSnapshot_CAlignment');
-late final _CMapRenderer_takeSnapshot_CAlignment = _CMapRenderer_takeSnapshot_CAlignmentPtr.asFunction<_CFuture_CImageData Function(_CMapRenderer, _CAlignment)>();
-
-late final _CMapRenderer_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_release');
-late final _CMapRenderer_release = _CMapRenderer_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CMapRenderer_retainPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function(ffi.Pointer<ffi.Void>)>>('CMapRenderer_retain');
-late final _CMapRenderer_retain = _CMapRenderer_retainPtr.asFunction<_CMapRenderer Function(ffi.Pointer<ffi.Void>)>();
-late final _CMapRendererMakeDefaultPtr = _lookup<ffi.NativeFunction<_CMapRenderer Function()>>('CMapRendererMakeDefault');
-late final _CMapRendererMakeDefault = _CMapRendererMakeDefaultPtr.asFunction<_CMapRenderer Function()>();
-
-
-late final _COptional_CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_COptional_CFps Function()>>('COptional_CFpsMakeDefault');
-late final _COptional_CFpsMakeDefault = _COptional_CFpsMakeDefaultPtr.asFunction<_COptional_CFps Function()>();
-
-late final _CStatefulChannel_CFpsMakeDefaultPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function()>>('CStatefulChannel_CFpsMakeDefault');
-late final _CStatefulChannel_CFpsMakeDefault = _CStatefulChannel_CFpsMakeDefaultPtr.asFunction<_CStatefulChannel_CFps Function()>();
-late final _CStatefulChannel_CFps_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_release');
-late final _CStatefulChannel_CFps_release = _CStatefulChannel_CFps_releasePtr.asFunction<void Function(_CStatefulChannel_CFps)>();
-late final _CStatefulChannel_CFps_retainPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CFps Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_retain');
-late final _CStatefulChannel_CFps_retain = _CStatefulChannel_CFps_retainPtr.asFunction<_CStatefulChannel_CFps Function(_CStatefulChannel_CFps)>();
-late final _CStatefulChannel_CFpsGetCurrentValuePtr = _lookup<ffi.NativeFunction<_CFps Function(_CStatefulChannel_CFps)>>('CStatefulChannel_CFps_getCurrentValue');
-late final _CStatefulChannel_CFpsGetCurrentValue = _CStatefulChannel_CFpsGetCurrentValuePtr.asFunction<_CFps Function(_CStatefulChannel_CFps)>();
-late final _CStatefulChannel_CFpsConnectPtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CFps,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CFps, ffi.Int64)>>
-  )
->>('CStatefulChannel_CFps_connect');
-late final _CStatefulChannel_CFpsConnect = _CStatefulChannel_CFpsConnectPtr.asFunction<
-  _CCancellable Function(
-    _CStatefulChannel_CFps,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CFps, ffi.Int64)>>
-  )
->();
-
-late final _CFuture_CImageDataMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function()>>('CFuture_CImageDataMakeDefault');
-late final _CFuture_CImageDataMakeDefault = _CFuture_CImageDataMakeDefaultPtr.asFunction<_CFuture_CImageData Function()>();
-late final _CFuture_CImageData_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CImageData)>>('CFuture_CImageData_release');
-late final _CFuture_CImageData_release = _CFuture_CImageData_releasePtr.asFunction<void Function(_CFuture_CImageData)>();
-late final _CFuture_CImageData_retainPtr = _lookup<ffi.NativeFunction<_CFuture_CImageData Function(_CFuture_CImageData)>>('CFuture_CImageData_retain');
-late final _CFuture_CImageData_retain = _CFuture_CImageData_retainPtr.asFunction<_CFuture_CImageData Function(_CFuture_CImageData)>();
-late final _CFuture_CImageDataReceivePtr = _lookup<ffi.NativeFunction<
-  _CCancellable Function(
-    _CFuture_CImageData,
-    ffi.Int64,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CImageData, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->>('CFuture_CImageData_receive');
-late final _CFuture_CImageDataReceive = _CFuture_CImageDataReceivePtr.asFunction<
-  _CCancellable Function(
-    _CFuture_CImageData,
-    int,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CImageData, ffi.Int64)>>,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CError, ffi.Int64)>>
-  )
->();
 
 late final _CMapBuilder_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CMapBuilder_cg_objectIdentifier');
 late final _CMapBuilder_cg_objectIdentifier = _CMapBuilder_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -92739,4 +93715,4 @@ late final _CStatefulChannel_CArray_CTerritoryConnect = _CStatefulChannel_CArray
   )
 >();
 
-//ApplicationState, BaseCameraInternalMethods, BssEventsSourceClearGuard, ContextObserver, ContextTaggedPointerSnapshot, ContextTaggedPointersProvider, ContextTaggedPointersProviderInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapGestureRecognizer, MapInternalMethods, MapRenderer, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, setupBssEventsSourceFromSdk, toLocaleManager
+//ApplicationState, BaseCameraInternalMethods, BssEventsSourceClearGuard, ContextObserver, ContextTaggedPointerSnapshot, ContextTaggedPointersProvider, ContextTaggedPointersProviderInternalMethods, ImageLoader, LocaleChangeNotifier, MapBuilder, MapControllerRegistry, MapGestureRecognizerInternalMethods, MapInternalMethods, MapRendererInternalMethods, MapSurfaceProvider, ModelDataLoader, PlatformLocaleManager, ProductType, TouchPointState, calculateBearing, calculateDistance, downloadData, makeSystemContext, move, releaseContext, setupBssEventsSourceFromSdk, toLocaleManager
