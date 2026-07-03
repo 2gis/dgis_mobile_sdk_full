@@ -7,16 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
-import '../../generated/native_exception.dart';
 import '../../generated/stateful_channel.dart';
 import '../../platform/map/map.dart';
 import '../../platform/map/map_appearance.dart';
-import '../../platform/map/map_options.dart';
 import '../../platform/map/map_theme.dart';
+import '../../platform/map/map_widget_options.dart';
 import '../../platform/map/touch_events_observer.dart';
 import 'copyright_widget.dart';
 
-typedef OnMapReadyCallback = void Function(sdk.Map map);
 typedef OnMapThemeChangedCallback = void Function(MapTheme theme);
 typedef MapObjectTappedCallback = void Function(
   sdk.RenderedObjectInfo objectInfo,
@@ -24,24 +22,30 @@ typedef MapObjectTappedCallback = void Function(
 
 /// Контроллер для работы с картой.
 class MapWidgetController {
-  final List<OnMapReadyCallback> _readyMapCallbacks = [];
+  final sdk.MapController _mapController;
+  final sdk.MapSurfaceProvider _provider;
+  final sdk.MapRenderer _renderer;
+  final sdk.MapGestureRecognizer _mapGestureRecognizer;
   final List<OnMapThemeChangedCallback> _mapThemeChangedCallbacks = [];
   final List<MapObjectTappedCallback> _objectTappedCallbacks = [];
   final List<MapObjectTappedCallback> _objectLongTouchCallbacks = [];
   final List<StreamSubscription<dynamic>?> _connections = [];
   final CopyrightWidgetController _copyrightWidgetController =
       CopyrightWidgetController();
-  sdk.Map? _map;
-  sdk.MapSurfaceProvider? _provider;
-  sdk.MapRenderer? _renderer;
   MapAppearance _appearance = const AutomaticAppearance(
     MapTheme.defaultDayTheme(),
     MapTheme.defaultNightTheme(),
   );
-  sdk.Fps? _maxFps;
-  sdk.Fps? _powerSavingMaxFps;
-  sdk.MapGestureRecognizer? _mapGestureRecognizer;
   TouchEventsObserver? _touchEventsObserver;
+
+  MapWidgetController(sdk.MapController mapController)
+      : _mapController = mapController,
+        _provider = sdk.MapSurfaceProvider.create(mapController.map),
+        _renderer = mapController.renderer,
+        _mapGestureRecognizer = mapController.gestureRecognizer;
+
+  /// Объект карты.
+  sdk.Map get map => _mapController.map;
 
   /// Внешний вид карты в зависимости от окружения.
   MapAppearance get appearance => _appearance;
@@ -54,31 +58,22 @@ class MapWidgetController {
 
   /// Частота обновления карты.
   /// Для получения корректного значения необходимо держать подписку на канал.
-  /// Перед вызовом метода карта должна быть проинициализирована (завершен getMapAsync).
-  StatefulChannel<sdk.Fps> get fpsChannel {
-    if (_renderer == null) {
-      throw NativeException(
-        'Map must be initialized (getMapAsync completed) before getting MapView.fpsChannel',
-      );
-    }
-    return _renderer!.fpsChannel;
-  }
+  /// Перед вызовом метода карта должна быть подключена к [MapWidget].
+  StatefulChannel<sdk.Fps> get fpsChannel => _renderer.fpsChannel;
 
   /// Максимальный FPS карты.
-  sdk.Fps? get maxFps => _maxFps;
+  sdk.Fps? get maxFps => _renderer.maxFps;
   set maxFps(sdk.Fps? value) {
-    if (_maxFps != value) {
-      _maxFps = value;
-      _updateRendererFps();
+    if (_renderer.maxFps != value) {
+      _renderer.setMaxFps(value, _renderer.powerSavingMaxFps);
     }
   }
 
   /// Максимальный FPS карты в режиме энергосбережения.
-  sdk.Fps? get powerSavingMaxFps => _powerSavingMaxFps;
+  sdk.Fps? get powerSavingMaxFps => _renderer.powerSavingMaxFps;
   set powerSavingMaxFps(sdk.Fps? value) {
-    if (_powerSavingMaxFps != value) {
-      _powerSavingMaxFps = value;
-      _updateRendererFps();
+    if (_renderer.powerSavingMaxFps != value) {
+      _renderer.setMaxFps(_renderer.maxFps, value);
     }
   }
 
@@ -101,28 +96,12 @@ class MapWidgetController {
   }
 
   /// Класс для управления обработкой жестов.
-  sdk.GestureManager? get gestureManager {
-    if (_mapGestureRecognizer == null) {
-      throw NativeException(
-        'Map must be initialized (getMapAsync completed) before MapView.gestureManager',
-      );
-    }
-
-    return _mapGestureRecognizer?.gestureManager;
-  }
+  sdk.GestureManager? get gestureManager =>
+      _mapGestureRecognizer.gestureManager;
 
   /// Метод для установки функции обратного вызова при тапе в копирайт.
   void setUriOpener(UriOpener uriOpener) {
     _copyrightWidgetController.uriOpener = uriOpener;
-  }
-
-  /// Метод для добавления подписки на инициализацию Map.
-  void getMapAsync(OnMapReadyCallback callback) {
-    if (_map != null) {
-      callback(_map!);
-      return;
-    }
-    _readyMapCallbacks.add(callback);
   }
 
   void setTouchEventsObserver(TouchEventsObserver? observer) {
@@ -150,7 +129,7 @@ class MapWidgetController {
     _updateTouchEventObserver();
   }
 
-  void removeLongTouchCallback(MapObjectTappedCallback callback) {
+  void removeObjectLongTouchCallback(MapObjectTappedCallback callback) {
     _objectLongTouchCallbacks.remove(callback);
     _updateTouchEventObserver();
   }
@@ -159,14 +138,8 @@ class MapWidgetController {
   CancelableOperation<ByteData?> takeSnapshot({
     sdk.Alignment copyrightPosition = sdk.Alignment.bottomRight,
   }) {
-    if (_renderer == null) {
-      throw NativeException(
-        'Map must be initialized (getMapAsync completed) before takeSnapshot',
-      );
-    }
-
     final completer = Completer<ByteData>();
-    _renderer!.takeSnapshot(copyrightPosition).value.then(
+    _renderer.takeSnapshot(copyrightPosition).value.then(
       (imageData) {
         final buffer = imageData.data.buffer;
         final imageDataList = buffer.asUint8List(
@@ -193,21 +166,14 @@ class MapWidgetController {
 
   void dispose() {
     _cancelConnections();
-    _renderer = null;
-    _provider = null;
-    _map = null;
   }
 
   void _updateMapTheme() {
     final theme = _appearance.mapTheme;
-    _map?.setTheme(theme);
+    _mapController.map.setTheme(theme);
     for (final cb in _mapThemeChangedCallbacks) {
       cb(theme);
     }
-  }
-
-  void _updateRendererFps() {
-    _renderer?.setMaxFps(_maxFps, _powerSavingMaxFps);
   }
 
   void _addMapThemeChangedCallback(OnMapThemeChangedCallback callback) {
@@ -219,10 +185,6 @@ class MapWidgetController {
   }
 
   void _updateTouchEventObserver() {
-    if (_mapGestureRecognizer == null) {
-      return;
-    }
-
     if (_touchEventsObserver == null &&
         _objectTappedCallbacks.isEmpty &&
         _objectLongTouchCallbacks.isEmpty) {
@@ -236,7 +198,7 @@ class MapWidgetController {
 
     _connections
       ..add(
-        _mapGestureRecognizer?.tap.listen(
+        _mapGestureRecognizer.tap.listen(
           (point) {
             _touchEventsObserver?.onTap(point);
             _callMapObjectCallbacks(point, _objectTappedCallbacks);
@@ -244,7 +206,7 @@ class MapWidgetController {
         ),
       )
       ..add(
-        _mapGestureRecognizer?.longTouch.listen(
+        _mapGestureRecognizer.longTouch.listen(
           (point) {
             _touchEventsObserver?.onLongTouch(point);
             _callMapObjectCallbacks(point, _objectLongTouchCallbacks);
@@ -252,21 +214,21 @@ class MapWidgetController {
         ),
       )
       ..add(
-        _mapGestureRecognizer?.dragBegin.listen(
+        _mapGestureRecognizer.dragBegin.listen(
           (dragBeginData) {
             _touchEventsObserver?.onDragBegin(dragBeginData);
           },
         ),
       )
       ..add(
-        _mapGestureRecognizer?.dragMove.listen(
+        _mapGestureRecognizer.dragMove.listen(
           (point) {
             _touchEventsObserver?.onDragMove(point);
           },
         ),
       )
       ..add(
-        _mapGestureRecognizer?.dragEnd.listen(
+        _mapGestureRecognizer.dragEnd.listen(
           (result) {
             _touchEventsObserver?.onDragEnd();
           },
@@ -275,10 +237,12 @@ class MapWidgetController {
   }
 
   Future<void> _cancelConnections() async {
-    for (final connection in _connections) {
+    final connections = List<StreamSubscription<dynamic>?>.from(_connections);
+    _connections.clear();
+
+    for (final connection in connections) {
       await connection?.cancel();
     }
-    _connections.clear();
   }
 
   Future<void> _callMapObjectCallbacks(
@@ -288,8 +252,8 @@ class MapWidgetController {
     if (callbacks.isEmpty) {
       return;
     }
-    await _map
-        ?.getMapObject(point, const sdk.ScreenDistance(1))
+    await map
+        .getMapObject(point, const sdk.ScreenDistance(1))
         .value
         .then((objectInfo) {
       if (objectInfo != null) {
@@ -303,8 +267,8 @@ class MapWidgetController {
 
 class MapWidgetInternal extends StatefulWidget {
   final sdk.Context sdkContext;
-  final MapOptions mapOptions;
-  final MapWidgetController? controller;
+  final MapWidgetController controller;
+  final MapWidgetOptions viewOptions;
   final Widget? child;
   final bool showCopyright;
 
@@ -314,8 +278,8 @@ class MapWidgetInternal extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
   MapWidgetInternal({
     required this.sdkContext,
-    required this.mapOptions,
-    this.controller,
+    required this.controller,
+    this.viewOptions = const MapWidgetOptions(),
     this.child,
     this.showCopyright = true,
     super.key,
@@ -333,8 +297,8 @@ class MapWidget extends MapWidgetInternal {
   // ignore: prefer_const_constructors_in_immutables
   MapWidget({
     required super.sdkContext,
-    required super.mapOptions,
-    super.controller,
+    required super.controller,
+    super.viewOptions,
     super.child,
     super.key,
   }) : super(
@@ -394,10 +358,10 @@ class _MapRenderBox extends RenderBox {
     final height = (newSize.height * deviceDensity).toInt();
     await textureController.update(textureId!, width, height);
     final screenSize = sdk.ScreenSize(width: width, height: height);
-    mapWidgetController._provider?.resizeSurface(screenSize);
-    mapWidgetController._map?.camera.size = screenSize;
+    mapWidgetController._provider.resizeSurface(screenSize);
+    mapWidgetController.map.camera.size = screenSize;
 
-    mapWidgetController._renderer?.waitForRendering().then((_) {
+    mapWidgetController._renderer.waitForRendering().then((_) {
       _currentTextureSize = newSize;
       markNeedsPaint();
     });
@@ -578,12 +542,9 @@ class MapWidgetState extends State<MapWidgetInternal>
   @override
   void initState() {
     super.initState();
-    mapWidgetController = widget.controller ?? MapWidgetController();
-    mapWidgetController
-      .._appearance = widget.mapOptions.appearance
-      .._maxFps = mapWidgetController.maxFps ?? widget.mapOptions.maxFps
-      .._powerSavingMaxFps = mapWidgetController.powerSavingMaxFps ??
-          widget.mapOptions.powerSavingMaxFps;
+    mapWidgetController = widget.controller;
+    mapWidgetController._appearance = widget.viewOptions.appearance;
+    mapWidgetController._updateMapTheme();
     WidgetsBinding.instance.addObserver(this);
     _appState = WidgetsBinding.instance.lifecycleState;
     _mapTheme = ValueNotifier(mapWidgetController._appearance.mapTheme);
@@ -596,9 +557,10 @@ class MapWidgetState extends State<MapWidgetInternal>
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!isMapInitialized) {
-      _deviceDensity = widget.mapOptions.deviceDensity?.value ??
+      _deviceDensity = widget.viewOptions.deviceDensity?.value ??
           MediaQuery.devicePixelRatioOf(context);
-      _devicePpi = widget.mapOptions.devicePPI?.value ?? _deviceDensity * 160.0;
+      _devicePpi =
+          widget.viewOptions.devicePPI?.value ?? _deviceDensity * 160.0;
       _initialize();
     }
   }
@@ -619,7 +581,7 @@ class MapWidgetState extends State<MapWidgetInternal>
   Widget build(BuildContext context) {
     if (_textureId == null) {
       return Container(
-        color: mapWidgetController._appearance.mapTheme.loadingBackground,
+        color: widget.viewOptions.loadingBackground,
       );
     }
 
@@ -649,7 +611,7 @@ class MapWidgetState extends State<MapWidgetInternal>
         ),
         if (widget.showCopyright)
           _MapProvider(
-            map: mapWidgetController._map!,
+            map: mapWidgetController.map,
             mapTheme: _mapTheme.value,
             child: ValueListenableBuilder(
               valueListenable: mapWidgetController
@@ -666,7 +628,7 @@ class MapWidgetState extends State<MapWidgetInternal>
           ValueListenableBuilder(
             valueListenable: _mapTheme,
             builder: (_, theme, __) => _MapProvider(
-              map: mapWidgetController._map!,
+              map: mapWidgetController.map,
               mapTheme: theme,
               child: widget.child!,
             ),
@@ -689,41 +651,25 @@ class MapWidgetState extends State<MapWidgetInternal>
   }
 
   Future<void> _initialize() async {
-    if (mapWidgetController._map == null) {
-      final builder = await sdk.MapBuilder().apply(
-        widget.mapOptions,
-        widget.sdkContext,
-        _deviceDensity,
-        _devicePpi,
-      );
-      final map = await builder.createMap(widget.sdkContext).value;
-      mapWidgetController._map = map;
-    }
+    final map = mapWidgetController.map;
+    map.camera.setDevicePpi(
+      sdk.DevicePpi(_devicePpi),
+      sdk.DeviceDensity(_deviceDensity),
+    );
 
-    final map = mapWidgetController._map;
-    if (map == null) {
-      throw NativeException(
-        'Failed to initialize map',
-      );
-    }
-    mapWidgetController._updateMapTheme();
-
-    final provider =
-        mapWidgetController._provider ??= sdk.MapSurfaceProvider.create(map);
+    final provider = mapWidgetController._provider;
     final id = await _controller.initialize(provider.id);
-    final screenFps = await _controller.getScreenFps();
 
-    final renderer =
-        mapWidgetController._renderer ??= sdk.MapRenderer.create(map);
-    mapWidgetController
-      ..maxFps = sdk.Fps(mapWidgetController.maxFps?.value ?? screenFps ?? 60)
-      ..powerSavingMaxFps = mapWidgetController.powerSavingMaxFps
-      .._updateRendererFps();
+    final screenFps = await _controller.getScreenFps();
+    final renderer = mapWidgetController._renderer;
+    final maxFps = renderer.maxFps ?? sdk.Fps(screenFps ?? 60);
+    final powerSavingMaxFps =
+        renderer.powerSavingMaxFps ?? sdk.Fps(screenFps ?? 60);
+    renderer.setMaxFps(maxFps, powerSavingMaxFps);
 
     _updateMapVisibility();
 
-    final mapGestureRecognizer = mapWidgetController._mapGestureRecognizer ??=
-        sdk.MapGestureRecognizer.create(map);
+    final mapGestureRecognizer = mapWidgetController._mapGestureRecognizer;
     _mapGestureController = _MapGestureController(
       mapGestureRecognizer,
       _deviceDensity,
@@ -736,9 +682,6 @@ class MapWidgetState extends State<MapWidgetInternal>
     });
 
     mapWidgetController._updateTouchEventObserver();
-    for (final callback in mapWidgetController._readyMapCallbacks) {
-      callback(map);
-    }
 
     renderer.waitForRendering().then((isRendered) {
       if (isRendered) {
@@ -765,63 +708,11 @@ class MapWidgetState extends State<MapWidgetInternal>
         mapVisibilityState = sdk.MapVisibilityState.visible;
     }
 
-    mapWidgetController._map?.mapVisibilityState = mapVisibilityState;
+    mapWidgetController.map.mapVisibilityState = mapVisibilityState;
   }
 
   void _onMapThemeChanged(MapTheme theme) {
     _mapTheme.value = theme;
-  }
-}
-
-extension _MapOptionsBackgroundColor on MapOptions {
-  Color get defaultBackgroundColor {
-    if (backgroundColor != null) {
-      return backgroundColor!;
-    }
-    return appearance.mapTheme.loadingBackground;
-  }
-}
-
-extension _MapBuilderApplyMapOptions on sdk.MapBuilder {
-  Future<sdk.MapBuilder> apply(
-    MapOptions options,
-    sdk.Context sdkContext,
-    double deviceDensity,
-    double devicePpi,
-  ) async {
-    final builder = sdk.MapBuilder()
-        .setPosition(options.position)
-        .setPositionPoint(options.positionPoint)
-        .setZoomRestrictions(options.zoomRestrictions)
-        .setDevicePpi(
-          sdk.DevicePpi(devicePpi),
-          sdk.DeviceDensity(deviceDensity),
-        );
-
-    if (options.sources != null) {
-      options.sources!.forEach(builder.addSource);
-    } else {
-      builder
-        ..addSource(sdk.DgisSource.createDgisSource(sdkContext))
-        ..addSource(sdk.DgisSource.createImmersiveDgisSource(sdkContext));
-    }
-
-    if (options.style != null) {
-      builder.setStyle(options.style!);
-    } else if (options.styleFuture != null) {
-      final style = await options.styleFuture!.value;
-      builder.setStyle(style);
-    }
-
-    builder
-      // ignore: deprecated_member_use
-      ..setBackgroundColor(sdk.Color(options.defaultBackgroundColor.value))
-      ..setAttribute(
-        'theme',
-        sdk.AttributeValue.string(options.appearance.mapTheme.name),
-      );
-
-    return builder;
   }
 }
 

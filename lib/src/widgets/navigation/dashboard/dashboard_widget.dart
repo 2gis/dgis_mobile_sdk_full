@@ -522,7 +522,7 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                           value: model.isMinimapVisible,
                           onChanged: (_) =>
                               widget.controller.toggleMinimapVisibility(),
-                          activeColor: Colors.white,
+                          activeThumbColor: Colors.white,
                           activeTrackColor:
                               colorScheme.buttonPositiveSurfaceColor,
                         ),

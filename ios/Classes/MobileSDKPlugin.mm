@@ -1,5 +1,6 @@
-#import "FlutterMetalTexture.h"
 #import "MobileSDKPlugin.h"
+
+#import "FlutterMetalTexture.h"
 
 @interface MobileSDKPlugin ()
 @property(nonatomic, strong) id<MTLDevice> device;

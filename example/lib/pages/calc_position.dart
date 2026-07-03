@@ -17,7 +17,7 @@ class CalcPositionPage extends StatefulWidget {
 
 class _SamplePageState extends State<CalcPositionPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  final _mapWidgetController = sdk.MapWidgetController();
+  sdk.MapWidgetController? _mapWidgetController;
   final _circleAssetsPath = 'assets/icons/circle.png';
   final ValueNotifier<double?> _deviceDensity = ValueNotifier<double?>(null);
 
@@ -44,21 +44,30 @@ class _SamplePageState extends State<CalcPositionPage> {
   @override
   void initState() {
     super.initState();
-    initContext();
+    unawaited(initContext());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = _mapWidgetController;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          sdk.MapWidget(
-            sdkContext: _sdkContext,
-            mapOptions: sdk.MapOptions(),
-            controller: _mapWidgetController,
-          ),
+          if (currentMapWidgetController == null)
+            const SizedBox.shrink()
+          else
+            sdk.MapWidget(
+              sdkContext: _sdkContext,
+              controller: currentMapWidgetController,
+            ),
           _buildPositionedOverlay(),
           Align(
             alignment: Alignment.bottomRight,
@@ -81,23 +90,32 @@ class _SamplePageState extends State<CalcPositionPage> {
     );
   }
 
-  void initContext() {
+  Future<void> initContext() async {
     _loader = sdk.ImageLoader(_sdkContext);
-    _mapWidgetController
-      ..getMapAsync((map) {
-        _sdkMap = map;
-        _sdkCamera = map.camera;
-        _mapObjectManager = sdk.MapObjectManager(map);
-        _initMarkers();
-        _initMarkersOn0();
-        _initMarkersOn180Meridian();
-        _initRectMarkersOn0();
-        _initRectMarkersOn180Meridian();
-        _initCircle();
-        _initPolygon();
-        _deviceDensity.value = map.camera.deviceDensity.value;
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+
+    final createdMapWidgetController = await createMapWidgetController(
+      _sdkContext,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    final map = createdMapWidgetController.map;
+    _sdkMap = map;
+    _sdkCamera = map.camera;
+    _mapObjectManager = sdk.MapObjectManager(map);
+    await _initMarkers();
+    await _initMarkersOn0();
+    await _initMarkersOn180Meridian();
+    await _initRectMarkersOn0();
+    await _initRectMarkersOn180Meridian();
+    _initCircle();
+    _initPolygon();
+    _deviceDensity.value = map.camera.deviceDensity.value;
+    setState(() {
+      _mapWidgetController = createdMapWidgetController
+        ..copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   Widget _buildPositionedOverlay() {

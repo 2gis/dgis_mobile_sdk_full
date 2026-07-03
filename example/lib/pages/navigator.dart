@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'common.dart';
 
@@ -16,14 +17,14 @@ class NavigatorPage extends StatefulWidget {
 }
 
 class _NavigatorPageState extends State<NavigatorPage> {
-  final mapWidgetController = sdk.MapWidgetController();
-  final miniMapWidgetController = sdk.MapWidgetController();
+  sdk.MapWidgetController? mapWidgetController;
+  sdk.MapWidgetController? miniMapWidgetController;
   final sdkContext = AppContainer().initializeSdk();
 
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
 
-  sdk.Style? _miniMapStyle;
+  late sdk.File miniMapStyleFile;
 
   final _startPoint = const sdk.RouteSearchPoint(
     coordinates: sdk.GeoPoint(
@@ -51,37 +52,39 @@ class _NavigatorPageState extends State<NavigatorPage> {
 
   @override
   void initState() {
+    super.initState();
     _currentSpeed = _minSpeedForCarSimulation;
     navigationManager = sdk.NavigationManager(sdkContext);
     trafficRouter = sdk.TrafficRouter(sdkContext);
+    miniMapStyleFile = sdk.File.fromAsset(
+      sdkContext,
+      'minimap_styles.2gis',
+    );
 
-    _loadMiniMapStyle();
-
-    super.initState();
-    mapWidgetController.getMapAsync((map) {
-      unawaited(
-        _startNavigation(map),
-      );
-    });
+    WakelockPlus.enable();
+    unawaited(_createMapControllers());
   }
 
-  Future<void> _loadMiniMapStyle() async {
-    final style = await sdk.StyleBuilder(sdkContext)
-        .loadStyle(
-          sdk.File.fromAsset(
-            sdkContext,
-            'minimap_styles.2gis',
-          ),
-        )
-        .value;
-
+  Future<void> _createMapControllers() async {
+    final createdMapWidgetController =
+        await createMapWidgetController(sdkContext);
+    final createdMiniMapWidgetController = await createMapWidgetController(
+      sdkContext,
+      controllerOptions: sdk.MapControllerOptions(
+        styleFile: miniMapStyleFile,
+      ),
+    );
     if (!mounted) {
-      _miniMapStyle = style;
+      return;
+    }
+    await _startNavigation(createdMapWidgetController.map);
+    if (!mounted) {
       return;
     }
 
     setState(() {
-      _miniMapStyle = style;
+      mapWidgetController = createdMapWidgetController;
+      miniMapWidgetController = createdMiniMapWidgetController;
     });
   }
 
@@ -164,6 +167,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
   void dispose() {
     _stopSpeedSimulation();
     navigationManager.stop();
+    WakelockPlus.disable();
     super.dispose();
   }
 
@@ -173,58 +177,63 @@ class _NavigatorPageState extends State<NavigatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = mapWidgetController;
+    final currentMiniMapWidgetController = miniMapWidgetController;
+
     return Scaffold(
-      body: sdk.MapWidget(
-        sdkContext: sdkContext,
-        mapOptions: sdk.MapOptions(),
-        controller: mapWidgetController,
-        child: Padding(
-          padding: EdgeInsets.only(
-            right: 8,
-            left: 8,
-            bottom: Platform.isIOS ? 0 : 8,
-          ),
-          child: sdk.NavigationLayoutWidget(
-            navigationManager: navigationManager,
-            dashboardWidgetBuilder: (controller, onHeaderChangeSize) =>
-                sdk.DashboardWidget(
-              controller: controller,
-              onHeaderChangeSize: onHeaderChangeSize,
-              onFinishClicked: () {
-                Navigator.pop(context);
-                controller.stopNavigation();
-              },
-            ),
-            finishRouteWidgetBuilder: (controller) => sdk.FinishRouteWidget(
-              controller: controller,
-              onFinishClicked: () {
-                Navigator.pop(context);
-                controller.stopNavigation();
-              },
-            ),
-            myLocationWidgetBuilder:
-                sdk.NavigationMyLocationWidget.defaultBuilder,
-            compassWidgetbuilder: sdk.NavigationCompassWidget.defaultBuilder,
-            zoomWidgetBuilder: sdk.NavigationZoomWidget.defaultBuilder,
-            parkingWidgetBuilder: sdk.NavigationParkingWidget.defaultBuilder,
-            trafficWidgetBuilder: sdk.NavigationTrafficWidget.defaultBuilder,
-            speedLimitWidgetBuilder: sdk.SpeedLimitWidget.defaultBuilder,
-            maneuverWidgetBuilder: sdk.ManeuverWidget.defaultBuilder,
-            trafficLineWidgetBuilder: sdk.TrafficLineWidget.defaultBuilder,
-            betterRoutePromptWidgetBuilder:
-                sdk.BetterRoutePromptWidget.defaultBuilder,
-            navigationMiniMapWidgetBuilder:
-                (miniMapController, dashboardController) =>
-                    sdk.NavigationMiniMapWidget(
+      body: currentMapWidgetController == null ||
+              currentMiniMapWidgetController == null
+          ? const SizedBox.shrink()
+          : sdk.MapWidget(
               sdkContext: sdkContext,
-              mapOptions: sdk.MapOptions(style: _miniMapStyle),
-              controller: miniMapWidgetController,
-              miniMapController: miniMapController,
-              dashboardController: dashboardController,
+              controller: currentMapWidgetController,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: 8,
+                  left: 8,
+                  bottom: Platform.isIOS ? 0 : 8,
+                ),
+                child: sdk.NavigationLayoutWidget(
+                  navigationManager: navigationManager,
+                  dashboardWidgetBuilder: (controller, onHeaderChangeSize) =>
+                      sdk.DashboardWidget(
+                    controller: controller,
+                    onHeaderChangeSize: onHeaderChangeSize,
+                    onFinishClicked: () {
+                      Navigator.pop(context);
+                      controller.stopNavigation();
+                    },
+                  ),
+                  finishRouteWidgetBuilder: (controller) => sdk.FinishRouteWidget(
+                    controller: controller,
+                    onFinishClicked: () {
+                      Navigator.pop(context);
+                      controller.stopNavigation();
+                    },
+                  ),
+                  myLocationWidgetBuilder:
+                      sdk.NavigationMyLocationWidget.defaultBuilder,
+                  compassWidgetbuilder: sdk.NavigationCompassWidget.defaultBuilder,
+                  zoomWidgetBuilder: sdk.NavigationZoomWidget.defaultBuilder,
+                  parkingWidgetBuilder: sdk.NavigationParkingWidget.defaultBuilder,
+                  trafficWidgetBuilder: sdk.NavigationTrafficWidget.defaultBuilder,
+                  speedLimitWidgetBuilder: sdk.SpeedLimitWidget.defaultBuilder,
+                  maneuverWidgetBuilder: sdk.ManeuverWidget.defaultBuilder,
+                  trafficLineWidgetBuilder: sdk.TrafficLineWidget.defaultBuilder,
+                  betterRoutePromptWidgetBuilder:
+                      sdk.BetterRoutePromptWidget.defaultBuilder,
+                  navigationMiniMapWidgetBuilder:
+                      (miniMapController, dashboardController) {
+                    return sdk.NavigationMiniMapWidget(
+                      sdkContext: sdkContext,
+                      controller: currentMiniMapWidgetController,
+                      miniMapController: miniMapController,
+                      dashboardController: dashboardController,
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

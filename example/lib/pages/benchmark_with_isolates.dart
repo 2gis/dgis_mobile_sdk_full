@@ -23,12 +23,12 @@ class BenchmarkWithIsolatesPage extends StatefulWidget {
 
 class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  sdk.MapWidgetController? mapWidgetController;
   final List<double> fpsValues = [];
 
   sdk.Map? sdkMap;
-  late sdk.MapObjectManager mapObjectManager;
-  late sdk.GeometryMapObjectSource geometryMapObjectSource;
+  sdk.MapObjectManager? mapObjectManager;
+  sdk.GeometryMapObjectSource? geometryMapObjectSource;
   double lastFps = 0;
   StreamSubscription<sdk.Fps>? fpsSubscription;
   Isolate? _runningIsolate;
@@ -49,8 +49,8 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
 
     _killIsolate();
 
-    mapObjectManager.removeAll();
-    geometryMapObjectSource.clear();
+    mapObjectManager?.removeAll();
+    geometryMapObjectSource?.clear();
 
     super.dispose();
   }
@@ -58,7 +58,7 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   Future<void> _startFpsTracking() async {
     await fpsSubscription?.cancel();
     fpsValues.clear();
-    fpsSubscription = mapWidgetController.fpsChannel.listen((fps) {
+    fpsSubscription = mapWidgetController?.fpsChannel.listen((fps) {
       setState(() {
         lastFps = fps.value.toDouble();
         fpsValues.add(lastFps);
@@ -68,6 +68,7 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -80,11 +81,13 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
       ),
       body: Stack(
         children: <Widget>[
-          sdk.MapWidget(
-            sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
-            controller: mapWidgetController,
-          ),
+          if (currentMapWidgetController == null)
+            const SizedBox.shrink()
+          else
+            sdk.MapWidget(
+              sdkContext: sdkContext,
+              controller: currentMapWidgetController,
+            ),
           Positioned(
             bottom: 20,
             left: 0,
@@ -104,15 +107,23 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   }
 
   Future<void> initContext() async {
-    geometryMapObjectSource =
+    final source =
         sdk.GeometryMapObjectSourceBuilder(sdkContext).createSource();
-    mapWidgetController
-      ..getMapAsync((map) {
-        sdkMap = map;
-        mapObjectManager = sdk.MapObjectManager(map);
-        map.addSource(geometryMapObjectSource);
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    geometryMapObjectSource = source;
+    final createdMapWidgetController = await createMapWidgetController(
+      sdkContext,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    final map = createdMapWidgetController.map..addSource(source);
+    sdkMap = map;
+    mapObjectManager = sdk.MapObjectManager(map);
+    setState(() {
+      mapWidgetController = createdMapWidgetController
+        ..copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   void _showActionSheet() {
@@ -143,11 +154,14 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   }
 
   Future<void> _testCamera(CameraPathType pathType) async {
-    if (sdkMap == null) {
+    final map = sdkMap;
+    final manager = mapObjectManager;
+    final source = geometryMapObjectSource;
+    if (map == null || manager == null || source == null) {
       return;
     }
-    mapObjectManager.removeAll();
-    geometryMapObjectSource.clear();
+    manager.removeAll();
+    source.clear();
 
     await _startFpsTracking();
 
@@ -165,9 +179,9 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
       _moveIsolateEntry,
       _IsolateMoveData(
         sendPort: _receivePort!.sendPort,
-        mapMessage: sdkMap!.message(),
-        mapObjectManagerMessage: mapObjectManager.message(),
-        geometryMapObjectSourceMessage: geometryMapObjectSource.message(),
+        mapMessage: map.message(),
+        mapObjectManagerMessage: manager.message(),
+        geometryMapObjectSourceMessage: source.message(),
         moscowGeoJson: moscowGeoJson,
         cameraPathType: pathType,
       ),

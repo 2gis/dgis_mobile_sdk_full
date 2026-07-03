@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations.dart';
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations_en.dart';
@@ -19,6 +21,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final sdkContext = AppContainer().initializeSdk();
+  sdk.MapWidgetController? mapWidgetController;
 
   final formKey = GlobalKey<FormState>();
   late sdk.SearchManager searchManager;
@@ -33,15 +36,24 @@ class _SearchPageState extends State<SearchPage> {
     locationService = sdk.LocationService(sdkContext);
     searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
     initialize();
+    unawaited(_createMapController());
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = mapWidgetController;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Search Page')),
       body: Stack(
         children: [
-          sdk.MapWidget(sdkContext: sdkContext, mapOptions: sdk.MapOptions()),
+          if (currentMapWidgetController == null)
+            const SizedBox.shrink()
+          else
+            sdk.MapWidget(
+              sdkContext: sdkContext,
+              controller: currentMapWidgetController,
+            ),
           sdk.DgisSearchWidget(
             searchManager: searchManager,
             locationService: locationService,
@@ -61,6 +73,19 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> initialize() async {
     await checkLocationPermissions(locationService);
+  }
+
+  Future<void> _createMapController() async {
+    final createdMapWidgetController = await createMapWidgetController(
+      sdkContext,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      mapWidgetController = createdMapWidgetController;
+    });
   }
 
   Widget _buildDirectoryObjectCard() {

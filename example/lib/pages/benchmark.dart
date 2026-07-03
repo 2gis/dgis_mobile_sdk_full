@@ -20,7 +20,7 @@ class BenchmarkPage extends StatefulWidget {
 
 class _BenchmarkPageState extends State<BenchmarkPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  sdk.MapWidgetController? mapWidgetController;
   final List<double> fpsValues = [];
 
   sdk.Map? sdkMap;
@@ -49,7 +49,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
   Future<void> _startFpsTracking() async {
     await fpsSubscription?.cancel();
     fpsValues.clear();
-    fpsSubscription = mapWidgetController.fpsChannel.listen((fps) {
+    fpsSubscription = mapWidgetController?.fpsChannel.listen((fps) {
       setState(() {
         lastFps = fps.value.toDouble();
         fpsValues.add(lastFps);
@@ -59,6 +59,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -71,11 +72,13 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
       ),
       body: Stack(
         children: <Widget>[
-          sdk.MapWidget(
-            sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
-            controller: mapWidgetController,
-          ),
+          if (currentMapWidgetController == null)
+            const SizedBox.shrink()
+          else
+            sdk.MapWidget(
+              sdkContext: sdkContext,
+              controller: currentMapWidgetController,
+            ),
           Positioned(
             bottom: 20,
             left: 0,
@@ -95,11 +98,18 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
   }
 
   Future<void> initContext() async {
-    mapWidgetController
-      ..getMapAsync((map) {
-        sdkMap = map;
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    final createdMapWidgetController = await createMapWidgetController(
+      sdkContext,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    sdkMap = createdMapWidgetController.map;
+    setState(() {
+      mapWidgetController = createdMapWidgetController
+        ..copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   void _showActionSheet() {

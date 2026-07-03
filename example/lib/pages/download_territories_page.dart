@@ -17,7 +17,7 @@ class DownloadTerritoriesPage extends StatefulWidget {
 }
 
 class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
-  final mapWidgetController = sdk.MapWidgetController();
+  sdk.MapWidgetController? mapWidgetController;
   final sdkContext = AppContainer().initializeSdk();
   sdk.Map? sdkMap;
 
@@ -34,6 +34,7 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
   void initState() {
     super.initState();
     initialize();
+    unawaited(_createMapController());
   }
 
   @override
@@ -48,11 +49,6 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
     sdk.PackageManager.instance(context).checkForUpdates();
     territoryManager = sdk.TerritoryManager.instance(context);
 
-    mapWidgetController.getMapAsync((map) {
-      sdkMap = map;
-      _updateGeometrySubscription();
-    });
-
     territoryManager.territoriesChannel.listen((territoriesList) {
       setState(() {
         territories = List.from(territoriesList);
@@ -65,6 +61,22 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
           return ai.name.compareTo(bi.name);
         });
       });
+    });
+  }
+
+  Future<void> _createMapController() async {
+    final createdMapWidgetController = await createMapWidgetController(
+      sdkContext,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    sdkMap = createdMapWidgetController.map;
+    _updateGeometrySubscription();
+
+    setState(() {
+      mapWidgetController = createdMapWidgetController;
     });
   }
 
@@ -139,6 +151,7 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -147,22 +160,23 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
         children: [
           SizedBox(
             height: 250,
-            child: sdk.MapWidget(
-              sdkContext: sdkContext,
-              mapOptions: sdk.MapOptions(),
-              controller: mapWidgetController,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: sdk.ZoomWidget(),
+            child: currentMapWidgetController == null
+                ? const SizedBox.shrink()
+                : sdk.MapWidget(
+                    sdkContext: sdkContext,
+                    controller: currentMapWidgetController,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: sdk.ZoomWidget(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),

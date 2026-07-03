@@ -41,8 +41,8 @@ export 'src/platform/coordinates/geo_point_with_elevation.dart';
 export 'src/platform/dgis.dart';
 export 'src/platform/map/image_loader.dart';
 export 'src/platform/map/map_appearance.dart';
-export 'src/platform/map/map_options.dart';
 export 'src/platform/map/map_theme.dart';
+export 'src/platform/map/map_widget_options.dart';
 export 'src/platform/map/model_loader.dart';
 export 'src/platform/map/touch_events_observer.dart';
 export 'src/util/stateful_channel_listenable.dart';
@@ -53,6 +53,7 @@ export 'src/widgets/directory/directory_object_widget/directory_object_widget.da
 export 'src/widgets/directory/directory_object_widget/directory_object_widget_builder.dart';
 export 'src/widgets/directory/directory_object_widget/directory_object_widget_theme.dart';
 export 'src/widgets/directory/directory_object_widget/working_hours_factory.dart';
+export 'src/widgets/directory/extensions.dart';
 export 'src/widgets/directory/search.dart'
     show DgisSearchWidget, SearchResultBuilder;
 export 'src/widgets/directory/search_result_item/search_result_item_builder.dart';
@@ -63,27 +64,21 @@ export 'src/widgets/directory/search_result_item/star_rating_widget.dart';
 export 'src/widgets/directory/search_widget_color_scheme.dart';
 export 'src/widgets/either.dart';
 export 'src/widgets/map/base_map_state.dart' show BaseMapWidgetState;
-export 'src/widgets/map/compass_widget.dart';
-export 'src/widgets/map/indoor_widget.dart';
+export 'src/widgets/map/compass/compass_widget.dart' show CompassWidget;
+export 'src/widgets/map/compass/compass_widget_color_scheme.dart';
+export 'src/widgets/map/indoor/indoor_widget.dart';
 export 'src/widgets/map/map_widget.dart' show MapWidget, MapWidgetController;
 export 'src/widgets/map/map_widget_color_scheme.dart';
 export 'src/widgets/map/mini_map_widget.dart' show MiniMapWidget;
-export 'src/widgets/map/modern/compass/modern_compass_widget.dart'
-    show ModernCompassWidget;
-export 'src/widgets/map/modern/indoor/indoor_widget.dart';
-export 'src/widgets/map/modern/my_location/modern_my_location_controller.dart';
-export 'src/widgets/map/modern/my_location/modern_my_location_model.dart';
-export 'src/widgets/map/modern/my_location/modern_my_location_widget.dart';
-export 'src/widgets/map/modern/my_location/modern_my_location_widget_color_scheme.dart';
-export 'src/widgets/map/modern/traffic/modern_traffic_widget.dart'
-    show ModernTrafficWidget;
-export 'src/widgets/map/modern/zoom/modern_zoom_widget.dart'
-    show ModernZoomWidget, ModernZoomWidgetColorScheme;
-export 'src/widgets/map/my_location_widget.dart';
+export 'src/widgets/map/my_location/my_location_controller.dart';
+export 'src/widgets/map/my_location/my_location_model.dart';
+export 'src/widgets/map/my_location/my_location_widget.dart';
+export 'src/widgets/map/my_location/my_location_widget_color_scheme.dart';
 export 'src/widgets/map/themed_map_controlling_widget.dart';
 export 'src/widgets/map/themed_map_controlling_widget_state.dart';
-export 'src/widgets/map/traffic_widget.dart';
-export 'src/widgets/map/zoom_widget.dart'
+export 'src/widgets/map/traffic/traffic_widget.dart' show TrafficWidget;
+export 'src/widgets/map/traffic/traffic_widget_color_scheme.dart';
+export 'src/widgets/map/zoom/zoom_widget.dart'
     show ZoomWidget, ZoomWidgetColorScheme;
 export 'src/widgets/widget_shadows.dart';
 export 'src/widgets/navigation/better_route_prompt/better_route_prompt_controller.dart';

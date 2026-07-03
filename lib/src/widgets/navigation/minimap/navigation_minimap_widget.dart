@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
-import '../../../platform/map/map_options.dart';
+import '../../../platform/map/map_widget_options.dart';
 import '../../map/map_widget.dart';
 import '../dashboard/dashboard_controller.dart';
 import 'navigation_minimap_controller.dart';
 
 class NavigationMiniMapWidget extends StatefulWidget {
   final sdk.Context sdkContext;
-  final MapOptions mapOptions;
   final MapWidgetController controller;
+  final MapWidgetOptions viewOptions;
   final double size;
   final NavigationMiniMapController miniMapController;
   final DashboardController? dashboardController;
@@ -19,10 +19,10 @@ class NavigationMiniMapWidget extends StatefulWidget {
 
   const NavigationMiniMapWidget({
     required this.sdkContext,
-    required this.mapOptions,
     required this.controller,
     required this.miniMapController,
     this.dashboardController,
+    this.viewOptions = const MapWidgetOptions(),
     this.size = _defaultSize,
     super.key,
   }) : assert(size <= _maxSize);
@@ -38,7 +38,7 @@ class _NavigationMiniMapWidgetState extends State<NavigationMiniMapWidget> {
   @override
   void initState() {
     super.initState();
-    widget.controller.getMapAsync(widget.miniMapController.onMapReady);
+    widget.miniMapController.onMapReady(widget.controller.map);
   }
 
   @override
@@ -56,8 +56,8 @@ class _NavigationMiniMapWidgetState extends State<NavigationMiniMapWidget> {
             child: Center(
               child: MapWidgetInternal(
                 sdkContext: widget.sdkContext,
-                mapOptions: widget.mapOptions,
                 controller: widget.controller,
+                viewOptions: widget.viewOptions,
                 showCopyright: false,
               ),
             ),

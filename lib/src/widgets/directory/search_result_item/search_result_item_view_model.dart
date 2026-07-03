@@ -1,6 +1,7 @@
 import '../../../../../l10n/generated/dgis_localizations.dart';
 import '../../../generated/dart_bindings.dart' as sdk;
 import '../../../platform/dgis.dart';
+import '../extensions.dart';
 
 /// View model for displaying search result item data.
 ///
@@ -52,13 +53,10 @@ class SearchResultItemViewModel {
   /// Combined attributes string (e.g., "Wi-Fi • Parking • 24/7").
   final String attributes;
 
-  /// Whether the place is currently open, or null if unknown.
+  /// Whether the place is open (`opened` or `closingSoon`), or null if unknown.
   final bool? isOpen;
 
-  /// Whether the place is opening soon, or null if not applicable.
-  final bool? isOpenSoon;
-
-  /// Alert description for work status (e.g., "Opens at 9:00").
+  /// Work status hint text (`openStatusHint`).
   final String? alertDescription;
 
   /// Whether the charging station is active, or null if not a charging station.
@@ -83,7 +81,6 @@ class SearchResultItemViewModel {
     required this.address,
     required this.attributes,
     required this.isOpen,
-    required this.isOpenSoon,
     required this.alertDescription,
     required this.chargingIsActive,
     required this.chargingIsBusy,
@@ -125,10 +122,10 @@ class SearchResultItemViewModel {
     final formattedAddress = object.formattedAddress(sdk.FormattingType.short);
     final address = formattedAddress?.streetAddress;
 
-    final isOpen = object.workStatus?.isOpen;
-
-    String? alertDescription;
-    bool? isOpenSoon;
+    final workStatus = object.workStatus;
+    final openStatus = workStatus?.openStatus;
+    final isOpen = openStatus?.isOpen;
+    final alertDescription = workStatus?.openStatusHint;
 
     bool? chargingIsActive;
     bool? chargingIsBusy;
@@ -169,7 +166,6 @@ class SearchResultItemViewModel {
       address: address,
       attributes: attributesText,
       isOpen: isOpen,
-      isOpenSoon: isOpenSoon,
       alertDescription: alertDescription,
       chargingIsActive: chargingIsActive,
       chargingIsBusy: chargingIsBusy,

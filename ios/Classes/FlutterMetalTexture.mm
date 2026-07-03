@@ -1,7 +1,6 @@
 #import "FlutterMetalTexture.h"
 
 #import <PlatformCDart/MetalDrawablePresenter.h>
-#import <PlatformCDart/MetalLayerProvider.h>
 #import <PlatformCDart/Util.h>
 
 @interface MetalDrawablePresenterImpl : NSObject <MetalDrawablePresenter>
@@ -10,16 +9,14 @@
 @property(nonatomic, strong) NSLock * lock;
 @property(nonatomic, assign) NSInteger flutterTextureId;
 
-- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry
-								   lock:(NSLock *)lock;
+- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry lock:(NSLock *)lock;
 - (void)setFlutterTextureId:(NSInteger)textureId;
 
 @end
 
 @implementation MetalDrawablePresenterImpl
 
-- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry
-								   lock:(NSLock *)lock
+- (instancetype)initWithTextureRegistry:(id<FlutterTextureRegistry>)flutterTextureRegistry lock:(NSLock *)lock
 {
 	self = [super init];
 	if (self)
@@ -64,7 +61,7 @@
 
 @interface FlutterMetalTexture ()
 @property(nonatomic, strong) MetalDrawablePresenterImpl * presenter;
-@property(nonatomic, strong) MetalLayerProvider * metalLayerProvider;
+@property(nonatomic, strong) id<MetalLayerProviderInstance> metalLayerProvider;
 @property(nonatomic, strong) id<FlutterTextureRegistry> flutterTextureRegistry;
 @end
 
@@ -80,13 +77,10 @@
 	if (self)
 	{
 		_lock = [[NSLock alloc] init];
-		_presenter = [[MetalDrawablePresenterImpl alloc] initWithTextureRegistry:flutterTextureRegistry
-																			lock:_lock];
-		_metalLayerProvider = [[MetalLayerProvider alloc] initWithDevice:device
-															textureCache:textureCache
-															   presenter:_presenter
-																   width:width
-																  height:height];
+		_presenter = [[MetalDrawablePresenterImpl alloc] initWithTextureRegistry:flutterTextureRegistry lock:_lock];
+		_metalLayerProvider =
+			dgis::dart::map::makeMetalLayerProviderInstance(device, textureCache, _presenter, width, height);
+		NSAssert(_metalLayerProvider != nil, @"MetalLayerProvider instance is unavailable");
 		_flutterTextureRegistry = flutterTextureRegistry;
 	}
 	return self;

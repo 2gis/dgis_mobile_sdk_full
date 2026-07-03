@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;
-import '../../platform/map/map_options.dart';
+import '../../platform/map/map_widget_options.dart';
 import 'map_widget.dart';
 
 class MiniMapWidget extends StatefulWidget {
   final sdk.Context sdkContext;
-  final MapOptions mapOptions;
   final MapWidgetController controller;
+  final MapWidgetOptions viewOptions;
   final double size;
 
   static const double _defaultSize = 160;
@@ -15,8 +15,8 @@ class MiniMapWidget extends StatefulWidget {
 
   const MiniMapWidget({
     required this.sdkContext,
-    required this.mapOptions,
     required this.controller,
+    this.viewOptions = const MapWidgetOptions(),
     this.size = _defaultSize,
     super.key,
   }) : assert(size <= _maxSize);
@@ -32,11 +32,9 @@ class _MiniMapWidgetState extends State<MiniMapWidget> {
   void initState() {
     super.initState();
 
-    widget.controller.getMapAsync((map) {
-      map
-        ..interactive = false
-        ..graphicsPreset = sdk.GraphicsPreset.lite;
-    });
+    widget.controller.map
+      ..interactive = false
+      ..graphicsPreset = sdk.GraphicsPreset.lite;
   }
 
   @override
@@ -52,8 +50,8 @@ class _MiniMapWidgetState extends State<MiniMapWidget> {
           child: Center(
             child: MapWidgetInternal(
               sdkContext: widget.sdkContext,
-              mapOptions: widget.mapOptions,
               controller: widget.controller,
+              viewOptions: widget.viewOptions,
               showCopyright: false,
             ),
           ),
