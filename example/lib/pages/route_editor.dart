@@ -1,9 +1,5 @@
-import 'dart:async';
-
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'common.dart';
 
@@ -17,7 +13,7 @@ class RouteEditorPage extends StatefulWidget {
 }
 
 class _RouteEditorPageState extends State<RouteEditorPage> {
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
   final List<sdk.RouteSearchPoint> intermediatePoints = [];
 
@@ -74,122 +70,84 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
   late sdk.RouteEditor routeEditor;
   late sdk.RouteEditorSource routeEditorSource;
 
-  sdk.MyLocationController? _myLocationController;
-
   @override
   void initState() {
     super.initState();
     loader = sdk.ImageLoader(sdkContext);
     final locationService = sdk.LocationService(sdkContext);
-    unawaited(_initContext(locationService));
+    checkLocationPermissions(locationService).then((_) {
+      mapWidgetController.getMapAsync((map) {
+        final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
+        map.addSource(locationSource);
+        routeEditor = sdk.RouteEditor(sdkContext);
+        routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor);
+        map.addSource(routeEditorSource);
+        sdkMap = map;
+        map.camera.position = const sdk.CameraPosition(
+          point: sdk.GeoPoint(
+            latitude: sdk.Latitude(55.35),
+            longitude: sdk.Longitude(37.42),
+          ),
+          zoom: sdk.Zoom(10),
+        );
+        mapObjectManager = sdk.MapObjectManager(map);
+      });
+    });
     _updateRouteSearchOptions();
   }
 
   @override
-  void dispose() {
-    _myLocationController?.dispose();
-    super.dispose();
-  }
-
-  Future<void> _initContext(sdk.LocationService locationService) async {
-    await checkLocationPermissions(locationService);
-
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-      controllerOptions: const sdk.MapControllerOptions(
-        position: sdk.CameraPosition(
-          point: sdk.GeoPoint(
-            latitude: sdk.Latitude(55.75),
-            longitude: sdk.Longitude(37.62),
-          ),
-          zoom: sdk.Zoom(10),
-        ),
-      ),
-    );
-    if (!mounted) {
-      return;
-    }
-
-    final map = createdMapWidgetController.map;
-    final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
-    map.addSource(locationSource);
-    routeEditor = sdk.RouteEditor(sdkContext);
-    routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor);
-    map.addSource(routeEditorSource);
-    sdkMap = map;
-    mapObjectManager = sdk.MapObjectManager(map);
-    setState(() {
-      mapWidgetController = createdMapWidgetController;
-      _myLocationController = sdk.MyLocationController(
-        map: map,
-        onPermissionRequest: () async {
-          await Permission.location.request();
-        },
-        onTapFeedback: HapticFeedback.mediumImpact,
-      );
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
-    final myLocationController = _myLocationController;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Stack(
         children: [
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Align(
-                          alignment: Alignment.topRight,
-                          child: sdk.TrafficWidget(),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: sdk.TrafficWidget(),
+                      ),
+                      Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Column(
+                          children: [
+                            sdk.ZoomWidget(),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: sdk.CompassWidget(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: sdk.MyLocationWidget(),
+                            ),
+                          ],
                         ),
-                        const Spacer(),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Column(
-                            children: [
-                              const sdk.ZoomWidget(),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 8),
-                                child: sdk.CompassWidget(),
-                              ),
-                              if (myLocationController != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: sdk.MyLocationWidget(
-                                    controller: myLocationController,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: sdk.IndoorWidget(),
-                    ),
-                  ],
-                ),
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: sdk.IndoorWidget(),
+                  ),
+                ],
               ),
             ),
+          ),
           Positioned(
             bottom: 16,
             right: 16,
@@ -414,79 +372,75 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
   }
 
   Widget _buildTransportTypeGrid(StateSetter setState) {
-    return RadioGroup<int>(
-      groupValue: selectedRadio,
-      onChanged: (value) {
-        final selectedValue = value!;
-        setState(() {
-          selectedRadio = selectedValue;
-        });
-        this.setState(() {
-          selectedRadio = selectedValue;
-        });
-        _updateRouteSearchOptions();
-      },
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 3,
-        ),
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          final i = index + 1;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedRadio = i;
-              });
-              this.setState(() {
-                selectedRadio = i;
-              });
-              _updateRouteSearchOptions();
-            },
-            child: DecoratedBox(
-              decoration: BoxDecoration(
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 3,
+      ),
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        final i = index + 1;
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              selectedRadio = i;
+            });
+            this.setState(() {
+              selectedRadio = i;
+            });
+            _updateRouteSearchOptions();
+          },
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: selectedRadio == i
+                  ? Colors.deepPurple.shade100
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
                 color: selectedRadio == i
-                    ? Colors.deepPurple.shade100
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: selectedRadio == i
-                      ? Colors.deepPurple
-                      : Colors.grey.shade300,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8),
-                  ),
-                  Expanded(
-                    child: Text(
-                      _getOptionText(i),
-                      style: TextStyle(
-                        color: selectedRadio == i
-                            ? Colors.deepPurple
-                            : Colors.black,
-                        fontWeight: selectedRadio == i
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                  Radio<int>(
-                    value: i,
-                  ),
-                ],
+                    ? Colors.deepPurple
+                    : Colors.grey.shade300,
               ),
             ),
-          );
-        },
-      ),
+            child: Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8),
+                ),
+                Expanded(
+                  child: Text(
+                    _getOptionText(i),
+                    style: TextStyle(
+                      color:
+                          selectedRadio == i ? Colors.deepPurple : Colors.black,
+                      fontWeight: selectedRadio == i
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                Radio<int>(
+                  value: i,
+                  groupValue: selectedRadio,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedRadio = value!;
+                    });
+                    this.setState(() {
+                      selectedRadio = value!;
+                    });
+                    _updateRouteSearchOptions();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -912,46 +866,58 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
             fontSize: 16,
           ),
         ),
-        RadioGroup<sdk.RouteSearchType>(
-          groupValue: truckRouteSearchType,
-          onChanged: (value) {
-            setState(() {
-              truckRouteSearchType = value!;
-              _updateRouteSearchOptions();
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Jam'),
-                  ),
-                  value: sdk.RouteSearchType.jam,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Jam'),
                 ),
+                value: sdk.RouteSearchType.jam,
+                groupValue: truckRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    truckRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Shortest'),
-                  ),
-                  value: sdk.RouteSearchType.shortest,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Shortest'),
                 ),
+                value: sdk.RouteSearchType.shortest,
+                groupValue: truckRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    truckRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Statistic'),
-                  ),
-                  value: sdk.RouteSearchType.statistic,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Statistic'),
                 ),
+                value: sdk.RouteSearchType.statistic,
+                groupValue: truckRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    truckRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         const SizedBox(height: 10),
         const Text(
@@ -1085,46 +1051,58 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
             fontSize: 16,
           ),
         ),
-        RadioGroup<sdk.RouteSearchType>(
-          groupValue: taxiRouteSearchType,
-          onChanged: (value) {
-            setState(() {
-              taxiRouteSearchType = value!;
-              _updateRouteSearchOptions();
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Jam'),
-                  ),
-                  value: sdk.RouteSearchType.jam,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Jam'),
                 ),
+                value: sdk.RouteSearchType.jam,
+                groupValue: taxiRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    taxiRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Shortest'),
-                  ),
-                  value: sdk.RouteSearchType.shortest,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Shortest'),
                 ),
+                value: sdk.RouteSearchType.shortest,
+                groupValue: taxiRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    taxiRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Statistic'),
-                  ),
-                  value: sdk.RouteSearchType.statistic,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Statistic'),
                 ),
+                value: sdk.RouteSearchType.statistic,
+                groupValue: taxiRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    taxiRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -1178,46 +1156,58 @@ class _RouteEditorPageState extends State<RouteEditorPage> {
             fontSize: 16,
           ),
         ),
-        RadioGroup<sdk.RouteSearchType>(
-          groupValue: carRouteSearchType,
-          onChanged: (value) {
-            setState(() {
-              carRouteSearchType = value!;
-              _updateRouteSearchOptions();
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Jam'),
-                  ),
-                  value: sdk.RouteSearchType.jam,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Jam'),
                 ),
+                value: sdk.RouteSearchType.jam,
+                groupValue: carRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    carRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Shortest'),
-                  ),
-                  value: sdk.RouteSearchType.shortest,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Shortest'),
                 ),
+                value: sdk.RouteSearchType.shortest,
+                groupValue: carRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    carRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-              Expanded(
-                child: RadioListTile<sdk.RouteSearchType>(
-                  title: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text('Statistic'),
-                  ),
-                  value: sdk.RouteSearchType.statistic,
+            ),
+            Expanded(
+              child: RadioListTile<sdk.RouteSearchType>(
+                title: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Statistic'),
                 ),
+                value: sdk.RouteSearchType.statistic,
+                groupValue: carRouteSearchType,
+                onChanged: (value) {
+                  setState(() {
+                    carRouteSearchType = value!;
+                    _updateRouteSearchOptions();
+                  });
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );

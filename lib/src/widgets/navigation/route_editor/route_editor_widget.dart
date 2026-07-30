@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -45,16 +44,6 @@ class RouteEditorWidget extends StatefulWidget {
   /// Callback invoked when the panel is expanded with its height.
   final void Function(double height)? onExpanded;
 
-  /// Callback invoked whenever the screen-edge insets occupied by the panel
-  /// change.
-  ///
-  /// The panel reserves space at the bottom in portrait and at the start edge
-  /// in landscape. Consumers can apply these insets to keep overlay controls
-  /// and map camera framing clear of the panel without having to know the
-  /// current orientation or the panel's size themselves. Also called once
-  /// during initialization.
-  final void Function(EdgeInsets insets)? onReservedInsetsChanged;
-
   /// Builder for route search point views.
   final RouteSearchPointBuilder routeSearchPointBuilder;
 
@@ -78,7 +67,6 @@ class RouteEditorWidget extends StatefulWidget {
     this.onSwapCallback,
     this.onCollapsed,
     this.onExpanded,
-    this.onReservedInsetsChanged,
     this.topPadding = 16,
     RouteSearchPointBuilder? routeSearchPointBuilder,
     RouteCardBuilder? routeCardBuilder,
@@ -96,11 +84,6 @@ class RouteEditorWidget extends StatefulWidget {
 
 class _RouteEditorWidgetState extends State<RouteEditorWidget>
     with SingleTickerProviderStateMixin {
-  double get _landscapePanelWidth =>
-      widget.theme.cardWidth + widget.theme.horizontalPadding * 2;
-
-  static const double _landscapeMinStartInset = 44;
-
   final ScrollController _tabScrollController = ScrollController();
   final Map<TransportMode, GlobalKey> _tabKeys = {};
   final GlobalKey<RouteListWidgetState> _routeListKey = GlobalKey();
@@ -114,11 +97,6 @@ class _RouteEditorWidgetState extends State<RouteEditorWidget>
   double _expandedHeight = 0;
   double _containerHeight = 0;
   double _headerHeight = 0;
-
-  bool _isLandscape = false;
-  double _panelWidth = 0;
-  double _startInset = 0;
-  EdgeInsets _reportedInsets = EdgeInsets.zero;
   double _dragStartPosition = 0;
   double _dragStartProgress = 0;
   bool _isDragging = false;
@@ -172,19 +150,6 @@ class _RouteEditorWidgetState extends State<RouteEditorWidget>
 
     if (_containerHeight > 0) {
       _expandedHeight = _containerHeight - widget.topPadding;
-    }
-  }
-
-  /// Reports the screen-edge insets the panel occupies, reserving space at the
-  /// start edge in landscape and at the bottom in portrait. Uses the collapsed
-  /// height so the reservation stays stable while the panel is expanded.
-  void _reportReservedInsets() {
-    final insets = _isLandscape
-        ? EdgeInsets.only(left: _startInset + _panelWidth)
-        : EdgeInsets.only(bottom: _collapsedHeight);
-    if (insets != _reportedInsets) {
-      _reportedInsets = insets;
-      widget.onReservedInsetsChanged?.call(insets);
     }
   }
 
@@ -388,76 +353,61 @@ class _RouteEditorWidgetState extends State<RouteEditorWidget>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final mediaQuery = MediaQuery.of(context);
-        _isLandscape = mediaQuery.orientation == Orientation.landscape;
-        _startInset = _isLandscape
-            ? math.max(mediaQuery.padding.left, _landscapeMinStartInset)
-            : 0;
-        _panelWidth = _isLandscape
-            ? math.min(_landscapePanelWidth, constraints.maxWidth - _startInset)
-            : constraints.maxWidth;
-
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_containerHeight != constraints.maxHeight) {
             _containerHeight = constraints.maxHeight;
             _calculateHeights();
           }
-          _reportReservedInsets();
         });
 
         return Align(
-          alignment:
-              _isLandscape ? Alignment.bottomLeft : Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(left: _startInset),
-            child: SizedBox(
-              width: _isLandscape ? _panelWidth : null,
-              height: _currentHeight,
-              child: GestureDetector(
-                onVerticalDragStart: _onDragStart,
-                onVerticalDragUpdate: _onDragUpdate,
-                onVerticalDragEnd: _onDragEnd,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: widget.theme.backgroundColor,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(16)),
-                  ),
-                  child: Column(
-                    children: [
-                      _buildHandle(),
-                      KeyedSubtree(
-                        key: _headerKey,
-                        child: _buildHeader(localizations),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: widget.theme.routeListVerticalPadding,
-                          ),
-                          child: RouteListWidget(
-                            key: _routeListKey,
-                            controller: widget.controller,
-                            cardTheme: widget.theme.cardTheme,
-                            emptyTextStyle: widget.theme.finishLabelTextStyle,
-                            routeCardBuilder: widget.routeCardBuilder,
-                            expandProgress: _expandController.value,
-                            onStartNavigation: widget.onStartNavigation,
-                            onRouteTapped: _onRouteTapped,
-                            collapsedCardHeight: widget.theme.routeListHeight,
-                            horizontalPadding: widget.theme.horizontalPadding,
-                            cardWidth: widget.theme.cardWidth,
-                            cardSpacing: widget.theme.cardSpacing,
-                          ),
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: _currentHeight,
+            child: GestureDetector(
+              onVerticalDragStart: _onDragStart,
+              onVerticalDragUpdate: _onDragUpdate,
+              onVerticalDragEnd: _onDragEnd,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: widget.theme.backgroundColor,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                child: Column(
+                  children: [
+                    _buildHandle(),
+                    KeyedSubtree(
+                      key: _headerKey,
+                      child: _buildHeader(localizations),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: widget.theme.routeListVerticalPadding,
+                        ),
+                        child: RouteListWidget(
+                          key: _routeListKey,
+                          controller: widget.controller,
+                          cardTheme: widget.theme.cardTheme,
+                          emptyTextStyle: widget.theme.finishLabelTextStyle,
+                          routeCardBuilder: widget.routeCardBuilder,
+                          expandProgress: _expandController.value,
+                          onStartNavigation: widget.onStartNavigation,
+                          onRouteTapped: _onRouteTapped,
+                          collapsedCardHeight: widget.theme.routeListHeight,
+                          horizontalPadding: widget.theme.horizontalPadding,
+                          cardWidth: widget.theme.cardWidth,
+                          cardSpacing: widget.theme.cardSpacing,
                         ),
                       ),
-                      _buildTabBar(),
-                      SizedBox(
-                        height: widget.theme.bottomPadding +
-                            MediaQuery.of(context).padding.bottom,
-                      ),
-                    ],
-                  ),
+                    ),
+                    _buildTabBar(),
+                    SizedBox(
+                      height: widget.theme.bottomPadding +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                  ],
                 ),
               ),
             ),

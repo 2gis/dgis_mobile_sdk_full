@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                = 'dgis_mobile_sdk_full'
-  s.version             = '14.0.0-alpha.1'
+  s.version             = '13.6.1'
   s.summary             = 'A new Flutter FFI plugin project.'
   s.description         = <<-DESC
 A new Flutter FFI plugin project.
@@ -14,7 +14,7 @@ A new Flutter FFI plugin project.
   s.public_header_files = 'Classes/**/*.h'
 
   s.dependency 'Flutter'
-  s.dependency 'DGisFlutterFullSDK', '~> 14.0.0-alpha.1+1'
+  s.dependency 'DGisFlutterFullSDK', '~> 13.6.1+1'
 
   s.frameworks          = 'CoreVideo', 'Foundation', 'Metal', 'UIKit'
   s.platform = :ios, '16.0'

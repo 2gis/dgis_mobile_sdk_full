@@ -108,71 +108,88 @@ class CircleOptionsDialogState extends State<CircleOptionsDialog> {
               ),
               const SizedBox(height: 10),
               const Text('Color:'),
-              RadioGroup<int>(
-                groupValue: selectedColor,
-                onChanged: (value) => setState(() => selectedColor = value!),
-                child: Column(
-                  children: <Widget>[
-                    RadioListTile<int>(
-                      title: const Text('Black'),
-                      value: Colors.black.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Red'),
-                      value: Colors.red.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Blue'),
-                      value: Colors.blue.toARGB32(),
-                    ),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<int>(
+                    title: const Text('Black'),
+                    // ignore: deprecated_member_use
+                    value: Colors.black.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Red'),
+                    // ignore: deprecated_member_use
+                    value: Colors.red.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Blue'),
+                    // ignore: deprecated_member_use
+                    value: Colors.blue.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               const Text('Stroke Color:'),
-              RadioGroup<int>(
-                groupValue: selectedStrokeColor,
-                onChanged: (value) =>
-                    setState(() => selectedStrokeColor = value!),
-                child: Column(
-                  children: <Widget>[
-                    RadioListTile<int>(
-                      title: const Text('Black'),
-                      value: Colors.black.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Red'),
-                      value: Colors.red.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Blue'),
-                      value: Colors.blue.toARGB32(),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<int>(
+                    title: const Text('Black'),
+                    // ignore: deprecated_member_use
+                    value: Colors.black.value,
+                    groupValue: selectedStrokeColor,
+                    onChanged: (value) =>
+                        setState(() => selectedStrokeColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Red'),
+                    // ignore: deprecated_member_use
+                    value: Colors.red.value,
+                    groupValue: selectedStrokeColor,
+                    onChanged: (value) =>
+                        setState(() => selectedStrokeColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Blue'),
+                    // ignore: deprecated_member_use
+                    value: Colors.blue.value,
+                    groupValue: selectedStrokeColor,
+                    onChanged: (value) =>
+                        setState(() => selectedStrokeColor = value!),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
               const Text('Stroke Width:'),
-              RadioGroup<double>(
-                groupValue: strokeWidth,
-                onChanged: (value) => setState(() => strokeWidth = value!),
-                child: const Column(
-                  children: <Widget>[
-                    RadioListTile<double>(
-                      title: Text('None'),
-                      value: 0,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Thin'),
-                      value: 1,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Thick'),
-                      value: 10,
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<double>(
+                    title: const Text('None'),
+                    value: 0,
+                    groupValue: strokeWidth,
+                    onChanged: (value) => setState(() => strokeWidth = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Thin'),
+                    value: 1,
+                    groupValue: strokeWidth,
+                    onChanged: (value) => setState(() => strokeWidth = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Thick'),
+                    value: 10,
+                    groupValue: strokeWidth,
+                    onChanged: (value) => setState(() => strokeWidth = value!),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
             ],
           ),

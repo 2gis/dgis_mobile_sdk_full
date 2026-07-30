@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +31,7 @@ enum _AlignmentLable {
 
 class _CopyrightPageState extends State<CopyrightPage> {
   final sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final formKey = GlobalKey<FormState>();
   final alignmentController = TextEditingController();
   final leftInset = TextEditingController(text: '8.0');
@@ -49,33 +47,24 @@ class _CopyrightPageState extends State<CopyrightPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(initContext());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    initContext();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-            ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+          ),
           Align(
             alignment: Alignment.bottomLeft,
             child: CupertinoButton(
-              onPressed: currentMapWidgetController == null ? null : _show,
+              onPressed: _show,
               child: const Icon(Icons.format_list_bulleted),
             ),
           ),
@@ -84,17 +73,9 @@ class _CopyrightPageState extends State<CopyrightPage> {
     );
   }
 
-  Future<void> initContext() async {
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    sdkMap = createdMapWidgetController.map;
-    setState(() {
-      mapWidgetController = createdMapWidgetController;
+  void initContext() {
+    mapWidgetController.getMapAsync((map) {
+      sdkMap = map;
     });
   }
 
@@ -255,11 +236,6 @@ class _CopyrightPageState extends State<CopyrightPage> {
   }
 
   void _updateCopyrightSettings() {
-    final controller = mapWidgetController;
-    if (controller == null) {
-      return;
-    }
-
     final insets = EdgeInsets.fromLTRB(
       double.tryParse(leftInset.text) ?? 8.0,
       double.tryParse(topInset.text) ?? 8.0,
@@ -267,11 +243,11 @@ class _CopyrightPageState extends State<CopyrightPage> {
       double.tryParse(bottomInset.text) ?? 8.0,
     );
     final alignment = selectedAlignment?.alignment ?? Alignment.bottomRight;
-    controller
+    mapWidgetController
       ..copyrightEdgeInsets = insets
       ..copyrightAlignment = alignment;
     if (alertUriOpener) {
-      controller.setUriOpener(
+      mapWidgetController.setUriOpener(
         _showUriAlert,
       );
     }

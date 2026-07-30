@@ -2,26 +2,26 @@ import 'package:flutter/foundation.dart';
 import '../../../generated/dart_bindings.dart' as sdk;
 
 @immutable
-class NavigationMyLocationModel {
+class MyLocationModel {
   final bool isActive;
   final bool isHideable;
   final sdk.CameraBehaviour behaviour;
   final String iconAssetName;
 
-  const NavigationMyLocationModel({
+  const MyLocationModel({
     required this.isActive,
     required this.behaviour,
     required this.isHideable,
     required this.iconAssetName,
   });
 
-  NavigationMyLocationModel copyWith({
+  MyLocationModel copyWith({
     bool? isActive,
     bool? isHideable,
     sdk.CameraBehaviour? behaviour,
     String? iconAssetName,
   }) {
-    return NavigationMyLocationModel(
+    return MyLocationModel(
       isActive: isActive ?? this.isActive,
       isHideable: isHideable ?? this.isHideable,
       behaviour: behaviour ?? this.behaviour,
@@ -33,7 +33,7 @@ class NavigationMyLocationModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NavigationMyLocationModel &&
+    return other is MyLocationModel &&
         other.isActive == isActive &&
         other.isHideable == isHideable &&
         other.behaviour == behaviour &&

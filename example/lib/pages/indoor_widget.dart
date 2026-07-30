@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,59 +14,35 @@ class IndoorWidgetPage extends StatefulWidget {
 }
 
 class _IndoorWidgetPageState extends State<IndoorWidgetPage> {
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
-  sdk.Map? _map;
 
   @override
   void initState() {
     super.initState();
-    unawaited(_createMapController());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _createMapController() async {
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    _map = createdMapWidgetController.map;
-    setState(() {
-      mapWidgetController = createdMapWidgetController
-        ..copyrightAlignment = Alignment.bottomLeft;
-    });
+    mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Stack(
         children: [
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: sdk.IndoorWidget(),
-                ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: sdk.IndoorWidget(),
               ),
             ),
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: CupertinoButton(
@@ -81,10 +55,6 @@ class _IndoorWidgetPageState extends State<IndoorWidgetPage> {
     );
   }
 
-  void _moveToBuilding(sdk.CameraPositionChange positionChange) {
-    _map?.camera.changePosition(positionChange);
-  }
-
   void _show() {
     showCupertinoModalPopup(
       context: context,
@@ -94,45 +64,51 @@ class _IndoorWidgetPageState extends State<IndoorWidgetPage> {
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(54.980661),
-                    longitude: sdk.Longitude(82.897799),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(54.980661),
+                      longitude: sdk.Longitude(82.897799),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text('Sun City Mall Novosibirsk (6 floors, scroll)'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(54.965676),
-                    longitude: sdk.Longitude(82.93565),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(54.965676),
+                      longitude: sdk.Longitude(82.93565),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text('MEGA Mall Novosibirsk (2 floors, no scroll)'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(55.028917),
-                    longitude: sdk.Longitude(82.936734),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(55.028917),
+                      longitude: sdk.Longitude(82.936734),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text(
               'Aura Mall Novosibirsk (6 floors, scroll, -1 -2 etc.)',
@@ -141,30 +117,34 @@ class _IndoorWidgetPageState extends State<IndoorWidgetPage> {
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(54.987016),
-                    longitude: sdk.Longitude(82.905888),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(54.987016),
+                      longitude: sdk.Longitude(82.905888),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text('NSTU (12 floors, scroll, double-digit)'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(25.212477),
-                    longitude: sdk.Longitude(55.280235),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(25.212477),
+                      longitude: sdk.Longitude(55.280235),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text(
               'Gate Avenue Dubai (Letters in floors, no scroll)',
@@ -173,30 +153,34 @@ class _IndoorWidgetPageState extends State<IndoorWidgetPage> {
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(25.19742),
-                    longitude: sdk.Longitude(55.27982),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(25.19742),
+                      longitude: sdk.Longitude(55.27982),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text('Dubai Mall (Letters in floors, scroll)'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              _moveToBuilding(
-                const sdk.CameraPositionChange(
-                  zoom: sdk.Zoom(17),
-                  point: sdk.GeoPoint(
-                    latitude: sdk.Latitude(25.076247),
-                    longitude: sdk.Longitude(55.14074),
+              mapWidgetController.getMapAsync((map) {
+                map.camera.changePosition(
+                  const sdk.CameraPositionChange(
+                    zoom: sdk.Zoom(17),
+                    point: sdk.GeoPoint(
+                      latitude: sdk.Latitude(25.076247),
+                      longitude: sdk.Longitude(55.14074),
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
             child: const Text('Marina Mall Dubai (Letters in floors, scroll)'),
           ),

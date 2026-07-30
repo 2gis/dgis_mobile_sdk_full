@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,24 +16,12 @@ class MapSnapshotPage extends StatefulWidget {
 
 class _MapSnapshotState extends State<MapSnapshotPage> {
   final sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final ValueNotifier<ByteData?> imageData = ValueNotifier(null);
   double mapHeight = 300;
 
   @override
-  void initState() {
-    super.initState();
-    unawaited(_createMapController());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Center(
@@ -49,12 +35,11 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
             children: <Widget>[
               SizedBox(
                 height: mapHeight,
-                child: currentMapWidgetController == null
-                    ? const SizedBox.shrink()
-                    : sdk.MapWidget(
-                        sdkContext: sdkContext,
-                        controller: currentMapWidgetController,
-                      ),
+                child: sdk.MapWidget(
+                  sdkContext: sdkContext,
+                  mapOptions: sdk.MapOptions(),
+                  controller: mapWidgetController,
+                ),
               ),
               SizedBox(
                 height: 50,
@@ -65,9 +50,7 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
                       foregroundColor: Colors.blueAccent,
                       elevation: 0,
                     ),
-                    onPressed: currentMapWidgetController == null
-                        ? null
-                        : _takeSnapshot,
+                    onPressed: _takeSnapshot,
                   ),
                 ),
               ),
@@ -86,19 +69,6 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
     );
   }
 
-  Future<void> _createMapController() async {
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      mapWidgetController = createdMapWidgetController;
-    });
-  }
-
   Widget _makeImageWidget(ByteData? imageData) {
     if (imageData == null) {
       return const Center(
@@ -112,16 +82,15 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
   }
 
   void _takeSnapshot() {
-    final controller = mapWidgetController;
-    if (controller == null) {
-      return;
-    }
-
-    controller.takeSnapshot().value.then((uiImage) {
-      setState(() {
-        imageData.value = uiImage;
-      });
-    });
+    mapWidgetController.getMapAsync(
+      (map) {
+        mapWidgetController.takeSnapshot().value.then((uiImage) {
+          setState(() {
+            imageData.value = uiImage;
+          });
+        });
+      },
+    );
   }
 }
 

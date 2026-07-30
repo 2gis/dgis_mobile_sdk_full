@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations.dart';
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations_en.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'common.dart';
 import 'route_editor_widgets/location_selector_sheet.dart';
@@ -23,7 +20,7 @@ class RouteEditorNewPage extends StatefulWidget {
 }
 
 class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
 
   sdk.Map? sdkMap;
@@ -36,8 +33,6 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   StreamSubscription<sdk.RouteEditorRoutesInfo>? _routesInfoSubscription;
   StreamSubscription<sdk.RouteIndex?>? _routesIndexSubscription;
-
-  sdk.MyLocationController? _myLocationController;
 
   sdk.Marker? startMarker;
   sdk.Marker? finishMarker;
@@ -52,7 +47,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   bool showRouteEditor = false;
   bool showPointsEditor = false;
   int? editingPointIndex;
-  EdgeInsets _editorInsets = EdgeInsets.zero;
+  double routeEditorHeight = 0;
 
   final defaultStartPoint = const sdk.GeoPoint(
     latitude: sdk.Latitude(55.7558),
@@ -75,8 +70,50 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     super.initState();
     loader = sdk.ImageLoader(sdkContext);
     final locationService = sdk.LocationService(sdkContext);
+    checkLocationPermissions(locationService).then((_) {
+      mapWidgetController
+        ..getMapAsync((map) {
+          final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
+          map.addSource(locationSource);
 
-    unawaited(_initContext(locationService));
+          routeEditor = sdk.RouteEditor(sdkContext);
+          routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor!);
+          map.addSource(routeEditorSource!);
+
+          routeEditorController = sdk.RouteEditorController(
+            routeEditor: routeEditor!,
+            briefInfoProvider: _createBriefInfoProvider(),
+          );
+
+          searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
+          trafficRouter = sdk.TrafficRouter(sdkContext);
+
+          setState(() {
+            sdkMap = map;
+            showRouteEditor = true;
+          });
+
+          map.camera.position = const sdk.CameraPosition(
+            point: sdk.GeoPoint(
+              latitude: sdk.Latitude(55.75),
+              longitude: sdk.Longitude(37.62),
+            ),
+            zoom: sdk.Zoom(12),
+          );
+          mapObjectManager = sdk.MapObjectManager(map);
+
+          _addDefaultMarkers().then((_) {
+            _setDefaultRoutePoints();
+          });
+
+          _routesInfoSubscription =
+              routeEditor!.routesInfoChannel.listen(_onRoutesChanged);
+          _routesIndexSubscription = routeEditor!.activeRouteIndexChannel
+              .listen(_onActiveRouteIndexChanged);
+        })
+        ..addObjectTappedCallback(_handleRouteObjectTapped)
+        ..addObjectLongTouchCallback(_handleMapLongTouch);
+    });
   }
 
   @override
@@ -84,76 +121,11 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     _routesInfoSubscription?.cancel();
     _routesIndexSubscription?.cancel();
     routeEditorController?.dispose();
-    _myLocationController?.dispose();
     super.dispose();
-  }
-
-  Future<void> _initContext(sdk.LocationService locationService) async {
-    await checkLocationPermissions(locationService);
-
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    final map = createdMapWidgetController.map;
-    final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
-    map.addSource(locationSource);
-
-    routeEditor = sdk.RouteEditor(sdkContext);
-    routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor!);
-    map.addSource(routeEditorSource!);
-
-    routeEditorController = sdk.RouteEditorController(
-      routeEditor: routeEditor!,
-      briefInfoProvider: _createBriefInfoProvider(),
-    );
-
-    searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
-    trafficRouter = sdk.TrafficRouter(sdkContext);
-
-    map.camera.position = const sdk.CameraPosition(
-      point: sdk.GeoPoint(
-        latitude: sdk.Latitude(55.75),
-        longitude: sdk.Longitude(37.62),
-      ),
-      zoom: sdk.Zoom(12),
-    );
-    mapObjectManager = sdk.MapObjectManager(map);
-
-    unawaited(
-      _addDefaultMarkers().then((_) {
-        _setDefaultRoutePoints();
-      }),
-    );
-
-    _routesInfoSubscription =
-        routeEditor!.routesInfoChannel.listen(_onRoutesChanged);
-    _routesIndexSubscription =
-        routeEditor!.activeRouteIndexChannel.listen(_onActiveRouteIndexChanged);
-
-    setState(() {
-      sdkMap = map;
-      mapWidgetController = createdMapWidgetController
-        ..addObjectTappedCallback(_handleRouteObjectTapped)
-        ..addObjectLongTouchCallback(_handleMapLongTouch);
-      _myLocationController = sdk.MyLocationController(
-        map: map,
-        onPermissionRequest: () async {
-          await Permission.location.request();
-        },
-        onTapFeedback: HapticFeedback.mediumImpact,
-      );
-      showRouteEditor = true;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -161,54 +133,49 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       body: Stack(
         key: _stackKey,
         children: [
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 6 + _editorInsets.left,
-                  top: 6 + _editorInsets.top,
-                  right: 6 + _editorInsets.right,
-                  bottom: 6 + _editorInsets.bottom,
-                ),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        _ProviderSwitchButton(
-                          useTrafficRouterProvider: useTrafficRouterProvider,
-                          onTap: _switchBriefInfoProvider,
-                        ),
-                        const SizedBox(height: 8),
-                        _ThemeSwitchButton(
-                          useDarkTheme: useDarkTheme,
-                          onTap: _switchTheme,
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                    const Spacer(),
-                    Column(
-                      children: [
-                        const sdk.TrafficWidget(),
-                        const Spacer(),
-                        const sdk.ZoomWidget(),
-                        const Spacer(),
-                        const sdk.CompassWidget(),
-                        const SizedBox(height: 8),
-                        if (_myLocationController != null)
-                          sdk.MyLocationWidget(
-                            controller: _myLocationController!,
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 6,
+                top: 6,
+                right: 6,
+                bottom: routeEditorHeight + 6,
+              ),
+              child: Row(
+                children: [
+                  Column(
+                    children: [
+                      _ProviderSwitchButton(
+                        useTrafficRouterProvider: useTrafficRouterProvider,
+                        onTap: _switchBriefInfoProvider,
+                      ),
+                      const SizedBox(height: 8),
+                      _ThemeSwitchButton(
+                        useDarkTheme: useDarkTheme,
+                        onTap: _switchTheme,
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                  const Spacer(),
+                  const Column(
+                    children: [
+                      sdk.TrafficWidget(),
+                      Spacer(),
+                      sdk.ZoomWidget(),
+                      Spacer(),
+                      sdk.CompassWidget(),
+                      SizedBox(height: 8),
+                      sdk.MyLocationWidget(),
+                    ],
+                  ),
+                ],
               ),
             ),
+          ),
           if (routeEditorController != null &&
               showRouteEditor &&
               !isSelectingLocation &&
@@ -231,9 +198,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
                 mapObjectManager?.removeAll();
                 _addDefaultMarkers();
               },
-              onReservedInsetsChanged: (insets) {
+              onCollapsed: (height) {
                 setState(() {
-                  _editorInsets = insets;
+                  routeEditorHeight = height;
                 });
               },
             ),
@@ -264,7 +231,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
             ),
           if (showCrosshair && isSelectingLocation)
             Positioned(
-              bottom: math.max(16, MediaQuery.of(context).padding.bottom),
+              bottom: 100,
               left: 16,
               right: 16,
               child: Row(
@@ -465,10 +432,10 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         coordinates = objectInfo.closestMapPoint.point;
         final objectId = object.id;
         if (searchManager != null) {
-          final directoryObjects =
-              await searchManager!.searchByDirectoryObjectIds([objectId]).value;
-          if (directoryObjects.isNotEmpty) {
-            label = directoryObjects.first.title;
+          final directoryObject =
+              await searchManager!.searchByDirectoryObjectId(objectId).value;
+          if (directoryObject != null) {
+            label = directoryObject.title;
           }
         }
         break;
@@ -604,9 +571,8 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
     if (object is sdk.DgisMapObject && searchManager != null) {
       final objectId = object.id;
-      final directoryObjects =
-          await searchManager!.searchByDirectoryObjectIds([objectId]).value;
-      final directoryObject = directoryObjects.firstOrNull;
+      final directoryObject =
+          await searchManager!.searchByDirectoryObjectId(objectId).value;
 
       if (directoryObject != null) {
         label = directoryObject.title;
@@ -682,10 +648,10 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       mapGeometry,
       null,
       sdk.Padding(
-        top: ((_editorInsets.top + _cameraPadding) * dpi).ceil(),
-        bottom: ((_editorInsets.bottom + _cameraPadding) * dpi).ceil(),
-        left: ((_editorInsets.left + _cameraPadding) * dpi).ceil(),
-        right: ((_editorInsets.right + _cameraPadding) * dpi).ceil(),
+        top: (_cameraPadding * dpi).ceil(),
+        bottom: ((routeEditorHeight + _cameraPadding) * dpi).ceil(),
+        left: (_cameraPadding * dpi).ceil(),
+        right: (_cameraPadding * dpi).ceil(),
       ),
       null,
       null,

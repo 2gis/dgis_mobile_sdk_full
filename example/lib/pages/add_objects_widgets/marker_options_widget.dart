@@ -68,26 +68,28 @@ class MarkerOptionsDialogState extends State<MarkerOptionsDialog> {
             shrinkWrap: true,
             children: <Widget>[
               const Text('Marker type:'),
-              RadioGroup<MarkerType>(
-                groupValue: markerType,
-                onChanged: (value) => setState(() => markerType = value!),
-                child: const Column(
-                  children: <Widget>[
-                    RadioListTile<MarkerType>(
-                      title: Text('Scooter'),
-                      value: MarkerType.scooterPng,
-                    ),
-                    RadioListTile<MarkerType>(
-                      title: Text('Bridge'),
-                      value: MarkerType.bridgeSvg,
-                    ),
-                    RadioListTile<MarkerType>(
-                      title: Text('Bat'),
-                      value: MarkerType.batLottie,
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<MarkerType>(
+                    title: const Text('Scooter'),
+                    value: MarkerType.scooterPng,
+                    groupValue: markerType,
+                    onChanged: (value) => setState(() => markerType = value!),
+                  ),
+                  RadioListTile<MarkerType>(
+                    title: const Text('Bridge'),
+                    value: MarkerType.bridgeSvg,
+                    groupValue: markerType,
+                    onChanged: (value) => setState(() => markerType = value!),
+                  ),
+                  RadioListTile<MarkerType>(
+                    title: const Text('Bat'),
+                    value: MarkerType.batLottie,
+                    groupValue: markerType,
+                    onChanged: (value) => setState(() => markerType = value!),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
               ListTile(
                 title: TextField(
@@ -123,26 +125,28 @@ class MarkerOptionsDialogState extends State<MarkerOptionsDialog> {
                 ),
               ),
               const Text('Marker width:'),
-              RadioGroup<double>(
-                groupValue: markerWidth,
-                onChanged: (value) => setState(() => markerWidth = value!),
-                child: const Column(
-                  children: <Widget>[
-                    RadioListTile<double>(
-                      title: Text('Thin'),
-                      value: 30,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Medium'),
-                      value: 45,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Thick'),
-                      value: 60,
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<double>(
+                    title: const Text('Thin'),
+                    value: 30,
+                    groupValue: markerWidth,
+                    onChanged: (value) => setState(() => markerWidth = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Medium'),
+                    value: 45,
+                    groupValue: markerWidth,
+                    onChanged: (value) => setState(() => markerWidth = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Thick'),
+                    value: 60,
+                    groupValue: markerWidth,
+                    onChanged: (value) => setState(() => markerWidth = value!),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
               ListTile(
                 title: TextFormField(

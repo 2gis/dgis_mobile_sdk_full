@@ -35,41 +35,38 @@ class _FpsButtonState {
 
 class _FpsState extends State<FpsPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? _mapWidgetController;
+  final _mapWidgetController = sdk.MapWidgetController();
   final _maxFps = TextEditingController();
   final _powerSavingMaxFps = TextEditingController();
   final _fpsButtonState = ValueNotifier(const _FpsButtonState());
-  StreamSubscription<sdk.Fps>? _fpsSubscription;
+  late final StreamSubscription<sdk.Fps> _fpsSubscription;
   sdk.Map? _sdkMap;
   CancelableOperation<sdk.CameraAnimatedMoveResult>? _moveCancelable;
 
   @override
   void initState() {
     super.initState();
-    unawaited(_initContext());
+    _initContext();
   }
 
   @override
   void dispose() {
-    _fpsSubscription?.cancel();
+    _fpsSubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = _mapWidgetController;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: _sdkContext,
-              controller: currentMapWidgetController,
-            ),
+          sdk.MapWidget(
+            sdkContext: _sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: _mapWidgetController,
+          ),
           Align(
             alignment: Alignment.topRight,
             child: Padding(
@@ -79,20 +76,13 @@ class _FpsState extends State<FpsPage> {
                   ConstrainedBox(
                     constraints: BoxConstraints.tight(const Size(100, 50)),
                     child: TextFormField(
-                      enabled: currentMapWidgetController != null,
                       controller: _maxFps,
                       decoration: const InputDecoration(
                         labelText: 'Max fps',
                       ),
                       onFieldSubmitted: (value) {
-                        final mapWidgetController = _mapWidgetController;
-                        if (mapWidgetController == null) {
-                          return;
-                        }
-
-                        mapWidgetController.maxFps = sdk.Fps(
-                          int.tryParse(value)!,
-                        );
+                        _mapWidgetController.maxFps =
+                            sdk.Fps(int.tryParse(value)!);
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -108,20 +98,13 @@ class _FpsState extends State<FpsPage> {
                   ConstrainedBox(
                     constraints: BoxConstraints.tight(const Size(100, 50)),
                     child: TextFormField(
-                      enabled: currentMapWidgetController != null,
                       controller: _powerSavingMaxFps,
                       decoration: const InputDecoration(
                         labelText: 'PS max fps',
                       ),
                       onFieldSubmitted: (value) {
-                        final mapWidgetController = _mapWidgetController;
-                        if (mapWidgetController == null) {
-                          return;
-                        }
-
-                        mapWidgetController.powerSavingMaxFps = sdk.Fps(
-                          int.tryParse(value)!,
-                        );
+                        _mapWidgetController.powerSavingMaxFps =
+                            sdk.Fps(int.tryParse(value)!);
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -181,19 +164,11 @@ class _FpsState extends State<FpsPage> {
   }
 
   Future<void> _initContext() async {
-    final createdMapWidgetController = await createMapWidgetController(
-      _sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    _sdkMap = createdMapWidgetController.map;
-    _fpsSubscription = createdMapWidgetController.fpsChannel.listen((fps) {
-      _fpsButtonState.value = _fpsButtonState.value.copyWith(currentFps: fps);
-    });
-    setState(() {
-      _mapWidgetController = createdMapWidgetController;
+    _mapWidgetController.getMapAsync((map) {
+      _sdkMap = map;
+      _fpsSubscription = _mapWidgetController.fpsChannel.listen((fps) {
+        _fpsButtonState.value = _fpsButtonState.value.copyWith(currentFps: fps);
+      });
     });
   }
 

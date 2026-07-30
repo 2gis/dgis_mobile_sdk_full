@@ -51,9 +51,13 @@ class _RoutePointsEditorWidgetState extends State<RoutePointsEditorWidget> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    var adjustedNewIndex = newIndex;
     setState(() {
+      if (adjustedNewIndex > oldIndex) {
+        adjustedNewIndex -= 1;
+      }
       final item = _points.removeAt(oldIndex);
-      _points.insert(newIndex, item);
+      _points.insert(adjustedNewIndex, item);
     });
     if (_points.length >= 2) {
       widget.controller.setRoutePoints(_points);
@@ -180,7 +184,7 @@ class _RoutePointsEditorWidgetState extends State<RoutePointsEditorWidget> {
                 shrinkWrap: true,
                 buildDefaultDragHandles: false,
                 itemCount: _points.length,
-                onReorderItem: _onReorder,
+                onReorder: _onReorder,
                 proxyDecorator: (child, index, animation) {
                   return Material(
                     elevation: 4,

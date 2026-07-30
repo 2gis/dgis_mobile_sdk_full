@@ -4,7 +4,6 @@ import 'package:async/async.dart';
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'common.dart';
 
@@ -19,7 +18,7 @@ class CameraMovesPage extends StatefulWidget {
 
 class _CameraMovesState extends State<CameraMovesPage> {
   final sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   sdk.Map? sdkMap;
   sdk.LocationService? locationService;
   CancelableOperation<sdk.CameraAnimatedMoveResult>? moveCameraCancellable;
@@ -94,13 +93,11 @@ class _CameraMovesState extends State<CameraMovesPage> {
   @override
   void initState() {
     super.initState();
-    WakelockPlus.enable();
     initContext();
   }
 
   @override
   void dispose() {
-    WakelockPlus.disable();
     locationSubscription?.cancel();
     moveCameraCancellable?.cancel();
     super.dispose();
@@ -112,13 +109,11 @@ class _CameraMovesState extends State<CameraMovesPage> {
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (mapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: mapWidgetController!,
-            ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: CupertinoButton(
@@ -133,21 +128,19 @@ class _CameraMovesState extends State<CameraMovesPage> {
 
   Future<void> initContext() async {
     locationService = sdk.LocationService(sdkContext);
-    await _createMapController();
-    await checkLocationPermissions(locationService!);
-  }
+    mapWidgetController
+      ..getMapAsync((map) {
+        sdkMap = map;
 
-  Future<void> _createMapController() async {
-    final createdMapWidgetController =
-        await createMapWidgetController(sdkContext);
-    if (!mounted) {
-      return;
-    }
-    sdkMap = createdMapWidgetController.map;
-    setState(() {
-      mapWidgetController = createdMapWidgetController
-        ..copyrightAlignment = Alignment.bottomLeft;
-    });
+        const locationController = sdk.MyLocationControllerSettings(
+          bearingSource: sdk.BearingSource.satellite,
+        );
+        final locationSource =
+            sdk.MyLocationMapObjectSource(sdkContext, locationController);
+        map.addSource(locationSource);
+      })
+      ..copyrightAlignment = Alignment.bottomLeft;
+    await checkLocationPermissions(locationService!);
   }
 
   void _show() {

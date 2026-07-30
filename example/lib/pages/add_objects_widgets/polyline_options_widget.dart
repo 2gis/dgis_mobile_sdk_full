@@ -104,47 +104,57 @@ class PolylineOptionsDialogState extends State<PolylineOptionsDialog> {
               ),
               const SizedBox(height: 10),
               const Text('Width:'),
-              RadioGroup<double>(
-                groupValue: width,
-                onChanged: (value) => setState(() => width = value!),
-                child: const Column(
-                  children: <Widget>[
-                    RadioListTile<double>(
-                      title: Text('Thin'),
-                      value: 1,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Medium'),
-                      value: 5,
-                    ),
-                    RadioListTile<double>(
-                      title: Text('Thick'),
-                      value: 10,
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<double>(
+                    title: const Text('Thin'),
+                    value: 1,
+                    groupValue: width,
+                    onChanged: (value) => setState(() => width = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Medium'),
+                    value: 5,
+                    groupValue: width,
+                    onChanged: (value) => setState(() => width = value!),
+                  ),
+                  RadioListTile<double>(
+                    title: const Text('Thick'),
+                    value: 10,
+                    groupValue: width,
+                    onChanged: (value) => setState(() => width = value!),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
               const Text('Color:'),
-              RadioGroup<int>(
-                groupValue: selectedColor,
-                onChanged: (value) => setState(() => selectedColor = value!),
-                child: Column(
-                  children: <Widget>[
-                    RadioListTile<int>(
-                      title: const Text('Black'),
-                      value: Colors.black.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Red'),
-                      value: Colors.red.toARGB32(),
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('Blue'),
-                      value: Colors.blue.toARGB32(),
-                    ),
-                  ],
-                ),
+              Column(
+                children: <Widget>[
+                  RadioListTile<int>(
+                    title: const Text('Black'),
+                    // ignore: deprecated_member_use
+                    value: Colors.black.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Red'),
+                    // ignore: deprecated_member_use
+                    value: Colors.red.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('Blue'),
+                    // ignore: deprecated_member_use
+                    value: Colors.blue.value,
+                    groupValue: selectedColor,
+                    onChanged: (value) =>
+                        setState(() => selectedColor = value!),
+                  ),
+                ],
               ),
             ],
           ),

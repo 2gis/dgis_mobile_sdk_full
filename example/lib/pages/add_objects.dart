@@ -25,7 +25,7 @@ enum MarkerType { scooterPng, bridgeSvg, batLottie }
 
 class _SamplePageState extends State<AddObjectsPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? _mapWidgetController;
+  final _mapWidgetController = sdk.MapWidgetController();
   final _formKey = GlobalKey<FormState>();
   final _scooterAssetsPath = 'assets/icons/scooter_model.png';
   final _bridgeAssetsPath = 'assets/icons/bridge.svg';
@@ -83,26 +83,17 @@ class _SamplePageState extends State<AddObjectsPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = _mapWidgetController;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: _sdkContext,
-              controller: currentMapWidgetController,
-            ),
+          sdk.MapWidget(
+            sdkContext: _sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: _mapWidgetController,
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: Row(
@@ -124,21 +115,15 @@ class _SamplePageState extends State<AddObjectsPage> {
     );
   }
 
-  Future<void> initContext() async {
+  void initContext() {
     _loader = sdk.ImageLoader(_sdkContext);
     _modelLoader = sdk.ModelLoader(_sdkContext);
-    final createdMapWidgetController =
-        await createMapWidgetController(_sdkContext);
-    if (!mounted) {
-      return;
-    }
-    final map = createdMapWidgetController.map;
-    _sdkMap = map;
-    _mapObjectManager = sdk.MapObjectManager(map);
-    setState(() {
-      _mapWidgetController = createdMapWidgetController
-        ..copyrightAlignment = Alignment.bottomLeft;
-    });
+    _mapWidgetController
+      ..getMapAsync((map) {
+        _sdkMap = map;
+        _mapObjectManager = sdk.MapObjectManager(map);
+      })
+      ..copyrightAlignment = Alignment.bottomLeft;
   }
 
   void _show() {

@@ -26,7 +26,7 @@ class ClusteringPage extends StatefulWidget {
 
 class _SamplePageState extends State<ClusteringPage> {
   final sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final List<sdk.Marker> markers = [];
   final formKey = GlobalKey<FormState>();
   final scooterAssetsPath = 'assets/icons/scooter_model.png';
@@ -58,28 +58,20 @@ class _SamplePageState extends State<ClusteringPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(initContext());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    initContext();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-            ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: CupertinoButton(
@@ -101,29 +93,20 @@ class _SamplePageState extends State<ClusteringPage> {
 
   Future<void> initContext() async {
     loader = sdk.ImageLoader(sdkContext);
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    final map = createdMapWidgetController.map;
-    sdkMap = map;
-    mapObjectManager = await _makeMapObjectManager(
-      map,
-      _GroupingType.clustering,
-      minZoomText,
-      maxZoomText,
-    );
-    camera = map.camera;
-    setState(() {
-      mapWidgetController = createdMapWidgetController
-        ..copyrightAlignment = Alignment.bottomLeft;
-    });
-
-    await _waitNotNullMapSize();
-    await _add();
+    mapWidgetController
+      ..getMapAsync((map) async {
+        sdkMap = map;
+        mapObjectManager = await _makeMapObjectManager(
+          map,
+          _GroupingType.clustering,
+          minZoomText,
+          maxZoomText,
+        );
+        camera = map.camera;
+        await _waitNotNullMapSize();
+        await _add();
+      })
+      ..copyrightAlignment = Alignment.bottomLeft;
   }
 
   Future<void> _waitNotNullMapSize() async {
@@ -242,52 +225,66 @@ class _SamplePageState extends State<ClusteringPage> {
                       ),
                       const SizedBox(height: 10),
                       const Text('Grouping type:'),
-                      RadioGroup<_GroupingType>(
-                        groupValue: selectedGroupingType,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedGroupingType = value;
-                          });
-                        },
-                        child: const Column(
-                          children: <Widget>[
-                            RadioListTile<_GroupingType>(
-                              title: Text('Without'),
-                              value: _GroupingType.without,
-                            ),
-                            RadioListTile<_GroupingType>(
-                              title: Text('Clustering'),
-                              value: _GroupingType.clustering,
-                            ),
-                            RadioListTile<_GroupingType>(
-                              title: Text('Generalization'),
-                              value: _GroupingType.generalization,
-                            ),
-                          ],
-                        ),
+                      Column(
+                        children: <Widget>[
+                          RadioListTile<_GroupingType>(
+                            title: const Text('Without'),
+                            value: _GroupingType.without,
+                            groupValue: selectedGroupingType,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGroupingType = value;
+                              });
+                            },
+                          ),
+                          RadioListTile<_GroupingType>(
+                            title: const Text('Clustering'),
+                            value: _GroupingType.clustering,
+                            groupValue: selectedGroupingType,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGroupingType = value;
+                              });
+                            },
+                          ),
+                          RadioListTile<_GroupingType>(
+                            title: const Text('Generalization'),
+                            value: _GroupingType.generalization,
+                            groupValue: selectedGroupingType,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGroupingType = value;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                       const Text('Marker type:'),
-                      RadioGroup<_MarkerType>(
-                        groupValue: markerType,
-                        onChanged: (value) =>
-                            setState(() => markerType = value!),
-                        child: const Column(
-                          children: <Widget>[
-                            RadioListTile<_MarkerType>(
-                              title: Text('Scooter'),
-                              value: _MarkerType.scooterPng,
-                            ),
-                            RadioListTile<_MarkerType>(
-                              title: Text('Bridge'),
-                              value: _MarkerType.bridgeSvg,
-                            ),
-                            RadioListTile<_MarkerType>(
-                              title: Text('Bat'),
-                              value: _MarkerType.batLottie,
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
+                      Column(
+                        children: <Widget>[
+                          RadioListTile<_MarkerType>(
+                            title: const Text('Scooter'),
+                            value: _MarkerType.scooterPng,
+                            groupValue: markerType,
+                            onChanged: (value) =>
+                                setState(() => markerType = value!),
+                          ),
+                          RadioListTile<_MarkerType>(
+                            title: const Text('Bridge'),
+                            value: _MarkerType.bridgeSvg,
+                            groupValue: markerType,
+                            onChanged: (value) =>
+                                setState(() => markerType = value!),
+                          ),
+                          RadioListTile<_MarkerType>(
+                            title: const Text('Bat'),
+                            value: _MarkerType.batLottie,
+                            groupValue: markerType,
+                            onChanged: (value) =>
+                                setState(() => markerType = value!),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       ),
                     ],
                   ),

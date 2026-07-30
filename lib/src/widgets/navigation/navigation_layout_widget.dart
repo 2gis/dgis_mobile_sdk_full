@@ -55,7 +55,7 @@ class NavigationLayoutWidget extends StatefulWidget {
     ParkingController controller,
   )? _parkingWidgetBuilder;
   final NavigationZoomWidget Function(ZoomController)? _zoomWidgetBuilder;
-  final NavigationMyLocationWidget Function(NavigationMyLocationController)?
+  final NavigationMyLocationWidget Function(MyLocationController)?
       _myLocationwidgetBuilder;
   final NavigationCompassWidget Function(CompassController)?
       _compassWidgetBuilder;
@@ -86,7 +86,7 @@ class NavigationLayoutWidget extends StatefulWidget {
     NavigationParkingWidget Function(RoundedCorners, ParkingController)?
         parkingWidgetBuilder,
     NavigationZoomWidget Function(ZoomController)? zoomWidgetBuilder,
-    NavigationMyLocationWidget Function(NavigationMyLocationController)?
+    NavigationMyLocationWidget Function(MyLocationController)?
         myLocationWidgetBuilder,
     NavigationCompassWidget Function(CompassController)? compassWidgetbuilder,
     BetterRoutePromptWidget Function(
@@ -153,7 +153,7 @@ class _NavigationLayoutWidgetState
   late CompassController compassController;
   late FinishRouteController finishRouteController;
   late ManeuverController maneuverController;
-  late NavigationMyLocationController myLocationController;
+  late MyLocationController myLocationController;
   late ParkingController parkingController;
   late ZoomController zoomController;
   late SpeedLimitController speedLimitController;
@@ -684,7 +684,7 @@ class _NavigationLayoutWidgetState
     );
     maneuverController =
         ManeuverController(navigationManager: widget.navigationManager);
-    myLocationController = NavigationMyLocationController(
+    myLocationController = MyLocationController(
       map: map,
       onTapped: () {
         if (dashboardController.isRouteViewMode) {

@@ -120,7 +120,7 @@ class DgisSearchWidget extends StatefulWidget {
   ) {
     return someQuery.fold(
       (query) => sdk.SearchQueryBuilder.fromQuery(query).build(),
-      (queryText) => sdk.SearchQueryBuilder().setQueryText(queryText).build(),
+      (queryText) => sdk.SearchQueryBuilder.fromQueryText(queryText).build(),
     );
   }
 
@@ -129,7 +129,7 @@ class DgisSearchWidget extends StatefulWidget {
   ) {
     return someQuery.fold(
       (query) => sdk.SuggestQueryBuilder.fromQuery(query).build(),
-      (queryText) => sdk.SuggestQueryBuilder(queryText).build(),
+      (queryText) => sdk.SuggestQueryBuilder.fromQueryText(queryText).build(),
     );
   }
 
@@ -168,7 +168,7 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
   void _performSearchFromText(String query) {
     if (query.isNotEmpty) {
       _performSearch(
-        sdk.SearchQueryBuilder().setQueryText(query).build(),
+        sdk.SearchQueryBuilder.fromQueryText(query).build(),
       );
     }
   }
@@ -390,7 +390,7 @@ typedef SearchResultBuilder = Widget Function(
 ///  ) {
 ///   return someQuery.fold(
 ///      (query) => sdk.SearchQueryBuilder.fromQuery(query).build(),
-///      (queryText) => sdk.SearchQueryBuilder(queryText).build(),
+///      (queryText) => sdk.SearchQueryBuilder.fromQueryText(queryText).build(),
 ///    );
 ///  }
 typedef SearchQueryProvider = sdk.SearchQuery Function(

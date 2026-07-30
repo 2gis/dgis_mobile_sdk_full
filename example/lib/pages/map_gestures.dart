@@ -17,42 +17,30 @@ class MapGesturesPage extends StatefulWidget {
 
 class _MapGesturesState extends State<MapGesturesPage> {
   final sdkContext = AppContainer().initializeSdk();
-  sdk.MapWidgetController? mapWidgetController;
+  final mapWidgetController = sdk.MapWidgetController();
   final formKey = GlobalKey<FormState>();
-  final pinAssetsPath = 'assets/icons/pin.png';
-  sdk.Map? sdkMap;
   sdk.GestureManager? gestureManager;
   sdk.TouchEventsObserver? touchEventsObserver;
-  sdk.MapObjectManager? mapObjectManager;
   sdk.MutableEnumSet<sdk.TransformGesture> enabledGestures =
       sdk.MutableTransformGestureEnumSet.all();
-  late sdk.Image iconImage;
 
   @override
   void initState() {
     super.initState();
-    unawaited(initContext());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    initContext();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Stack(
         children: <Widget>[
-          if (currentMapWidgetController == null)
-            const SizedBox.shrink()
-          else
-            sdk.MapWidget(
-              sdkContext: sdkContext,
-              controller: currentMapWidgetController,
-            ),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            mapOptions: sdk.MapOptions(),
+            controller: mapWidgetController,
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: CupertinoButton(
@@ -66,28 +54,11 @@ class _MapGesturesState extends State<MapGesturesPage> {
   }
 
   Future<void> initContext() async {
-    final loader = sdk.ImageLoader(sdkContext);
-    iconImage = await loader.loadPngFromAsset(pinAssetsPath, 160, 160);
-    await _createMapController();
-  }
-
-  Future<void> _createMapController() async {
-    final createdMapWidgetController = await createMapWidgetController(
-      sdkContext,
-    );
-    if (!mounted) {
-      return;
-    }
-
-    final map = createdMapWidgetController.map;
-    sdkMap = map;
-    gestureManager = createdMapWidgetController.gestureManager;
-    mapObjectManager = sdk.MapObjectManager(map);
-
-    setState(() {
-      mapWidgetController = createdMapWidgetController
-        ..copyrightAlignment = Alignment.bottomLeft;
-    });
+    mapWidgetController
+      ..getMapAsync((map) {
+        gestureManager = mapWidgetController.gestureManager;
+      })
+      ..copyrightAlignment = Alignment.bottomLeft;
   }
 
   void _show() {
@@ -225,71 +196,25 @@ class _MapGesturesState extends State<MapGesturesPage> {
   }
 
   void _updateTouchEventsObserver(BuildContext context) {
-    final currentMapWidgetController = mapWidgetController;
-    if (currentMapWidgetController == null) {
-      return;
-    }
-
     if (touchEventsObserver != null) {
       touchEventsObserver = null;
-      currentMapWidgetController.setTouchEventsObserver(null);
+      mapWidgetController.setTouchEventsObserver(null);
       return;
     }
 
     touchEventsObserver =
-        _TouchEventsObserverImpl(ScaffoldMessenger.of(context), (point, idx) {
-      final geoPoint = sdkMap?.camera.projection.screenToMap(point);
-      if (geoPoint == null) {
-        return;
-      }
-      final options = sdk.MarkerOptions(
-        icon: iconImage,
-        position: sdk.GeoPointWithElevation(
-          latitude: geoPoint.latitude,
-          longitude: geoPoint.longitude,
-        ),
-        anchor: const sdk.Anchor(y: 1),
-        draggable: true,
-        iconWidth: const sdk.LogicalPixel(5),
-        userData: idx,
-      );
-      mapObjectManager?.addObject(sdk.Marker(options));
-    }, () {
-      mapObjectManager?.removeAll();
-    }, (point) {
-      final geoPoint = sdkMap?.camera.projection.screenToMap(point);
-      if (geoPoint == null) {
-        return null;
-      }
-      return sdk.GeoPointWithElevation(
-        latitude: geoPoint.latitude,
-        longitude: geoPoint.longitude,
-      );
-    });
-    currentMapWidgetController.setTouchEventsObserver(touchEventsObserver);
+        _TouchEventsObserverImpl(ScaffoldMessenger.of(context));
+    mapWidgetController.setTouchEventsObserver(touchEventsObserver);
   }
 }
 
 class _TouchEventsObserverImpl extends sdk.TouchEventsObserver {
   final ScaffoldMessengerState _messengerState;
-  final void Function(sdk.ScreenPoint point, int idx) _onTapFunction;
-  final void Function() _onLongTouchFunction;
-  final sdk.GeoPointWithElevation? Function(sdk.ScreenPoint point)
-      _getGeoPointFunction;
-  int tapIdx = 0;
-  sdk.Marker? dragObject;
 
-  _TouchEventsObserverImpl(
-    this._messengerState,
-    this._onTapFunction,
-    this._onLongTouchFunction,
-    this._getGeoPointFunction,
-  );
+  _TouchEventsObserverImpl(this._messengerState);
 
   @override
   void onTap(sdk.ScreenPoint point) {
-    _onTapFunction(point, tapIdx);
-    tapIdx += 1;
     final snackBar = SnackBar(
       content: Text('User taped on screen (${point.x}, ${point.y})'),
       duration: const Duration(seconds: 2),
@@ -299,61 +224,8 @@ class _TouchEventsObserverImpl extends sdk.TouchEventsObserver {
 
   @override
   void onLongTouch(sdk.ScreenPoint point) {
-    _onLongTouchFunction();
     final snackBar = SnackBar(
       content: Text('User long touched on screen (${point.x}, ${point.y})'),
-      duration: const Duration(seconds: 2),
-    );
-    _messengerState.showSnackBar(snackBar);
-  }
-
-  @override
-  void onDragBegin(sdk.DragBeginData data) {
-    final mapObject = data.item.item;
-    if (mapObject.userData == null) {
-      return;
-    }
-    final point = data.point;
-    final simpleObject = mapObject as sdk.SimpleMapObject;
-    dragObject = simpleObject as sdk.Marker;
-    if (dragObject == null) {
-      return;
-    }
-    final dragIdx = dragObject!.userData! as int;
-    final snackBar = SnackBar(
-      content: Text(
-        'User drag begin on screen (${point.x}, ${point.y}) and object with id $dragIdx',
-      ),
-      duration: const Duration(seconds: 2),
-    );
-    _messengerState.showSnackBar(snackBar);
-  }
-
-  @override
-  void onDragMove(sdk.ScreenPoint point) {
-    if (dragObject == null) {
-      return;
-    }
-    // ignore: avoid_print
-    print(
-      'User drag move on screen (${point.x}, ${point.y}) and object with id ${dragObject?.userData}',
-    );
-    final geoPoint = _getGeoPointFunction(point);
-    if (geoPoint == null) {
-      return;
-    }
-    dragObject?.position = geoPoint;
-  }
-
-  @override
-  void onDragEnd() {
-    if (dragObject == null) {
-      return;
-    }
-    final snackBar = SnackBar(
-      content: Text(
-        'User drag end on screen object with id ${dragObject?.userData}',
-      ),
       duration: const Duration(seconds: 2),
     );
     _messengerState.showSnackBar(snackBar);

@@ -78,7 +78,7 @@ class _DefaultTransportModeTab extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
-                  vertical: 6,
+                  vertical: 8,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
