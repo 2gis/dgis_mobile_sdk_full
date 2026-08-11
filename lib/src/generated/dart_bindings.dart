@@ -15190,6 +15190,7 @@ class _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_COptional_CPublicTransportDirectoryScheduleInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable(
     this.completer,
@@ -15200,10 +15201,18 @@ class _CFuture_COptional_CPublicTransportDirectoryScheduleInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -15266,12 +15275,8 @@ extension _CFuture_COptional_CPublicTransportDirectoryScheduleInfoToDart on _CFu
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -15502,6 +15507,7 @@ class _CFuture_COptional_CPage_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_COptional_CPage, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_COptional_CPage_Cancellable(
     this.completer,
@@ -15512,10 +15518,18 @@ class _CFuture_COptional_CPage_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -15578,12 +15592,8 @@ extension _CFuture_COptional_CPageToDart on _CFuture_COptional_CPage {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -17377,6 +17387,7 @@ class _CFuture_COptional_CArray_CItemMarkerInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_COptional_CArray_CItemMarkerInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_COptional_CArray_CItemMarkerInfo_Cancellable(
     this.completer,
@@ -17387,10 +17398,18 @@ class _CFuture_COptional_CArray_CItemMarkerInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -17453,12 +17472,8 @@ extension _CFuture_COptional_CArray_CItemMarkerInfoToDart on _CFuture_COptional_
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -17604,6 +17619,7 @@ class _CFuture_CArray_CUIMarkerInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CUIMarkerInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CUIMarkerInfo_Cancellable(
     this.completer,
@@ -17614,10 +17630,18 @@ class _CFuture_CArray_CUIMarkerInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -17680,12 +17704,8 @@ extension _CFuture_CArray_CUIMarkerInfoToDart on _CFuture_CArray_CUIMarkerInfo {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -19101,6 +19121,7 @@ class _CFuture_CSuggestResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CSuggestResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CSuggestResult_Cancellable(
     this.completer,
@@ -19111,10 +19132,18 @@ class _CFuture_CSuggestResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -19177,12 +19206,8 @@ extension _CFuture_CSuggestResultToDart on _CFuture_CSuggestResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -19206,6 +19231,7 @@ class _CFuture_CSearchResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CSearchResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CSearchResult_Cancellable(
     this.completer,
@@ -19216,10 +19242,18 @@ class _CFuture_CSearchResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -19282,12 +19316,8 @@ extension _CFuture_CSearchResultToDart on _CFuture_CSearchResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -19311,6 +19341,7 @@ class _CFuture_COptional_CDirectoryObject_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_COptional_CDirectoryObject, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_COptional_CDirectoryObject_Cancellable(
     this.completer,
@@ -19321,10 +19352,18 @@ class _CFuture_COptional_CDirectoryObject_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -19387,12 +19426,8 @@ extension _CFuture_COptional_CDirectoryObjectToDart on _CFuture_COptional_CDirec
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -21467,6 +21502,7 @@ class _CFuture_CSearchHistoryResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CSearchHistoryResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CSearchHistoryResult_Cancellable(
     this.completer,
@@ -21477,10 +21513,18 @@ class _CFuture_CSearchHistoryResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -21543,12 +21587,8 @@ extension _CFuture_CSearchHistoryResultToDart on _CFuture_CSearchHistoryResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -21627,7 +21667,10 @@ class _CChannel_CChangeTypeImpl extends Channel<ChangeType> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -22401,6 +22444,7 @@ class _CFuture_CData_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CData, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CData_Cancellable(
     this.completer,
@@ -22411,10 +22455,18 @@ class _CFuture_CData_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -22477,12 +22529,8 @@ extension _CFuture_CDataToDart on _CFuture_CData {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -27363,7 +27411,10 @@ class _CChannel_CArray_CStringImpl extends Channel<List<String>> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -27956,7 +28007,10 @@ class _CStatefulChannel_CGeometryImpl extends StatefulChannel<Geometry> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -28047,7 +28101,10 @@ class _CStatefulChannel_boolImpl extends StatefulChannel<bool> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -28636,7 +28693,10 @@ class _CStatefulChannel_CArray_CDgisObjectIdImpl extends StatefulChannel<List<Dg
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -31424,6 +31484,7 @@ class _CFuture_CArray_CRoadEventPhoto_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CRoadEventPhoto, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CRoadEventPhoto_Cancellable(
     this.completer,
@@ -31434,10 +31495,18 @@ class _CFuture_CArray_CRoadEventPhoto_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -31500,12 +31569,8 @@ extension _CFuture_CArray_CRoadEventPhotoToDart on _CFuture_CArray_CRoadEventPho
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -31739,6 +31804,7 @@ class _CFuture_CActionResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CActionResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CActionResult_Cancellable(
     this.completer,
@@ -31749,10 +31815,18 @@ class _CFuture_CActionResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -31815,12 +31889,8 @@ extension _CFuture_CActionResultToDart on _CFuture_CActionResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -32198,7 +32268,10 @@ class _CStatefulChannel_CRoadEventActionInfoImpl extends StatefulChannel<RoadEve
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -35782,7 +35855,10 @@ class _CStatefulChannel_uint64_tImpl extends StatefulChannel<int> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -35873,7 +35949,10 @@ class _CStatefulChannel_CIndoorBuildingModeImpl extends StatefulChannel<IndoorBu
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -36108,7 +36187,10 @@ class _CStatefulChannel_COptional_CIndoorBuildingImpl extends StatefulChannel<In
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -36374,7 +36456,10 @@ class _CStatefulChannel_COptional_uint64_tImpl extends StatefulChannel<int?> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -36508,7 +36593,10 @@ class _CStatefulChannel_CArray_CStringImpl extends StatefulChannel<List<String>>
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -37236,6 +37324,7 @@ class _CFuture_CCameraAnimatedMoveResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CCameraAnimatedMoveResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CCameraAnimatedMoveResult_Cancellable(
     this.completer,
@@ -37246,10 +37335,18 @@ class _CFuture_CCameraAnimatedMoveResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -37312,12 +37409,8 @@ extension _CFuture_CCameraAnimatedMoveResultToDart on _CFuture_CCameraAnimatedMo
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -37365,7 +37458,10 @@ class _CStatefulChannel_CMapDataLoadingStateImpl extends StatefulChannel<MapData
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -37456,7 +37552,10 @@ class _CStatefulChannel_CStyleImpl extends StatefulChannel<Style> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -37547,7 +37646,10 @@ class _CStatefulChannel_floatImpl extends StatefulChannel<double> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -37657,6 +37759,7 @@ class _CFuture_CArray_CRenderedObjectInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CRenderedObjectInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CRenderedObjectInfo_Cancellable(
     this.completer,
@@ -37667,10 +37770,18 @@ class _CFuture_CArray_CRenderedObjectInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -37733,12 +37844,8 @@ extension _CFuture_CArray_CRenderedObjectInfoToDart on _CFuture_CArray_CRendered
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -37906,7 +38013,10 @@ class _CStatefulChannel_CMapVisibilityStateImpl extends StatefulChannel<MapVisib
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -37992,7 +38102,10 @@ class _CChannel_boolImpl extends Channel<bool> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -38076,7 +38189,10 @@ class _CStatefulChannel_CProductTypeImpl extends StatefulChannel<ProductType> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -38205,7 +38321,10 @@ class _CStatefulChannel_COptional_CGraphicsPresetImpl extends StatefulChannel<Gr
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -38308,6 +38427,7 @@ class _CFuture_COptional_CRenderedObjectInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_COptional_CRenderedObjectInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_COptional_CRenderedObjectInfo_Cancellable(
     this.completer,
@@ -38318,10 +38438,18 @@ class _CFuture_COptional_CRenderedObjectInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -38384,12 +38512,8 @@ extension _CFuture_COptional_CRenderedObjectInfoToDart on _CFuture_COptional_CRe
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -39024,7 +39148,10 @@ class _CChannel_CCameraChangeImpl extends Channel<CameraChange> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -42799,7 +42926,10 @@ class _CStatefulChannel_CCameraFollowStateImpl extends StatefulChannel<CameraFol
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -42890,7 +43020,10 @@ class _CStatefulChannel_CLocationQualityImpl extends StatefulChannel<LocationQua
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -43083,7 +43216,10 @@ class _CStatefulChannel_CBearingImpl extends StatefulChannel<Bearing> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -45343,7 +45479,10 @@ class _CStatefulChannel_CFpsImpl extends StatefulChannel<Fps> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -45410,6 +45549,7 @@ class _CFuture_bool_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(ffi.Bool, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_bool_Cancellable(
     this.completer,
@@ -45420,10 +45560,18 @@ class _CFuture_bool_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -45486,12 +45634,8 @@ extension _CFuture_boolToDart on _CFuture_bool {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -45515,6 +45659,7 @@ class _CFuture_CImageData_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CImageData, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CImageData_Cancellable(
     this.completer,
@@ -45525,10 +45670,18 @@ class _CFuture_CImageData_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -45591,12 +45744,8 @@ extension _CFuture_CImageDataToDart on _CFuture_CImageData {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -47837,7 +47986,10 @@ class _CChannel_CDragBeginDataImpl extends Channel<DragBeginData> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -47916,7 +48068,10 @@ class _CChannel_CScreenPointImpl extends Channel<ScreenPoint> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -48126,6 +48281,7 @@ class _CFuture_CMapController_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CMapController, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CMapController_Cancellable(
     this.completer,
@@ -48136,10 +48292,18 @@ class _CFuture_CMapController_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -48202,12 +48366,8 @@ extension _CFuture_CMapControllerToDart on _CFuture_CMapController {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -48628,7 +48788,10 @@ class _CStatefulChannel_CSet_CLevelIdImpl extends StatefulChannel<Set<LevelId>> 
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -49277,7 +49440,10 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectDisplayFlagImpl exte
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -49589,7 +49755,10 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectPermanentDisplayFlag
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -64945,7 +65114,10 @@ class _CStatefulChannel_CStateImpl extends StatefulChannel<State> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -65036,7 +65208,10 @@ class _CStatefulChannel_COptional_CLocationImpl extends StatefulChannel<Location
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -65127,7 +65302,10 @@ class _CStatefulChannel_CRouteInfoImpl extends StatefulChannel<RouteInfo> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -65413,7 +65591,10 @@ class _CStatefulChannel_CDynamicRouteInfoImpl extends StatefulChannel<DynamicRou
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -65947,7 +66128,10 @@ class _CStatefulChannel_COptional_CRoutePointImpl extends StatefulChannel<RouteP
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66038,7 +66222,10 @@ class _CStatefulChannel_COptional_CBetterRouteInfoImpl extends StatefulChannel<B
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66289,7 +66476,10 @@ class _CStatefulChannel_CRouteDistanceImpl extends StatefulChannel<RouteDistance
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66380,7 +66570,10 @@ class _CStatefulChannel_CRouteMapObjectPassedDistanceVisualizationImpl extends S
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66471,7 +66664,10 @@ class _CStatefulChannel_CArray_CCalloutMapPositionImpl extends StatefulChannel<L
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66605,7 +66801,10 @@ class _CStatefulChannel_COptional_COptionSet_CRouteMapObjectCalloutLabelFlagImpl
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -66917,7 +67116,10 @@ class _CStatefulChannel_CRouteMapObjectCalloutLabelDisplayModeImpl extends State
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -67008,7 +67210,10 @@ class _CStatefulChannel_CRoadEventMapObjectRouteAttributeImpl extends StatefulCh
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -68059,7 +68264,10 @@ class _CStatefulChannel_CRouteEditorRoutesInfoImpl extends StatefulChannel<Route
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -68609,7 +68817,10 @@ class _CStatefulChannel_COptional_CRouteIndexImpl extends StatefulChannel<RouteI
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -68991,6 +69202,7 @@ class _CFuture_CArray_CTrafficRoute_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CTrafficRoute, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CTrafficRoute_Cancellable(
     this.completer,
@@ -69001,10 +69213,18 @@ class _CFuture_CArray_CTrafficRoute_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -69067,12 +69287,8 @@ extension _CFuture_CArray_CTrafficRouteToDart on _CFuture_CArray_CTrafficRoute {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -69096,6 +69312,7 @@ class _CFuture_CSharedRouteData_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CSharedRouteData, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CSharedRouteData_Cancellable(
     this.completer,
@@ -69106,10 +69323,18 @@ class _CFuture_CSharedRouteData_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -69172,12 +69397,8 @@ extension _CFuture_CSharedRouteDataToDart on _CFuture_CSharedRouteData {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -69300,6 +69521,7 @@ class _CFuture_CArray_CTruckPassZonePass_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CTruckPassZonePass, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CTruckPassZonePass_Cancellable(
     this.completer,
@@ -69310,10 +69532,18 @@ class _CFuture_CArray_CTruckPassZonePass_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -69376,12 +69606,8 @@ extension _CFuture_CArray_CTruckPassZonePassToDart on _CFuture_CArray_CTruckPass
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -69569,6 +69795,7 @@ class _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_COptional_CBriefRouteInfo, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable(
     this.completer,
@@ -69579,10 +69806,18 @@ class _CFuture_CArray_COptional_CBriefRouteInfo_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -69645,12 +69880,8 @@ extension _CFuture_CArray_COptional_CBriefRouteInfoToDart on _CFuture_CArray_COp
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -71210,7 +71441,10 @@ class _CStatefulChannel_CGeoPointImpl extends StatefulChannel<GeoPoint> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -71733,6 +71967,7 @@ class _CFuture_CMap_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CMap, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CMap_Cancellable(
     this.completer,
@@ -71743,10 +71978,18 @@ class _CFuture_CMap_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -71809,12 +72052,8 @@ extension _CFuture_CMapToDart on _CFuture_CMap {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -71952,6 +72191,7 @@ class _CFuture_CStyle_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CStyle, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CStyle_Cancellable(
     this.completer,
@@ -71962,10 +72202,18 @@ class _CFuture_CStyle_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -72028,12 +72276,8 @@ extension _CFuture_CStyleToDart on _CFuture_CStyle {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -73217,7 +73461,10 @@ class _CStatefulChannel_CArray_CRouteMapObjectImpl extends StatefulChannel<List<
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -74797,7 +75044,10 @@ class _CStatefulChannel_COptional_CTrafficJamInfoImpl extends StatefulChannel<Tr
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -76306,6 +76556,7 @@ class _CFuture_void_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_void_Cancellable(
     this.completer,
@@ -76316,10 +76567,18 @@ class _CFuture_void_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -76382,12 +76641,8 @@ extension _CFuture_voidToDart on _CFuture_void {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -76558,7 +76813,10 @@ class _CStatefulChannel_CArray_CVoiceImpl extends StatefulChannel<List<Voice>> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -77026,7 +77284,10 @@ class _CStatefulChannel_COptional_CCameraProgressInfoImpl extends StatefulChanne
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -77736,7 +77997,10 @@ class _CStatefulChannel_CArray_CLocaleImpl extends StatefulChannel<List<Locale>>
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -78809,6 +79073,7 @@ class _CFuture_CAddEventResult_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CAddEventResult, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CAddEventResult_Cancellable(
     this.completer,
@@ -78819,10 +79084,18 @@ class _CFuture_CAddEventResult_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -78885,12 +79158,8 @@ extension _CFuture_CAddEventResultToDart on _CFuture_CAddEventResult {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -79870,6 +80139,7 @@ class _CFuture_CArray_CTerritory_Cancellable {
   final _CCancellable _cancellable;
   final ffi.NativeCallable<ffi.Void Function(_CArray_CTerritory, ffi.Int64)> valueFunctionCallable;
   final ffi.NativeCallable<ffi.Void Function(_CError, ffi.Int64)> failureCallable;
+  bool _isCanceled = false;
 
   _CFuture_CArray_CTerritory_Cancellable(
     this.completer,
@@ -79880,10 +80150,18 @@ class _CFuture_CArray_CTerritory_Cancellable {
   );
 
   void cancel() {
+    if (this._isCanceled) {
+      return;
+    }
+    this._isCanceled = true;
     this._cancellable._cancel();
     this._futureInstance._releaseIntermediate();
-    this.valueFunctionCallable.close();
-    this.failureCallable.close();
+    final valueCallback = this.valueFunctionCallable;
+    final failureCallback = this.failureCallable;
+    Timer.run(() {
+      valueCallback.close();
+      failureCallback.close();
+    });
   }
 }
 
@@ -79946,12 +80224,8 @@ extension _CFuture_CArray_CTerritoryToDart on _CFuture_CArray_CTerritory {
     return CancelableOperation.fromFuture(
       completer.future,
       onCancel: () {
-        try {
-          instanceMap[instanceId]?.cancel();
-          instanceMap.remove(instanceId);
-        } finally {
-          valueFunctionCallable.close();
-        }
+        instanceMap[instanceId]?.cancel();
+        instanceMap.remove(instanceId);
       },
     );
   }
@@ -80495,7 +80769,10 @@ class _CStatefulChannel_CTrafficScoreImpl extends StatefulChannel<TrafficScore> 
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -80827,7 +81104,10 @@ class _CStatefulChannel_CTrafficControlStateImpl extends StatefulChannel<Traffic
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -81378,7 +81658,10 @@ class _CStatefulChannel_CPackageInfoImpl extends StatefulChannel<PackageInfo> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -81469,7 +81752,10 @@ class _CStatefulChannel_uint8_tImpl extends StatefulChannel<int> {
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -81983,7 +82269,10 @@ class _CStatefulChannel_CArray_CPackageImpl extends StatefulChannel<List<Package
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );
@@ -82280,7 +82569,10 @@ class _CStatefulChannel_CArray_CTerritoryImpl extends StatefulChannel<List<Terri
         try {
           cancellable._cancel();
         } finally {
-          valueFunctionCallable.close();
+          final valueCallback = valueFunctionCallable;
+          Timer.run(() {
+            valueCallback.close();
+          });
         }
       },
     );

@@ -114,7 +114,7 @@ class _CopyrightWidgetState extends BaseMapWidgetState<CopyrightWidget> {
     hideCopyrightSubscription?.cancel();
     hideCopyrightSubscription = null;
     productTypeSubscription?.cancel();
-    hideCopyrightSubscription = null;
+    productTypeSubscription = null;
   }
 
   @override

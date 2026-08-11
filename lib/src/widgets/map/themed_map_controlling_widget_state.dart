@@ -19,25 +19,24 @@ abstract class ThemedMapControllingWidgetState<
   @override
   void didChangeDependencies() {
     final mapTheme = mapThemeOf(context);
-    if (_colorMode == mapTheme?.colorMode) {
-      return;
-    }
-    if (mapTheme != null) {
-      _colorMode = mapTheme.colorMode;
-    }
-    switch (_colorMode) {
-      case MapThemeColorMode.light:
-        setState(() {
-          colorScheme = widget.light;
-        });
-      case MapThemeColorMode.dark:
-        setState(() {
-          colorScheme = widget.dark;
-        });
-      default:
-        setState(() {
-          colorScheme = widget.light;
-        });
+    if (_colorMode != mapTheme?.colorMode) {
+      if (mapTheme != null) {
+        _colorMode = mapTheme.colorMode;
+      }
+      switch (_colorMode) {
+        case MapThemeColorMode.light:
+          setState(() {
+            colorScheme = widget.light;
+          });
+        case MapThemeColorMode.dark:
+          setState(() {
+            colorScheme = widget.dark;
+          });
+        default:
+          setState(() {
+            colorScheme = widget.light;
+          });
+      }
     }
 
     super.didChangeDependencies();

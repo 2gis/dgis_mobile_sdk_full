@@ -375,6 +375,8 @@ class _MapRenderBox extends RenderBox {
 
   ClipRectLayer? _clipRectLayer;
   Size _currentTextureSize = Size.zero;
+  bool _isDisposed = false;
+  CancelableOperation<bool>? _renderingWait;
 
   _MapRenderBox(
     this.textureId,
@@ -384,7 +386,11 @@ class _MapRenderBox extends RenderBox {
   );
 
   Future<void> _updateMapSize(Size newSize) async {
-    if (newSize.width == 0.0 || newSize.height == 0.0) {
+    final textureId = this.textureId;
+    if (_isDisposed ||
+        textureId == null ||
+        newSize.width == 0.0 ||
+        newSize.height == 0.0) {
       return;
     }
 
@@ -392,15 +398,37 @@ class _MapRenderBox extends RenderBox {
 
     final width = (newSize.width * deviceDensity).toInt();
     final height = (newSize.height * deviceDensity).toInt();
-    await textureController.update(textureId!, width, height);
+    await textureController.update(textureId, width, height);
+    if (_isDisposed || this.textureId != textureId) {
+      return;
+    }
+
     final screenSize = sdk.ScreenSize(width: width, height: height);
     mapWidgetController._provider?.resizeSurface(screenSize);
     mapWidgetController._map?.camera.size = screenSize;
 
-    mapWidgetController._renderer?.waitForRendering().then((_) {
-      _currentTextureSize = newSize;
-      markNeedsPaint();
-    });
+    final renderer = mapWidgetController._renderer;
+    if (renderer == null) {
+      return;
+    }
+
+    unawaited(_renderingWait?.cancel());
+    final renderingWait = renderer.waitForRendering();
+    _renderingWait = renderingWait;
+    unawaited(
+      renderingWait.valueOrCancellation(false).then((isRendered) {
+        if (_renderingWait != renderingWait) {
+          return;
+        }
+        _renderingWait = null;
+
+        if (isRendered != true || _isDisposed || this.textureId != textureId) {
+          return;
+        }
+        _currentTextureSize = newSize;
+        markNeedsPaint();
+      }),
+    );
   }
 
   @override
@@ -441,6 +469,15 @@ class _MapRenderBox extends RenderBox {
     }
     _clipRectLayer = null;
     _paintTexture(context, offset);
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    unawaited(_renderingWait?.cancel());
+    _renderingWait = null;
+    _clipRectLayer = null;
+    super.dispose();
   }
 
   void _paintTexture(PaintingContext context, Offset offset) {
@@ -567,9 +604,11 @@ class MapWidgetState extends State<MapWidgetInternal>
   final _controller = _TextureController();
   late final MapWidgetController mapWidgetController;
   int? _textureId;
+  int? _createdTextureId;
   AppLifecycleState? _appState;
   _MapGestureController? _mapGestureController;
   StreamSubscription<sdk.CameraChange>? _cameraChangeSubscription;
+  CancelableOperation<bool>? _renderingWait;
   double _deviceDensity = 1;
   double _devicePpi = 1;
   late final ValueNotifier<MapTheme> _mapTheme;
@@ -605,10 +644,10 @@ class MapWidgetState extends State<MapWidgetInternal>
 
   @override
   void dispose() {
-    mapWidgetController._cancelConnections();
-    if (_textureId != null) {
-      _controller.dispose(_textureId!);
-    }
+    unawaited(_renderingWait?.cancel());
+    _renderingWait = null;
+    unawaited(mapWidgetController._cancelConnections());
+    _disposeTexture();
     mapWidgetController._removeMapThemeChangedCallback(_onMapThemeChanged);
     WidgetsBinding.instance.removeObserver(this);
     _cameraChangeSubscription?.cancel();
@@ -689,65 +728,114 @@ class MapWidgetState extends State<MapWidgetInternal>
   }
 
   Future<void> _initialize() async {
-    if (mapWidgetController._map == null) {
-      final builder = await sdk.MapBuilder().apply(
-        widget.mapOptions,
-        widget.sdkContext,
+    try {
+      if (mapWidgetController._map == null) {
+        final builder = await sdk.MapBuilder().apply(
+          widget.mapOptions,
+          widget.sdkContext,
+          _deviceDensity,
+          _devicePpi,
+        );
+        final map = await builder.createMap(widget.sdkContext).value;
+        if (!mounted) {
+          return;
+        }
+        mapWidgetController._map = map;
+      }
+
+      final map = mapWidgetController._map;
+      if (map == null) {
+        throw NativeException(
+          'Failed to initialize map',
+        );
+      }
+      mapWidgetController._updateMapTheme();
+
+      final provider =
+          mapWidgetController._provider ??= sdk.MapSurfaceProvider.create(map);
+      final id = await _controller.initialize(provider.id);
+      if (id == null) {
+        return;
+      }
+
+      _createdTextureId = id;
+      if (!mounted) {
+        _disposeTexture();
+        return;
+      }
+
+      final screenFps = await _controller.getScreenFps();
+      if (!mounted) {
+        _disposeTexture();
+        return;
+      }
+
+      final renderer =
+          mapWidgetController._renderer ??= sdk.MapRenderer.create(map);
+      mapWidgetController
+        ..maxFps = sdk.Fps(mapWidgetController.maxFps?.value ?? screenFps ?? 60)
+        ..powerSavingMaxFps = mapWidgetController.powerSavingMaxFps
+        .._updateRendererFps();
+
+      _updateMapVisibility();
+
+      final mapGestureRecognizer = mapWidgetController._mapGestureRecognizer ??=
+          sdk.MapGestureRecognizer.create(map);
+      _mapGestureController = _MapGestureController(
+        mapGestureRecognizer,
         _deviceDensity,
-        _devicePpi,
       );
-      final map = await builder.createMap(widget.sdkContext).value;
-      mapWidgetController._map = map;
-    }
+      _cameraChangeSubscription = map.camera.changed.listen((changes) {
+        if (changes.changeReasons.contains(sdk.CameraChangeReason.devicePPI)) {
+          _mapGestureController?._mapGestureRecognizer
+              .onDevicePpiChanged(map.camera.devicePpi);
+        }
+      });
 
-    final map = mapWidgetController._map;
-    if (map == null) {
-      throw NativeException(
-        'Failed to initialize map',
+      mapWidgetController._updateTouchEventObserver();
+      for (final callback in mapWidgetController._readyMapCallbacks) {
+        callback(map);
+      }
+
+      unawaited(_renderingWait?.cancel());
+      final renderingWait = renderer.waitForRendering();
+      _renderingWait = renderingWait;
+      unawaited(
+        renderingWait.valueOrCancellation(false).then((isRendered) {
+          if (_renderingWait != renderingWait) {
+            return;
+          }
+          _renderingWait = null;
+
+          if (isRendered != true || !mounted || _createdTextureId != id) {
+            return;
+          }
+          setState(() {
+            _textureId = id;
+          });
+        }),
+      );
+      isMapInitialized = true;
+    } catch (error, stackTrace) {
+      _disposeTexture();
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'dgis_mobile_sdk',
+          context: ErrorDescription('while initializing MapWidget'),
+        ),
       );
     }
-    mapWidgetController._updateMapTheme();
+  }
 
-    final provider =
-        mapWidgetController._provider ??= sdk.MapSurfaceProvider.create(map);
-    final id = await _controller.initialize(provider.id);
-    final screenFps = await _controller.getScreenFps();
-
-    final renderer =
-        mapWidgetController._renderer ??= sdk.MapRenderer.create(map);
-    mapWidgetController
-      ..maxFps = sdk.Fps(mapWidgetController.maxFps?.value ?? screenFps ?? 60)
-      ..powerSavingMaxFps = mapWidgetController.powerSavingMaxFps
-      .._updateRendererFps();
-
-    _updateMapVisibility();
-
-    final mapGestureRecognizer = mapWidgetController._mapGestureRecognizer ??=
-        sdk.MapGestureRecognizer.create(map);
-    _mapGestureController = _MapGestureController(
-      mapGestureRecognizer,
-      _deviceDensity,
-    );
-    _cameraChangeSubscription = map.camera.changed.listen((changes) {
-      if (changes.changeReasons.contains(sdk.CameraChangeReason.devicePPI)) {
-        _mapGestureController?._mapGestureRecognizer
-            .onDevicePpiChanged(map.camera.devicePpi);
-      }
-    });
-
-    mapWidgetController._updateTouchEventObserver();
-    for (final callback in mapWidgetController._readyMapCallbacks) {
-      callback(map);
+  void _disposeTexture() {
+    final textureId = _createdTextureId ?? _textureId;
+    _createdTextureId = null;
+    _textureId = null;
+    if (textureId != null) {
+      _controller.dispose(textureId);
     }
-
-    renderer.waitForRendering().then((isRendered) {
-      if (isRendered) {
-        setState(() {
-          _textureId = id;
-        });
-      }
-    });
-    isMapInitialized = true;
   }
 
   void _updateMapVisibility() {

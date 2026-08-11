@@ -19,8 +19,11 @@ abstract class BaseMapWidgetState<T extends StatefulWidget> extends State<T> {
       throw Exception('Any MapControl should be added as child of MapWidget');
     }
     if (map.id.value != _map?.id.value) {
+      if (_map != null) {
+        onDetachedFromMap();
+      }
       _map = map;
-      onAttachedToMap(_map!);
+      onAttachedToMap(map);
     }
   }
 
@@ -36,7 +39,7 @@ abstract class BaseMapWidgetState<T extends StatefulWidget> extends State<T> {
   /// подписки и другие объекты, которым необходима карта.
   void onAttachedToMap(sdk.Map map);
 
-  /// Вызывается перед вызовом [dispose].
+  /// Вызывается перед вызовом [dispose] и при пересоздании карты.
   /// В этом методе необходимо отменить все подписки и освободить все объекты,
   /// зависящие от [sdk.Map]
   void onDetachedFromMap();
