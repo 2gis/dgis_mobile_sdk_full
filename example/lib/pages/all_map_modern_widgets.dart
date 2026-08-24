@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,30 +18,17 @@ class AllMapModernWidgetsPage extends StatefulWidget {
 }
 
 class _AllMapModernWidgetsPageState extends State<AllMapModernWidgetsPage> {
-  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
 
-  sdk.ModernMyLocationController? _myLocationController;
-  sdk.ModernMyLocationController? _defaultMyLocationController;
+  sdk.MyLocationController? _myLocationController;
+  sdk.MyLocationController? _defaultMyLocationController;
 
   @override
   void initState() {
     super.initState();
-    mapWidgetController.getMapAsync((map) {
-      final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
-      map.addSource(locationSource);
-      setState(() {
-        _myLocationController = sdk.ModernMyLocationController(
-          map: map,
-          onPermissionRequest: _requestLocationPermission,
-          onTapFeedback: HapticFeedback.mediumImpact,
-        );
-        _defaultMyLocationController = sdk.ModernMyLocationController(
-          map: map,
-          onTapFeedback: HapticFeedback.mediumImpact,
-        );
-      });
-    });
+    unawaited(_createMapController());
   }
 
   @override
@@ -47,6 +36,27 @@ class _AllMapModernWidgetsPageState extends State<AllMapModernWidgetsPage> {
     _myLocationController?.dispose();
     _defaultMyLocationController?.dispose();
     super.dispose();
+  }
+
+  Future<void> _createMapController() async {
+    final map = await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
+    map.addSource(locationSource);
+
+    setState(() {
+      _myLocationController = sdk.MyLocationController(
+        map: map,
+        onPermissionRequest: _requestLocationPermission,
+        onTapFeedback: HapticFeedback.mediumImpact,
+      );
+      _defaultMyLocationController = sdk.MyLocationController(
+        map: map,
+        onTapFeedback: HapticFeedback.mediumImpact,
+      );
+    });
   }
 
   Future<void> _requestLocationPermission() async {
@@ -86,7 +96,6 @@ class _AllMapModernWidgetsPageState extends State<AllMapModernWidgetsPage> {
       ),
       body: sdk.MapWidget(
         sdkContext: sdkContext,
-        mapOptions: sdk.MapOptions(),
         controller: mapWidgetController,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -98,22 +107,22 @@ class _AllMapModernWidgetsPageState extends State<AllMapModernWidgetsPage> {
                 children: [
                   const Align(
                     alignment: Alignment.topRight,
-                    child: sdk.ModernTrafficWidget(),
+                    child: sdk.TrafficWidget(),
                   ),
                   const Spacer(),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Column(
                       children: [
-                        const sdk.ModernZoomWidget(),
+                        const sdk.ZoomWidget(),
                         const Padding(
                           padding: EdgeInsets.only(top: 8),
-                          child: sdk.ModernCompassWidget(),
+                          child: sdk.CompassWidget(),
                         ),
                         if (myLocationController != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
-                            child: sdk.ModernMyLocationWidget(
+                            child: sdk.MyLocationWidget(
                               controller: myLocationController,
                             ),
                           ),
@@ -131,14 +140,14 @@ class _AllMapModernWidgetsPageState extends State<AllMapModernWidgetsPage> {
                     const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        sdk.ModernIndoorWidget(),
+                        sdk.IndoorWidget(),
                         SizedBox(width: 8),
-                        sdk.ModernIndoorWidget(showRoof: false),
+                        sdk.IndoorWidget(showRoof: false),
                       ],
                     ),
                     if (defaultMyLocationController != null) ...[
                       const SizedBox(height: 8),
-                      sdk.ModernMyLocationWidget(
+                      sdk.MyLocationWidget(
                         controller: defaultMyLocationController,
                       ),
                     ],

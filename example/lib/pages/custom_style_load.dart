@@ -15,36 +15,38 @@ class CustomStyleLoadPage extends StatefulWidget {
 }
 
 class _CustomStyleLoadPageState extends State<CustomStyleLoadPage> {
-  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
-  final ValueNotifier<bool> isReady = ValueNotifier(false);
-  late final sdk.MapOptions mapOptions;
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(
+    sdkContext,
+    controllerOptions: sdk.MapControllerOptions(
+      styleFile: sdk.File.fromAsset(sdkContext, 'custom_styles.2gis'),
+    ),
+  );
 
   @override
   void initState() {
     super.initState();
-    unawaited(initializeMapOptions());
-    mapWidgetController.getMapAsync(
-      (map) {
-        map.camera.position = const sdk.CameraPosition(
-          point: sdk.GeoPoint(
-            latitude: sdk.Latitude(55.752474),
-            longitude: sdk.Longitude(37.668906),
-          ),
-          zoom: sdk.Zoom(11),
-        );
-      },
-    );
+    unawaited(_createMapController());
   }
 
-  Future<void> initializeMapOptions() async {
-    final style = await sdk.StyleBuilder(sdkContext)
-        .loadStyle(
-          sdk.File.fromAsset(sdkContext, 'custom_styles.2gis'),
-        )
-        .value;
-    mapOptions = sdk.MapOptions(style: style);
-    isReady.value = true;
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _createMapController() async {
+    final map = await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    map.camera.position = const sdk.CameraPosition(
+      point: sdk.GeoPoint(
+        latitude: sdk.Latitude(55.752474),
+        longitude: sdk.Longitude(37.668906),
+      ),
+      zoom: sdk.Zoom(11),
+    );
   }
 
   @override
@@ -53,18 +55,9 @@ class _CustomStyleLoadPageState extends State<CustomStyleLoadPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: isReady,
-        builder: (context, ready, _) {
-          if (ready) {
-            return sdk.MapWidget(
-              sdkContext: sdkContext,
-              mapOptions: mapOptions,
-              controller: mapWidgetController,
-            );
-          }
-          return const SizedBox.shrink();
-        },
+      body: sdk.MapWidget(
+        sdkContext: sdkContext,
+        controller: mapWidgetController,
       ),
     );
   }

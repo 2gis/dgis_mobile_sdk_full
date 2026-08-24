@@ -260,9 +260,7 @@ class DefaultSearchResultItemBuilder implements SearchResultItemBuilder {
     if (alertDescription == null || alertDescription.isEmpty) {
       return const SizedBox.shrink();
     }
-
-    final isOpenSoon = viewModel.isOpenSoon;
-    if (isOpenSoon == null) {
+    if (viewModel.isOpen ?? true) {
       return const SizedBox.shrink();
     }
 
@@ -270,7 +268,7 @@ class DefaultSearchResultItemBuilder implements SearchResultItemBuilder {
       padding: const EdgeInsets.only(top: 6, bottom: 2),
       child: Text(
         alertDescription,
-        style: isOpenSoon ? theme.soonOpenTextStyle : theme.closedTextStyle,
+        style: theme.closedTextStyle,
       ),
     );
   }

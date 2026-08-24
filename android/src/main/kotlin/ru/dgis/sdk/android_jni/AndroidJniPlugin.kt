@@ -1,24 +1,22 @@
 package ru.dgis.sdk.android_jni
 
-import androidx.annotation.NonNull
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.SurfaceTexture
-import android.util.LongSparseArray
-import android.view.Surface
+import android.hardware.display.DisplayManager
 import android.util.Log
-import android.view.WindowManager
-
+import android.util.LongSparseArray
+import android.view.Display
+import android.view.Surface
+import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.view.TextureRegistry
-
 import kotlin.math.roundToInt
-import kotlin.reflect.full.*
 import kotlin.reflect.KVisibility
+import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
@@ -79,8 +77,8 @@ class AndroidJniPlugin : FlutterPlugin, MethodCallHandler {
     private fun setup(context: Context) {
         val packageName = context.packageName
         val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
-        val versionName = packageInfo.versionName
-        initializeJni(context, this.javaClass.classLoader, packageName, versionName)
+        val versionName = packageInfo.versionName ?: ""
+        initializeJni(context, this.javaClass.classLoader!!, packageName, versionName)
         initializeLoggerWithReflection()
     }
 
@@ -117,12 +115,12 @@ class AndroidJniPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun getScreenFps(): Int {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-        val display = wm?.defaultDisplay
+        val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager
+        val display = displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
         return try {
             val fps = display?.mode?.refreshRate ?: display?.refreshRate ?: 60f
             fps.roundToInt()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             val fps = display?.refreshRate ?: 60f
             fps.roundToInt()
         }

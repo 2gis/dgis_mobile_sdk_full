@@ -1,25 +1,31 @@
 PODS:
-  - dgis_mobile_sdk_full (13.7.0):
-    - "DGisFlutterFullSDK (= 13.7.0+1)"
+  - dgis_mobile_sdk_full (14.0.0):
+    - "DGisFlutterFullSDK (~> 14.0.0+2)"
     - Flutter
-  - "DGisFlutterFullSDK (13.7.0+1)"
+  - "DGisFlutterFullSDK (14.0.0+2)"
   - Flutter (1.0.0)
   - integration_test (0.0.1):
+    - Flutter
+  - package_info_plus (0.4.5):
     - Flutter
   - permission_handler_apple (9.3.0):
     - Flutter
   - url_launcher_ios (0.0.1):
+    - Flutter
+  - wakelock_plus (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - dgis_mobile_sdk_full (from `.symlinks/plugins/dgis_mobile_sdk_full/ios`)
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - DGisFlutterFullSDK
 
 EXTERNAL SOURCES:
@@ -29,19 +35,25 @@ EXTERNAL SOURCES:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
+  wakelock_plus:
+    :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
-  dgis_mobile_sdk_full: 69f22476a4ff0fbdde7aa3a60342bc4a8d2f7adf
-  DGisFlutterFullSDK: fa674d2ac13e24b1a8afbd2fc7c8a1da29526509
+  dgis_mobile_sdk_full: 135ef43183d7ebbdab4cde670676db8ad68863ea
+  DGisFlutterFullSDK: 9b0bdeb1766537117d766c022ea587cbf9eb1b83
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
 
-PODFILE CHECKSUM: faf0229efeb7fc3b0b9860b52def5c8523d760f7
+PODFILE CHECKSUM: c1b4c818c2ff8c2f92ea2167016b00b44062bad3
 
 COCOAPODS: 1.16.2

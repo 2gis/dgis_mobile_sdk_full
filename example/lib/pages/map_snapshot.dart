@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,9 +18,21 @@ class MapSnapshotPage extends StatefulWidget {
 
 class _MapSnapshotState extends State<MapSnapshotPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   final ValueNotifier<ByteData?> imageData = ValueNotifier(null);
   double mapHeight = 300;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_createMapController());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +51,6 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
                 height: mapHeight,
                 child: sdk.MapWidget(
                   sdkContext: sdkContext,
-                  mapOptions: sdk.MapOptions(),
                   controller: mapWidgetController,
                 ),
               ),
@@ -69,6 +82,15 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
     );
   }
 
+  Future<void> _createMapController() async {
+    await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
   Widget _makeImageWidget(ByteData? imageData) {
     if (imageData == null) {
       return const Center(
@@ -82,15 +104,13 @@ class _MapSnapshotState extends State<MapSnapshotPage> {
   }
 
   void _takeSnapshot() {
-    mapWidgetController.getMapAsync(
-      (map) {
-        mapWidgetController.takeSnapshot().value.then((uiImage) {
-          setState(() {
-            imageData.value = uiImage;
-          });
-        });
-      },
-    );
+    final controller = mapWidgetController;
+
+    controller.takeSnapshot().value.then((uiImage) {
+      setState(() {
+        imageData.value = uiImage;
+      });
+    });
   }
 }
 

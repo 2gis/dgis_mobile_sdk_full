@@ -15,7 +15,7 @@ import './my_location_model.dart';
 /// направлением (bearing), и осуществления перелета к текущему местоположению.
 class NavigationMyLocationWidget
     extends ThemedMapControllingWidget<NavigationMapControlTheme> {
-  final MyLocationController controller;
+  final NavigationMyLocationController controller;
   const NavigationMyLocationWidget({
     required this.controller,
     super.key,
@@ -28,7 +28,7 @@ class NavigationMyLocationWidget
 
   // ignore: prefer_constructors_over_static_methods
   static NavigationMyLocationWidget defaultBuilder(
-    MyLocationController controller,
+    NavigationMyLocationController controller,
   ) =>
       NavigationMyLocationWidget(
         controller: controller,
@@ -49,7 +49,7 @@ class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<MyLocationModel>(
+    return ValueListenableBuilder<NavigationMyLocationModel>(
       valueListenable: widget.controller.state,
       builder: (context, state, _) {
         final iconAssetName = state.iconAssetName;

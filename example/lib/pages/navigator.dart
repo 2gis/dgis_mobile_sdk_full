@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'common.dart';
 
@@ -16,14 +17,23 @@ class NavigatorPage extends StatefulWidget {
 }
 
 class _NavigatorPageState extends State<NavigatorPage> {
-  final mapWidgetController = sdk.MapWidgetController();
-  final miniMapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
+  late final sdk.File miniMapStyleFile = sdk.File.fromAsset(
+    sdkContext,
+    'minimap_styles.2gis',
+  );
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
+  late final sdk.MapWidgetController miniMapWidgetController =
+      createMapWidgetController(
+    sdkContext,
+    controllerOptions: sdk.MapControllerOptions(
+      styleFile: miniMapStyleFile,
+    ),
+  );
 
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
-
-  sdk.Style? _miniMapStyle;
 
   final _startPoint = const sdk.RouteSearchPoint(
     coordinates: sdk.GeoPoint(
@@ -51,38 +61,22 @@ class _NavigatorPageState extends State<NavigatorPage> {
 
   @override
   void initState() {
+    super.initState();
     _currentSpeed = _minSpeedForCarSimulation;
     navigationManager = sdk.NavigationManager(sdkContext);
     trafficRouter = sdk.TrafficRouter(sdkContext);
 
-    _loadMiniMapStyle();
-
-    super.initState();
-    mapWidgetController.getMapAsync((map) {
-      unawaited(
-        _startNavigation(map),
-      );
-    });
+    WakelockPlus.enable();
+    unawaited(_createMapControllers());
   }
 
-  Future<void> _loadMiniMapStyle() async {
-    final style = await sdk.StyleBuilder(sdkContext)
-        .loadStyle(
-          sdk.File.fromAsset(
-            sdkContext,
-            'minimap_styles.2gis',
-          ),
-        )
-        .value;
-
+  Future<void> _createMapControllers() async {
+    final map = await mapWidgetController.mapAsync;
+    await miniMapWidgetController.mapAsync;
     if (!mounted) {
-      _miniMapStyle = style;
       return;
     }
-
-    setState(() {
-      _miniMapStyle = style;
-    });
+    await _startNavigation(map);
   }
 
   void _startSpeedSimulation() {
@@ -164,6 +158,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
   void dispose() {
     _stopSpeedSimulation();
     navigationManager.stop();
+    WakelockPlus.disable();
     super.dispose();
   }
 
@@ -176,7 +171,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
     return Scaffold(
       body: sdk.MapWidget(
         sdkContext: sdkContext,
-        mapOptions: sdk.MapOptions(),
         controller: mapWidgetController,
         child: Padding(
           padding: EdgeInsets.only(
@@ -214,14 +208,14 @@ class _NavigatorPageState extends State<NavigatorPage> {
             betterRoutePromptWidgetBuilder:
                 sdk.BetterRoutePromptWidget.defaultBuilder,
             navigationMiniMapWidgetBuilder:
-                (miniMapController, dashboardController) =>
-                    sdk.NavigationMiniMapWidget(
-              sdkContext: sdkContext,
-              mapOptions: sdk.MapOptions(style: _miniMapStyle),
-              controller: miniMapWidgetController,
-              miniMapController: miniMapController,
-              dashboardController: dashboardController,
-            ),
+                (miniMapController, dashboardController) {
+              return sdk.NavigationMiniMapWidget(
+                sdkContext: sdkContext,
+                controller: miniMapWidgetController,
+                miniMapController: miniMapController,
+                dashboardController: dashboardController,
+              );
+            },
           ),
         ),
       ),

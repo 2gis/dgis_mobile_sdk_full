@@ -17,10 +17,9 @@ class DownloadTerritoriesPage extends StatefulWidget {
 }
 
 class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
-  final mapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
-  sdk.Map? sdkMap;
-
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   final TextEditingController filterController = TextEditingController();
   late sdk.TerritoryManager territoryManager;
   List<sdk.Territory> territories = [];
@@ -34,6 +33,7 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
   void initState() {
     super.initState();
     initialize();
+    unawaited(_createMapController());
   }
 
   @override
@@ -47,11 +47,6 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
     final context = AppContainer().initializeSdk();
     sdk.PackageManager.instance(context).checkForUpdates();
     territoryManager = sdk.TerritoryManager.instance(context);
-
-    mapWidgetController.getMapAsync((map) {
-      sdkMap = map;
-      _updateGeometrySubscription();
-    });
 
     territoryManager.territoriesChannel.listen((territoriesList) {
       setState(() {
@@ -68,28 +63,39 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
     });
   }
 
-  void _updateGeometrySubscription() {
-    geometrySubscription?.cancel();
-    if (sdkMap == null) return;
-    geometrySubscription = sdkMap!.camera.changed.listen((changes) {
+  Future<void> _createMapController() async {
+    await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    await _updateGeometrySubscription();
+
+    setState(() {});
+  }
+
+  Future<void> _updateGeometrySubscription() async {
+    await geometrySubscription?.cancel();
+    final map = await mapWidgetController.mapAsync;
+    geometrySubscription = map.camera.changed.listen((changes) {
       if (filterMode == 1 &&
           changes.changeReasons.contains(sdk.CameraChangeReason.position)) {
-        _updateGeometryFilter();
+        unawaited(_updateGeometryFilter());
       } else if (filterMode == 2 &&
           changes.changeReasons.contains(sdk.CameraChangeReason.visibleRect)) {
-        _updateGeometryFilter();
+        unawaited(_updateGeometryFilter());
       }
     });
   }
 
   Future<void> _updateGeometryFilter() async {
-    if (sdkMap == null) {
-      filteredTerritories = territories;
-    } else if (filterMode == 1) {
-      final position = sdkMap!.camera.position;
+    if (filterMode == 1) {
+      final map = await mapWidgetController.mapAsync;
+      final position = map.camera.position;
       filteredTerritories = territoryManager.findByPoint(position.point);
     } else if (filterMode == 2) {
-      final rect = sdkMap!.camera.visibleRect;
+      final map = await mapWidgetController.mapAsync;
+      final rect = map.camera.visibleRect;
       filteredTerritories = territoryManager.findByRect(rect);
     } else {
       filteredTerritories = territories;
@@ -105,7 +111,7 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
   }
 
   void _applyFilter() {
-    _updateGeometryFilter();
+    unawaited(_updateGeometryFilter());
   }
 
   void _updateFilter(String value) {
@@ -149,7 +155,6 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
             height: 250,
             child: sdk.MapWidget(
               sdkContext: sdkContext,
-              mapOptions: sdk.MapOptions(),
               controller: mapWidgetController,
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -172,7 +177,7 @@ class _DownloadTerritoriesPageState extends State<DownloadTerritoriesPage> {
                 setState(() {
                   filterMode = index;
                 });
-                _updateGeometrySubscription();
+                await _updateGeometrySubscription();
                 await _updateGeometryFilter();
               },
               children: const [

@@ -25,7 +25,8 @@ enum MarkerType { scooterPng, bridgeSvg, batLottie }
 
 class _SamplePageState extends State<AddObjectsPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  final _mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController _mapWidgetController =
+      createMapWidgetController(_sdkContext);
   final _formKey = GlobalKey<FormState>();
   final _scooterAssetsPath = 'assets/icons/scooter_model.png';
   final _bridgeAssetsPath = 'assets/icons/bridge.svg';
@@ -35,7 +36,6 @@ class _SamplePageState extends State<AddObjectsPage> {
   final _imageCache = <String, sdk.Image>{};
   MarkerType _markerType = MarkerType.scooterPng;
 
-  sdk.Map? _sdkMap;
   sdk.MapObjectManager? _mapObjectManager;
   late sdk.ImageLoader _loader;
   late sdk.ModelLoader _modelLoader;
@@ -83,6 +83,11 @@ class _SamplePageState extends State<AddObjectsPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -91,7 +96,6 @@ class _SamplePageState extends State<AddObjectsPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: _sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: _mapWidgetController,
           ),
           Align(
@@ -115,15 +119,17 @@ class _SamplePageState extends State<AddObjectsPage> {
     );
   }
 
-  void initContext() {
+  Future<void> initContext() async {
     _loader = sdk.ImageLoader(_sdkContext);
     _modelLoader = sdk.ModelLoader(_sdkContext);
-    _mapWidgetController
-      ..getMapAsync((map) {
-        _sdkMap = map;
-        _mapObjectManager = sdk.MapObjectManager(map);
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    final map = await _mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    _mapObjectManager = sdk.MapObjectManager(map);
+    setState(() {
+      _mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   void _show() {
@@ -170,11 +176,12 @@ class _SamplePageState extends State<AddObjectsPage> {
             child: const Text('Polygon'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              _addTopGoMarker(
-                _sdkMap!.camera.position.point.latitude.value,
-                _sdkMap!.camera.position.point.longitude.value,
+              final map = await _mapWidgetController.mapAsync;
+              await _addTopGoMarker(
+                map.camera.position.point.latitude.value,
+                map.camera.position.point.longitude.value,
                 _pinAssetsPath,
                 'Marker from topGo',
               );
@@ -223,9 +230,10 @@ class _SamplePageState extends State<AddObjectsPage> {
   }
 
   Future<void> _addCircle() async {
+    final map = await _mapWidgetController.mapAsync;
     final circle = sdk.Circle(
       sdk.CircleOptions(
-        position: _sdkMap!.camera.position.point,
+        position: map.camera.position.point,
         radius: sdk.Meter(double.tryParse(_circleRadius)!),
         userData: _circleUserData,
         color: sdk.Color(_circleSelectedColor),
@@ -266,7 +274,7 @@ class _SamplePageState extends State<AddObjectsPage> {
   Future<void> _addPolyline() async {
     final points = <sdk.GeoPoint>[];
     for (var i = 0; i < (int.tryParse(_polylinePointCount)!); i++) {
-      points.add(_makePoint()!);
+      points.add((await _makePoint())!);
     }
     final polyline = sdk.Polyline(
       sdk.PolylineOptions(
@@ -312,7 +320,7 @@ class _SamplePageState extends State<AddObjectsPage> {
   Future<void> _addPolygon() async {
     final points = <sdk.GeoPoint>[];
     for (var i = 0; i < (int.tryParse(_polygonPointCount)!); i++) {
-      points.add(_makePoint()!);
+      points.add((await _makePoint())!);
     }
     final polygon = sdk.Polygon(
       sdk.PolygonOptions(
@@ -363,11 +371,12 @@ class _SamplePageState extends State<AddObjectsPage> {
   }
 
   Future<void> _addMarker() async {
+    final map = await _mapWidgetController.mapAsync;
     final marker = sdk.Marker(
       sdk.MarkerOptions(
         position: sdk.GeoPointWithElevation(
-          latitude: _sdkMap!.camera.position.point.latitude,
-          longitude: _sdkMap!.camera.position.point.longitude,
+          latitude: map.camera.position.point.latitude,
+          longitude: map.camera.position.point.longitude,
           elevation: sdk.Elevation(double.tryParse(_markerElevation)!),
         ),
         icon: await _getMarkerImage(_markerType),
@@ -424,11 +433,12 @@ class _SamplePageState extends State<AddObjectsPage> {
   }
 
   Future<void> _addModel() async {
+    final map = await _mapWidgetController.mapAsync;
     final model = sdk.ModelMapObject(
       sdk.ModelMapObjectOptions(
         position: sdk.GeoPointWithElevation(
-          latitude: _sdkMap!.camera.position.point.latitude,
-          longitude: _sdkMap!.camera.position.point.longitude,
+          latitude: map.camera.position.point.latitude,
+          longitude: map.camera.position.point.longitude,
         ),
         data: await _getModelData(),
         size: _getModelSize(),
@@ -456,17 +466,17 @@ class _SamplePageState extends State<AddObjectsPage> {
     _mapObjectManager?.removeAll();
   }
 
-  sdk.GeoPoint? _makePoint() {
+  Future<sdk.GeoPoint?> _makePoint() async {
+    final map = await _mapWidgetController.mapAsync;
     final random = Random();
-    final minHeight = _sdkMap!.camera.size.height / 3;
-    final maxHeight =
-        _sdkMap!.camera.size.height - (_sdkMap!.camera.size.height / 3);
+    final minHeight = map.camera.size.height / 3;
+    final maxHeight = map.camera.size.height - (map.camera.size.height / 3);
     final randomHeight =
         minHeight + (random.nextDouble() * (maxHeight - minHeight));
 
-    return _sdkMap?.camera.projection.screenToMap(
+    return map.camera.projection.screenToMap(
       sdk.ScreenPoint(
-        x: random.nextDouble() * _sdkMap!.camera.size.width,
+        x: random.nextDouble() * map.camera.size.width,
         y: randomHeight,
       ),
     );

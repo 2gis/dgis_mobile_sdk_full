@@ -20,10 +20,10 @@ class BenchmarkPage extends StatefulWidget {
 
 class _BenchmarkPageState extends State<BenchmarkPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   final List<double> fpsValues = [];
 
-  sdk.Map? sdkMap;
   CancelableOperation<sdk.CameraAnimatedMoveResult>? moveCameraCancellable;
   StreamSubscription<sdk.Location?>? locationSubscription;
   double lastFps = 0;
@@ -73,7 +73,6 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: mapWidgetController,
           ),
           Positioned(
@@ -95,11 +94,14 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
   }
 
   Future<void> initContext() async {
-    mapWidgetController
-      ..getMapAsync((map) {
-        sdkMap = map;
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   void _showActionSheet() {
@@ -111,7 +113,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
           return CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context, pathType.toString());
-              _testCamera(pathType);
+              unawaited(_testCamera(pathType));
             },
             child: Text(
               pathType.toString().split('.').last,
@@ -129,21 +131,19 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     );
   }
 
-  void _testCamera(CameraPathType pathType) {
-    locationSubscription?.cancel();
+  Future<void> _testCamera(CameraPathType pathType) async {
+    await locationSubscription?.cancel();
     locationSubscription = null;
-    if (sdkMap == null) {
-      return;
-    }
-    _startFpsTracking();
+    final map = await mapWidgetController.mapAsync;
+    await _startFpsTracking();
 
     final selectedPath = cameraPaths[pathType];
     if (selectedPath != null) {
-      sdkMap?.camera.position = sdk.CameraPosition(
+      map.camera.position = sdk.CameraPosition(
         point: selectedPath.first.$1.point,
         zoom: const sdk.Zoom(13),
       );
-      _move(0, selectedPath);
+      await _move(0, selectedPath);
     }
   }
 
@@ -151,12 +151,12 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     if (index >= path.length) {
       return;
     }
+    final map = await mapWidgetController.mapAsync;
     final tuple = path[index];
     moveCameraCancellable =
-        sdkMap?.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
-    await moveCameraCancellable?.value.then((value) {
-      _move(index + 1, path);
-    });
+        map.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
+    await moveCameraCancellable?.value;
+    await _move(index + 1, path);
   }
 
   List<double> filterLeadingZeros(List<double> fpsValues) {

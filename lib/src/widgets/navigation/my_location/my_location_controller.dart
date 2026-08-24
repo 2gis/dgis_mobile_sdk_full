@@ -61,12 +61,12 @@ enum _Behaviour {
 /// ```dart
 /// controller.dispose();
 /// ```
-class MyLocationController {
+class NavigationMyLocationController {
   final sdk.Map map;
   final VoidCallback? onTapped;
 
   late final StreamSubscription<sdk.CameraChange> _cameraChangeSubscription;
-  late final ValueNotifier<MyLocationModel> _model;
+  late final ValueNotifier<NavigationMyLocationModel> _model;
 
   bool get _isFollowPositionMode =>
       map.camera.state == sdk.CameraState.free &&
@@ -76,15 +76,15 @@ class MyLocationController {
   sdk.CameraBehaviour get _currentBehaviour => _model.value.behaviour;
 
   /// The current state of location tracking as a [ValueNotifier]
-  ValueNotifier<MyLocationModel> get state => _model;
+  ValueNotifier<NavigationMyLocationModel> get state => _model;
 
-  MyLocationController({required this.map, this.onTapped}) {
+  NavigationMyLocationController({required this.map, this.onTapped}) {
     _init();
   }
 
   void _init() {
     _model = ValueNotifier(
-      MyLocationModel(
+      NavigationMyLocationModel(
         isActive: map.camera.behaviour.newBehaviour == _Behaviour.full.value ||
             map.camera.behaviour.newBehaviour ==
                 _Behaviour.withoutBearing.value,

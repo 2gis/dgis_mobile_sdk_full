@@ -17,7 +17,8 @@ class CalcPositionPage extends StatefulWidget {
 
 class _SamplePageState extends State<CalcPositionPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  final _mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController _mapWidgetController =
+      createMapWidgetController(_sdkContext);
   final _circleAssetsPath = 'assets/icons/circle.png';
   final ValueNotifier<double?> _deviceDensity = ValueNotifier<double?>(null);
 
@@ -27,8 +28,6 @@ class _SamplePageState extends State<CalcPositionPage> {
   sdk.ScreenSize? _screenSize;
   sdk.MapObjectManager? _mapObjectManager;
   bool _switchValue = false;
-  sdk.Map? _sdkMap;
-
   late sdk.Bearing _bearing;
   late sdk.SimpleMapObject _marker;
   late sdk.ImageLoader _loader;
@@ -44,7 +43,12 @@ class _SamplePageState extends State<CalcPositionPage> {
   @override
   void initState() {
     super.initState();
-    initContext();
+    unawaited(initContext());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -56,7 +60,6 @@ class _SamplePageState extends State<CalcPositionPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: _sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: _mapWidgetController,
           ),
           _buildPositionedOverlay(),
@@ -81,23 +84,26 @@ class _SamplePageState extends State<CalcPositionPage> {
     );
   }
 
-  void initContext() {
+  Future<void> initContext() async {
     _loader = sdk.ImageLoader(_sdkContext);
-    _mapWidgetController
-      ..getMapAsync((map) {
-        _sdkMap = map;
-        _sdkCamera = map.camera;
-        _mapObjectManager = sdk.MapObjectManager(map);
-        _initMarkers();
-        _initMarkersOn0();
-        _initMarkersOn180Meridian();
-        _initRectMarkersOn0();
-        _initRectMarkersOn180Meridian();
-        _initCircle();
-        _initPolygon();
-        _deviceDensity.value = map.camera.deviceDensity.value;
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+
+    final map = await _mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    _sdkCamera = map.camera;
+    _mapObjectManager = sdk.MapObjectManager(map);
+    await _initMarkers();
+    await _initMarkersOn0();
+    await _initMarkersOn180Meridian();
+    await _initRectMarkersOn0();
+    await _initRectMarkersOn180Meridian();
+    _initCircle();
+    _initPolygon();
+    _deviceDensity.value = map.camera.deviceDensity.value;
+    setState(() {
+      _mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   Widget _buildPositionedOverlay() {
@@ -106,11 +112,10 @@ class _SamplePageState extends State<CalcPositionPage> {
       builder: (context, deviceDensity, child) {
         if (deviceDensity == null) return const SizedBox.shrink();
         return Positioned(
-          top: _sdkMap?.camera.padding.top.toDouble() ?? 0 / deviceDensity,
-          bottom:
-              _sdkMap?.camera.padding.bottom.toDouble() ?? 0 / deviceDensity,
-          left: _sdkMap?.camera.padding.left.toDouble() ?? 0 / deviceDensity,
-          right: _sdkMap?.camera.padding.right.toDouble() ?? 0 / deviceDensity,
+          top: _sdkCamera.padding.top.toDouble() / deviceDensity,
+          bottom: _sdkCamera.padding.bottom.toDouble() / deviceDensity,
+          left: _sdkCamera.padding.left.toDouble() / deviceDensity,
+          right: _sdkCamera.padding.right.toDouble() / deviceDensity,
           child: IgnorePointer(
             child: Container(
               decoration: BoxDecoration(
@@ -281,7 +286,8 @@ class _SamplePageState extends State<CalcPositionPage> {
                   isDefaultAction: true,
                   onPressed: _switchValue
                       ? null
-                      : () {
+                      : () async {
+                          final navigator = Navigator.of(context);
                           _padding = sdk.Padding(
                             left: int.tryParse(paddingLeftText.text) ?? 0,
                             right: int.tryParse(paddingRightText.text) ?? 0,
@@ -291,12 +297,15 @@ class _SamplePageState extends State<CalcPositionPage> {
                           _updateMapPadding(_padding!);
                           _tilt =
                               sdk.Tilt(double.tryParse(tiltText.text) ?? 0.0);
-                          _updateMapTilt(_tilt!);
+                          await _updateMapTilt(_tilt!);
+                          if (!mounted) {
+                            return;
+                          }
                           _bearing = sdk.Bearing(
                             double.tryParse(bearingText.text) ?? 0.0,
                           );
                           _updateMapBearing(_bearing);
-                          Navigator.pop(context);
+                          navigator.pop();
                         },
                   child: Text(
                     'Submit',
@@ -400,8 +409,9 @@ class _SamplePageState extends State<CalcPositionPage> {
     );
   }
 
-  void _updateMapTilt(sdk.Tilt tilt) {
-    _sdkCamera.position = _sdkMap!.camera.position.copyWith(tilt: tilt);
+  Future<void> _updateMapTilt(sdk.Tilt tilt) async {
+    final map = await _mapWidgetController.mapAsync;
+    _sdkCamera.position = map.camera.position.copyWith(tilt: tilt);
   }
 
   void _updateMapBearing(sdk.Bearing bearing) {

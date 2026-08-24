@@ -37,6 +37,16 @@ class AppContainer {
   }
 }
 
+sdk.MapWidgetController createMapWidgetController(
+  sdk.Context sdkContext, {
+  sdk.MapControllerOptions controllerOptions = const sdk.MapControllerOptions(),
+}) {
+  return sdk.MapWidgetController(
+    sdkContext,
+    controllerOptions: controllerOptions,
+  );
+}
+
 Future<void> checkLocationPermissions(
   sdk.LocationService locationService,
 ) async {

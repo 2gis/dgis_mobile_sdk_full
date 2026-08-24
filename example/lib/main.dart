@@ -26,6 +26,7 @@ import 'pages/route_editor_new.dart';
 import 'pages/search_page.dart';
 import 'pages/stateless_screen_with_map.dart';
 import 'pages/traffic_widget.dart';
+import 'pages/voice_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -92,46 +93,64 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView(
       children: [
         ListTile(
-          title: buildPageTitle('Route editor'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => RouteEditorPage(title: 'Route editor')),
-            );
-          },
-        ),
-        ListTile(
-          title: buildPageTitle("Navigation Example"),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        NavigatorPage(title: "Navigation Example")));
-          },
-        ),
-        ListTile(
           title: buildPageTitle('Mini Map'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MiniMapPage(title: 'Mini Map')),
+                builder: (context) => const MiniMapPage(title: 'Mini Map'),
+              ),
             );
           },
         ),
         ListTile(
-          title: buildPageTitle('Route Editor (new)'),
+          title: buildPageTitle('Navigation Example'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      RouteEditorNewPage(title: 'Route Editor (new)')),
+                builder: (context) =>
+                    const NavigatorPage(title: 'Navigation Example'),
+              ),
             );
           },
         ),
+        ListTile(
+          title: buildPageTitle('Route editor'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const RouteEditorPage(title: 'Route editor'),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: buildPageTitle('Route editor (new)'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const RouteEditorNewPage(title: 'Route editor (new)'),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: buildPageTitle('Voice manager'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const VoiceManagerPage(title: 'Voice manager'),
+              ),
+            );
+          },
+        )
       ],
     );
   }
@@ -140,12 +159,26 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView(
       children: [
         ListTile(
-          title: buildPageTitle('Add Objects'),
+          title: buildPageTitle('Add objects'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddObjectsPage(title: 'Add Objects')),
+                builder: (context) =>
+                    const AddObjectsPage(title: 'Add objects'),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: buildPageTitle('All Map Controls'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const AllMapWidgetsPage(title: 'All Map Controls'),
+              ),
             );
           },
         ),
@@ -155,19 +188,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      AllMapModernWidgetsPage(title: 'All Map Modern Controls')),
-            );
-          },
-        ),
-        ListTile(
-          title: buildPageTitle('All map widgets'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AllMapWidgetsPage(title: 'All map widgets')),
+                builder: (context) => const AllMapModernWidgetsPage(
+                    title: 'All Map Modern Controls'),
+              ),
             );
           },
         ),
@@ -177,7 +200,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => BenchmarkPage(title: 'Benchmark')),
+                builder: (context) => const BenchmarkPage(title: 'Benchmark'),
+              ),
             );
           },
         ),
@@ -187,8 +211,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      BenchmarkWithIsolatesPage(title: 'Benchmark with Isolates')),
+                builder: (context) => const BenchmarkWithIsolatesPage(
+                    title: 'Benchmark with Isolates'),
+              ),
             );
           },
         ),
@@ -198,8 +223,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      CalcPositionPage(title: 'Calc position')),
+                builder: (context) =>
+                    const CalcPositionPage(title: 'Calc position'),
+              ),
             );
           },
         ),
@@ -209,7 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CameraMovesPage(title: 'Camera moves')),
+                builder: (context) =>
+                    const CameraMovesPage(title: 'Camera moves'),
+              ),
             );
           },
         ),
@@ -219,7 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ClusteringPage(title: 'Clustering')),
+                builder: (context) => const ClusteringPage(title: 'Clustering'),
+              ),
             );
           },
         ),
@@ -229,18 +258,20 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CopyrightPage(title: 'Copyright')),
+                builder: (context) => const CopyrightPage(title: 'Copyright'),
+              ),
             );
           },
         ),
         ListTile(
-          title: buildPageTitle('Custom style loading'),
+          title: buildPageTitle('Custom style load'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      CustomStyleLoadPage(title: 'Custom style loading')),
+                builder: (context) =>
+                    const CustomStyleLoadPage(title: 'Custom style load'),
+              ),
             );
           },
         ),
@@ -250,28 +281,32 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      DownloadTerritoriesPage(title: 'Download territories')),
+                builder: (context) => const DownloadTerritoriesPage(
+                    title: 'Download territories'),
+              ),
             );
           },
         ),
         ListTile(
-          title: buildPageTitle('FPS'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FpsPage(title: 'FPS')),
-            );
-          },
-        ),
-        ListTile(
-          title: buildPageTitle('Indoor Widget'),
+          title: buildPageTitle('Fps'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      IndoorWidgetPage(title: 'Indoor Widget')),
+                builder: (context) => const FpsPage(title: 'Fps'),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: buildPageTitle('Indoor Control'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const IndoorWidgetPage(title: 'Indoor Control'),
+              ),
             );
           },
         ),
@@ -281,7 +316,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MapGesturesPage(title: 'Map gestures')),
+                builder: (context) =>
+                    const MapGesturesPage(title: 'Map gestures'),
+              ),
             );
           },
         ),
@@ -291,8 +328,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MapObjectsIdentificationFullPage(
-                      title: 'Map objects identification')),
+                builder: (context) => const MapObjectsIdentificationFullPage(
+                    title: 'Map objects identification'),
+              ),
             );
           },
         ),
@@ -302,7 +340,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MapSnapshotPage(title: 'Map snapshot')),
+                builder: (context) =>
+                    const MapSnapshotPage(title: 'Map snapshot'),
+              ),
             );
           },
         ),
@@ -312,22 +352,24 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SimpleMapScreen(
-                      title: 'Simple map screen (stateless widget)')),
+                builder: (context) => const SimpleMapScreen(
+                    title: 'Simple map screen (stateless widget)'),
+              ),
             );
           },
         ),
         ListTile(
-          title: buildPageTitle('Traffic widget'),
+          title: buildPageTitle('Traffic Control'),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      TrafficWidgetPage(title: 'Traffic widget')),
+                builder: (context) =>
+                    const TrafficWidgetPage(title: 'Traffic Control'),
+              ),
             );
           },
-        ),
+        )
       ],
     );
   }
@@ -341,10 +383,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SearchPage(title: 'Search')),
+                builder: (context) => const SearchPage(title: 'Search'),
+              ),
             );
           },
-        ),
+        )
       ],
     );
   }

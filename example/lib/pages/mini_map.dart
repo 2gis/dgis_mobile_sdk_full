@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'common.dart';
 
@@ -14,15 +17,33 @@ class MiniMapPage extends StatefulWidget {
 }
 
 class _MiniMapPageState extends State<MiniMapPage> {
-  final mapWidgetController = sdk.MapWidgetController();
-  final miniMapWidgetController = sdk.MapWidgetController();
-  final finishMiniMapWidgetController = sdk.MapWidgetController();
   final sdkContext = AppContainer().initializeSdk();
+  late final sdk.File miniMapStyleFile = sdk.File.fromAsset(
+    sdkContext,
+    'minimap_styles.2gis',
+  );
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
+  late final sdk.MapWidgetController miniMapWidgetController =
+      createMapWidgetController(
+    sdkContext,
+    controllerOptions: sdk.MapControllerOptions(
+      styleFile: miniMapStyleFile,
+      maxFps: const sdk.Fps(20),
+    ),
+  );
+  late final sdk.MapWidgetController finishMiniMapWidgetController =
+      createMapWidgetController(
+    sdkContext,
+    controllerOptions: sdk.MapControllerOptions(
+      styleFile: miniMapStyleFile,
+      maxFps: const sdk.Fps(20),
+    ),
+  );
   final pinAssetsPath = 'assets/icons/pin.png';
   final _imageCache = <String, sdk.Image>{};
   final simulationSpeed = 80.0 * 1000 / 3600;
 
-  sdk.Map? sdkMap;
   sdk.Map? miniMap;
   sdk.Map? finishMiniMap;
   sdk.MapObjectManager? mapObjectManager;
@@ -30,8 +51,6 @@ class _MiniMapPageState extends State<MiniMapPage> {
   late sdk.ImageLoader loader;
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
-
-  sdk.Style? _finishMiniMapStyle;
 
   final startPointDubai = const sdk.GeoPoint(
     latitude: sdk.Latitude(25.198014),
@@ -61,55 +80,32 @@ class _MiniMapPageState extends State<MiniMapPage> {
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable();
     loader = sdk.ImageLoader(sdkContext);
     navigationManager = sdk.NavigationManager(sdkContext);
     trafficRouter = sdk.TrafficRouter(sdkContext);
-
-    _loadMiniMapStyle();
-
-    mapWidgetController.getMapAsync((map) {
-      sdkMap = map;
-    });
-
-    miniMapWidgetController
-      ..getMapAsync((map) {
-        miniMap = map;
-        miniMap?.interactive = false;
-      })
-      ..maxFps = const sdk.Fps(20);
-
-    finishMiniMapWidgetController
-      ..getMapAsync((map) {
-        finishMiniMap = map;
-        mapObjectManager = sdk.MapObjectManager(map);
-      })
-      ..maxFps = const sdk.Fps(20);
-  }
-
-  Future<void> _loadMiniMapStyle() async {
-    final style = await sdk.StyleBuilder(sdkContext)
-        .loadStyle(
-          sdk.File.fromAsset(
-            sdkContext,
-            'minimap_styles.2gis',
-          ),
-        )
-        .value;
-
-    if (!mounted) {
-      _finishMiniMapStyle = style;
-      return;
-    }
-
-    setState(() {
-      _finishMiniMapStyle = style;
-    });
+    unawaited(_createMapControllers());
   }
 
   @override
   void dispose() {
-    super.dispose();
+    WakelockPlus.disable();
     navigationManager.stop();
+    super.dispose();
+  }
+
+  Future<void> _createMapControllers() async {
+    await mapWidgetController.mapAsync;
+    final createdMiniMap = await miniMapWidgetController.mapAsync;
+    final createdFinishMiniMap = await finishMiniMapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    miniMap = createdMiniMap;
+    miniMap?.interactive = false;
+    finishMiniMap = createdFinishMiniMap;
+    mapObjectManager = sdk.MapObjectManager(finishMiniMap!);
   }
 
   @override
@@ -120,7 +116,6 @@ class _MiniMapPageState extends State<MiniMapPage> {
       ),
       body: sdk.MapWidget(
         sdkContext: sdkContext,
-        mapOptions: sdk.MapOptions(),
         controller: mapWidgetController,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -129,10 +124,13 @@ class _MiniMapPageState extends State<MiniMapPage> {
               sdk.NavigationLayoutWidget(
                 navigationManager: navigationManager,
                 speedLimitWidgetBuilder: sdk.SpeedLimitWidget.defaultBuilder,
-                parkingWidgetBuilder: sdk.NavigationParkingWidget.defaultBuilder,
+                parkingWidgetBuilder:
+                    sdk.NavigationParkingWidget.defaultBuilder,
                 zoomWidgetBuilder: sdk.NavigationZoomWidget.defaultBuilder,
-                trafficWidgetBuilder: sdk.NavigationTrafficWidget.defaultBuilder,
-                compassWidgetbuilder: sdk.NavigationCompassWidget.defaultBuilder,
+                trafficWidgetBuilder:
+                    sdk.NavigationTrafficWidget.defaultBuilder,
+                compassWidgetbuilder:
+                    sdk.NavigationCompassWidget.defaultBuilder,
                 myLocationWidgetBuilder:
                     sdk.NavigationMyLocationWidget.defaultBuilder,
               ),
@@ -156,8 +154,6 @@ class _MiniMapPageState extends State<MiniMapPage> {
                         left: 16,
                         child: sdk.NavigationMiniMapWidget(
                           sdkContext: sdkContext,
-                          mapOptions:
-                              sdk.MapOptions(style: _finishMiniMapStyle),
                           controller: miniMapWidgetController,
                           miniMapController: sdk.NavigationMiniMapController(
                             navigationManager: navigationManager,
@@ -170,14 +166,10 @@ class _MiniMapPageState extends State<MiniMapPage> {
                             orientation == Orientation.landscape ? 16 : null,
                         top: orientation == Orientation.portrait ? 16 : null,
                         right: 60,
-                        child: _finishMiniMapStyle == null
-                            ? const SizedBox.shrink()
-                            : sdk.MiniMapWidget(
-                                sdkContext: sdkContext,
-                                mapOptions:
-                                    sdk.MapOptions(style: _finishMiniMapStyle),
-                                controller: finishMiniMapWidgetController,
-                              ),
+                        child: sdk.MiniMapWidget(
+                          sdkContext: sdkContext,
+                          controller: finishMiniMapWidgetController,
+                        ),
                       ),
                     ],
                   );
@@ -261,9 +253,14 @@ class _MiniMapPageState extends State<MiniMapPage> {
         .valueOrCancellation();
 
     if (routes != null) {
-      navigationManager.mapManager.addMap(miniMap!);
+      final navigationMiniMap = miniMap;
+      if (navigationMiniMap == null) {
+        return;
+      }
 
-      miniMap?.camera.addFollowController(
+      navigationManager.mapManager.addMap(navigationMiniMap);
+
+      navigationMiniMap.camera.addFollowController(
         sdk.StyleZoomFollowController(),
       );
 

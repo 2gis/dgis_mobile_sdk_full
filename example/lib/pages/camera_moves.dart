@@ -4,6 +4,7 @@ import 'package:async/async.dart';
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'common.dart';
 
@@ -18,8 +19,8 @@ class CameraMovesPage extends StatefulWidget {
 
 class _CameraMovesState extends State<CameraMovesPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
-  sdk.Map? sdkMap;
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   sdk.LocationService? locationService;
   CancelableOperation<sdk.CameraAnimatedMoveResult>? moveCameraCancellable;
   StreamSubscription<sdk.Location?>? locationSubscription;
@@ -93,11 +94,13 @@ class _CameraMovesState extends State<CameraMovesPage> {
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable();
     initContext();
   }
 
   @override
   void dispose() {
+    WakelockPlus.disable();
     locationSubscription?.cancel();
     moveCameraCancellable?.cancel();
     super.dispose();
@@ -111,7 +114,6 @@ class _CameraMovesState extends State<CameraMovesPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: mapWidgetController,
           ),
           Align(
@@ -128,18 +130,11 @@ class _CameraMovesState extends State<CameraMovesPage> {
 
   Future<void> initContext() async {
     locationService = sdk.LocationService(sdkContext);
-    mapWidgetController
-      ..getMapAsync((map) {
-        sdkMap = map;
-
-        const locationController = sdk.MyLocationControllerSettings(
-          bearingSource: sdk.BearingSource.satellite,
-        );
-        final locationSource =
-            sdk.MyLocationMapObjectSource(sdkContext, locationController);
-        map.addSource(locationSource);
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
     await checkLocationPermissions(locationService!);
   }
 
@@ -152,7 +147,7 @@ class _CameraMovesState extends State<CameraMovesPage> {
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context, 'One');
-              _testCamera();
+              unawaited(_testCamera());
             },
             child: const Text('Move camera around Moscow'),
           ),
@@ -177,25 +172,22 @@ class _CameraMovesState extends State<CameraMovesPage> {
     );
   }
 
-  void _testCamera() {
-    locationSubscription?.cancel();
+  Future<void> _testCamera() async {
+    await locationSubscription?.cancel();
     locationSubscription = null;
-    if (sdkMap == null) {
-      return;
-    }
-    _move(0);
+    await _move(0);
   }
 
   Future<void> _move(int index) async {
     if (index >= testPoints.length) {
       return;
     }
+    final map = await mapWidgetController.mapAsync;
     final tuple = testPoints[index];
     moveCameraCancellable =
-        sdkMap?.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
-    await moveCameraCancellable?.value.then((value) {
-      _move(index + 1);
-    });
+        map.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
+    await moveCameraCancellable?.value;
+    await _move(index + 1);
   }
 
   Future<void> _startFollowingPosition() async {
@@ -205,17 +197,18 @@ class _CameraMovesState extends State<CameraMovesPage> {
       return;
     }
     locationSubscription =
-        locationService?.lastLocation().listen((currentLocation) async {
+        locationService?.lastLocationChannel.listen((currentLocation) async {
       if (currentLocation == null) {
         return;
       }
 
+      final map = await mapWidgetController.mapAsync;
       final position = sdk.CameraPosition(
         point: currentLocation.coordinates.value,
         zoom: const sdk.Zoom(14),
         tilt: const sdk.Tilt(15),
       );
-      moveCameraCancellable = sdkMap?.camera.moveToCameraPosition(
+      moveCameraCancellable = map.camera.moveToCameraPosition(
         position,
         const Duration(seconds: 3),
         sdk.CameraAnimationType.linear,

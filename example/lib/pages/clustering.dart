@@ -26,7 +26,8 @@ class ClusteringPage extends StatefulWidget {
 
 class _SamplePageState extends State<ClusteringPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   final List<sdk.Marker> markers = [];
   final formKey = GlobalKey<FormState>();
   final scooterAssetsPath = 'assets/icons/scooter_model.png';
@@ -39,7 +40,6 @@ class _SamplePageState extends State<ClusteringPage> {
   late sdk.ImageLoader loader;
   late sdk.Camera camera;
 
-  sdk.Map? sdkMap;
   sdk.MapObjectManager? mapObjectManager;
   int objectsCountText = 100;
   double minZoomText = 0;
@@ -58,7 +58,12 @@ class _SamplePageState extends State<ClusteringPage> {
   @override
   void initState() {
     super.initState();
-    initContext();
+    unawaited(initContext());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -69,7 +74,6 @@ class _SamplePageState extends State<ClusteringPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: mapWidgetController,
           ),
           Align(
@@ -93,20 +97,23 @@ class _SamplePageState extends State<ClusteringPage> {
 
   Future<void> initContext() async {
     loader = sdk.ImageLoader(sdkContext);
-    mapWidgetController
-      ..getMapAsync((map) async {
-        sdkMap = map;
-        mapObjectManager = await _makeMapObjectManager(
-          map,
-          _GroupingType.clustering,
-          minZoomText,
-          maxZoomText,
-        );
-        camera = map.camera;
-        await _waitNotNullMapSize();
-        await _add();
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    final map = await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+    mapObjectManager = await _makeMapObjectManager(
+      map,
+      _GroupingType.clustering,
+      minZoomText,
+      maxZoomText,
+    );
+    camera = map.camera;
+    setState(() {
+      mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
+    });
+
+    await _waitNotNullMapSize();
+    await _add();
   }
 
   Future<void> _waitNotNullMapSize() async {
@@ -140,8 +147,9 @@ class _SamplePageState extends State<ClusteringPage> {
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
+              final map = await mapWidgetController.mapAsync;
               mapObjectManager = await _makeMapObjectManager(
-                sdkMap!,
+                map,
                 selectedGroupingType!,
                 minZoomText,
                 maxZoomText,
@@ -225,66 +233,52 @@ class _SamplePageState extends State<ClusteringPage> {
                       ),
                       const SizedBox(height: 10),
                       const Text('Grouping type:'),
-                      Column(
-                        children: <Widget>[
-                          RadioListTile<_GroupingType>(
-                            title: const Text('Without'),
-                            value: _GroupingType.without,
-                            groupValue: selectedGroupingType,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGroupingType = value;
-                              });
-                            },
-                          ),
-                          RadioListTile<_GroupingType>(
-                            title: const Text('Clustering'),
-                            value: _GroupingType.clustering,
-                            groupValue: selectedGroupingType,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGroupingType = value;
-                              });
-                            },
-                          ),
-                          RadioListTile<_GroupingType>(
-                            title: const Text('Generalization'),
-                            value: _GroupingType.generalization,
-                            groupValue: selectedGroupingType,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGroupingType = value;
-                              });
-                            },
-                          ),
-                        ],
+                      RadioGroup<_GroupingType>(
+                        groupValue: selectedGroupingType,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedGroupingType = value;
+                          });
+                        },
+                        child: const Column(
+                          children: <Widget>[
+                            RadioListTile<_GroupingType>(
+                              title: Text('Without'),
+                              value: _GroupingType.without,
+                            ),
+                            RadioListTile<_GroupingType>(
+                              title: Text('Clustering'),
+                              value: _GroupingType.clustering,
+                            ),
+                            RadioListTile<_GroupingType>(
+                              title: Text('Generalization'),
+                              value: _GroupingType.generalization,
+                            ),
+                          ],
+                        ),
                       ),
                       const Text('Marker type:'),
-                      Column(
-                        children: <Widget>[
-                          RadioListTile<_MarkerType>(
-                            title: const Text('Scooter'),
-                            value: _MarkerType.scooterPng,
-                            groupValue: markerType,
-                            onChanged: (value) =>
-                                setState(() => markerType = value!),
-                          ),
-                          RadioListTile<_MarkerType>(
-                            title: const Text('Bridge'),
-                            value: _MarkerType.bridgeSvg,
-                            groupValue: markerType,
-                            onChanged: (value) =>
-                                setState(() => markerType = value!),
-                          ),
-                          RadioListTile<_MarkerType>(
-                            title: const Text('Bat'),
-                            value: _MarkerType.batLottie,
-                            groupValue: markerType,
-                            onChanged: (value) =>
-                                setState(() => markerType = value!),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+                      RadioGroup<_MarkerType>(
+                        groupValue: markerType,
+                        onChanged: (value) =>
+                            setState(() => markerType = value!),
+                        child: const Column(
+                          children: <Widget>[
+                            RadioListTile<_MarkerType>(
+                              title: Text('Scooter'),
+                              value: _MarkerType.scooterPng,
+                            ),
+                            RadioListTile<_MarkerType>(
+                              title: Text('Bridge'),
+                              value: _MarkerType.bridgeSvg,
+                            ),
+                            RadioListTile<_MarkerType>(
+                              title: Text('Bat'),
+                              value: _MarkerType.batLottie,
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -302,11 +296,12 @@ class _SamplePageState extends State<ClusteringPage> {
                 ElevatedButton(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
+                      final map = await mapWidgetController.mapAsync;
                       objectsCountText = int.tryParse(objectsCount.text)!;
                       minZoomText = double.tryParse(minZoomController.text)!;
                       maxZoomText = double.tryParse(maxZoomController.text)!;
                       mapObjectManager = await _makeMapObjectManager(
-                        sdkMap!,
+                        map,
                         selectedGroupingType!,
                         minZoomText,
                         maxZoomText,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations.dart';
 import 'package:dgis_mobile_sdk_full/l10n/generated/dgis_localizations_en.dart';
@@ -19,6 +21,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final sdkContext = AppContainer().initializeSdk();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
 
   final formKey = GlobalKey<FormState>();
   late sdk.SearchManager searchManager;
@@ -33,6 +37,7 @@ class _SearchPageState extends State<SearchPage> {
     locationService = sdk.LocationService(sdkContext);
     searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
     initialize();
+    unawaited(_createMapController());
   }
 
   @override
@@ -41,7 +46,10 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(title: const Text('Search Page')),
       body: Stack(
         children: [
-          sdk.MapWidget(sdkContext: sdkContext, mapOptions: sdk.MapOptions()),
+          sdk.MapWidget(
+            sdkContext: sdkContext,
+            controller: mapWidgetController,
+          ),
           sdk.DgisSearchWidget(
             searchManager: searchManager,
             locationService: locationService,
@@ -61,6 +69,15 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> initialize() async {
     await checkLocationPermissions(locationService);
+  }
+
+  Future<void> _createMapController() async {
+    await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
   }
 
   Widget _buildDirectoryObjectCard() {
@@ -160,7 +177,7 @@ class _SearchPageState extends State<SearchPage> {
 
   void _showObjectCard(sdk.DirectoryObject objectInfo) {
     String? distance;
-    final myLocation = locationService.lastLocation().value;
+    final myLocation = locationService.lastLocation;
     final objectPosition = objectInfo.markerPosition;
     if (myLocation != null && objectPosition != null) {
       final localizations =

@@ -35,23 +35,23 @@ class _FpsButtonState {
 
 class _FpsState extends State<FpsPage> {
   final _sdkContext = AppContainer().initializeSdk();
-  final _mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController _mapWidgetController =
+      createMapWidgetController(_sdkContext);
   final _maxFps = TextEditingController();
   final _powerSavingMaxFps = TextEditingController();
   final _fpsButtonState = ValueNotifier(const _FpsButtonState());
-  late final StreamSubscription<sdk.Fps> _fpsSubscription;
-  sdk.Map? _sdkMap;
+  StreamSubscription<sdk.Fps>? _fpsSubscription;
   CancelableOperation<sdk.CameraAnimatedMoveResult>? _moveCancelable;
 
   @override
   void initState() {
     super.initState();
-    _initContext();
+    unawaited(_initContext());
   }
 
   @override
   void dispose() {
-    _fpsSubscription.cancel();
+    _fpsSubscription?.cancel();
     super.dispose();
   }
 
@@ -64,7 +64,6 @@ class _FpsState extends State<FpsPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: _sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: _mapWidgetController,
           ),
           Align(
@@ -76,13 +75,15 @@ class _FpsState extends State<FpsPage> {
                   ConstrainedBox(
                     constraints: BoxConstraints.tight(const Size(100, 50)),
                     child: TextFormField(
+                      enabled: true,
                       controller: _maxFps,
                       decoration: const InputDecoration(
                         labelText: 'Max fps',
                       ),
                       onFieldSubmitted: (value) {
-                        _mapWidgetController.maxFps =
-                            sdk.Fps(int.tryParse(value)!);
+                        _mapWidgetController.maxFps = sdk.Fps(
+                          int.tryParse(value)!,
+                        );
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -98,13 +99,15 @@ class _FpsState extends State<FpsPage> {
                   ConstrainedBox(
                     constraints: BoxConstraints.tight(const Size(100, 50)),
                     child: TextFormField(
+                      enabled: true,
                       controller: _powerSavingMaxFps,
                       decoration: const InputDecoration(
                         labelText: 'PS max fps',
                       ),
                       onFieldSubmitted: (value) {
-                        _mapWidgetController.powerSavingMaxFps =
-                            sdk.Fps(int.tryParse(value)!);
+                        _mapWidgetController.powerSavingMaxFps = sdk.Fps(
+                          int.tryParse(value)!,
+                        );
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -164,20 +167,24 @@ class _FpsState extends State<FpsPage> {
   }
 
   Future<void> _initContext() async {
-    _mapWidgetController.getMapAsync((map) {
-      _sdkMap = map;
-      _fpsSubscription = _mapWidgetController.fpsChannel.listen((fps) {
-        _fpsButtonState.value = _fpsButtonState.value.copyWith(currentFps: fps);
-      });
+    await _mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    _fpsSubscription = _mapWidgetController.fpsChannel.listen((fps) {
+      _fpsButtonState.value = _fpsButtonState.value.copyWith(currentFps: fps);
     });
+    setState(() {});
   }
 
   Future<void> _onFpsButtonTap(_FpsButtonState state) async {
     final newPressedState = !state.isPressed;
     if (newPressedState) {
-      final currentPosition = _sdkMap!.camera.position;
-      _moveCancelable = _sdkMap?.camera
-          .moveWithController(_FpsMoveController(currentPosition));
+      final map = await _mapWidgetController.mapAsync;
+      final currentPosition = map.camera.position;
+      _moveCancelable =
+          map.camera.moveWithController(_FpsMoveController(currentPosition));
     } else {
       await _moveCancelable?.cancel();
       _moveCancelable = null;

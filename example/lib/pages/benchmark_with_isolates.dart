@@ -23,12 +23,12 @@ class BenchmarkWithIsolatesPage extends StatefulWidget {
 
 class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   final sdkContext = AppContainer().initializeSdk();
-  final mapWidgetController = sdk.MapWidgetController();
+  late final sdk.MapWidgetController mapWidgetController =
+      createMapWidgetController(sdkContext);
   final List<double> fpsValues = [];
 
-  sdk.Map? sdkMap;
-  late sdk.MapObjectManager mapObjectManager;
-  late sdk.GeometryMapObjectSource geometryMapObjectSource;
+  sdk.MapObjectManager? mapObjectManager;
+  sdk.GeometryMapObjectSource? geometryMapObjectSource;
   double lastFps = 0;
   StreamSubscription<sdk.Fps>? fpsSubscription;
   Isolate? _runningIsolate;
@@ -49,8 +49,8 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
 
     _killIsolate();
 
-    mapObjectManager.removeAll();
-    geometryMapObjectSource.clear();
+    mapObjectManager?.removeAll();
+    geometryMapObjectSource?.clear();
 
     super.dispose();
   }
@@ -82,7 +82,6 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
         children: <Widget>[
           sdk.MapWidget(
             sdkContext: sdkContext,
-            mapOptions: sdk.MapOptions(),
             controller: mapWidgetController,
           ),
           Positioned(
@@ -104,15 +103,19 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   }
 
   Future<void> initContext() async {
-    geometryMapObjectSource =
+    final source =
         sdk.GeometryMapObjectSourceBuilder(sdkContext).createSource();
-    mapWidgetController
-      ..getMapAsync((map) {
-        sdkMap = map;
-        mapObjectManager = sdk.MapObjectManager(map);
-        map.addSource(geometryMapObjectSource);
-      })
-      ..copyrightAlignment = Alignment.bottomLeft;
+    geometryMapObjectSource = source;
+    final map = await mapWidgetController.mapAsync;
+    if (!mounted) {
+      return;
+    }
+
+    map.addSource(source);
+    mapObjectManager = sdk.MapObjectManager(map);
+    setState(() {
+      mapWidgetController.copyrightAlignment = Alignment.bottomLeft;
+    });
   }
 
   void _showActionSheet() {
@@ -143,11 +146,14 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
   }
 
   Future<void> _testCamera(CameraPathType pathType) async {
-    if (sdkMap == null) {
+    final map = await mapWidgetController.mapAsync;
+    final manager = mapObjectManager;
+    final source = geometryMapObjectSource;
+    if (manager == null || source == null) {
       return;
     }
-    mapObjectManager.removeAll();
-    geometryMapObjectSource.clear();
+    manager.removeAll();
+    source.clear();
 
     await _startFpsTracking();
 
@@ -165,9 +171,9 @@ class _BenchmarkWithIsolatesPageState extends State<BenchmarkWithIsolatesPage> {
       _moveIsolateEntry,
       _IsolateMoveData(
         sendPort: _receivePort!.sendPort,
-        mapMessage: sdkMap!.message(),
-        mapObjectManagerMessage: mapObjectManager.message(),
-        geometryMapObjectSourceMessage: geometryMapObjectSource.message(),
+        mapMessage: map.message(),
+        mapObjectManagerMessage: manager.message(),
+        geometryMapObjectSourceMessage: source.message(),
         moscowGeoJson: moscowGeoJson,
         cameraPathType: pathType,
       ),
@@ -231,8 +237,8 @@ Future<void> _moveIsolateEntry(_IsolateMoveData data) async {
     return;
   }
 
-  final sdkMap = sdk.Map.fromMessage(data.mapMessage);
-  sdkMap.camera.position = sdk.CameraPosition(
+  final map = sdk.Map.fromMessage(data.mapMessage);
+  map.camera.position = sdk.CameraPosition(
     point: selectedPath.first.$1.point,
     zoom: const sdk.Zoom(13),
   );
@@ -246,7 +252,7 @@ Future<void> _moveIsolateEntry(_IsolateMoveData data) async {
       break;
   }
 
-  await _moveIsolateEntryImpl(0, selectedPath, sdkMap);
+  await _moveIsolateEntryImpl(0, selectedPath, map);
 
   data.sendPort.send(true);
 }
@@ -269,16 +275,15 @@ void _parseGeoJsonAndObjectsInGeometrySource(_IsolateMoveData data) {
 Future<void> _moveIsolateEntryImpl(
   int index,
   CameraPath path,
-  sdk.Map sdkMap,
+  sdk.Map map,
 ) async {
   if (index >= path.length) {
     return;
   }
   final tuple = path[index];
   final moveCameraCancellable =
-      sdkMap.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
-  await moveCameraCancellable.value.then((value) {
-    moveCameraCancellable.cancel();
-    _moveIsolateEntryImpl(index + 1, path, sdkMap);
-  });
+      map.camera.moveToCameraPosition(tuple.$1, tuple.$2, tuple.$3);
+  await moveCameraCancellable.value;
+  await moveCameraCancellable.cancel();
+  await _moveIsolateEntryImpl(index + 1, path, map);
 }

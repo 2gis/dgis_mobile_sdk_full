@@ -38,7 +38,7 @@ android {
         applicationId = "ru.mobile.sdk.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = 23
+        minSdkVersion = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
@@ -64,5 +64,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 }
 
 dependencies {
-    compileOnly("ru.dgis.sdk.flutter_plugin:full:12.8.0")
+    compileOnly("ru.dgis.sdk.flutter_plugin:full:14.0.0")
 }
