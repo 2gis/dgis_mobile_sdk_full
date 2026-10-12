@@ -34,6 +34,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
 
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
+  sdk.NavigationSettingsRepository? _settingsRepository;
 
   final _startPoint = const sdk.RouteSearchPoint(
     coordinates: sdk.GeoPoint(
@@ -46,9 +47,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
       latitude: sdk.Latitude(55.7060),
       longitude: sdk.Longitude(37.5369),
     ),
-  );
-  final _options = sdk.RouteSearchOptions.car(
-    const sdk.CarRouteSearchOptions(),
   );
 
   final _minSpeedForCarSimulation = 46.0;
@@ -71,12 +69,16 @@ class _NavigatorPageState extends State<NavigatorPage> {
   }
 
   Future<void> _createMapControllers() async {
+    final repositoryFuture = sdk.NavigationSettingsRepository.defaults();
     final map = await mapWidgetController.mapAsync;
     await miniMapWidgetController.mapAsync;
+    final repository = await repositoryFuture;
     if (!mounted) {
+      repository.dispose();
       return;
     }
-    await _startNavigation(map);
+    setState(() => _settingsRepository = repository);
+    await _startNavigation(map, repository);
   }
 
   void _startSpeedSimulation() {
@@ -117,13 +119,29 @@ class _NavigatorPageState extends State<NavigatorPage> {
     _speedUpdateTimer = null;
   }
 
-  Future<void> _startNavigation(sdk.Map map) async {
+  Future<void> _startNavigation(
+    sdk.Map map,
+    sdk.NavigationSettingsRepository repository,
+  ) async {
+    final options = sdk.RouteSearchOptions.car(
+      sdk.CarRouteSearchOptions(
+        avoidTollRoads: repository.get(
+          sdk.NavigationSettingKeys.carAvoidTollRoads,
+        ),
+        avoidUnpavedRoads: repository.get(
+          sdk.NavigationSettingKeys.carAvoidUnpavedRoads,
+        ),
+        avoidFerries: repository.get(sdk.NavigationSettingKeys.carAvoidFerries),
+        avoidLockedRoads: repository.get(
+          sdk.NavigationSettingKeys.carAvoidLockedRoads,
+        ),
+        routeSearchType: repository.get(
+          sdk.NavigationSettingKeys.carRouteSearchType,
+        ),
+      ),
+    );
     final routes = await trafficRouter
-        .findRoute(
-          _startPoint,
-          _finishPoint,
-          _options,
-        )
+        .findRoute(_startPoint, _finishPoint, options)
         .valueOrCancellation();
 
     if (routes != null) {
@@ -146,7 +164,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
       navigationManager.startSimulation(
         sdk.RouteBuildOptions(
           finishPoint: _finishPoint,
-          routeSearchOptions: _options,
+          routeSearchOptions: options,
         ),
         route,
       );
@@ -159,6 +177,8 @@ class _NavigatorPageState extends State<NavigatorPage> {
     _stopSpeedSimulation();
     navigationManager.stop();
     WakelockPlus.disable();
+    _settingsRepository?.dispose();
+    _settingsRepository = null;
     super.dispose();
   }
 
@@ -180,6 +200,9 @@ class _NavigatorPageState extends State<NavigatorPage> {
           ),
           child: sdk.NavigationLayoutWidget(
             navigationManager: navigationManager,
+            settingsOptions: sdk.NavigationSettingsOptions(
+              repository: _settingsRepository,
+            ),
             dashboardWidgetBuilder: (controller, onHeaderChangeSize) =>
                 sdk.DashboardWidget(
               controller: controller,

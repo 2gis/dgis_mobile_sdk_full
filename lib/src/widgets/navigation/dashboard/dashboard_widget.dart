@@ -581,6 +581,62 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                   ),
                 ),
               ),
+              ValueListenableBuilder<VoidCallback?>(
+                valueListenable: widget.controller.settingsClickHandler,
+                builder: (context, onSettingsClick, _) {
+                  if (onSettingsClick == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        _closeOverlay();
+                        onSettingsClick();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: colorScheme.buttonSurfaceColor,
+                          borderRadius: BorderRadius.circular(
+                            colorScheme.buttonBorderRadius,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'packages/$pluginName/assets/icons/navigation/dgis_settings_gear.svg',
+                              fit: BoxFit.scaleDown,
+                              width: colorScheme.iconSize,
+                              height: colorScheme.iconSize,
+                              colorFilter: ColorFilter.mode(
+                                colorScheme.iconColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              localizations.dgis_settings_dashboard_button,
+                              style: colorScheme.menuButtonTextStyle,
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              'packages/$pluginName/assets/icons/navigation/dgis_chevron.svg',
+                              fit: BoxFit.scaleDown,
+                              width: colorScheme.iconSize,
+                              height: colorScheme.iconSize,
+                              colorFilter: ColorFilter.mode(
+                                colorScheme.iconColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: GestureDetector(

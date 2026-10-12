@@ -19919,44 +19919,6 @@ extension _DartToCSearchManager on SearchManager {
     return (_CSearchManagerMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - SearchManager <-> _CResult_CSearchManager
-
-final class _CResult_CSearchManagerImpl extends ffi.Union {
-  
-  external _CSearchManager _value;
-  external _CError _error;
-}
-
-final class _CResult_CSearchManager extends ffi.Struct {
-  external _CResult_CSearchManagerImpl _impl;
-  @ffi.Uint8()
-  external int _index;
-}
-
-extension _CResult_CSearchManagerBasicFunctions on _CResult_CSearchManager {
-  void _releaseIntermediate() {
-    _CResult_CSearchManager_release(this);
-  }
-}
-
-extension _CResult_CSearchManagerToDart on _CResult_CSearchManager {
-  SearchManager _toDart() {
-    if (this._index == 0) {
-      return this._impl._value._toDart();
-    } else {
-      throw this._impl._error._toDart();
-    }
-  }
-
-  _CSearchManager _toCDart() {
-    if (this._index == 0) {
-      return this._impl._value;
-    } else {
-      throw this._impl._error._toDart();
-    }
-  }
-}
-	
 // MARK: - CancelableOperation<SuggestResult> <-> _CFuture_CSuggestResult
 
 final class _CFuture_CSuggestResult extends ffi.Struct {
@@ -20515,6 +20477,44 @@ extension _DartTo_COptional_CLocale on Locale? {
     return cOptional;
   }
 }
+// MARK: - SearchManager <-> _CResult_CSearchManager
+
+final class _CResult_CSearchManagerImpl extends ffi.Union {
+  
+  external _CSearchManager _value;
+  external _CError _error;
+}
+
+final class _CResult_CSearchManager extends ffi.Struct {
+  external _CResult_CSearchManagerImpl _impl;
+  @ffi.Uint8()
+  external int _index;
+}
+
+extension _CResult_CSearchManagerBasicFunctions on _CResult_CSearchManager {
+  void _releaseIntermediate() {
+    _CResult_CSearchManager_release(this);
+  }
+}
+
+extension _CResult_CSearchManagerToDart on _CResult_CSearchManager {
+  SearchManager _toDart() {
+    if (this._index == 0) {
+      return this._impl._value._toDart();
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+
+  _CSearchManager _toCDart() {
+    if (this._index == 0) {
+      return this._impl._value;
+    } else {
+      throw this._impl._error._toDart();
+    }
+  }
+}
+	
 // MARK: - SearchQueryBuilder
 
 /**
@@ -26884,59 +26884,6 @@ extension _DartToCCancelEvent on CancelEvent {
     return (_CCancelEventMakeDefault().._impl=_self)._retain();
   }
 }
-// MARK: - DgisSourceWorkingMode
-
-/** Установка режима работы источника данных IDgisSource. */
-enum DgisSourceWorkingMode {
-  /** Получение данных с серверов 2ГИС. */
-  online(0),
-  /** Использование в работе предварительно загруженных данных. */
-  offline(1),
-  /**
-   Гибридный режим, при котором приоритетно получение данных с серверов 2ГИС.
-   Предварительно загруженные данные используются,
-   если по каким-либо причинам не удалось получить данные с серверов или
-   предварительно загруженные данные совпадают с данными на сервере.
-  */
-  hybridOnlineFirst(2),
-  /**
-   Гибридный режим, при котором приоритетно использование предварительно загруженных данных.
-   Данные с серверов 2ГИС используются, если отсутствуют предварительно загруженные данные.
-  */
-  hybridOfflineFirst(3),
-  ;
-
-  const DgisSourceWorkingMode(this.rawValue);
-  final int rawValue;
-
-  static DgisSourceWorkingMode getByValue(int value) {
-    return DgisSourceWorkingMode.values.firstWhere((x) => x.rawValue == value);
-  }
-}
-
-
-final class _CDgisSourceWorkingMode extends ffi.Struct {
-  @ffi.Uint32()
-  external int rawValue;
-}
-
-extension _CDgisSourceWorkingModeBasicFunctions on _CDgisSourceWorkingMode {
-  void _releaseIntermediate() {
-  }
-}
-
-extension _CDgisSourceWorkingModeToDart on _CDgisSourceWorkingMode {
-  DgisSourceWorkingMode _toDart() {
-    return DgisSourceWorkingMode.getByValue(this.rawValue);
-  }
-}
-
-extension _DartTo_CDgisSourceWorkingMode on DgisSourceWorkingMode {
-  _CDgisSourceWorkingMode _copyFromDartTo_CDgisSourceWorkingMode() {
-    return _CDgisSourceWorkingModeMakeDefault()..rawValue = this.rawValue;
-  }
-}
-	
 // MARK: - DirectMapControlBeginEvent
 
 /**
@@ -29880,6 +29827,59 @@ extension _DartToCSource on Source {
     return (_CSourceMakeDefault().._impl=_self)._retain();
   }
 }
+// MARK: - DgisSourceWorkingMode
+
+/** Установка режима работы источника данных IDgisSource. */
+enum DgisSourceWorkingMode {
+  /** Получение данных с серверов 2ГИС. */
+  online(0),
+  /** Использование в работе предварительно загруженных данных. */
+  offline(1),
+  /**
+   Гибридный режим, при котором приоритетно получение данных с серверов 2ГИС.
+   Предварительно загруженные данные используются,
+   если по каким-либо причинам не удалось получить данные с серверов или
+   предварительно загруженные данные совпадают с данными на сервере.
+  */
+  hybridOnlineFirst(2),
+  /**
+   Гибридный режим, при котором приоритетно использование предварительно загруженных данных.
+   Данные с серверов 2ГИС используются, если отсутствуют предварительно загруженные данные.
+  */
+  hybridOfflineFirst(3),
+  ;
+
+  const DgisSourceWorkingMode(this.rawValue);
+  final int rawValue;
+
+  static DgisSourceWorkingMode getByValue(int value) {
+    return DgisSourceWorkingMode.values.firstWhere((x) => x.rawValue == value);
+  }
+}
+
+
+final class _CDgisSourceWorkingMode extends ffi.Struct {
+  @ffi.Uint32()
+  external int rawValue;
+}
+
+extension _CDgisSourceWorkingModeBasicFunctions on _CDgisSourceWorkingMode {
+  void _releaseIntermediate() {
+  }
+}
+
+extension _CDgisSourceWorkingModeToDart on _CDgisSourceWorkingMode {
+  DgisSourceWorkingMode _toDart() {
+    return DgisSourceWorkingMode.getByValue(this.rawValue);
+  }
+}
+
+extension _DartTo_CDgisSourceWorkingMode on DgisSourceWorkingMode {
+  _CDgisSourceWorkingMode _copyFromDartTo_CDgisSourceWorkingMode() {
+    return _CDgisSourceWorkingModeMakeDefault()..rawValue = this.rawValue;
+  }
+}
+	
 // MARK: - DgisSource
 
 /** Основной интерфейс источников данных 2ГИС. */
@@ -29927,23 +29927,6 @@ class DgisSource extends Source implements ffi.Finalizable {
 
   // MARK: CDgisSource: Static Methods
 
-  /**
-   Создание источника, получающего данные с серверов 2ГИС
-   или использующего в работе предварительно загруженные данные.
-  */
-  static Source createDgisSource(
-    Context context,
-    [DgisSourceWorkingMode workingMode = DgisSourceWorkingMode.hybridOnlineFirst
-    ])  {
-    var _a0 = context._copyFromDartTo_CContext();
-    var _a1 = workingMode._copyFromDartTo_CDgisSourceWorkingMode();
-    _CSource res = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode(_a0, _a1);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
   /** Создание источника, получающего реалистичные данные с серверов 2ГИС. */
   static Source createImmersiveDgisSource(
     Context context
@@ -29962,6 +29945,23 @@ class DgisSource extends Source implements ffi.Finalizable {
   )  {
     var _a0 = context._copyFromDartTo_CContext();
     _CSource res = _CDgisSource_S_createReliefDgisSource_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+  /**
+   Создание источника, получающего данные с серверов 2ГИС
+   или использующего в работе предварительно загруженные данные.
+  */
+  static Source createDgisSource(
+    Context context,
+    [DgisSourceWorkingMode workingMode = DgisSourceWorkingMode.hybridOnlineFirst
+    ])  {
+    var _a0 = context._copyFromDartTo_CContext();
+    var _a1 = workingMode._copyFromDartTo_CDgisSourceWorkingMode();
+    _CSource res = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode(_a0, _a1);
     _a0._releaseIntermediate();
     final t = res._toDart();
     res._releaseIntermediate();
@@ -85407,115 +85407,6 @@ extension _CArray_CRouteAltitudeItemBasicFunctions on _CArray_CRouteAltitudeItem
   }
 }
 	
-// MARK: - TrafficCollector
-
-/**
- Интерфейс для управления сервисом сбора информации о транспортном трафике.
-
- - Note: Этот интерфейс является потокобезопасным.
-*/
-class TrafficCollector implements ffi.Finalizable {
-  final ffi.Pointer<ffi.Void> _self;
-
-  /**
-   Функция определения состояния разрешения/запрета отправки информации о дорожном движении на сервер.
-  
-   - Returns: true - разрешено/ false - запрещено.
-  */
-  bool get trafficCollectingAllowed {
-    bool res = _CTrafficCollector_trafficCollectingAllowed(_CTrafficCollectorMakeDefault().._impl=_self);
-    return res;
-  }
-  set trafficCollectingAllowed(bool allowed) {
-    void res = _CTrafficCollector_setTrafficCollectingAllowed_bool(_CTrafficCollectorMakeDefault().._impl=_self, allowed);
-    return res;
-  }
-
-  static final _finalizer = ffi.NativeFinalizer(_CTrafficCollector_releasePtr);
-
-  TrafficCollector._raw(this._self);
-  factory TrafficCollector._create(ffi.Pointer<ffi.Void> self) {
-    final classObject = TrafficCollector._raw(self);
-    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
-    return classObject;
-  }
-
-  factory TrafficCollector.fromMessage(ClassMessage<TrafficCollector> message) {
-    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
-    return TrafficCollector._create(ptr);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-    identical(this, other) || other is TrafficCollector &&
-    other.runtimeType == runtimeType &&
-    _CTrafficCollector_cg_objectIdentifier(this._self) == _CTrafficCollector_cg_objectIdentifier(other._self);
-
-  @override
-  int get hashCode {
-    final identifier = _CTrafficCollector_cg_objectIdentifier(this._self);
-    return identifier.hashCode;
-  }
-
-  // MARK: CTrafficCollector: Static Methods
-
-  /**
-   Функция получения сервиса сбора информации о транспортном трафике.
-   Сервис сбора информации о транспортном трафике анализирует состояние трафика на дороге,
-   по которой движется пользователь и отправляет результаты анализа в анонимизированном виде на сервер.
-  
-   - Parameter context: Контекст - окружение, необходимое для работы SDK.
-   - Returns: Сервис сбора информации о дорожном движении.
-   - Throws: Exception, если невозможно создать сервис сбора информации о дорожном движении.
-  */
-  static TrafficCollector instance(
-    Context context
-  )  {
-    var _a0 = context._copyFromDartTo_CContext();
-    _CTrafficCollector res = _CTrafficCollector_S_instance_CContext(_a0);
-    _a0._releaseIntermediate();
-    final t = res._toDart();
-    res._releaseIntermediate();
-    return t;
-  }
-
-}
-
-extension TrafficCollectorToClassMessage on TrafficCollector {
-  ClassMessage<TrafficCollector> message() {
-    final res = (_CTrafficCollectorMakeDefault().._impl=_self)._retain();
-    return ClassMessage<TrafficCollector>(res._impl.address, _CTrafficCollector_release);
-  }
-}
-
-// MARK: - TrafficCollector <-> CTrafficCollector
-
-final class _CTrafficCollector extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _impl;
-}
-
-extension _CTrafficCollectorBasicFunctions on _CTrafficCollector {
-  void _releaseIntermediate() {
-    _CTrafficCollector_release(_impl);
-  }
-
-  _CTrafficCollector _retain() {
-    return _CTrafficCollector_retain(_impl);
-  }
-}
-
-extension _CTrafficCollectorToDart on _CTrafficCollector {
-  TrafficCollector _toDart() {
-    return TrafficCollector._create(_retain()._impl);
-  }
-}
-
-
-extension _DartToCTrafficCollector on TrafficCollector {
-  _CTrafficCollector _copyFromDartTo_CTrafficCollector() {
-    return (_CTrafficCollectorMakeDefault().._impl=_self)._retain();
-  }
-}
 // MARK: - TrafficScoreState
 
 /** Актуальность балла пробок. */
@@ -86167,6 +86058,115 @@ extension _DartTo_CStatefulChannel_CTrafficControlState on StatefulChannel<Traff
   }
 }
 	
+// MARK: - TrafficCollector
+
+/**
+ Интерфейс для управления сервисом сбора информации о транспортном трафике.
+
+ - Note: Этот интерфейс является потокобезопасным.
+*/
+class TrafficCollector implements ffi.Finalizable {
+  final ffi.Pointer<ffi.Void> _self;
+
+  /**
+   Функция определения состояния разрешения/запрета отправки информации о дорожном движении на сервер.
+  
+   - Returns: true - разрешено/ false - запрещено.
+  */
+  bool get trafficCollectingAllowed {
+    bool res = _CTrafficCollector_trafficCollectingAllowed(_CTrafficCollectorMakeDefault().._impl=_self);
+    return res;
+  }
+  set trafficCollectingAllowed(bool allowed) {
+    void res = _CTrafficCollector_setTrafficCollectingAllowed_bool(_CTrafficCollectorMakeDefault().._impl=_self, allowed);
+    return res;
+  }
+
+  static final _finalizer = ffi.NativeFinalizer(_CTrafficCollector_releasePtr);
+
+  TrafficCollector._raw(this._self);
+  factory TrafficCollector._create(ffi.Pointer<ffi.Void> self) {
+    final classObject = TrafficCollector._raw(self);
+    _finalizer.attach(classObject, self, detach: classObject, externalSize: 10000);
+    return classObject;
+  }
+
+  factory TrafficCollector.fromMessage(ClassMessage<TrafficCollector> message) {
+    final ptr = ffi.Pointer<ffi.Void>.fromAddress(message.address);
+    return TrafficCollector._create(ptr);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) || other is TrafficCollector &&
+    other.runtimeType == runtimeType &&
+    _CTrafficCollector_cg_objectIdentifier(this._self) == _CTrafficCollector_cg_objectIdentifier(other._self);
+
+  @override
+  int get hashCode {
+    final identifier = _CTrafficCollector_cg_objectIdentifier(this._self);
+    return identifier.hashCode;
+  }
+
+  // MARK: CTrafficCollector: Static Methods
+
+  /**
+   Функция получения сервиса сбора информации о транспортном трафике.
+   Сервис сбора информации о транспортном трафике анализирует состояние трафика на дороге,
+   по которой движется пользователь и отправляет результаты анализа в анонимизированном виде на сервер.
+  
+   - Parameter context: Контекст - окружение, необходимое для работы SDK.
+   - Returns: Сервис сбора информации о дорожном движении.
+   - Throws: Exception, если невозможно создать сервис сбора информации о дорожном движении.
+  */
+  static TrafficCollector instance(
+    Context context
+  )  {
+    var _a0 = context._copyFromDartTo_CContext();
+    _CTrafficCollector res = _CTrafficCollector_S_instance_CContext(_a0);
+    _a0._releaseIntermediate();
+    final t = res._toDart();
+    res._releaseIntermediate();
+    return t;
+  }
+
+}
+
+extension TrafficCollectorToClassMessage on TrafficCollector {
+  ClassMessage<TrafficCollector> message() {
+    final res = (_CTrafficCollectorMakeDefault().._impl=_self)._retain();
+    return ClassMessage<TrafficCollector>(res._impl.address, _CTrafficCollector_release);
+  }
+}
+
+// MARK: - TrafficCollector <-> CTrafficCollector
+
+final class _CTrafficCollector extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _impl;
+}
+
+extension _CTrafficCollectorBasicFunctions on _CTrafficCollector {
+  void _releaseIntermediate() {
+    _CTrafficCollector_release(_impl);
+  }
+
+  _CTrafficCollector _retain() {
+    return _CTrafficCollector_retain(_impl);
+  }
+}
+
+extension _CTrafficCollectorToDart on _CTrafficCollector {
+  TrafficCollector _toDart() {
+    return TrafficCollector._create(_retain()._impl);
+  }
+}
+
+
+extension _DartToCTrafficCollector on TrafficCollector {
+  _CTrafficCollector _copyFromDartTo_CTrafficCollector() {
+    return (_CTrafficCollectorMakeDefault().._impl=_self)._retain();
+  }
+}
 // MARK: - PackageInfoError
 
 /** Ошибки, которые могут произойти при загрузке и/или установке пакета. */
@@ -90082,9 +90082,6 @@ late final _CSearchManagerMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSearchMa
 late final _CSearchManagerMakeDefault = _CSearchManagerMakeDefaultPtr.asFunction<_CSearchManager Function()>();
 
 
-late final _CResult_CSearchManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CSearchManager)>>('CResult_CSearchManager_release');
-late final _CResult_CSearchManager_release = _CResult_CSearchManager_releasePtr.asFunction<void Function(_CResult_CSearchManager)>();
-
 late final _CFuture_CSuggestResultMakeDefaultPtr = _lookup<ffi.NativeFunction<_CFuture_CSuggestResult Function()>>('CFuture_CSuggestResultMakeDefault');
 late final _CFuture_CSuggestResultMakeDefault = _CFuture_CSuggestResultMakeDefaultPtr.asFunction<_CFuture_CSuggestResult Function()>();
 late final _CFuture_CSuggestResult_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CFuture_CSuggestResult)>>('CFuture_CSuggestResult_release');
@@ -90188,6 +90185,9 @@ late final _COptional_CLocaleMakeDefault = _COptional_CLocaleMakeDefaultPtr.asFu
 
 late final _COptional_CLocale_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_COptional_CLocale)>>('COptional_CLocale_release');
 late final _COptional_CLocale_release = _COptional_CLocale_releasePtr.asFunction<void Function(_COptional_CLocale)>();
+
+late final _CResult_CSearchManager_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CResult_CSearchManager)>>('CResult_CSearchManager_release');
+late final _CResult_CSearchManager_release = _CResult_CSearchManager_releasePtr.asFunction<void Function(_CResult_CSearchManager)>();
 
 late final _CSearchQueryBuilder_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CSearchQueryBuilder_cg_objectIdentifier');
 late final _CSearchQueryBuilder_cg_objectIdentifier = _CSearchQueryBuilder_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
@@ -90973,9 +90973,6 @@ late final _CCancelEventMakeDefaultPtr = _lookup<ffi.NativeFunction<_CCancelEven
 late final _CCancelEventMakeDefault = _CCancelEventMakeDefaultPtr.asFunction<_CCancelEvent Function()>();
 
 
-late final _CDgisSourceWorkingModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDgisSourceWorkingMode Function()>>('CDgisSourceWorkingModeMakeDefault');
-late final _CDgisSourceWorkingModeMakeDefault = _CDgisSourceWorkingModeMakeDefaultPtr.asFunction<_CDgisSourceWorkingMode Function()>();
-
 late final _CDirectMapControlBeginEvent_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDirectMapControlBeginEvent_cg_objectIdentifier');
 late final _CDirectMapControlBeginEvent_cg_objectIdentifier = _CDirectMapControlBeginEvent_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
@@ -91483,6 +91480,9 @@ late final _CSource_retain = _CSource_retainPtr.asFunction<_CSource Function(ffi
 late final _CSourceMakeDefaultPtr = _lookup<ffi.NativeFunction<_CSource Function()>>('CSourceMakeDefault');
 late final _CSourceMakeDefault = _CSourceMakeDefaultPtr.asFunction<_CSource Function()>();
 
+
+late final _CDgisSourceWorkingModeMakeDefaultPtr = _lookup<ffi.NativeFunction<_CDgisSourceWorkingMode Function()>>('CDgisSourceWorkingModeMakeDefault');
+late final _CDgisSourceWorkingModeMakeDefault = _CDgisSourceWorkingModeMakeDefaultPtr.asFunction<_CDgisSourceWorkingMode Function()>();
 late final _CDgisSource_highlightedObjectsChannelPtr = _lookup<ffi.NativeFunction<_CStatefulChannel_CArray_CDgisObjectId Function(_CDgisSource)>>('CDgisSource_highlightedObjectsChannel');
 late final _CDgisSource_highlightedObjectsChannel = _CDgisSource_highlightedObjectsChannelPtr.asFunction<_CStatefulChannel_CArray_CDgisObjectId Function(_CDgisSource)>();
 late final _CDgisSource_highlightedObjectsPtr = _lookup<ffi.NativeFunction<_CArray_CDgisObjectId Function(_CDgisSource)>>('CDgisSource_highlightedObjects');
@@ -91491,12 +91491,12 @@ late final _CDgisSource_highlightedObjects = _CDgisSource_highlightedObjectsPtr.
 late final _CDgisSource_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CDgisSource_cg_objectIdentifier');
 late final _CDgisSource_cg_objectIdentifier = _CDgisSource_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
 
-late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>>('CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode');
-late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr.asFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>();
 late final _CDgisSource_S_createImmersiveDgisSource_CContextPtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext)>>('CDgisSource_S_createImmersiveDgisSource_CContext');
 late final _CDgisSource_S_createImmersiveDgisSource_CContext = _CDgisSource_S_createImmersiveDgisSource_CContextPtr.asFunction<_CSource Function(_CContext)>();
 late final _CDgisSource_S_createReliefDgisSource_CContextPtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext)>>('CDgisSource_S_createReliefDgisSource_CContext');
 late final _CDgisSource_S_createReliefDgisSource_CContext = _CDgisSource_S_createReliefDgisSource_CContextPtr.asFunction<_CSource Function(_CContext)>();
+late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr = _lookup<ffi.NativeFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>>('CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode');
+late final _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingMode = _CDgisSource_S_createDgisSource_CContext_CDgisSourceWorkingModePtr.asFunction<_CSource Function(_CContext, _CDgisSourceWorkingMode)>();
 late final _CDgisSource_setHighlighted_CArray_CDgisObjectId_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CDgisSource, _CArray_CDgisObjectId, ffi.Bool)>>('CDgisSource_setHighlighted_CArray_CDgisObjectId_bool');
 late final _CDgisSource_setHighlighted_CArray_CDgisObjectId_bool = _CDgisSource_setHighlighted_CArray_CDgisObjectId_boolPtr.asFunction<void Function(_CDgisSource, _CArray_CDgisObjectId, bool)>();
 
@@ -99242,24 +99242,6 @@ late final _forEach_CArray_CRouteAltitudeItem = _forEach_CArray_CRouteAltitudeIt
 >>)>();
 late final _CArray_CRouteAltitudeItem_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CArray_CRouteAltitudeItem)>>('CArray_CRouteAltitudeItem_release');
 late final _CArray_CRouteAltitudeItem_release = _CArray_CRouteAltitudeItem_releasePtr.asFunction<void Function(_CArray_CRouteAltitudeItem)>();
-late final _CTrafficCollector_trafficCollectingAllowedPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CTrafficCollector)>>('CTrafficCollector_trafficCollectingAllowed');
-late final _CTrafficCollector_trafficCollectingAllowed = _CTrafficCollector_trafficCollectingAllowedPtr.asFunction<bool Function(_CTrafficCollector)>();
-late final _CTrafficCollector_setTrafficCollectingAllowed_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTrafficCollector, ffi.Bool)>>('CTrafficCollector_setTrafficCollectingAllowed_bool');
-late final _CTrafficCollector_setTrafficCollectingAllowed_bool = _CTrafficCollector_setTrafficCollectingAllowed_boolPtr.asFunction<void Function(_CTrafficCollector, bool)>();
-
-late final _CTrafficCollector_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_cg_objectIdentifier');
-late final _CTrafficCollector_cg_objectIdentifier = _CTrafficCollector_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
-
-late final _CTrafficCollector_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(_CContext)>>('CTrafficCollector_S_instance_CContext');
-late final _CTrafficCollector_S_instance_CContext = _CTrafficCollector_S_instance_CContextPtr.asFunction<_CTrafficCollector Function(_CContext)>();
-
-late final _CTrafficCollector_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_release');
-late final _CTrafficCollector_release = _CTrafficCollector_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-late final _CTrafficCollector_retainPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_retain');
-late final _CTrafficCollector_retain = _CTrafficCollector_retainPtr.asFunction<_CTrafficCollector Function(ffi.Pointer<ffi.Void>)>();
-late final _CTrafficCollectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function()>>('CTrafficCollectorMakeDefault');
-late final _CTrafficCollectorMakeDefault = _CTrafficCollectorMakeDefaultPtr.asFunction<_CTrafficCollector Function()>();
-
 
 late final _CTrafficScoreStateMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficScoreState Function()>>('CTrafficScoreStateMakeDefault');
 late final _CTrafficScoreStateMakeDefault = _CTrafficScoreStateMakeDefaultPtr.asFunction<_CTrafficScoreState Function()>();
@@ -99360,6 +99342,24 @@ late final _CStatefulChannel_CTrafficControlStateConnect = _CStatefulChannel_CTr
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(_CTrafficControlState, ffi.Int64)>>
   )
 >();
+late final _CTrafficCollector_trafficCollectingAllowedPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(_CTrafficCollector)>>('CTrafficCollector_trafficCollectingAllowed');
+late final _CTrafficCollector_trafficCollectingAllowed = _CTrafficCollector_trafficCollectingAllowedPtr.asFunction<bool Function(_CTrafficCollector)>();
+late final _CTrafficCollector_setTrafficCollectingAllowed_boolPtr = _lookup<ffi.NativeFunction<ffi.Void Function(_CTrafficCollector, ffi.Bool)>>('CTrafficCollector_setTrafficCollectingAllowed_bool');
+late final _CTrafficCollector_setTrafficCollectingAllowed_bool = _CTrafficCollector_setTrafficCollectingAllowed_boolPtr.asFunction<void Function(_CTrafficCollector, bool)>();
+
+late final _CTrafficCollector_cg_objectIdentifierPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_cg_objectIdentifier');
+late final _CTrafficCollector_cg_objectIdentifier = _CTrafficCollector_cg_objectIdentifierPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
+late final _CTrafficCollector_S_instance_CContextPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(_CContext)>>('CTrafficCollector_S_instance_CContext');
+late final _CTrafficCollector_S_instance_CContext = _CTrafficCollector_S_instance_CContextPtr.asFunction<_CTrafficCollector Function(_CContext)>();
+
+late final _CTrafficCollector_releasePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_release');
+late final _CTrafficCollector_release = _CTrafficCollector_releasePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficCollector_retainPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function(ffi.Pointer<ffi.Void>)>>('CTrafficCollector_retain');
+late final _CTrafficCollector_retain = _CTrafficCollector_retainPtr.asFunction<_CTrafficCollector Function(ffi.Pointer<ffi.Void>)>();
+late final _CTrafficCollectorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CTrafficCollector Function()>>('CTrafficCollectorMakeDefault');
+late final _CTrafficCollectorMakeDefault = _CTrafficCollectorMakeDefaultPtr.asFunction<_CTrafficCollector Function()>();
+
 
 late final _CPackageInfoErrorMakeDefaultPtr = _lookup<ffi.NativeFunction<_CPackageInfoError Function()>>('CPackageInfoErrorMakeDefault');
 late final _CPackageInfoErrorMakeDefault = _CPackageInfoErrorMakeDefaultPtr.asFunction<_CPackageInfoError Function()>();

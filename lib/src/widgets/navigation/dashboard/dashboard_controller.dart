@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import '../../../../l10n/generated/dgis_localizations.dart';
 import '../../common/formatted_measure.dart';
 import '../navigation_layout_widget.dart';
+import '../settings/navigation_setting_keys.dart';
+import '../settings/navigation_settings_repository.dart';
 import './../../../generated/dart_bindings.dart' as sdk;
 import './../extensions.dart';
 import './dashboard_model.dart';
@@ -68,8 +70,13 @@ class DashboardController {
   late final StreamSubscription<sdk.RoutePoint?> _routePositionSubscription;
   late final ValueNotifier<DashboardModel> _model;
 
+  final _settingsClickHandler = ValueNotifier<VoidCallback?>(null);
+
   // Callback to control overlay from widget
   Function()? _closeOverlayCallback;
+
+  NavigationSettingsRepository? _settingsRepository;
+  VoidCallback? _removeSoundListener;
 
   DashboardController({
     required this.navigationManager,
@@ -107,6 +114,41 @@ class DashboardController {
     _closeOverlayCallback = callback;
   }
 
+  /// Action behind the dashboard settings row.
+  ///
+  /// Null while no settings entry is available; the dashboard hides the row.
+  ValueListenable<VoidCallback?> get settingsClickHandler =>
+      _settingsClickHandler;
+
+  /// Updates the settings action. A null handler hides the dashboard row.
+  ///
+  /// Owned by [NavigationLayoutWidget], which rewrites the handler whenever
+  /// its settings configuration changes. A host app configures the row
+  /// through `NavigationSettingsOptions` instead of calling this.
+  @internal
+  void setSettingsClickHandler(VoidCallback? handler) {
+    _settingsClickHandler.value = handler;
+  }
+
+  /// Binds the repository that persists navigation sound instructions.
+  @internal
+  void setSettingsRepository(NavigationSettingsRepository? repository) {
+    if (_settingsRepository == repository) {
+      return;
+    }
+    _removeSoundListener?.call();
+    _removeSoundListener = null;
+    _settingsRepository = repository;
+    if (repository != null) {
+      final listenable =
+          repository.observe(NavigationSettingKeys.soundInstructions);
+      void listener() => _syncSoundsEnabled();
+      listenable.addListener(listener);
+      _removeSoundListener = () => listenable.removeListener(listener);
+    }
+    _syncSoundsEnabled();
+  }
+
   void _init() {
     _routePositionSubscription = navigationManager.uiModel.routePositionChannel
         .listen(_handleRoutePositionUpdate);
@@ -118,10 +160,10 @@ class DashboardController {
         soundsEnabled: _isSoundEnabled(),
       ),
     );
+  }
 
-    _model.value = _model.value.copyWith(
-      soundsEnabled: _isSoundEnabled(),
-    );
+  void _syncSoundsEnabled() {
+    _model.value = _model.value.copyWith(soundsEnabled: _isSoundEnabled());
   }
 
   void _handleRoutePositionUpdate(sdk.RoutePoint? position) {
@@ -135,6 +177,10 @@ class DashboardController {
   }
 
   bool _isSoundEnabled() {
+    final repository = _settingsRepository;
+    if (repository != null) {
+      return repository.get(NavigationSettingKeys.soundInstructions);
+    }
     return navigationManager.soundNotificationSettings.enabledSoundCategories
         .contains(sdk.SoundCategory.instructions);
   }
@@ -159,9 +205,19 @@ class DashboardController {
     return formatter.format(estimatedArrivalTime);
   }
 
-  /// Toggles the sound state for navigation instructions.
-  /// Updates the [soundsEnabled] state and [state] accordingly.
+  /// Toggles navigation instructions, persisting through the bound repository.
   void toggleSounds() {
+    final repository = _settingsRepository;
+    if (repository != null) {
+      unawaited(
+        repository.set(
+          NavigationSettingKeys.soundInstructions,
+          !soundsEnabled,
+        ),
+      );
+      return;
+    }
+
     final categories = navigationManager
         .soundNotificationSettings.enabledSoundCategories
         .toMutableEnumSet();
@@ -175,9 +231,7 @@ class DashboardController {
     navigationManager.soundNotificationSettings.enabledSoundCategories =
         categories.toEnumSet();
 
-    _model.value = _model.value.copyWith(
-      soundsEnabled: _isSoundEnabled(),
-    );
+    _syncSoundsEnabled();
   }
 
   /// Shows the remaining route on the map and switches to route view mode.
@@ -262,7 +316,11 @@ class DashboardController {
   }
 
   void dispose() {
+    _removeSoundListener?.call();
+    _removeSoundListener = null;
+    _settingsRepository = null;
     _routePositionSubscription.cancel();
     _model.dispose();
+    _settingsClickHandler.dispose();
   }
 }

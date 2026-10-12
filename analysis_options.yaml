@@ -1,3 +1,6 @@
 analyzer:
   exclude: 
     - '**/generated'
+    - build/**
+    - android/**
+    - ios/**

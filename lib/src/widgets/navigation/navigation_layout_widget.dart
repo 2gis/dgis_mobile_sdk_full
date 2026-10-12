@@ -24,6 +24,9 @@ import './my_location/my_location_controller.dart';
 import './my_location/my_location_widget.dart';
 import './parking/parking_controller.dart';
 import './parking/parking_widget.dart';
+import './settings/navigation_settings_applier.dart';
+import './settings/navigation_settings_options.dart';
+import './settings/settings_flow.dart';
 import './speed_limit/speed_limit_controller.dart';
 import './speed_limit/speed_limit_widget.dart';
 import './traffic/traffic_controller.dart';
@@ -37,6 +40,12 @@ const _minEdgeInset = 8.0;
 
 class NavigationLayoutWidget extends StatefulWidget {
   final sdk.NavigationManager navigationManager;
+
+  /// Settings entry and runtime synchronization.
+  ///
+  /// Defaults to a configuration with the feature disabled.
+  final NavigationSettingsOptions settingsOptions;
+
   final DashboardWidget Function(
     DashboardController,
     void Function(Offset) onHeaderChangeSize,
@@ -72,6 +81,7 @@ class NavigationLayoutWidget extends StatefulWidget {
 
   const NavigationLayoutWidget({
     required this.navigationManager,
+    this.settingsOptions = const NavigationSettingsOptions(),
     DashboardWidget Function(
       DashboardController,
       Function(Offset) onHeaderChangeSize,
@@ -115,6 +125,7 @@ class NavigationLayoutWidget extends StatefulWidget {
 
   const NavigationLayoutWidget.defaultLayout({
     required this.navigationManager,
+    this.settingsOptions = const NavigationSettingsOptions(),
     super.key,
   })  : _dashboardWidgetBuilder = DashboardWidget.defaultBuilder,
         _speedLimitWidgetBuilder = SpeedLimitWidget.defaultBuilder,
@@ -148,6 +159,8 @@ class _NavigationLayoutWidgetState
 
   StreamSubscription<sdk.State>? navigationStateSubscription;
   final ValueNotifier<sdk.State?> navigationState = ValueNotifier(null);
+  NavigationSettingsApplier? _settingsApplier;
+  bool _controllersAttached = false;
 
   final ValueNotifier<bool> isBetterRoutePrompted = ValueNotifier(false);
 
@@ -178,28 +191,99 @@ class _NavigationLayoutWidgetState
     startHideTimer();
   }
 
+  VoidCallback? get _effectiveSettingsClickHandler {
+    final options = widget.settingsOptions;
+    final customHandler = options.onSettingsClick;
+    if (customHandler != null) return customHandler;
+
+    final repository = options.repository;
+    if (repository == null) return null;
+
+    return () => unawaited(
+          showNavigationSettingsFlow(
+            context: context,
+            repository: repository,
+            primarySection: widget.settingsOptions.primarySection,
+            visibilityConfig: widget.settingsOptions.sectionVisibility,
+            theme: widget.settingsOptions.theme,
+          ),
+        );
+  }
+
+  void _configureSettingsApplier() {
+    _settingsApplier?.dispose();
+    _settingsApplier = null;
+    final repository = widget.settingsOptions.repository;
+    if (repository == null) return;
+    _settingsApplier = NavigationSettingsApplier(
+      repository: repository,
+      navigationManager: widget.navigationManager,
+    )..startObserving();
+  }
+
+  void _handleNavigationState() {
+    final state = navigationState.value;
+    if (state == sdk.State.navigation) {
+      _settingsApplier?.apply();
+    }
+    if (state == sdk.State.finished) {
+      overlayController.show();
+    } else if (overlayController.isShowing) {
+      overlayController.hide();
+    }
+  }
+
+  void _updateDashboardSettings() {
+    if (_controllersAttached) {
+      dashboardController
+        ..setSettingsClickHandler(_effectiveSettingsClickHandler)
+        ..setSettingsRepository(widget.settingsOptions.repository);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     startHideTimer();
     navigationStateSubscription = widget.navigationManager.uiModel.stateChannel
         .listen((state) => navigationState.value = state);
+    navigationState.addListener(_handleNavigationState);
+    _configureSettingsApplier();
+  }
 
-    navigationState.addListener(() {
-      if (navigationState.value == sdk.State.finished) {
-        overlayController.show();
-      } else {
-        if (overlayController.isShowing) overlayController.hide();
-      }
-    });
+  @override
+  void didUpdateWidget(NavigationLayoutWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.navigationManager != widget.navigationManager) {
+      unawaited(navigationStateSubscription?.cancel());
+      navigationStateSubscription = widget
+          .navigationManager.uiModel.stateChannel
+          .listen((state) => navigationState.value = state);
+    }
+    final oldOptions = oldWidget.settingsOptions;
+    final options = widget.settingsOptions;
+    if (oldOptions.repository != options.repository ||
+        oldWidget.navigationManager != widget.navigationManager) {
+      _configureSettingsApplier();
+    }
+    if (oldOptions.onSettingsClick != options.onSettingsClick ||
+        oldOptions.repository != options.repository) {
+      _updateDashboardSettings();
+    }
   }
 
   @override
   void dispose() {
     hideMapControlsTimer?.cancel();
+    unawaited(navigationStateSubscription?.cancel());
+    navigationState
+      ..removeListener(_handleNavigationState)
+      ..dispose();
+    dashboardSize.dispose();
+    isBetterRoutePrompted.dispose();
     isMapControlsVisible.dispose();
     isMinimapVisible.dispose();
-    navigationStateSubscription?.cancel();
+    _settingsApplier?.dispose();
     super.dispose();
   }
 
@@ -730,10 +814,17 @@ class _NavigationLayoutWidgetState
       final model = dashboardController.state.value;
       isMinimapVisible.value = model.isMinimapVisible;
     });
+
+    _controllersAttached = true;
+    _updateDashboardSettings();
   }
 
   @override
   void onDetachedFromMap() {
+    if (!_controllersAttached) {
+      return;
+    }
+    _controllersAttached = false;
     dashboardController.dispose();
     compassController.dispose();
     finishRouteController.dispose();

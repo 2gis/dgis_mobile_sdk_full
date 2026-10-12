@@ -184,7 +184,7 @@ class DgisLocalizationsRu extends DgisLocalizations {
   String get dgis_public_transport_type_waterway => 'Водный транспорт';
 
   @override
-  String get dgis_public_transport_type_cable_car => 'Канатная дорога';
+  String get dgis_public_transport_type_cable_car => 'Канатный трамвай';
 
   @override
   String get dgis_public_transport_type_speed_tram => 'Скоростной трамвай';
@@ -454,5 +454,409 @@ class DgisLocalizationsRu extends DgisLocalizations {
   String get dgis_working_hours_weekday_closed_to_sat => 'субботы';
 
   @override
+  String get dgis_settings_avoid_toll_roads => 'Избегать платных дорог';
+
+  @override
+  String get dgis_settings_avoid_unpaved_roads => 'Избегать грунтовых дорог';
+
+  @override
+  String get dgis_settings_avoid_ferries => 'Избегать паромов';
+
+  @override
+  String get dgis_settings_avoid_locked_roads => 'Избегать закрытых дорог';
+
+  @override
+  String get dgis_settings_route_search_type => 'Тип маршрута';
+
+  @override
+  String get dgis_settings_route_search_type_jam => 'С учётом пробок';
+
+  @override
+  String get dgis_settings_route_search_type_jam_desc =>
+      'Маршрут учитывает актуальные данные о пробках';
+
+  @override
+  String get dgis_settings_route_search_type_statistic => 'Статистический';
+
+  @override
+  String get dgis_settings_route_search_type_statistic_desc =>
+      'Маршрут на основе статистики загруженности';
+
+  @override
+  String get dgis_settings_route_search_type_shortest => 'Кратчайший';
+
+  @override
+  String get dgis_settings_route_search_type_shortest_desc =>
+      'Кратчайший маршрут без учёта пробок';
+
+  @override
+  String get dgis_settings_avoid_stairs => 'Избегать лестниц';
+
+  @override
+  String get dgis_settings_avoid_underpasses => 'Избегать подземных переходов';
+
+  @override
+  String get dgis_settings_use_indoor => 'Маршруты внутри зданий';
+
+  @override
+  String get dgis_settings_avoid_car_roads => 'Избегать автодорог';
+
+  @override
+  String get dgis_settings_remember_choice => 'Запомнить мой выбор';
+
+  @override
+  String get dgis_settings_transport_types => 'Типы транспорта';
+
+  @override
+  String get dgis_settings_truck_length => 'Длина, м';
+
+  @override
+  String get dgis_settings_truck_height => 'Высота, м';
+
+  @override
+  String get dgis_settings_truck_width => 'Ширина, м';
+
+  @override
+  String get dgis_settings_truck_actual_mass => 'Фактическая масса, т';
+
+  @override
+  String get dgis_settings_truck_max_permitted_mass => 'Разрешённая масса, т';
+
+  @override
+  String get dgis_settings_truck_axle_load => 'Нагрузка на ось, т';
+
+  @override
+  String get dgis_settings_truck_title => 'Грузовая навигация';
+
+  @override
+  String get dgis_settings_truck_description =>
+      'Строим маршруты для грузового транспорта. Навигатор ведёт только по тем улицам, где можно ездить грузовикам. Перед поездкой укажите габариты машины, особенности груза и включите интернет.';
+
+  @override
+  String get dgis_settings_truck_section_dimensions => 'Габариты и масса';
+
+  @override
+  String get dgis_settings_truck_section_cargo => 'Особый груз';
+
+  @override
+  String get dgis_settings_truck_dangerous_cargo => 'Опасный груз';
+
+  @override
+  String get dgis_settings_truck_explosive_cargo => 'Взрывчатый груз';
+
+  @override
+  String get dgis_settings_truck_fallback_on_car =>
+      'Откат на автомобильный маршрут';
+
+  @override
   String get dgis_working_hours_weekday_closed_to_sun => 'воскресенья';
+
+  @override
+  String get dgis_settings_section_route => 'Маршрут';
+
+  @override
+  String get dgis_settings_section_car => 'Автомобиль';
+
+  @override
+  String get dgis_settings_section_map_events => 'Дорожные события';
+
+  @override
+  String get dgis_settings_section_passed_route => 'Пройденный маршрут';
+
+  @override
+  String get dgis_settings_section_pedestrian => 'Пешком';
+
+  @override
+  String get dgis_settings_section_bicycle => 'Велосипед';
+
+  @override
+  String get dgis_settings_section_scooter => 'Самокат';
+
+  @override
+  String get dgis_settings_section_motorcycle => 'Мотоцикл';
+
+  @override
+  String get dgis_settings_section_public_transport => 'Общественный транспорт';
+
+  @override
+  String get dgis_settings_section_truck => 'Грузовик';
+
+  @override
+  String get dgis_settings_section_other_navigators => 'Другие навигаторы';
+
+  @override
+  String get dgis_settings_section_sound_and_voice => 'Звук и голос';
+
+  @override
+  String get dgis_settings_suggest_better_route => 'Предлагать маршрут лучше';
+
+  @override
+  String get dgis_settings_show_alternative_routes =>
+      'Показывать альтернативные маршруты';
+
+  @override
+  String get dgis_settings_rebuild_on_deviation =>
+      'Перестроить маршрут при сходе';
+
+  @override
+  String get dgis_settings_callout_visualization => 'Отображение информации';
+
+  @override
+  String get dgis_settings_callout_always => 'Всегда';
+
+  @override
+  String get dgis_settings_callout_always_desc =>
+      'Показывать баблы с временем и длиной, если добавлен хотя бы один маршрут';
+
+  @override
+  String get dgis_settings_callout_multiple_routes => 'Несколько маршрутов';
+
+  @override
+  String get dgis_settings_callout_multiple_routes_desc =>
+      'Показывать баблы только если добавлено более одного маршрута';
+
+  @override
+  String get dgis_settings_callout_none => 'Не показывать';
+
+  @override
+  String get dgis_settings_callout_none_desc =>
+      'Не показывать баблы и не рассчитывать их позиции';
+
+  @override
+  String get dgis_settings_map_events => 'Дорожные события на карте';
+
+  @override
+  String get dgis_settings_map_events_accidents => 'ДТП';
+
+  @override
+  String get dgis_settings_map_events_road_works => 'Дорожные работы';
+
+  @override
+  String get dgis_settings_map_events_cameras => 'Камеры';
+
+  @override
+  String get dgis_settings_map_events_comments => 'Сообщения на карте';
+
+  @override
+  String get dgis_settings_map_events_road_restrictions => 'Перекрытия';
+
+  @override
+  String get dgis_settings_map_events_other => 'Прочее';
+
+  @override
+  String get dgis_settings_map_events_bubbles => 'Подсказки маневров';
+
+  @override
+  String get dgis_settings_map_events_lanes_bubbles => 'Подсказки полос';
+
+  @override
+  String get dgis_settings_passed_route => 'Элементы на пройденном маршруте';
+
+  @override
+  String get dgis_settings_passed_route_start_point => 'Начальная точка';
+
+  @override
+  String get dgis_settings_passed_route_finish_point => 'Конечная точка';
+
+  @override
+  String get dgis_settings_passed_route_intermediate_points =>
+      'Промежуточные точки';
+
+  @override
+  String get dgis_settings_passed_route_cameras => 'Камеры';
+
+  @override
+  String get dgis_settings_passed_route_accidents => 'ДТП';
+
+  @override
+  String get dgis_settings_passed_route_road_works => 'Дорожные работы';
+
+  @override
+  String get dgis_settings_passed_route_comments => 'Сообщения';
+
+  @override
+  String get dgis_settings_passed_route_road_restrictions => 'Перекрытия';
+
+  @override
+  String get dgis_settings_passed_route_other => 'Прочее';
+
+  @override
+  String get dgis_settings_passed_route_toll_roads => 'Платные дороги';
+
+  @override
+  String get dgis_settings_title => 'Настройки навигатора';
+
+  @override
+  String get dgis_settings_dashboard_button => 'Настройки';
+
+  @override
+  String get dgis_settings_sounds_and_alerts => 'Звуки и оповещения';
+
+  @override
+  String get dgis_settings_voices => 'Голоса';
+
+  @override
+  String get dgis_settings_voice => 'Голос';
+
+  @override
+  String get dgis_settings_voices_yours => 'Ваши голоса';
+
+  @override
+  String get dgis_settings_voices_available => 'Доступные к загрузке';
+
+  @override
+  String get dgis_settings_voices_language_selection => 'Выбор языка';
+
+  @override
+  String get dgis_settings_voices_play => 'Проиграть пример';
+
+  @override
+  String get dgis_settings_voices_delete => 'Удалить голос';
+
+  @override
+  String get dgis_settings_voices_update => 'Обновить голос';
+
+  @override
+  String get dgis_settings_voices_download => 'Загрузить голос';
+
+  @override
+  String get dgis_settings_language => 'Язык';
+
+  @override
+  String get dgis_settings_sound_section_general => 'Звуковое сопровождение';
+
+  @override
+  String get dgis_settings_sound_mode => 'Голосовые инструкции';
+
+  @override
+  String get dgis_settings_sound_mode_off => 'Выключены';
+
+  @override
+  String get dgis_settings_sound_mode_important => 'Важные';
+
+  @override
+  String get dgis_settings_sound_mode_all => 'Все события';
+
+  @override
+  String get dgis_settings_sound_mode_subtitle_off => 'Звук выключен';
+
+  @override
+  String get dgis_settings_sound_mode_subtitle_important =>
+      'Камеры и дорожные события';
+
+  @override
+  String get dgis_settings_sound_mode_subtitle_all =>
+      'Озвучиваются все события';
+
+  @override
+  String get dgis_settings_sound_duck_other_audio => 'Приглушать другие звуки';
+
+  @override
+  String get dgis_settings_sound_volume => 'Громкость подсказок';
+
+  @override
+  String get dgis_settings_sound_volume_min => 'Минимум';
+
+  @override
+  String get dgis_settings_sound_volume_low => 'Тихая';
+
+  @override
+  String get dgis_settings_sound_volume_standard => 'Стандарт';
+
+  @override
+  String get dgis_settings_sound_section_event_warnings =>
+      'Предупреждение о событиях';
+
+  @override
+  String get dgis_settings_sound_speed_exceed => 'Превышение скорости';
+
+  @override
+  String get dgis_settings_sound_speed_exceed_description =>
+      'Звуковой сигнал при нарушении скоростного режима';
+
+  @override
+  String dgis_settings_sound_speed_exceed_threshold_format(int count) {
+    return 'Предупредим при превышении на $count км/ч';
+  }
+
+  @override
+  String dgis_settings_sound_speed_exceed_threshold_below_format(int count) {
+    return 'Предупредим о скоростном лимите за $count км/ч';
+  }
+
+  @override
+  String get dgis_settings_sound_section_cameras => 'Камеры';
+
+  @override
+  String get dgis_settings_sound_cameras => 'Предупреждать о камерах';
+
+  @override
+  String get dgis_settings_sound_cameras_description =>
+      'Голосовые инструкции о камерах на маршруте';
+
+  @override
+  String get dgis_settings_sound_camera_speed => 'Контроль скорости';
+
+  @override
+  String get dgis_settings_sound_camera_always => 'Озвучивать всегда';
+
+  @override
+  String get dgis_settings_sound_camera_always_description =>
+      'Всегда предупреждать о камерах, даже если скорость не превышена';
+
+  @override
+  String get dgis_settings_sound_camera_stop => 'Остановка';
+
+  @override
+  String get dgis_settings_sound_camera_crossroad => 'Проезд перекрёстка';
+
+  @override
+  String get dgis_settings_sound_camera_lane => 'Контроль полосы';
+
+  @override
+  String get dgis_settings_sound_camera_marking => 'Разметка';
+
+  @override
+  String get dgis_settings_sound_section_road_events => 'Дорожные события';
+
+  @override
+  String get dgis_settings_sound_road_events => 'Озвучивать все события';
+
+  @override
+  String get dgis_settings_sound_road_events_description =>
+      'Сообщать обо всём по маршруту';
+
+  @override
+  String get dgis_settings_sound_event_toll => 'Платные дороги';
+
+  @override
+  String get dgis_settings_sound_event_road_works => 'Дорожные работы';
+
+  @override
+  String get dgis_settings_sound_event_obstacle => 'Препятствия';
+
+  @override
+  String get dgis_settings_sound_event_accident => 'ДТП';
+
+  @override
+  String get dgis_settings_sound_event_instructions => 'Инструкции';
+
+  @override
+  String get dgis_settings_sound_event_route_rebuild => 'Маршрут перестроен';
+
+  @override
+  String get dgis_settings_sound_event_better_route => 'Маршрут лучше';
+
+  @override
+  String get dgis_settings_sound_event_intermediate_points =>
+      'Промежуточные точки';
+
+  @override
+  String get dgis_settings_sound_event_road_subtypes => 'Подтипы дорог';
+
+  @override
+  String get dgis_settings_sound_event_no_signal => 'Потерян сигнал GPS';
+
+  @override
+  String get dgis_settings_sound_event_finish => 'Маршрут завершён';
 }
