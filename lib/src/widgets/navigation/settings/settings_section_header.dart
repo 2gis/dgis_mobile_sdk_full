@@ -22,22 +22,22 @@ class NavigationSettingsSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        header: true,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: theme.colors.divider),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-            child: Text(
-              label.toUpperCase(),
-              style: theme.typography.sectionHeader.copyWith(
-                color: theme.colors.sectionHeader,
-              ),
-            ),
+    header: true,
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: theme.colors.divider),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+        child: Text(
+          label.toUpperCase(),
+          style: theme.typography.sectionHeader.copyWith(
+            color: theme.colors.sectionHeader,
           ),
         ),
-      );
+      ),
+    ),
+  );
 }

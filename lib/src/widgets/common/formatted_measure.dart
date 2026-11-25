@@ -77,8 +77,9 @@ FormattedMeasure durationToFormattedMeasure(
 ) {
   if (duration.inHours > 0) {
     final remainingHours = duration.inHours;
-    final remainingMinutes =
-        (duration.inMinutes - duration.inHours * 60).toString().padLeft(2, '0');
+    final remainingMinutes = (duration.inMinutes - duration.inHours * 60)
+        .toString()
+        .padLeft(2, '0');
     return FormattedMeasure(
       '$remainingHours:$remainingMinutes',
       localizations.dgis_h__hours,

@@ -472,8 +472,9 @@ class _PorchesInfoWidgetState extends State<_PorchesInfoWidget> {
     final canExpand = count > 1;
 
     return GestureDetector(
-      onTap:
-          canExpand ? () => setState(() => _isExpanded = !_isExpanded) : null,
+      onTap: canExpand
+          ? () => setState(() => _isExpanded = !_isExpanded)
+          : null,
       behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
@@ -809,8 +810,9 @@ class _ContactsInfoWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
-          crossAxisAlignment:
-              hasComment ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          crossAxisAlignment: hasComment
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.only(top: hasComment ? 10 : 0),

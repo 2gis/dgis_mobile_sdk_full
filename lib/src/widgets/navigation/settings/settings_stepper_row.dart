@@ -125,38 +125,38 @@ class _Stepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colors.segmentedTrack,
-          borderRadius: const BorderRadius.all(_stepperRadius),
-        ),
-        child: SizedBox(
-          width: _stepperWidth,
-          height: _stepperHeight,
-          child: Row(
-            children: [
-              Expanded(
-                child: _StepperButton(
-                  isIncrement: false,
-                  onPressed: onDecrement,
-                  theme: theme,
-                ),
-              ),
-              SizedBox(
-                width: _dividerWidth,
-                height: _dividerHeight,
-                child: ColoredBox(color: theme.colors.divider),
-              ),
-              Expanded(
-                child: _StepperButton(
-                  isIncrement: true,
-                  onPressed: onIncrement,
-                  theme: theme,
-                ),
-              ),
-            ],
+    decoration: BoxDecoration(
+      color: theme.colors.segmentedTrack,
+      borderRadius: const BorderRadius.all(_stepperRadius),
+    ),
+    child: SizedBox(
+      width: _stepperWidth,
+      height: _stepperHeight,
+      child: Row(
+        children: [
+          Expanded(
+            child: _StepperButton(
+              isIncrement: false,
+              onPressed: onDecrement,
+              theme: theme,
+            ),
           ),
-        ),
-      );
+          SizedBox(
+            width: _dividerWidth,
+            height: _dividerHeight,
+            child: ColoredBox(color: theme.colors.divider),
+          ),
+          Expanded(
+            child: _StepperButton(
+              isIncrement: true,
+              onPressed: onIncrement,
+              theme: theme,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _StepperButton extends StatefulWidget {

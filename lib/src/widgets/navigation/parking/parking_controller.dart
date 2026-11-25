@@ -56,12 +56,15 @@ class ParkingController {
   }
 
   void _init() {
-    _parkingControlModel =
-        withBssEventsSourceFromSdk(() => sdk.ParkingControlModel(map));
-    _model =
-        ValueNotifier(ParkingModel(isActive: _parkingControlModel.isEnabled));
-    _stateSubscription =
-        _parkingControlModel.isEnabledChannel.listen((newState) {
+    _parkingControlModel = withBssEventsSourceFromSdk(
+      () => sdk.ParkingControlModel(map),
+    );
+    _model = ValueNotifier(
+      ParkingModel(isActive: _parkingControlModel.isEnabled),
+    );
+    _stateSubscription = _parkingControlModel.isEnabledChannel.listen((
+      newState,
+    ) {
       _model.value = _model.value.copyWith(isActive: newState);
     });
   }

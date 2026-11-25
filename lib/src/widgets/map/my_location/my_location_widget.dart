@@ -28,35 +28,39 @@ class MyLocationWidget
     MyLocationWidgetColorScheme? light,
     MyLocationWidgetColorScheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   /// Default color scheme for light mode.
   static const MyLocationWidgetColorScheme defaultLightColorScheme =
       MyLocationWidgetColorScheme(
-    surfaceColor: Color(0xffffffff),
-    iconInactiveColor: Color(0xff000000),
-    iconDisabledColor: Color(0xffcccccc),
-    iconActiveColor: Color(0xff0059d6),
-  );
+        surfaceColor: Color(0xffffffff),
+        iconInactiveColor: Color(0xff000000),
+        iconDisabledColor: Color(0xffcccccc),
+        iconActiveColor: Color(0xff0059d6),
+      );
 
   /// Default color scheme for dark mode.
   static const MyLocationWidgetColorScheme defaultDarkColorScheme =
       MyLocationWidgetColorScheme(
-    surfaceColor: Color(0xff141414),
-    iconInactiveColor: Color(0xffffffff),
-    iconDisabledColor: Color(0xff808080),
-    iconActiveColor: Color(0xff3588fd),
-  );
+        surfaceColor: Color(0xff141414),
+        iconInactiveColor: Color(0xffffffff),
+        iconDisabledColor: Color(0xff808080),
+        iconActiveColor: Color(0xff3588fd),
+      );
 
   @override
   ThemedMapControllingWidgetState<MyLocationWidget, MyLocationWidgetColorScheme>
-      createState() => _MyLocationWidgetState();
+  createState() => _MyLocationWidgetState();
 }
 
-class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
-    MyLocationWidget, MyLocationWidgetColorScheme> {
+class _MyLocationWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          MyLocationWidget,
+          MyLocationWidgetColorScheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 
@@ -148,8 +152,9 @@ class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
         iconColor = colorScheme.iconActiveColor;
     }
 
-    final size =
-        isFollowDirection ? _innerFrameSizeFollowDirection : _innerFrameSize;
+    final size = isFollowDirection
+        ? _innerFrameSizeFollowDirection
+        : _innerFrameSize;
 
     final colorFilter = isFollowDirection
         ? null

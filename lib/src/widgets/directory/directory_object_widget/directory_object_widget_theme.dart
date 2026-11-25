@@ -568,7 +568,8 @@ class DirectoryObjectWidgetTheme extends MapWidgetColorScheme {
           shortAddressTextStyle ?? this.shortAddressTextStyle,
       fullAddressMainLineTextStyle:
           fullAddressMainLineTextStyle ?? this.fullAddressMainLineTextStyle,
-      fullAddressSecondaryLineTextStyle: fullAddressSecondaryLineTextStyle ??
+      fullAddressSecondaryLineTextStyle:
+          fullAddressSecondaryLineTextStyle ??
           this.fullAddressSecondaryLineTextStyle,
       additionalInfoTextStyle:
           additionalInfoTextStyle ?? this.additionalInfoTextStyle,
@@ -601,7 +602,8 @@ class DirectoryObjectWidgetTheme extends MapWidgetColorScheme {
       contactExpandButtonTextStyle:
           contactExpandButtonTextStyle ?? this.contactExpandButtonTextStyle,
       contactIconColor: contactIconColor ?? this.contactIconColor,
-      socialMediaButtonBackgroundColor: socialMediaButtonBackgroundColor ??
+      socialMediaButtonBackgroundColor:
+          socialMediaButtonBackgroundColor ??
           this.socialMediaButtonBackgroundColor,
       cardCornerRadius: cardCornerRadius ?? this.cardCornerRadius,
     );

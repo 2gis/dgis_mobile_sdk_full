@@ -88,8 +88,9 @@ class SpeedLimitController {
       ),
     );
 
-    _locationSubscription =
-        navigationManager.uiModel.locationChannel.listen((location) {
+    _locationSubscription = navigationManager.uiModel.locationChannel.listen((
+      location,
+    ) {
       _model.value = _model.value.copyWith(
         location: () => location,
         currentSpeed: () =>
@@ -99,43 +100,45 @@ class SpeedLimitController {
     _routeSubscription = navigationManager.uiModel.routeChannel.listen((route) {
       _speedLimits = route.route.maxSpeedLimits;
     });
-    _routePositionSubscription =
-        navigationManager.uiModel.routePositionChannel.listen((position) {
-      if (position == null || _speedLimits == null) {
-        return;
-      }
+    _routePositionSubscription = navigationManager.uiModel.routePositionChannel
+        .listen((position) {
+          if (position == null || _speedLimits == null) {
+            return;
+          }
 
-      final entry = _speedLimits!.entry(position);
-      _model.value = _model.value.copyWith(
-        speedLimit: () => _metersPerSecondToKilometerPerHour(entry?.value),
-      );
-    });
+          final entry = _speedLimits!.entry(position);
+          _model.value = _model.value.copyWith(
+            speedLimit: () => _metersPerSecondToKilometerPerHour(entry?.value),
+          );
+        });
     _exceedingMaxSpeedLimitSubscription = navigationManager
-        .uiModel.exceedingMaxSpeedLimitChannel
+        .uiModel
+        .exceedingMaxSpeedLimitChannel
         .listen((exceeding) {
-      _model.value = _model.value.copyWith(
-        exceeding: () => exceeding,
-      );
-    });
-    _cameraProgressSubscription =
-        _cameraNotifier.cameraProgressChannel.listen((cameraProgressInfo) {
+          _model.value = _model.value.copyWith(
+            exceeding: () => exceeding,
+          );
+        });
+    _cameraProgressSubscription = _cameraNotifier.cameraProgressChannel.listen((
+      cameraProgressInfo,
+    ) {
       _model.value = _model.value.copyWith(
         cameraProgressInfo: () => cameraProgressInfo,
       );
     });
 
-    _navigationStateSubscription =
-        navigationManager.uiModel.stateChannel.listen((state) {
-      final uiModel = navigationManager.uiModel;
-      _model.value = _model.value.copyWith(
-        currentSpeed: () => _metersPerSecondToKilometerPerHour(
-          uiModel.location?.groundSpeed?.value,
-        ),
-        cameraProgressInfo: () => _cameraNotifier.cameraProgress,
-        location: () => uiModel.location,
-        exceeding: () => uiModel.exceedingMaxSpeedLimit,
-      );
-    });
+    _navigationStateSubscription = navigationManager.uiModel.stateChannel
+        .listen((state) {
+          final uiModel = navigationManager.uiModel;
+          _model.value = _model.value.copyWith(
+            currentSpeed: () => _metersPerSecondToKilometerPerHour(
+              uiModel.location?.groundSpeed?.value,
+            ),
+            cameraProgressInfo: () => _cameraNotifier.cameraProgress,
+            location: () => uiModel.location,
+            exceeding: () => uiModel.exceedingMaxSpeedLimit,
+          );
+        });
   }
 
   double? _metersPerSecondToKilometerPerHour(double? mps) {

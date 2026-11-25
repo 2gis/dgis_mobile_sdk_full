@@ -120,8 +120,9 @@ class _VoicesLayoutState extends State<VoicesLayout> {
     );
 
     return ValueListenableBuilder<String?>(
-      valueListenable:
-          widget.repository.observe(NavigationSettingKeys.voiceSelected),
+      valueListenable: widget.repository.observe(
+        NavigationSettingKeys.voiceSelected,
+      ),
       builder: (context, selectedId, _) => _buildContent(
         theme: theme,
         localizations: localizations,
@@ -230,8 +231,8 @@ class _VoicesLayoutState extends State<VoicesLayout> {
       onTap: row.downloading
           ? () {}
           : row.needsUpdate
-              ? () => _install(row)
-              : () => _select(row),
+          ? () => _install(row)
+          : () => _select(row),
       onPlay: blocked ? null : () => _play(row),
       playing: playing,
       needsUpdate: row.needsUpdate,
@@ -239,16 +240,16 @@ class _VoicesLayoutState extends State<VoicesLayout> {
       onDelete: row.downloading
           ? null
           : row.needsUpdate
-              ? () => _install(row)
-              : deletable
-                  ? () => _uninstall(
-                        row,
-                        language: language,
-                        allRows: allRows,
-                        downloadedCount: downloadedCount,
-                        effectiveSelectedId: effectiveSelectedId,
-                      )
-                  : null,
+          ? () => _install(row)
+          : deletable
+          ? () => _uninstall(
+              row,
+              language: language,
+              allRows: allRows,
+              downloadedCount: downloadedCount,
+              effectiveSelectedId: effectiveSelectedId,
+            )
+          : null,
       theme: theme,
     );
   }
@@ -325,8 +326,9 @@ class _VoicesLayoutState extends State<VoicesLayout> {
       final preferredRows = language == null
           ? allRows
           : allRows.where((candidate) => candidate.language == language);
-      final candidates =
-          language == null ? allRows : [...preferredRows, ...allRows];
+      final candidates = language == null
+          ? allRows
+          : [...preferredRows, ...allRows];
       final replacement = candidates.firstWhereOrNull(
         (candidate) =>
             candidate.downloaded &&
@@ -598,8 +600,9 @@ String? _resolveVoiceLanguage({
   final languages = _voiceLanguagesOf(rows);
   if (explicit != null && languages.contains(explicit)) return explicit;
   final defaultId = defaultVoice?.id;
-  final defaultLanguage =
-      rows.firstWhereOrNull((row) => row.id == defaultId)?.language;
+  final defaultLanguage = rows
+      .firstWhereOrNull((row) => row.id == defaultId)
+      ?.language;
   if (defaultLanguage != null) return defaultLanguage;
   final localeLanguage = locale?.languageCode;
   if (localeLanguage != null && languages.contains(localeLanguage)) {
@@ -610,20 +613,20 @@ String? _resolveVoiceLanguage({
 
 /// Endonym for an ISO 639-1 language code.
 String _voiceLanguageLabel(String language) => switch (language.toLowerCase()) {
-      'ar' => 'العربية',
-      'hy' => 'Հայերեն',
-      'az' => 'Azərbaycanca',
-      'en' => 'English',
-      'ka' => 'ქართული',
-      'kk' => 'Қазақ',
-      'ky' => 'Кыргызча',
-      'ru' => 'Русский',
-      'tg' => 'Тоҷикӣ',
-      'uk' => 'Українська',
-      'uz' => 'O‘zbekcha',
-      'zh' => '中文',
-      _ => language,
-    };
+  'ar' => 'العربية',
+  'hy' => 'Հայերեն',
+  'az' => 'Azərbaycanca',
+  'en' => 'English',
+  'ka' => 'ქართული',
+  'kk' => 'Қазақ',
+  'ky' => 'Кыргызча',
+  'ru' => 'Русский',
+  'tg' => 'Тоҷикӣ',
+  'uk' => 'Українська',
+  'uz' => 'O‘zbekcha',
+  'zh' => '中文',
+  _ => language,
+};
 
 class _VoicesSection extends StatelessWidget {
   final String label;
@@ -638,31 +641,31 @@ class _VoicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Semantics(
-            header: true,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-              child: Text(
-                label.toUpperCase(),
-                style: theme.typography.sectionHeader.copyWith(
-                  color: theme.colors.sectionHeader,
-                ),
-              ),
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Semantics(
+        header: true,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+          child: Text(
+            label.toUpperCase(),
+            style: theme.typography.sectionHeader.copyWith(
+              color: theme.colors.sectionHeader,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-              child: NavigationSettingsSection(
-                theme: theme,
-                bottomDivider: false,
-                children: children,
-              ),
-            ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          child: NavigationSettingsSection(
+            theme: theme,
+            bottomDivider: false,
+            children: children,
           ),
-        ],
-      );
+        ),
+      ),
+    ],
+  );
 }

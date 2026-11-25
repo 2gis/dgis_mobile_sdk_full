@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,16 +29,22 @@ class NavigationSettingsRepository {
   final _sessionValues = <String, Object?>{};
   bool _disposed = false;
 
+  late final _settingsController =
+      StreamController<({SettingsKey<dynamic> key, dynamic value})>.broadcast();
+
   NavigationSettingsRepository._(this._storage);
 
   @visibleForTesting
   NavigationSettingsRepository.forTesting(SettingsStorage storage)
-      : _storage = storage;
+    : _storage = storage;
 
   static Future<NavigationSettingsRepository> defaults() async {
     final prefs = await SharedPreferences.getInstance();
     return NavigationSettingsRepository._(SharedPreferencesStorage(prefs));
   }
+
+  Stream<({SettingsKey<dynamic> key, dynamic value})> get settingsStream =>
+      _settingsController.stream;
 
   T get<T>(SettingsKey<T> key) {
     _checkNotDisposed();
@@ -49,6 +57,8 @@ class NavigationSettingsRepository {
   /// to storage and may be ignored if durability does not matter. A value
   /// that is not saved because its remember flag is off completes with true.
   Future<bool> set<T>(SettingsKey<T> key, T value) {
+    _settingsController.add((key: key, value: value));
+
     _checkNotDisposed();
     final Future<bool> write;
     if (_isSessionOnly(key)) {
@@ -73,6 +83,8 @@ class NavigationSettingsRepository {
       return;
     }
     _disposed = true;
+
+    _settingsController.close();
     for (final notifier in _notifiers.values) {
       notifier.dispose();
     }
@@ -91,8 +103,8 @@ class NavigationSettingsRepository {
   }
 
   bool _isSessionOnly(SettingsKey<Object?> key) => _rememberScoped.any(
-        (scoped) => scoped.key == key && !scoped.remember.readFrom(_storage),
-      );
+    (scoped) => scoped.key == key && !scoped.remember.readFrom(_storage),
+  );
 
   bool _isRememberFlag(SettingsKey<Object?> key) =>
       _rememberScoped.any((scoped) => scoped.remember == key);

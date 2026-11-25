@@ -108,10 +108,12 @@ class RouteSettingsLayout extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (visibilityConfig
-                  .isVisible(SectionVisibilityConfig.sectionVoices) ||
-              visibilityConfig
-                  .isVisible(SectionVisibilityConfig.sectionSounds)) ...[
+          if (visibilityConfig.isVisible(
+                SectionVisibilityConfig.sectionVoices,
+              ) ||
+              visibilityConfig.isVisible(
+                SectionVisibilityConfig.sectionSounds,
+              )) ...[
             NavigationSettingsSectionHeader(
               label: localizations.dgis_settings_section_sound_and_voice,
               theme: resolvedTheme,
@@ -119,8 +121,9 @@ class RouteSettingsLayout extends StatelessWidget {
             NavigationSettingsSection(
               theme: resolvedTheme,
               children: [
-                if (visibilityConfig
-                    .isVisible(SectionVisibilityConfig.sectionVoices))
+                if (visibilityConfig.isVisible(
+                  SectionVisibilityConfig.sectionVoices,
+                ))
                   NavigationSettingsLink(
                     label: localizations.dgis_settings_voices,
                     onTap: onNavigateToVoices,
@@ -168,7 +171,7 @@ class RouteSettingsLayout extends StatelessWidget {
               ],
             ),
           ],
-          if (primary != null) primary,
+          ?primary,
           if (visibilityConfig.isVisible(
             SectionVisibilityConfig.sectionCalloutVisualization,
           )) ...[
@@ -184,36 +187,37 @@ class RouteSettingsLayout extends StatelessWidget {
                   key: NavigationSettingKeys.calloutVisualizationMode,
                   builder: (context, value, child) =>
                       NavigationSettingsRadioGroup<
-                          sdk.CalloutVisualizationMode>(
-                    options: [
-                      NavigationSettingsRadioOption(
-                        value: sdk.CalloutVisualizationMode.always,
-                        label: localizations.dgis_settings_callout_always,
-                        description:
-                            localizations.dgis_settings_callout_always_desc,
+                        sdk.CalloutVisualizationMode
+                      >(
+                        options: [
+                          NavigationSettingsRadioOption(
+                            value: sdk.CalloutVisualizationMode.always,
+                            label: localizations.dgis_settings_callout_always,
+                            description:
+                                localizations.dgis_settings_callout_always_desc,
+                          ),
+                          NavigationSettingsRadioOption(
+                            value: sdk.CalloutVisualizationMode.multipleRoutes,
+                            label: localizations
+                                .dgis_settings_callout_multiple_routes,
+                            description: localizations
+                                .dgis_settings_callout_multiple_routes_desc,
+                          ),
+                          NavigationSettingsRadioOption(
+                            value: sdk.CalloutVisualizationMode.none,
+                            label: localizations.dgis_settings_callout_none,
+                            description:
+                                localizations.dgis_settings_callout_none_desc,
+                          ),
+                        ],
+                        selected: value,
+                        onChanged: (value) => setNavigationSetting(
+                          repository,
+                          NavigationSettingKeys.calloutVisualizationMode,
+                          value,
+                        ),
+                        theme: resolvedTheme,
                       ),
-                      NavigationSettingsRadioOption(
-                        value: sdk.CalloutVisualizationMode.multipleRoutes,
-                        label:
-                            localizations.dgis_settings_callout_multiple_routes,
-                        description: localizations
-                            .dgis_settings_callout_multiple_routes_desc,
-                      ),
-                      NavigationSettingsRadioOption(
-                        value: sdk.CalloutVisualizationMode.none,
-                        label: localizations.dgis_settings_callout_none,
-                        description:
-                            localizations.dgis_settings_callout_none_desc,
-                      ),
-                    ],
-                    selected: value,
-                    onChanged: (value) => setNavigationSetting(
-                      repository,
-                      NavigationSettingKeys.calloutVisualizationMode,
-                      value,
-                    ),
-                    theme: resolvedTheme,
-                  ),
                 ),
               ],
             ),
@@ -264,132 +268,130 @@ class RouteSettingsLayout extends StatelessWidget {
   Widget _mapEventsSection(
     DgisLocalizations localizations,
     NavigationSettingsTheme theme,
-  ) =>
-      observeNavigationSetting(
-        repository: repository,
-        key: NavigationSettingKeys.mapEventsEnabled,
-        builder: (context, value, child) => NavigationSettingsMasterToggle(
-          label: localizations.dgis_settings_map_events,
-          value: value,
-          onChanged: (value) => setNavigationSetting(
-            repository,
-            NavigationSettingKeys.mapEventsEnabled,
-            value,
-          ),
+  ) => observeNavigationSetting(
+    repository: repository,
+    key: NavigationSettingKeys.mapEventsEnabled,
+    builder: (context, value, child) => NavigationSettingsMasterToggle(
+      label: localizations.dgis_settings_map_events,
+      value: value,
+      onChanged: (value) => setNavigationSetting(
+        repository,
+        NavigationSettingKeys.mapEventsEnabled,
+        value,
+      ),
+      theme: theme,
+      builder: (context, enabled) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _checkmarkGroup(
+          enabled: enabled,
           theme: theme,
-          builder: (context, enabled) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: _checkmarkGroup(
-              enabled: enabled,
-              theme: theme,
-              settings: [
-                (
-                  NavigationSettingKeys.mapEventsAccidents,
-                  localizations.dgis_settings_map_events_accidents,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsRoadWorks,
-                  localizations.dgis_settings_map_events_road_works,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsCameras,
-                  localizations.dgis_settings_map_events_cameras,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsComments,
-                  localizations.dgis_settings_map_events_comments,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsRoadRestrictions,
-                  localizations.dgis_settings_map_events_road_restrictions,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsOtherEvents,
-                  localizations.dgis_settings_map_events_other,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsBubbles,
-                  localizations.dgis_settings_map_events_bubbles,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsLanesBubbles,
-                  localizations.dgis_settings_map_events_lanes_bubbles,
-                ),
-              ],
+          settings: [
+            (
+              NavigationSettingKeys.mapEventsAccidents,
+              localizations.dgis_settings_map_events_accidents,
             ),
-          ),
+            (
+              NavigationSettingKeys.mapEventsRoadWorks,
+              localizations.dgis_settings_map_events_road_works,
+            ),
+            (
+              NavigationSettingKeys.mapEventsCameras,
+              localizations.dgis_settings_map_events_cameras,
+            ),
+            (
+              NavigationSettingKeys.mapEventsComments,
+              localizations.dgis_settings_map_events_comments,
+            ),
+            (
+              NavigationSettingKeys.mapEventsRoadRestrictions,
+              localizations.dgis_settings_map_events_road_restrictions,
+            ),
+            (
+              NavigationSettingKeys.mapEventsOtherEvents,
+              localizations.dgis_settings_map_events_other,
+            ),
+            (
+              NavigationSettingKeys.mapEventsBubbles,
+              localizations.dgis_settings_map_events_bubbles,
+            ),
+            (
+              NavigationSettingKeys.mapEventsLanesBubbles,
+              localizations.dgis_settings_map_events_lanes_bubbles,
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _passedRouteSection(
     DgisLocalizations localizations,
     NavigationSettingsTheme theme,
-  ) =>
-      observeNavigationSetting(
-        repository: repository,
-        key: NavigationSettingKeys.mapEventsPermanentEnabled,
-        builder: (context, value, child) => NavigationSettingsMasterToggle(
-          label: localizations.dgis_settings_passed_route,
-          value: value,
-          onChanged: (value) => setNavigationSetting(
-            repository,
-            NavigationSettingKeys.mapEventsPermanentEnabled,
-            value,
-          ),
+  ) => observeNavigationSetting(
+    repository: repository,
+    key: NavigationSettingKeys.mapEventsPermanentEnabled,
+    builder: (context, value, child) => NavigationSettingsMasterToggle(
+      label: localizations.dgis_settings_passed_route,
+      value: value,
+      onChanged: (value) => setNavigationSetting(
+        repository,
+        NavigationSettingKeys.mapEventsPermanentEnabled,
+        value,
+      ),
+      theme: theme,
+      builder: (context, enabled) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _checkmarkGroup(
+          enabled: enabled,
           theme: theme,
-          builder: (context, enabled) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: _checkmarkGroup(
-              enabled: enabled,
-              theme: theme,
-              settings: [
-                (
-                  NavigationSettingKeys.mapEventsPermanentStartPoint,
-                  localizations.dgis_settings_passed_route_start_point,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentFinishPoint,
-                  localizations.dgis_settings_passed_route_finish_point,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentIntermediatePoints,
-                  localizations.dgis_settings_passed_route_intermediate_points,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentCameras,
-                  localizations.dgis_settings_passed_route_cameras,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentAccidents,
-                  localizations.dgis_settings_passed_route_accidents,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentRoadWorks,
-                  localizations.dgis_settings_passed_route_road_works,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentComments,
-                  localizations.dgis_settings_passed_route_comments,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentRoadRestrictions,
-                  localizations.dgis_settings_passed_route_road_restrictions,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentOtherEvents,
-                  localizations.dgis_settings_passed_route_other,
-                ),
-                (
-                  NavigationSettingKeys.mapEventsPermanentTollRoads,
-                  localizations.dgis_settings_passed_route_toll_roads,
-                ),
-              ],
+          settings: [
+            (
+              NavigationSettingKeys.mapEventsPermanentStartPoint,
+              localizations.dgis_settings_passed_route_start_point,
             ),
-          ),
+            (
+              NavigationSettingKeys.mapEventsPermanentFinishPoint,
+              localizations.dgis_settings_passed_route_finish_point,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentIntermediatePoints,
+              localizations.dgis_settings_passed_route_intermediate_points,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentCameras,
+              localizations.dgis_settings_passed_route_cameras,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentAccidents,
+              localizations.dgis_settings_passed_route_accidents,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentRoadWorks,
+              localizations.dgis_settings_passed_route_road_works,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentComments,
+              localizations.dgis_settings_passed_route_comments,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentRoadRestrictions,
+              localizations.dgis_settings_passed_route_road_restrictions,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentOtherEvents,
+              localizations.dgis_settings_passed_route_other,
+            ),
+            (
+              NavigationSettingKeys.mapEventsPermanentTollRoads,
+              localizations.dgis_settings_passed_route_toll_roads,
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   List<Widget> _checkmarkGroup({
     required bool enabled,
@@ -423,62 +425,60 @@ class RouteSettingsLayout extends StatelessWidget {
     String section,
     DgisLocalizations localizations,
     NavigationSettingsTheme theme,
-  ) =>
-      switch (section) {
-        SectionVisibilityConfig.sectionCarRoute => _primarySection(
-            localizations.dgis_settings_section_car,
-            CarRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionPedestrian => _primarySection(
-            localizations.dgis_settings_section_pedestrian,
-            PedestrianRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionBicycle => _primarySection(
-            localizations.dgis_settings_section_bicycle,
-            BicycleRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionScooter => _primarySection(
-            localizations.dgis_settings_section_scooter,
-            ScooterRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionMotorcycle => _primarySection(
-            localizations.dgis_settings_section_motorcycle,
-            MotorcycleRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionPublicTransport => _primarySection(
-            localizations.dgis_settings_section_public_transport,
-            PublicTransportRouteSettingsLayout(
-              repository: repository,
-              theme: theme,
-            ),
-            theme,
-          ),
-        SectionVisibilityConfig.sectionTruck => _primarySection(
-            localizations.dgis_settings_section_truck,
-            TruckRouteSettingsLayout(repository: repository, theme: theme),
-            theme,
-          ),
-        _ => null,
-      };
+  ) => switch (section) {
+    SectionVisibilityConfig.sectionCarRoute => _primarySection(
+      localizations.dgis_settings_section_car,
+      CarRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionPedestrian => _primarySection(
+      localizations.dgis_settings_section_pedestrian,
+      PedestrianRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionBicycle => _primarySection(
+      localizations.dgis_settings_section_bicycle,
+      BicycleRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionScooter => _primarySection(
+      localizations.dgis_settings_section_scooter,
+      ScooterRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionMotorcycle => _primarySection(
+      localizations.dgis_settings_section_motorcycle,
+      MotorcycleRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionPublicTransport => _primarySection(
+      localizations.dgis_settings_section_public_transport,
+      PublicTransportRouteSettingsLayout(
+        repository: repository,
+        theme: theme,
+      ),
+      theme,
+    ),
+    SectionVisibilityConfig.sectionTruck => _primarySection(
+      localizations.dgis_settings_section_truck,
+      TruckRouteSettingsLayout(repository: repository, theme: theme),
+      theme,
+    ),
+    _ => null,
+  };
 
   Widget _primarySection(
     String label,
     Widget content,
     NavigationSettingsTheme theme,
-  ) =>
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          NavigationSettingsSectionHeader(label: label, theme: theme),
-          content,
-        ],
-      );
+  ) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      NavigationSettingsSectionHeader(label: label, theme: theme),
+      content,
+    ],
+  );
 
   List<Widget> _otherNavigators(
     DgisLocalizations localizations,

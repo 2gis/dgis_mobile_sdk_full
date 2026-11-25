@@ -19,7 +19,7 @@ class SpeedLimitWidgetTheme extends MapWidgetColorScheme {
 
   /// Widget color scheme for default light mode.
   static const defaultLight = SpeedLimitWidgetTheme(
-    size: 92,
+    size: 96,
     speedometerTheme: SpeedometerTheme.defaultLight,
     speedLimitTheme: SpeedLimitTheme.defaultLight,
     cameraProgressTheme: CameraProgressTheme.defaultLight,
@@ -27,7 +27,7 @@ class SpeedLimitWidgetTheme extends MapWidgetColorScheme {
 
   /// Widget color scheme for default dark mode.
   static const defaultDark = SpeedLimitWidgetTheme(
-    size: 92,
+    size: 96,
     speedometerTheme: SpeedometerTheme.defaultDark,
     speedLimitTheme: SpeedLimitTheme.defaultDark,
     cameraProgressTheme: CameraProgressTheme.defaultDark,

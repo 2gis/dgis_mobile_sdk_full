@@ -22,8 +22,9 @@ class MapWidgetOptions {
   }) {
     return MapWidgetOptions(
       devicePPI: devicePPI != null ? devicePPI.value : this.devicePPI,
-      deviceDensity:
-          deviceDensity != null ? deviceDensity.value : this.deviceDensity,
+      deviceDensity: deviceDensity != null
+          ? deviceDensity.value
+          : this.deviceDensity,
     );
   }
 }

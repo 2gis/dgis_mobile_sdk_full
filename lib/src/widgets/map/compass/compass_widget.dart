@@ -21,29 +21,33 @@ class CompassWidget
     CompassWidgetColorScheme? light,
     CompassWidgetColorScheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   /// Default color scheme of the UI element for light mode.
   static const CompassWidgetColorScheme defaultLightColorScheme =
       CompassWidgetColorScheme(
-    surfaceColor: Color(0x80FFFFFF),
-  );
+        surfaceColor: Color(0x80FFFFFF),
+      );
 
   /// Default color scheme of the UI element for dark mode.
   static const CompassWidgetColorScheme defaultDarkColorScheme =
       CompassWidgetColorScheme(
-    surfaceColor: Color(0x80141414),
-  );
+        surfaceColor: Color(0x80141414),
+      );
 
   @override
   ThemedMapControllingWidgetState<CompassWidget, CompassWidgetColorScheme>
-      createState() => _CompassWidgetState();
+  createState() => _CompassWidgetState();
 }
 
-class _CompassWidgetState extends ThemedMapControllingWidgetState<CompassWidget,
-    CompassWidgetColorScheme> {
+class _CompassWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          CompassWidget,
+          CompassWidgetColorScheme
+        > {
   late sdk.CompassControlModel model;
 
   StatefulChannel<sdk.Bearing>? bearingSubscription;

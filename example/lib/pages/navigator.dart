@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
 import 'package:flutter/material.dart';
@@ -26,11 +25,11 @@ class _NavigatorPageState extends State<NavigatorPage> {
       createMapWidgetController(sdkContext);
   late final sdk.MapWidgetController miniMapWidgetController =
       createMapWidgetController(
-    sdkContext,
-    controllerOptions: sdk.MapControllerOptions(
-      styleFile: miniMapStyleFile,
-    ),
-  );
+        sdkContext,
+        controllerOptions: sdk.MapControllerOptions(
+          styleFile: miniMapStyleFile,
+        ),
+      );
 
   late sdk.NavigationManager navigationManager;
   late sdk.TrafficRouter trafficRouter;
@@ -94,10 +93,10 @@ class _NavigatorPageState extends State<NavigatorPage> {
   void _updateSimulationSpeed() {
     navigationManager.simulationSettings.speedMode =
         sdk.SimulationSpeedMode.speed(
-      sdk.SimulationConstantSpeed(
-        _kilometersPerHourToMetersPerSecond(_currentSpeed),
-      ),
-    );
+          sdk.SimulationConstantSpeed(
+            _kilometersPerHourToMetersPerSecond(_currentSpeed),
+          ),
+        );
 
     if (_isSpeedIncreasing) {
       _currentSpeed += _simulationCarSpeedStep;
@@ -156,10 +155,14 @@ class _NavigatorPageState extends State<NavigatorPage> {
       // TODO: перенести в настройки, когда они появятся.
       navigationManager.alternativeRoutesProviderSettings.routeSearchDelay =
           const Duration(seconds: 5);
-      navigationManager.alternativeRoutesProviderSettings
-          .betterRouteTimeCostThreshold = Duration.zero;
-      navigationManager.alternativeRoutesProviderSettings
-          .betterRouteLengthThreshold = const sdk.RouteDistance();
+      navigationManager
+              .alternativeRoutesProviderSettings
+              .betterRouteTimeCostThreshold =
+          Duration.zero;
+      navigationManager
+              .alternativeRoutesProviderSettings
+              .betterRouteLengthThreshold =
+          const sdk.RouteDistance();
 
       navigationManager.startSimulation(
         sdk.RouteBuildOptions(
@@ -193,11 +196,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
         sdkContext: sdkContext,
         controller: mapWidgetController,
         child: Padding(
-          padding: EdgeInsets.only(
-            right: 8,
-            left: 8,
-            bottom: Platform.isIOS ? 0 : 8,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: sdk.NavigationLayoutWidget(
             navigationManager: navigationManager,
             settingsOptions: sdk.NavigationSettingsOptions(
@@ -205,13 +204,13 @@ class _NavigatorPageState extends State<NavigatorPage> {
             ),
             dashboardWidgetBuilder: (controller, onHeaderChangeSize) =>
                 sdk.DashboardWidget(
-              controller: controller,
-              onHeaderChangeSize: onHeaderChangeSize,
-              onFinishClicked: () {
-                Navigator.pop(context);
-                controller.stopNavigation();
-              },
-            ),
+                  controller: controller,
+                  onHeaderChangeSize: onHeaderChangeSize,
+                  onFinishClicked: () {
+                    Navigator.pop(context);
+                    controller.stopNavigation();
+                  },
+                ),
             finishRouteWidgetBuilder: (controller) => sdk.FinishRouteWidget(
               controller: controller,
               onFinishClicked: () {
@@ -232,13 +231,13 @@ class _NavigatorPageState extends State<NavigatorPage> {
                 sdk.BetterRoutePromptWidget.defaultBuilder,
             navigationMiniMapWidgetBuilder:
                 (miniMapController, dashboardController) {
-              return sdk.NavigationMiniMapWidget(
-                sdkContext: sdkContext,
-                controller: miniMapWidgetController,
-                miniMapController: miniMapController,
-                dashboardController: dashboardController,
-              );
-            },
+                  return sdk.NavigationMiniMapWidget(
+                    sdkContext: sdkContext,
+                    controller: miniMapWidgetController,
+                    miniMapController: miniMapController,
+                    dashboardController: dashboardController,
+                  );
+                },
           ),
         ),
       ),

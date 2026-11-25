@@ -69,8 +69,9 @@ class _DefaultTransportModeTab extends StatelessWidget {
                       ? theme.activeBackgroundColor
                       : theme.inactiveBackgroundColor,
                   border: Border.all(
-                    color:
-                        isActive ? theme.activeBorderColor : Colors.transparent,
+                    color: isActive
+                        ? theme.activeBorderColor
+                        : Colors.transparent,
                     width: theme.activeBorderWidth,
                   ),
                   borderRadius: BorderRadius.circular(theme.borderRadius),

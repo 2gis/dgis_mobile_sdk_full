@@ -24,13 +24,13 @@ class TrafficWidget
     TrafficWidgetColorScheme? light,
     TrafficWidgetColorScheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   /// Default color scheme of the UI element for light mode.
-  static const TrafficWidgetColorScheme defaultLightColorScheme =
-      TrafficWidgetColorScheme(
+  static const TrafficWidgetColorScheme
+  defaultLightColorScheme = TrafficWidgetColorScheme(
     backgroundColor: Color(0xFFFFFFFF),
     pressedBackgroundColor: Color(0xFFEEEEEE),
     iconInactiveColor: Color(0xFF141414),
@@ -62,8 +62,8 @@ class TrafficWidget
   );
 
   /// Default color scheme of the UI element for dark mode.
-  static const TrafficWidgetColorScheme defaultDarkColorScheme =
-      TrafficWidgetColorScheme(
+  static const TrafficWidgetColorScheme
+  defaultDarkColorScheme = TrafficWidgetColorScheme(
     backgroundColor: Color(0xFF141414),
     pressedBackgroundColor: Color(0xFF3C3C3C),
     iconInactiveColor: Color(0xFFFFFFFF),
@@ -96,11 +96,15 @@ class TrafficWidget
 
   @override
   ThemedMapControllingWidgetState<TrafficWidget, TrafficWidgetColorScheme>
-      createState() => _TrafficWidgetState();
+  createState() => _TrafficWidgetState();
 }
 
-class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
-    TrafficWidgetColorScheme> {
+class _TrafficWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          TrafficWidget,
+          TrafficWidgetColorScheme
+        > {
   final ValueNotifier<sdk.TrafficControlState?> state = ValueNotifier(null);
 
   StreamSubscription<sdk.TrafficControlState>? stateSubscription;
@@ -126,8 +130,9 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
   Widget build(BuildContext context) {
     return ValueListenableBuilder<sdk.TrafficControlState?>(
       valueListenable: state,
-      builder: (_, currentState, __) {
-        final isEnabled = currentState != null &&
+      builder: (_, currentState, _) {
+        final isEnabled =
+            currentState != null &&
             currentState.status != sdk.TrafficControlStatus.disabled &&
             currentState.status != sdk.TrafficControlStatus.hidden;
 
@@ -135,7 +140,8 @@ class _TrafficWidgetState extends ThemedMapControllingWidgetState<TrafficWidget,
           maintainSize: true,
           maintainState: true,
           maintainAnimation: true,
-          visible: currentState != null &&
+          visible:
+              currentState != null &&
               currentState.status != sdk.TrafficControlStatus.hidden,
           child: GestureDetector(
             onTap: () => withBssEventsSourceFromSdk(model.onClicked),

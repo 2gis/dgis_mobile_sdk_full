@@ -147,10 +147,10 @@ class NavigationSettingsMultiSelect<T> extends StatelessWidget {
                       if (description != null)
                         Text(
                           description,
-                          style:
-                              theme.typography.radioOptionDescription.copyWith(
-                            color: colors.settingDescription,
-                          ),
+                          style: theme.typography.radioOptionDescription
+                              .copyWith(
+                                color: colors.settingDescription,
+                              ),
                         ),
                     ],
                   ),
@@ -180,10 +180,10 @@ class NavigationSettingsMultiSelect<T> extends StatelessWidget {
   }
 
   Widget _defaultIcon(Color color) => SvgPicture.asset(
-        'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
-        width: _iconSize,
-        height: _iconSize,
-        fit: BoxFit.scaleDown,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
+    width: _iconSize,
+    height: _iconSize,
+    fit: BoxFit.scaleDown,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+  );
 }

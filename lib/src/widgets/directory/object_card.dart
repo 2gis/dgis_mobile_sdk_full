@@ -27,8 +27,9 @@ class SuggestionCard extends StatelessWidget {
       return TextSpan(text: text.text, style: normalStyle);
     }
 
-    if (text.matchedParts
-        .any((element) => element.offset + element.length > text.text.length)) {
+    if (text.matchedParts.any(
+      (element) => element.offset + element.length > text.text.length,
+    )) {
       return TextSpan(text: text.text, style: normalStyle);
     }
 

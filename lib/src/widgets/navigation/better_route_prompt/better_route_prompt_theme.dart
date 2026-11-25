@@ -70,7 +70,8 @@ class BetterRoutePromptTheme extends MapWidgetColorScheme {
   }) {
     return BetterRoutePromptTheme(
       acceptButtonIconColor: acceptButtonIconColor ?? this.acceptButtonColor,
-      acceptButtonIconColorBackground: acceptButtonIconColorBackground ??
+      acceptButtonIconColorBackground:
+          acceptButtonIconColorBackground ??
           this.acceptButtonIconColorBackground,
       acceptButtonColor: acceptButtonColor ?? this.acceptButtonColor,
       acceptButtonTextStyle:

@@ -19,8 +19,7 @@ import 'navigation_settings_theme.dart';
 Widget navigationSettingsTextScope({
   required NavigationSettingsTheme theme,
   required Widget child,
-}) =>
-    DefaultTextStyle(
-      style: TextStyle(inherit: false, color: theme.colors.settingLabel),
-      child: child,
-    );
+}) => DefaultTextStyle(
+  style: TextStyle(inherit: false, color: theme.colors.settingLabel),
+  child: child,
+);

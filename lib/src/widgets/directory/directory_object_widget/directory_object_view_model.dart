@@ -143,12 +143,14 @@ class DirectoryObjectViewModel {
     final reviewCount = reviews?.count ?? 0;
     final reviewsCountText = localizations.dgis_reviews_count(reviewCount);
 
-    final shortFormattedAddress =
-        object.formattedAddress(sdk.FormattingType.short);
+    final shortFormattedAddress = object.formattedAddress(
+      sdk.FormattingType.short,
+    );
     final shortAddress = shortFormattedAddress?.streetAddress;
 
-    final fullFormattedAddress =
-        object.formattedAddress(sdk.FormattingType.full);
+    final fullFormattedAddress = object.formattedAddress(
+      sdk.FormattingType.full,
+    );
     final fullAddressMainLine = fullFormattedAddress?.streetAddress;
 
     String? fullAddressSecondaryLine;
@@ -172,8 +174,9 @@ class DirectoryObjectViewModel {
     }
 
     final attributesList = object.attributes.map((attr) => attr.value).toList();
-    final attributesText =
-        attributesList.isNotEmpty ? attributesList.join(' \u2022 ') : null;
+    final attributesText = attributesList.isNotEmpty
+        ? attributesList.join(' \u2022 ')
+        : null;
 
     final objectEntrances = object.entrances
         .where((e) => e.porchName != null || e.porchNumber != null)
@@ -444,33 +447,33 @@ class DirectoryObjectViewModel {
 
   @override
   int get hashCode => Object.hash(
-        object,
-        title,
-        titleAddition,
-        subtitle,
-        rating,
-        reviewsCount,
-        distance,
-        shortAddress,
-        fullAddressMainLine,
-        fullAddressSecondaryLine,
-        attributes,
-        alertDescription,
-        isOpenSoon,
-        porchesPrefix,
-        porchesCount,
-        porches != null ? Object.hashAll(porches!) : null,
-        workingHours,
-        contacts != null ? Object.hashAll(contacts!) : null,
-        entrances != null ? Object.hashAll(entrances!) : null,
-        Object.hash(
-          entrancesButtonLabel,
-          copyButtonLabel,
-          contactsTitle,
-          websitesSocialNetworksTitle,
-          expandButtonLabel,
-        ),
-      );
+    object,
+    title,
+    titleAddition,
+    subtitle,
+    rating,
+    reviewsCount,
+    distance,
+    shortAddress,
+    fullAddressMainLine,
+    fullAddressSecondaryLine,
+    attributes,
+    alertDescription,
+    isOpenSoon,
+    porchesPrefix,
+    porchesCount,
+    porches != null ? Object.hashAll(porches!) : null,
+    workingHours,
+    contacts != null ? Object.hashAll(contacts!) : null,
+    entrances != null ? Object.hashAll(entrances!) : null,
+    Object.hash(
+      entrancesButtonLabel,
+      copyButtonLabel,
+      contactsTitle,
+      websitesSocialNetworksTitle,
+      expandButtonLabel,
+    ),
+  );
 
   @override
   String toString() {

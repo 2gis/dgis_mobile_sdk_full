@@ -3,7 +3,7 @@ description: "Demonstrates how to use the dgis_mobile_sdk_full plugin."
 publish_to: 'none'
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
@@ -28,6 +28,9 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
 flutter:
+  # Opt this example into Swift Package Manager for iOS.
+  config:
+    enable-swift-package-manager: true
   uses-material-design: true
   # It is obligatory to add your key to assets directory of this example app
   assets:

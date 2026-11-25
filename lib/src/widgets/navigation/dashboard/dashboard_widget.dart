@@ -73,26 +73,27 @@ class DashboardWidget extends ThemedMapControllingWidget<DashboardWidgetTheme> {
     DashboardWidgetTheme? light,
     DashboardWidgetTheme? dark,
   }) : super(
-          light: light ?? DashboardWidgetTheme.defaultLight,
-          dark: dark ?? DashboardWidgetTheme.defaultDark,
-        );
+         light: light ?? DashboardWidgetTheme.defaultLight,
+         dark: dark ?? DashboardWidgetTheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static DashboardWidget defaultBuilder(
     DashboardController controller,
     Function(Offset) onHeaderChangeSize,
-  ) =>
-      DashboardWidget(
-        controller: controller,
-        onHeaderChangeSize: onHeaderChangeSize,
-      );
+  ) => DashboardWidget(
+    controller: controller,
+    onHeaderChangeSize: onHeaderChangeSize,
+  );
   @override
   ThemedMapControllingWidgetState<DashboardWidget, DashboardWidgetTheme>
-      createState() => _DashboardWidgetState();
+  createState() => _DashboardWidgetState();
 }
 
-class _DashboardWidgetState extends ThemedMapControllingWidgetState<
-    DashboardWidget, DashboardWidgetTheme> with SingleTickerProviderStateMixin {
+class _DashboardWidgetState
+    extends
+        ThemedMapControllingWidgetState<DashboardWidget, DashboardWidgetTheme>
+    with SingleTickerProviderStateMixin {
   final headerGlobalKey = GlobalKey();
   final fullHeightHeaderFlobalKey = GlobalKey();
 
@@ -125,15 +126,16 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
       curve: Curves.easeInOut,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0, 1),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     // Set overlay callback for controller
     widget.controller.setOverlayCallback(_closeOverlay);
@@ -462,9 +464,9 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                             Text(
                               model.soundsEnabled
                                   ? localizations
-                                      .dgis_navi_sound_settings_subtitle_on
+                                        .dgis_navi_sound_settings_subtitle_on
                                   : localizations
-                                      .dgis_navi_sound_settings_subtitle_off,
+                                        .dgis_navi_sound_settings_subtitle_off,
                               style: colorScheme.menuButtonSubTextStyle,
                             ),
                           ],
@@ -522,7 +524,8 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
                           value: model.isMinimapVisible,
                           onChanged: (_) =>
                               widget.controller.toggleMinimapVisibility(),
-                          activeThumbColor: Colors.white,
+                          // ignore: deprecated_member_use
+                          activeColor: Colors.white,
                           activeTrackColor:
                               colorScheme.buttonPositiveSurfaceColor,
                         ),
@@ -640,7 +643,8 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: GestureDetector(
-                  onTap: widget.onFinishClicked ??
+                  onTap:
+                      widget.onFinishClicked ??
                       widget.controller.stopNavigation,
                   child: Container(
                     decoration: BoxDecoration(
@@ -787,15 +791,16 @@ class _DashboardWidgetState extends ThemedMapControllingWidgetState<
           animation: _animationController,
           builder: (context, child) {
             return SlideTransition(
-              position: Tween<Offset>(
-                begin: Offset.zero,
-                end: const Offset(0, -1),
-              ).animate(
-                CurvedAnimation(
-                  parent: _animationController,
-                  curve: Curves.easeOutCubic,
-                ),
-              ),
+              position:
+                  Tween<Offset>(
+                    begin: Offset.zero,
+                    end: const Offset(0, -1),
+                  ).animate(
+                    CurvedAnimation(
+                      parent: _animationController,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: FadeTransition(
                 opacity: ReverseAnimation(_fadeAnimation),
                 child: child,

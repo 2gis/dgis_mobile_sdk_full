@@ -85,12 +85,12 @@ class ManeuverController {
         );
       }
     });
-    _routePositionSubscription =
-        navigationManager.uiModel.routePositionChannel.listen((position) {
-      if (_instructions != null && position != null) {
-        _updateNextManeuverInfo(position, _instructions!, _roadRule);
-      }
-    });
+    _routePositionSubscription = navigationManager.uiModel.routePositionChannel
+        .listen((position) {
+          if (_instructions != null && position != null) {
+            _updateNextManeuverInfo(position, _instructions!, _roadRule);
+          }
+        });
     _stateSubscription = navigationManager.uiModel.stateChannel.listen((state) {
       if (_instructions != null &&
           navigationManager.uiModel.routePosition != null) {
@@ -173,8 +173,9 @@ class ManeuverController {
       return null;
     }
 
-    final maneuver =
-        sdk.getInstructionManeuver(instruction.value.extraInstructionInfo);
+    final maneuver = sdk.getInstructionManeuver(
+      instruction.value.extraInstructionInfo,
+    );
     if (maneuver == sdk.InstructionManeuver.finish) {
       return null;
     }
@@ -239,7 +240,8 @@ class ManeuverController {
 
     // Hide the additional maneuver if the distance between the main and additional (next)
     // maneuver > 50 m.
-    final distance = (nextInstructionEntry.point.distance.millimeters -
+    final distance =
+        (nextInstructionEntry.point.distance.millimeters -
             instruction.point.distance.millimeters) /
         1000;
     if (distance > 50) {
@@ -264,93 +266,93 @@ class ManeuverController {
     return switch (maneuver) {
       sdk.InstructionManeuver.none => null,
       sdk.InstructionManeuver.start => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_start.svg',
-          false,
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_start.svg',
+        false,
+      ),
       sdk.InstructionManeuver.finish => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_finish.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_finish.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadStraight => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_start.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_start.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadSlightlyLeft => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_slightly_left.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_slightly_left.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadLeft => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_left.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_left.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadSharplyLeft => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_sharply_left.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_sharply_left.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadSlightlyRight => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_slightly_right.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_slightly_right.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadRight => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_right.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_right.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadSharplyRight => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_sharply_right.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_sharply_right.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadKeepLeft => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_left.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_left.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadKeepRight => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_right.svg',
-          false
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_right.svg',
+        false,
+      ),
       sdk.InstructionManeuver.crossroadUTurn => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_uturn.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_uturn.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutForward => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_forward.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_forward.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutLeft45 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_45.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_45.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutLeft90 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_90.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_90.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutLeft135 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_135.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "right" : "left"}_135.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutRight45 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_45.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_45.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutRight90 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_90.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_90.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutRight135 => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_135.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_${isLeftHandTraffic ? "left" : "right"}_135.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutBackward => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_backward.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_backward.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roundaboutExit => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_exit.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_ringroad_exit.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.uTurn => (
-          'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_uturn.svg',
-          isLeftHandTraffic
-        ),
+        'packages/$pluginName/assets/icons/navigation/maneuvers/dgis_crossroad_uturn.svg',
+        isLeftHandTraffic,
+      ),
       sdk.InstructionManeuver.roadCrossing => null,
     };
   }

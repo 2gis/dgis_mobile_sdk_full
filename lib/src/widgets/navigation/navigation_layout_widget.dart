@@ -36,7 +36,8 @@ import './traffic_line/traffic_line_widget.dart';
 import './zoom/zoom_controller.dart';
 import './zoom/zoom_widget.dart';
 
-const _minEdgeInset = 8.0;
+const _topEdgeInset = EdgeInsets.only(top: 8);
+const _bottomEdgeInset = EdgeInsets.only(bottom: 8);
 
 class NavigationLayoutWidget extends StatefulWidget {
   final sdk.NavigationManager navigationManager;
@@ -49,35 +50,40 @@ class NavigationLayoutWidget extends StatefulWidget {
   final DashboardWidget Function(
     DashboardController,
     void Function(Offset) onHeaderChangeSize,
-  )? _dashboardWidgetBuilder;
+  )?
+  _dashboardWidgetBuilder;
   final SpeedLimitWidget Function(SpeedLimitController)?
-      _speedLimitWidgetBuilder;
+  _speedLimitWidgetBuilder;
   final ManeuverWidget Function(ManeuverController)? _maneuverWidgetBuilder;
   final TrafficLineWidget Function(TrafficLineController, DashboardController)?
-      _trafficLineWidgetBuilder;
+  _trafficLineWidgetBuilder;
   final FinishRouteWidget Function(FinishRouteController)?
-      _finishRouteWidgetBuilder;
+  _finishRouteWidgetBuilder;
   final NavigationTrafficWidget Function(
     RoundedCorners roundedCorners,
     TrafficController controller,
-  )? _trafficWidgetBuilder;
+  )?
+  _trafficWidgetBuilder;
   final NavigationParkingWidget Function(
     RoundedCorners roundedCorners,
     ParkingController controller,
-  )? _parkingWidgetBuilder;
+  )?
+  _parkingWidgetBuilder;
   final NavigationZoomWidget Function(ZoomController)? _zoomWidgetBuilder;
   final NavigationMyLocationWidget Function(NavigationMyLocationController)?
-      _myLocationwidgetBuilder;
+  _myLocationwidgetBuilder;
   final NavigationCompassWidget Function(CompassController)?
-      _compassWidgetBuilder;
+  _compassWidgetBuilder;
   final BetterRoutePromptWidget Function(
     BetterRoutePromptController,
     Duration,
-  )? _betterRoutePromptWidgetBuilder;
+  )?
+  _betterRoutePromptWidgetBuilder;
   final NavigationMiniMapWidget Function(
     NavigationMiniMapController,
     DashboardController,
-  )? _navigationMiniMapWidgetBuilder;
+  )?
+  _navigationMiniMapWidgetBuilder;
 
   const NavigationLayoutWidget({
     required this.navigationManager,
@@ -85,61 +91,64 @@ class NavigationLayoutWidget extends StatefulWidget {
     DashboardWidget Function(
       DashboardController,
       Function(Offset) onHeaderChangeSize,
-    )? dashboardWidgetBuilder,
+    )?
+    dashboardWidgetBuilder,
     SpeedLimitWidget Function(SpeedLimitController)? speedLimitWidgetBuilder,
     ManeuverWidget Function(ManeuverController)? maneuverWidgetBuilder,
     TrafficLineWidget Function(TrafficLineController, DashboardController)?
-        trafficLineWidgetBuilder,
+    trafficLineWidgetBuilder,
     FinishRouteWidget Function(FinishRouteController)? finishRouteWidgetBuilder,
     NavigationTrafficWidget Function(
       RoundedCorners,
       TrafficController,
-    )? trafficWidgetBuilder,
+    )?
+    trafficWidgetBuilder,
     NavigationParkingWidget Function(RoundedCorners, ParkingController)?
-        parkingWidgetBuilder,
+    parkingWidgetBuilder,
     NavigationZoomWidget Function(ZoomController)? zoomWidgetBuilder,
     NavigationMyLocationWidget Function(NavigationMyLocationController)?
-        myLocationWidgetBuilder,
+    myLocationWidgetBuilder,
     NavigationCompassWidget Function(CompassController)? compassWidgetbuilder,
     BetterRoutePromptWidget Function(
       BetterRoutePromptController,
       Duration,
-    )? betterRoutePromptWidgetBuilder,
+    )?
+    betterRoutePromptWidgetBuilder,
     NavigationMiniMapWidget Function(
       NavigationMiniMapController,
       DashboardController,
-    )? navigationMiniMapWidgetBuilder,
+    )?
+    navigationMiniMapWidgetBuilder,
     super.key,
-  })  : _dashboardWidgetBuilder = dashboardWidgetBuilder,
-        _speedLimitWidgetBuilder = speedLimitWidgetBuilder,
-        _maneuverWidgetBuilder = maneuverWidgetBuilder,
-        _trafficLineWidgetBuilder = trafficLineWidgetBuilder,
-        _finishRouteWidgetBuilder = finishRouteWidgetBuilder,
-        _trafficWidgetBuilder = trafficWidgetBuilder,
-        _parkingWidgetBuilder = parkingWidgetBuilder,
-        _zoomWidgetBuilder = zoomWidgetBuilder,
-        _myLocationwidgetBuilder = myLocationWidgetBuilder,
-        _compassWidgetBuilder = compassWidgetbuilder,
-        _betterRoutePromptWidgetBuilder = betterRoutePromptWidgetBuilder,
-        _navigationMiniMapWidgetBuilder = navigationMiniMapWidgetBuilder;
+  }) : _dashboardWidgetBuilder = dashboardWidgetBuilder,
+       _speedLimitWidgetBuilder = speedLimitWidgetBuilder,
+       _maneuverWidgetBuilder = maneuverWidgetBuilder,
+       _trafficLineWidgetBuilder = trafficLineWidgetBuilder,
+       _finishRouteWidgetBuilder = finishRouteWidgetBuilder,
+       _trafficWidgetBuilder = trafficWidgetBuilder,
+       _parkingWidgetBuilder = parkingWidgetBuilder,
+       _zoomWidgetBuilder = zoomWidgetBuilder,
+       _myLocationwidgetBuilder = myLocationWidgetBuilder,
+       _compassWidgetBuilder = compassWidgetbuilder,
+       _betterRoutePromptWidgetBuilder = betterRoutePromptWidgetBuilder,
+       _navigationMiniMapWidgetBuilder = navigationMiniMapWidgetBuilder;
 
   const NavigationLayoutWidget.defaultLayout({
     required this.navigationManager,
     this.settingsOptions = const NavigationSettingsOptions(),
     super.key,
-  })  : _dashboardWidgetBuilder = DashboardWidget.defaultBuilder,
-        _speedLimitWidgetBuilder = SpeedLimitWidget.defaultBuilder,
-        _maneuverWidgetBuilder = ManeuverWidget.defaultBuilder,
-        _trafficLineWidgetBuilder = TrafficLineWidget.defaultBuilder,
-        _finishRouteWidgetBuilder = FinishRouteWidget.defaultBuilder,
-        _trafficWidgetBuilder = NavigationTrafficWidget.defaultBuilder,
-        _parkingWidgetBuilder = NavigationParkingWidget.defaultBuilder,
-        _zoomWidgetBuilder = NavigationZoomWidget.defaultBuilder,
-        _myLocationwidgetBuilder = NavigationMyLocationWidget.defaultBuilder,
-        _compassWidgetBuilder = NavigationCompassWidget.defaultBuilder,
-        _betterRoutePromptWidgetBuilder =
-            BetterRoutePromptWidget.defaultBuilder,
-        _navigationMiniMapWidgetBuilder = null;
+  }) : _dashboardWidgetBuilder = DashboardWidget.defaultBuilder,
+       _speedLimitWidgetBuilder = SpeedLimitWidget.defaultBuilder,
+       _maneuverWidgetBuilder = ManeuverWidget.defaultBuilder,
+       _trafficLineWidgetBuilder = TrafficLineWidget.defaultBuilder,
+       _finishRouteWidgetBuilder = FinishRouteWidget.defaultBuilder,
+       _trafficWidgetBuilder = NavigationTrafficWidget.defaultBuilder,
+       _parkingWidgetBuilder = NavigationParkingWidget.defaultBuilder,
+       _zoomWidgetBuilder = NavigationZoomWidget.defaultBuilder,
+       _myLocationwidgetBuilder = NavigationMyLocationWidget.defaultBuilder,
+       _compassWidgetBuilder = NavigationCompassWidget.defaultBuilder,
+       _betterRoutePromptWidgetBuilder = BetterRoutePromptWidget.defaultBuilder,
+       _navigationMiniMapWidgetBuilder = null;
 
   @override
   BaseMapWidgetState<NavigationLayoutWidget> createState() =>
@@ -200,14 +209,14 @@ class _NavigationLayoutWidgetState
     if (repository == null) return null;
 
     return () => unawaited(
-          showNavigationSettingsFlow(
-            context: context,
-            repository: repository,
-            primarySection: widget.settingsOptions.primarySection,
-            visibilityConfig: widget.settingsOptions.sectionVisibility,
-            theme: widget.settingsOptions.theme,
-          ),
-        );
+      showNavigationSettingsFlow(
+        context: context,
+        repository: repository,
+        primarySection: widget.settingsOptions.primarySection,
+        visibilityConfig: widget.settingsOptions.sectionVisibility,
+        theme: widget.settingsOptions.theme,
+      ),
+    );
   }
 
   void _configureSettingsApplier() {
@@ -257,7 +266,9 @@ class _NavigationLayoutWidgetState
     if (oldWidget.navigationManager != widget.navigationManager) {
       unawaited(navigationStateSubscription?.cancel());
       navigationStateSubscription = widget
-          .navigationManager.uiModel.stateChannel
+          .navigationManager
+          .uiModel
+          .stateChannel
           .listen((state) => navigationState.value = state);
     }
     final oldOptions = oldWidget.settingsOptions;
@@ -350,35 +361,38 @@ class _NavigationLayoutWidgetState
           return Column(
             children: [
               SafeArea(
-                minimum: const EdgeInsets.only(top: _minEdgeInset),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget._maneuverWidgetBuilder != null)
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional.topStart,
-                          child: widget._maneuverWidgetBuilder!
-                              .call(maneuverController),
+                child: Padding(
+                  padding: _topEdgeInset,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget._maneuverWidgetBuilder != null)
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: widget._maneuverWidgetBuilder!.call(
+                              maneuverController,
+                            ),
+                          ),
                         ),
-                      ),
-                    if (widget._speedLimitWidgetBuilder != null)
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional.topEnd,
-                          child: widget._speedLimitWidgetBuilder!
-                              .call(speedLimitController),
+                      if (widget._speedLimitWidgetBuilder != null)
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional.topEnd,
+                            child: widget._speedLimitWidgetBuilder!.call(
+                              speedLimitController,
+                            ),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Expanded(
                 flex: 20,
-                child: GestureDetector(
+                child: Listener(
                   behavior: HitTestBehavior.translucent,
-                  onTapDown: (_) => handleInteraction(),
-                  onPanDown: (_) => handleInteraction(),
+                  onPointerDown: (_) => handleInteraction(),
                   child: Stack(
                     children: [
                       if (widget._trafficLineWidgetBuilder != null)
@@ -409,15 +423,15 @@ class _NavigationLayoutWidgetState
                                           return widget
                                               ._navigationMiniMapWidgetBuilder!
                                               .call(
-                                            miniMapController,
-                                            dashboardController,
-                                          );
+                                                miniMapController,
+                                                dashboardController,
+                                              );
                                         }
                                         return widget._trafficLineWidgetBuilder!
                                             .call(
-                                          trafficLineController,
-                                          dashboardController,
-                                        );
+                                              trafficLineController,
+                                              dashboardController,
+                                            );
                                       },
                                     );
                                   },
@@ -467,11 +481,15 @@ class _NavigationLayoutWidgetState
                       if (isBetterRoutePrompted.value &&
                           widget._betterRoutePromptWidgetBuilder != null)
                         SafeArea(
-                          child: Align(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            child: widget._betterRoutePromptWidgetBuilder!.call(
-                              betterRoutePromptController,
-                              betterRoutePromptDuration,
+                          child: Padding(
+                            padding: _bottomEdgeInset,
+                            child: Align(
+                              alignment: AlignmentDirectional.bottomCenter,
+                              child: widget._betterRoutePromptWidgetBuilder!
+                                  .call(
+                                    betterRoutePromptController,
+                                    betterRoutePromptDuration,
+                                  ),
                             ),
                           ),
                         ),
@@ -482,11 +500,17 @@ class _NavigationLayoutWidgetState
                             ignoring: isBetterRoutePrompted.value,
                             child: ValueListenableBuilder(
                               valueListenable: navigationState,
-                              child: Align(
-                                alignment: AlignmentDirectional.bottomCenter,
-                                child: widget._dashboardWidgetBuilder!.call(
-                                  dashboardController,
-                                  (p0) => dashboardSize.value = p0,
+                              child: SafeArea(
+                                child: Padding(
+                                  padding: _bottomEdgeInset,
+                                  child: Align(
+                                    alignment:
+                                        AlignmentDirectional.bottomCenter,
+                                    child: widget._dashboardWidgetBuilder!.call(
+                                      dashboardController,
+                                      (p0) => dashboardSize.value = p0,
+                                    ),
+                                  ),
                                 ),
                               ),
                               builder: (context, state, child) {
@@ -512,177 +536,195 @@ class _NavigationLayoutWidgetState
           //
         } else {
           return SafeArea(
-            minimum: const EdgeInsets.only(top: _minEdgeInset),
-            child: Stack(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          if (widget._maneuverWidgetBuilder != null)
-                            Align(
-                              alignment: AlignmentDirectional.topStart,
-                              child: widget._maneuverWidgetBuilder!(
-                                maneuverController,
+            child: Padding(
+              padding: _topEdgeInset,
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            if (widget._maneuverWidgetBuilder != null)
+                              Align(
+                                alignment: AlignmentDirectional.topStart,
+                                child: widget._maneuverWidgetBuilder!(
+                                  maneuverController,
+                                ),
                               ),
-                            ),
-                          Expanded(
-                            flex: 20,
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTapDown: (_) => handleInteraction(),
-                              onPanDown: (_) => handleInteraction(),
-                              child: Align(
-                                alignment: AlignmentDirectional.bottomStart,
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    final newConstraints = constraints.copyWith(
-                                      maxWidth: constraints.maxWidth /
-                                          dashboardHorizonatalWidthScaleFactor,
-                                    );
-                                    return ConstrainedBox(
-                                      constraints: newConstraints,
-                                      child: Stack(
-                                        children: [
-                                          if (isBetterRoutePrompted.value &&
-                                              widget._betterRoutePromptWidgetBuilder !=
-                                                  null)
-                                            SafeArea(
-                                              child: Align(
-                                                alignment: AlignmentDirectional
-                                                    .bottomCenter,
-                                                child: widget
-                                                    ._betterRoutePromptWidgetBuilder!
-                                                    .call(
-                                                  betterRoutePromptController,
-                                                  betterRoutePromptDuration,
-                                                ),
-                                              ),
-                                            ),
-                                          if (widget._dashboardWidgetBuilder !=
-                                              null)
-                                            Visibility.maintain(
-                                              visible:
-                                                  !isBetterRoutePrompted.value,
-                                              child: IgnorePointer(
-                                                ignoring:
-                                                    isBetterRoutePrompted.value,
-                                                child: ValueListenableBuilder(
-                                                  valueListenable:
-                                                      navigationState,
+                            Expanded(
+                              flex: 20,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTapDown: (_) => handleInteraction(),
+                                onPanDown: (_) => handleInteraction(),
+                                child: Align(
+                                  alignment: AlignmentDirectional.bottomStart,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final newConstraints = constraints.copyWith(
+                                        maxWidth:
+                                            constraints.maxWidth /
+                                            dashboardHorizonatalWidthScaleFactor,
+                                      );
+                                      return ConstrainedBox(
+                                        constraints: newConstraints,
+                                        child: Stack(
+                                          children: [
+                                            if (isBetterRoutePrompted.value &&
+                                                widget._betterRoutePromptWidgetBuilder !=
+                                                    null)
+                                              SafeArea(
+                                                child: Padding(
+                                                  padding: _bottomEdgeInset,
                                                   child: Align(
                                                     alignment:
                                                         AlignmentDirectional
                                                             .bottomCenter,
                                                     child: widget
-                                                        ._dashboardWidgetBuilder!
+                                                        ._betterRoutePromptWidgetBuilder!
                                                         .call(
-                                                      dashboardController,
-                                                      (p0) => dashboardSize
-                                                          .value = p0,
-                                                    ),
+                                                          betterRoutePromptController,
+                                                          betterRoutePromptDuration,
+                                                        ),
                                                   ),
-                                                  builder:
-                                                      (context, state, child) {
-                                                    if (widget._dashboardWidgetBuilder !=
-                                                            null &&
-                                                        navigationState.value !=
-                                                            sdk.State
-                                                                .finished) {
-                                                      return child!;
-                                                    } else {
-                                                      return const SizedBox
-                                                          .shrink();
-                                                    }
-                                                  },
                                                 ),
                                               ),
-                                            ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: AlignmentDirectional.bottomEnd,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional.topEnd,
-                        child: widget._speedLimitWidgetBuilder!
-                            .call(speedLimitController),
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: isMapControlsVisible,
-                        builder: (context, isVisible, _) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween(
-                                begin: isVisible ? 0 : 1,
-                                end: isVisible ? 1 : 0,
-                              ),
-                              duration: const Duration(milliseconds: 300),
-                              builder: (context, value, child) => Opacity(
-                                opacity: value,
-                                child: Visibility(
-                                  visible: value > 0,
-                                  child: IgnorePointer(
-                                    ignoring: !isVisible,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: _mapControlsColumn(),
-                                    ),
+                                            if (widget
+                                                    ._dashboardWidgetBuilder !=
+                                                null)
+                                              Visibility.maintain(
+                                                visible: !isBetterRoutePrompted
+                                                    .value,
+                                                child: IgnorePointer(
+                                                  ignoring:
+                                                      isBetterRoutePrompted
+                                                          .value,
+                                                  child: ValueListenableBuilder(
+                                                    valueListenable:
+                                                        navigationState,
+                                                    child: SafeArea(
+                                                      child: Padding(
+                                                        padding:
+                                                            _bottomEdgeInset,
+                                                        child: Align(
+                                                          alignment:
+                                                              AlignmentDirectional
+                                                                  .bottomCenter,
+                                                          child: widget
+                                                              ._dashboardWidgetBuilder!
+                                                              .call(
+                                                                dashboardController,
+                                                                (p0) =>
+                                                                    dashboardSize
+                                                                            .value =
+                                                                        p0,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    builder: (context, state, child) {
+                                                      if (widget._dashboardWidgetBuilder !=
+                                                              null &&
+                                                          navigationState
+                                                                  .value !=
+                                                              sdk
+                                                                  .State
+                                                                  .finished) {
+                                                        return child!;
+                                                      } else {
+                                                        return const SizedBox.shrink();
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                if (widget._trafficLineWidgetBuilder != null)
-                  ValueListenableBuilder(
-                    valueListenable: isMapControlsVisible,
-                    builder: (context, isVisible, _) {
-                      return Align(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween(
-                            begin: isVisible ? 1 : 0,
-                            end: isVisible ? 0 : 1,
+                  Align(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: widget._speedLimitWidgetBuilder!.call(
+                            speedLimitController,
                           ),
-                          duration: const Duration(milliseconds: 300),
-                          builder: (context, value, child) => Opacity(
-                            opacity: value,
-                            child: Visibility(
-                              visible: value > 0,
-                              child: IgnorePointer(
-                                ignoring: isVisible,
-                                child: widget._trafficLineWidgetBuilder!.call(
-                                  trafficLineController,
-                                  dashboardController,
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: isMapControlsVisible,
+                          builder: (context, isVisible, _) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween(
+                                  begin: isVisible ? 0 : 1,
+                                  end: isVisible ? 1 : 0,
+                                ),
+                                duration: const Duration(milliseconds: 300),
+                                builder: (context, value, child) => Opacity(
+                                  opacity: value,
+                                  child: Visibility(
+                                    visible: value > 0,
+                                    child: IgnorePointer(
+                                      ignoring: !isVisible,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: _mapControlsColumn(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (widget._trafficLineWidgetBuilder != null)
+                    ValueListenableBuilder(
+                      valueListenable: isMapControlsVisible,
+                      builder: (context, isVisible, _) {
+                        return Align(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(
+                              begin: isVisible ? 1 : 0,
+                              end: isVisible ? 0 : 1,
+                            ),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (context, value, child) => Opacity(
+                              opacity: value,
+                              child: Visibility(
+                                visible: value > 0,
+                                child: IgnorePointer(
+                                  ignoring: isVisible,
+                                  child: widget._trafficLineWidgetBuilder!.call(
+                                    trafficLineController,
+                                    dashboardController,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-              ],
+                        );
+                      },
+                    ),
+                ],
+              ),
             ),
           );
         }
@@ -711,8 +753,9 @@ class _NavigationLayoutWidgetState
           return OrientationBuilder(
             builder: (context, orientation) {
               if (orientation == Orientation.portrait) {
-                return widget._finishRouteWidgetBuilder!
-                    .call(finishRouteController);
+                return widget._finishRouteWidgetBuilder!.call(
+                  finishRouteController,
+                );
               }
               return Stack(
                 children: [
@@ -721,8 +764,9 @@ class _NavigationLayoutWidgetState
                     right: rightInset,
                     top: 0,
                     bottom: 0,
-                    child: widget._finishRouteWidgetBuilder!
-                        .call(finishRouteController),
+                    child: widget._finishRouteWidgetBuilder!.call(
+                      finishRouteController,
+                    ),
                   ),
                 ],
               );
@@ -745,8 +789,7 @@ class _NavigationLayoutWidgetState
           // TODO: add distinguish states for free roam.
           sdk.State.disabled ||
           sdk.State.navigation ||
-          sdk.State.routeSearch =>
-            _buildOnGoingNavigationState(context),
+          sdk.State.routeSearch => _buildOnGoingNavigationState(context),
           sdk.State.finished => _buildFinishedNavigationState(context),
         };
       },
@@ -770,8 +813,9 @@ class _NavigationLayoutWidgetState
       map: map,
       navigationManager: widget.navigationManager,
     );
-    maneuverController =
-        ManeuverController(navigationManager: widget.navigationManager);
+    maneuverController = ManeuverController(
+      navigationManager: widget.navigationManager,
+    );
     myLocationController = NavigationMyLocationController(
       map: map,
       onTapped: () {
@@ -782,10 +826,12 @@ class _NavigationLayoutWidgetState
     );
     parkingController = ParkingController(map: map);
     zoomController = ZoomController(map: map);
-    speedLimitController =
-        SpeedLimitController(navigationManager: widget.navigationManager);
-    trafficLineController =
-        TrafficLineController(navigationManager: widget.navigationManager);
+    speedLimitController = SpeedLimitController(
+      navigationManager: widget.navigationManager,
+    );
+    trafficLineController = TrafficLineController(
+      navigationManager: widget.navigationManager,
+    );
     trafficController = TrafficController(map: map);
     betterRoutePromptController = BetterRoutePromptController(
       navigationManager: widget.navigationManager,

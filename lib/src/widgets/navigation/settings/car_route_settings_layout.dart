@@ -79,36 +79,37 @@ class CarRouteSettingsLayout extends StatelessWidget {
               key: NavigationSettingKeys.carRouteSearchType,
               builder: (context, value, child) =>
                   NavigationSettingsRadioGroup<sdk.RouteSearchType>(
-                options: [
-                  NavigationSettingsRadioOption(
-                    value: sdk.RouteSearchType.jam,
-                    label: localizations.dgis_settings_route_search_type_jam,
-                    description:
-                        localizations.dgis_settings_route_search_type_jam_desc,
+                    options: [
+                      NavigationSettingsRadioOption(
+                        value: sdk.RouteSearchType.jam,
+                        label:
+                            localizations.dgis_settings_route_search_type_jam,
+                        description: localizations
+                            .dgis_settings_route_search_type_jam_desc,
+                      ),
+                      NavigationSettingsRadioOption(
+                        value: sdk.RouteSearchType.statistic,
+                        label: localizations
+                            .dgis_settings_route_search_type_statistic,
+                        description: localizations
+                            .dgis_settings_route_search_type_statistic_desc,
+                      ),
+                      NavigationSettingsRadioOption(
+                        value: sdk.RouteSearchType.shortest,
+                        label: localizations
+                            .dgis_settings_route_search_type_shortest,
+                        description: localizations
+                            .dgis_settings_route_search_type_shortest_desc,
+                      ),
+                    ],
+                    selected: value,
+                    onChanged: (value) => setNavigationSetting(
+                      repository,
+                      NavigationSettingKeys.carRouteSearchType,
+                      value,
+                    ),
+                    theme: resolvedTheme,
                   ),
-                  NavigationSettingsRadioOption(
-                    value: sdk.RouteSearchType.statistic,
-                    label:
-                        localizations.dgis_settings_route_search_type_statistic,
-                    description: localizations
-                        .dgis_settings_route_search_type_statistic_desc,
-                  ),
-                  NavigationSettingsRadioOption(
-                    value: sdk.RouteSearchType.shortest,
-                    label:
-                        localizations.dgis_settings_route_search_type_shortest,
-                    description: localizations
-                        .dgis_settings_route_search_type_shortest_desc,
-                  ),
-                ],
-                selected: value,
-                onChanged: (value) => setNavigationSetting(
-                  repository,
-                  NavigationSettingKeys.carRouteSearchType,
-                  value,
-                ),
-                theme: resolvedTheme,
-              ),
             ),
           ],
         ),

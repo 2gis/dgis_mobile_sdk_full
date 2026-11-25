@@ -17,6 +17,24 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// integration_test из Flutter SDK объявляет androidx.test с динамическими версиями (1.2+, 3.3+).
+// Для них Gradle опрашивает все репозитории, включая недоступные; фиксируем те же версии явно.
+def pinnedAndroidxTest = [
+    'androidx.test:runner': '1.2.0',
+    'androidx.test:rules': '1.2.0',
+    'androidx.test.espresso:espresso-core': '3.3.0',
+]
+subprojects {
+    configurations.configureEach {
+        resolutionStrategy.eachDependency { details ->
+            def pinned = pinnedAndroidxTest[details.requested.module.toString()]
+            if (pinned != null && details.requested.version?.endsWith('+')) {
+                details.useVersion(pinned)
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

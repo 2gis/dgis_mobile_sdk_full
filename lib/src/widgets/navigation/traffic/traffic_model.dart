@@ -32,7 +32,8 @@ class TrafficModel {
   int get hashCode => Object.hash(status, score);
 
   @override
-  String toString() => 'TrafficModel('
+  String toString() =>
+      'TrafficModel('
       'status: $status, '
       'score: $score'
       ')';

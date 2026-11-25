@@ -140,8 +140,9 @@ class DashboardController {
     _removeSoundListener = null;
     _settingsRepository = repository;
     if (repository != null) {
-      final listenable =
-          repository.observe(NavigationSettingKeys.soundInstructions);
+      final listenable = repository.observe(
+        NavigationSettingKeys.soundInstructions,
+      );
       void listener() => _syncSoundsEnabled();
       listenable.addListener(listener);
       _removeSoundListener = () => listenable.removeListener(listener);
@@ -219,7 +220,8 @@ class DashboardController {
     }
 
     final categories = navigationManager
-        .soundNotificationSettings.enabledSoundCategories
+        .soundNotificationSettings
+        .enabledSoundCategories
         .toMutableEnumSet();
 
     if (soundsEnabled) {

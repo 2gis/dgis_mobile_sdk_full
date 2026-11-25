@@ -32,27 +32,30 @@ class TrafficLineWidget
     TrafficLineColorScheme? dark,
     super.key,
   }) : super(
-          light: light ?? TrafficLineColorScheme.defaultLight,
-          dark: dark ?? TrafficLineColorScheme.defaultDark,
-        );
+         light: light ?? TrafficLineColorScheme.defaultLight,
+         dark: dark ?? TrafficLineColorScheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static TrafficLineWidget defaultBuilder(
     TrafficLineController controller, [
     DashboardController? dashboardController,
-  ]) =>
-      TrafficLineWidget(
-        controller: controller,
-        dashboardController: dashboardController,
-      );
+  ]) => TrafficLineWidget(
+    controller: controller,
+    dashboardController: dashboardController,
+  );
 
   @override
   ThemedMapControllingWidgetState<TrafficLineWidget, TrafficLineColorScheme>
-      createState() => _TrafficLineWidgetState();
+  createState() => _TrafficLineWidgetState();
 }
 
-class _TrafficLineWidgetState extends ThemedMapControllingWidgetState<
-    TrafficLineWidget, TrafficLineColorScheme> {
+class _TrafficLineWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          TrafficLineWidget,
+          TrafficLineColorScheme
+        > {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -255,12 +258,14 @@ class _TrafficLinePainter extends CustomPainter {
     );
     canvas.clipRRect(rect);
 
-    final sortedSegments = List<sdk.TrafficSpeedColorRouteLongEntry>.from(
-      speedColors,
-    )..sort(
-        (a, b) => a.point.distance.millimeters
-            .compareTo(b.point.distance.millimeters),
-      );
+    final sortedSegments =
+        List<sdk.TrafficSpeedColorRouteLongEntry>.from(
+          speedColors,
+        )..sort(
+          (a, b) => a.point.distance.millimeters.compareTo(
+            b.point.distance.millimeters,
+          ),
+        );
 
     for (var i = 0; i < sortedSegments.length; i++) {
       final current = sortedSegments[i];
@@ -268,10 +273,14 @@ class _TrafficLinePainter extends CustomPainter {
       final startPoint = current.point.distance.millimeters.toDouble();
       final endPoint = startPoint + current.length.millimeters.toDouble();
 
-      var startY = size.height -
-          ((startPoint / routeLength * size.height)
-              .clamp(0.0, size.height - 1));
-      final endY = size.height -
+      var startY =
+          size.height -
+          ((startPoint / routeLength * size.height).clamp(
+            0.0,
+            size.height - 1,
+          ));
+      final endY =
+          size.height -
           ((endPoint / routeLength * size.height).clamp(0.0, size.height - 1));
 
       if (startY - endY < minSegmentSize) {
@@ -486,8 +495,9 @@ class _RoadEventsPainter extends CustomPainter {
       })
       ..toList()
       ..sort(
-        (a, b) => (a.point.distance.millimeters / routeLength)
-            .compareTo(b.point.distance.millimeters / routeLength),
+        (a, b) => (a.point.distance.millimeters / routeLength).compareTo(
+          b.point.distance.millimeters / routeLength,
+        ),
       )
       ..reversed;
 
@@ -508,7 +518,8 @@ class _RoadEventsPainter extends CustomPainter {
 
           canvas.save();
 
-          final scale = iconSize /
+          final scale =
+              iconSize /
               math.max(pictureInfo.size.width, pictureInfo.size.height);
 
           canvas

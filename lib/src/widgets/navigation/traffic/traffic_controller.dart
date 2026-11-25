@@ -64,8 +64,9 @@ class TrafficController {
   }
 
   void _init() {
-    _trafficModel =
-        withBssEventsSourceFromSdk(() => sdk.TrafficControlModel(map));
+    _trafficModel = withBssEventsSourceFromSdk(
+      () => sdk.TrafficControlModel(map),
+    );
     _model = ValueNotifier(
       TrafficModel(
         score: _trafficModel.state.score,
@@ -73,8 +74,10 @@ class TrafficController {
       ),
     );
     _stateSubscription = _trafficModel.stateChannel.listen((newState) {
-      _model.value = _model.value
-          .copyWith(status: newState.status, score: () => newState.score);
+      _model.value = _model.value.copyWith(
+        status: newState.status,
+        score: () => newState.score,
+      );
     });
   }
 

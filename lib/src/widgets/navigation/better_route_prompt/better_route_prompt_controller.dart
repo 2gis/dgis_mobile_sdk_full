@@ -65,7 +65,7 @@ class BetterRoutePromptController {
   sdk.BetterRouteInfo? _currentBetterRoutePromptInfo;
 
   late final StreamSubscription<sdk.BetterRouteInfo?>
-      _betterRouteInfoSubscription;
+  _betterRouteInfoSubscription;
 
   late final ValueNotifier<BetterRoutePromptModel> _model;
 
@@ -79,10 +79,10 @@ class BetterRoutePromptController {
     required void Function() onBetterRouteRejected,
     required void Function() onBetterRouteTimedOut,
     required void Function(sdk.BetterRouteInfo) onBetterRouteAccepted,
-  })  : _onBetterRouteTimedOut = onBetterRouteTimedOut,
-        _onBetterRouteRejected = onBetterRouteRejected,
-        _onBetterRouteAccepted = onBetterRouteAccepted,
-        _onBetterRoutePrompted = onBetterRoutePrompted {
+  }) : _onBetterRouteTimedOut = onBetterRouteTimedOut,
+       _onBetterRouteRejected = onBetterRouteRejected,
+       _onBetterRouteAccepted = onBetterRouteAccepted,
+       _onBetterRoutePrompted = onBetterRoutePrompted {
     _init();
   }
 
@@ -93,20 +93,20 @@ class BetterRoutePromptController {
         type: BetterRouteType.unspecified,
       ),
     );
-    _betterRouteInfoSubscription =
-        navigationManager.uiModel.betterRouteChannel.listen((betterRouteInfo) {
-      if (betterRouteInfo != null) {
-        _currentBetterRoutePromptInfo = betterRouteInfo;
-        _onBetterRoutePrompted(betterRouteInfo);
-        _calculateTimeForModel(betterRouteInfo);
-      } else {
-        rejectBetterRoute();
-        _model.value = _model.value.copyWith(
-          timeWinning: () => null,
-          type: BetterRouteType.unspecified,
-        );
-      }
-    });
+    _betterRouteInfoSubscription = navigationManager.uiModel.betterRouteChannel
+        .listen((betterRouteInfo) {
+          if (betterRouteInfo != null) {
+            _currentBetterRoutePromptInfo = betterRouteInfo;
+            _onBetterRoutePrompted(betterRouteInfo);
+            _calculateTimeForModel(betterRouteInfo);
+          } else {
+            rejectBetterRoute();
+            _model.value = _model.value.copyWith(
+              timeWinning: () => null,
+              type: BetterRouteType.unspecified,
+            );
+          }
+        });
   }
 
   void _calculateTimeForModel(sdk.BetterRouteInfo info) {
@@ -115,8 +115,10 @@ class BetterRoutePromptController {
     final currentDuration = navigationManager.uiModel.duration();
 
     if (currentDuration == null) {
-      _model.value = _model.value
-          .copyWith(timeWinning: () => null, type: BetterRouteType.unspecified);
+      _model.value = _model.value.copyWith(
+        timeWinning: () => null,
+        type: BetterRouteType.unspecified,
+      );
       return;
     }
 
@@ -130,8 +132,10 @@ class BetterRoutePromptController {
       type = BetterRouteType.sameTime;
     }
 
-    _model.value =
-        _model.value.copyWith(timeWinning: () => difference, type: type);
+    _model.value = _model.value.copyWith(
+      timeWinning: () => difference,
+      type: type,
+    );
   }
 
   /// Accepts the currently suggested better route.
@@ -140,8 +144,9 @@ class BetterRoutePromptController {
   /// * Triggers acceptance callback
   /// * Updates navigation manager with acceptance response
   void acceptBetterRoute() {
-    navigationManager.uiModel
-        .betterRouteResponse(sdk.BetterRouteResponse.accept);
+    navigationManager.uiModel.betterRouteResponse(
+      sdk.BetterRouteResponse.accept,
+    );
     _onBetterRouteAccepted(_currentBetterRoutePromptInfo!);
   }
 
@@ -151,8 +156,9 @@ class BetterRoutePromptController {
   /// * Triggers rejection callback
   /// * Clears current suggestion
   void rejectBetterRoute() {
-    navigationManager.uiModel
-        .betterRouteResponse(sdk.BetterRouteResponse.reject);
+    navigationManager.uiModel.betterRouteResponse(
+      sdk.BetterRouteResponse.reject,
+    );
     _onBetterRouteRejected();
     _currentBetterRoutePromptInfo = null;
   }
@@ -163,8 +169,9 @@ class BetterRoutePromptController {
   /// * Clears current suggestion
   /// * Updates navigation manager with timeout response
   void timeoutBetterRoutePrompt() {
-    navigationManager.uiModel
-        .betterRouteResponse(sdk.BetterRouteResponse.timeout);
+    navigationManager.uiModel.betterRouteResponse(
+      sdk.BetterRouteResponse.timeout,
+    );
     _onBetterRouteTimedOut();
     _currentBetterRoutePromptInfo = null;
   }

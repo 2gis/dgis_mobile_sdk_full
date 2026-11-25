@@ -22,8 +22,10 @@ extension ModelDistanceDuration on sdk.Model {
       return null;
     }
 
-    final duration = dynamicRouteInfo.traffic.durations
-        .calculateDuration(routePosition, endPosition);
+    final duration = dynamicRouteInfo.traffic.durations.calculateDuration(
+      routePosition,
+      endPosition,
+    );
 
     return duration;
   }

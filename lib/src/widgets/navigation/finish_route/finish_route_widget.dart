@@ -23,9 +23,9 @@ class FinishRouteWidget
     FinishRouteWidgetTheme? dark,
     super.key,
   }) : super(
-          dark: dark ?? FinishRouteWidgetTheme.defaultDark,
-          light: light ?? FinishRouteWidgetTheme.defaultLight,
-        );
+         dark: dark ?? FinishRouteWidgetTheme.defaultDark,
+         light: light ?? FinishRouteWidgetTheme.defaultLight,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static FinishRouteWidget defaultBuilder(FinishRouteController controller) =>
@@ -33,12 +33,16 @@ class FinishRouteWidget
 
   @override
   ThemedMapControllingWidgetState<FinishRouteWidget, FinishRouteWidgetTheme>
-      createState() => _FinishRouteWidgetState();
+  createState() => _FinishRouteWidgetState();
 }
 
-class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
-    FinishRouteWidget,
-    FinishRouteWidgetTheme> with SingleTickerProviderStateMixin {
+class _FinishRouteWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          FinishRouteWidget,
+          FinishRouteWidgetTheme
+        >
+    with SingleTickerProviderStateMixin {
   final DraggableScrollableController _controller =
       DraggableScrollableController();
   final ValueNotifier<bool> isExpanded = ValueNotifier(false);
@@ -63,15 +67,16 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
       duration: _animationDuration,
     );
 
-    _animation = Tween<double>(
-      begin: minExtendedSize,
-      end: maxExtendedSize,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOut,
-      ),
-    );
+    _animation =
+        Tween<double>(
+          begin: minExtendedSize,
+          end: maxExtendedSize,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOut,
+          ),
+        );
 
     _animation.addListener(() {
       _controller.jumpTo(_animation.value);
@@ -103,18 +108,21 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
       final contentHeight = renderBox.size.height;
       final screenHeight = MediaQuery.of(context).size.height;
       setState(() {
-        maxExtendedSize =
-            (contentHeight / screenHeight).clamp(minExtendedSize, 0.9);
-
-        _animation = Tween<double>(
-          begin: minExtendedSize,
-          end: maxExtendedSize,
-        ).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeOut,
-          ),
+        maxExtendedSize = (contentHeight / screenHeight).clamp(
+          minExtendedSize,
+          0.9,
         );
+
+        _animation =
+            Tween<double>(
+              begin: minExtendedSize,
+              end: maxExtendedSize,
+            ).animate(
+              CurvedAnimation(
+                parent: _animationController,
+                curve: Curves.easeOut,
+              ),
+            );
       });
     }
   }
@@ -193,7 +201,8 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
                           child: isExpanded && widget.shouldShowParkingButton
                               ? GestureDetector(
                                   onTap: widget
-                                      .controller.toggleParkingsVisibility,
+                                      .controller
+                                      .toggleParkingsVisibility,
                                   child: ValueListenableBuilder(
                                     valueListenable: widget.controller.state,
                                     builder: (context, state, _) {
@@ -201,11 +210,12 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
                                         decoration: BoxDecoration(
                                           color: state.isParkingEnabled
                                               ? colorScheme
-                                                  .activeButtonSurfaceColor
+                                                    .activeButtonSurfaceColor
                                               : colorScheme
-                                                  .inactiveButtonSurfaceColor,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                                    .inactiveButtonSurfaceColor,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         padding: const EdgeInsets.all(8),
                                         child: Row(
@@ -216,9 +226,9 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
                                               colorFilter: ColorFilter.mode(
                                                 state.isParkingEnabled
                                                     ? colorScheme
-                                                        .activeIconColor
+                                                          .activeIconColor
                                                     : colorScheme
-                                                        .inactiveIconColor,
+                                                          .inactiveIconColor,
                                                 BlendMode.srcIn,
                                               ),
                                             ),
@@ -226,9 +236,9 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
                                               localizations.dgis_navi_parking,
                                               style: state.isParkingEnabled
                                                   ? colorScheme
-                                                      .activeButtonsTextStyle
+                                                        .activeButtonsTextStyle
                                                   : colorScheme
-                                                      .inactiveButtonsTextStyle,
+                                                        .inactiveButtonsTextStyle,
                                             ),
                                           ],
                                         ),
@@ -254,7 +264,8 @@ class _FinishRouteWidgetState extends ThemedMapControllingWidgetState<
                   top: 8,
                 ),
                 child: GestureDetector(
-                  onTap: widget.onFinishClicked ??
+                  onTap:
+                      widget.onFinishClicked ??
                       widget.controller.stopNavigation,
                   child: Container(
                     decoration: BoxDecoration(

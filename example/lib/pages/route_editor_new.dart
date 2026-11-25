@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dgis_mobile_sdk_full/dgis.dart' as sdk;
@@ -27,6 +28,16 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   late final sdk.MapWidgetController mapWidgetController =
       createMapWidgetController(sdkContext);
 
+  final _showCrosshairNotifier = ValueNotifier<bool>(false);
+  final _isSelectingLocationNotifier = ValueNotifier<bool>(false);
+  final _isSelectingStartNotifier = ValueNotifier<bool>(false);
+  final _useTrafficRouterProviderNotifier = ValueNotifier<bool>(false);
+  final _showRouteEditorNotifier = ValueNotifier<bool>(false);
+  final _showPointsEditorNotifier = ValueNotifier<bool>(false);
+  final _hasRouteEditorInitializedNotifier = ValueNotifier<bool>(false);
+  final _editorInsetsNotifier = ValueNotifier<EdgeInsets>(EdgeInsets.zero);
+  final _editingPointIndexNotifier = ValueNotifier<int?>(null);
+
   sdk.MapObjectManager? mapObjectManager;
   sdk.RouteEditor? routeEditor;
   sdk.RouteEditorSource? routeEditorSource;
@@ -39,20 +50,14 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   sdk.MyLocationController? _myLocationController;
 
+  sdk.NavigationSettingsRepository? _navigationSettings;
+  sdk.SettingsTransportModeProvider? _settingsProvider;
+
   sdk.Marker? startMarker;
   sdk.Marker? finishMarker;
   List<sdk.Marker> intermediateMarkers = [];
 
   late sdk.ImageLoader loader;
-  bool showCrosshair = false;
-  bool isSelectingLocation = false;
-  bool isSelectingStart = true;
-  bool useTrafficRouterProvider = false;
-  bool useDarkTheme = false;
-  bool showRouteEditor = false;
-  bool showPointsEditor = false;
-  int? editingPointIndex;
-  EdgeInsets _editorInsets = EdgeInsets.zero;
 
   final defaultStartPoint = const sdk.GeoPoint(
     latitude: sdk.Latitude(55.7558),
@@ -81,10 +86,21 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   @override
   void dispose() {
+    _showCrosshairNotifier.dispose();
+    _isSelectingLocationNotifier.dispose();
+    _isSelectingStartNotifier.dispose();
+    _useTrafficRouterProviderNotifier.dispose();
+    _showRouteEditorNotifier.dispose();
+    _showPointsEditorNotifier.dispose();
+    _hasRouteEditorInitializedNotifier.dispose();
+    _editorInsetsNotifier.dispose();
+    _editingPointIndexNotifier.dispose();
+
     _routesInfoSubscription?.cancel();
     _routesIndexSubscription?.cancel();
     routeEditorController?.dispose();
     _myLocationController?.dispose();
+    _navigationSettings?.dispose();
     super.dispose();
   }
 
@@ -95,6 +111,7 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     if (!mounted) {
       return;
     }
+
     final locationSource = sdk.MyLocationMapObjectSource(sdkContext);
     map.addSource(locationSource);
 
@@ -102,9 +119,13 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     routeEditorSource = sdk.RouteEditorSource(sdkContext, routeEditor!);
     map.addSource(routeEditorSource!);
 
+    _navigationSettings = await sdk.NavigationSettingsRepository.defaults();
+    _settingsProvider = sdk.SettingsTransportModeProvider(_navigationSettings!);
+
     routeEditorController = sdk.RouteEditorController(
       routeEditor: routeEditor!,
       briefInfoProvider: _createBriefInfoProvider(),
+      transportTypeOptionsProvider: _settingsProvider,
     );
 
     searchManager = sdk.SearchManager.createOnlineManager(sdkContext);
@@ -125,10 +146,16 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       }),
     );
 
-    _routesInfoSubscription =
-        routeEditor!.routesInfoChannel.listen(_onRoutesChanged);
-    _routesIndexSubscription =
-        routeEditor!.activeRouteIndexChannel.listen(_onActiveRouteIndexChanged);
+    _routesInfoSubscription = routeEditor!.routesInfoChannel.listen(
+      _onRoutesChanged,
+    );
+    _routesIndexSubscription = routeEditor!.activeRouteIndexChannel.listen(
+      _onActiveRouteIndexChanged,
+    );
+
+    if (!mounted) return;
+
+    _showRouteEditorNotifier.value = true;
 
     setState(() {
       mapWidgetController
@@ -141,142 +168,284 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         },
         onTapFeedback: HapticFeedback.mediumImpact,
       );
-      showRouteEditor = true;
     });
+  }
+
+  /// Determines physical location of the front camera in landscape orientation
+  double _getControlsInsets(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    if (!isLandscape) return 0;
+
+    final padding = mediaQuery.padding;
+    if (Platform.isAndroid) {
+      // Check if there is a camera block in the horizontal orientation on the
+      // left side
+      return padding.right > 0 ? padding.right : 8;
+    } else if (Platform.isIOS) {
+      // And also on iOS
+      final isLeftSide = mediaQuery.viewPadding.top == 0;
+
+      return !isLeftSide ? mediaQuery.viewPadding.left : 8;
+    }
+
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isSystemThemeDark = mediaQuery.platformBrightness == Brightness.dark;
+    final theme = isSystemThemeDark
+        ? sdk.RouteEditorViewTheme.defaultDark
+        : sdk.RouteEditorViewTheme.defaultLight;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: !isLandscape
+          ? AppBar(
+              title: Text(
+                widget.title,
+                style: theme.finishLabelTextStyle.copyWith(fontSize: 22),
+              ),
+              backgroundColor: theme.backgroundColor,
+              iconTheme: IconThemeData(
+                color: isSystemThemeDark ? Colors.white : Colors.black,
+              ),
+            )
+          : null,
+      backgroundColor: theme.backgroundColor,
       body: Stack(
         key: _stackKey,
         children: [
           sdk.MapWidget(
             sdkContext: sdkContext,
             controller: mapWidgetController,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 6 + _editorInsets.left,
-                top: 6 + _editorInsets.top,
-                right: 6 + _editorInsets.right,
-                bottom: 6 + _editorInsets.bottom,
-              ),
+            child: ValueListenableBuilder(
+              valueListenable: _editorInsetsNotifier,
+              builder: (context, editorInsets, child) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: 6 + editorInsets.left,
+                    top: 6 + editorInsets.top,
+                    right: 6 + editorInsets.right,
+                    bottom: 6 + editorInsets.bottom,
+                  ),
+                  child: child,
+                );
+              },
               child: Row(
                 children: [
                   Column(
                     children: [
-                      _ProviderSwitchButton(
-                        useTrafficRouterProvider: useTrafficRouterProvider,
-                        onTap: _switchBriefInfoProvider,
-                      ),
-                      const SizedBox(height: 8),
-                      _ThemeSwitchButton(
-                        useDarkTheme: useDarkTheme,
-                        onTap: _switchTheme,
+                      ValueListenableBuilder(
+                        valueListenable: _useTrafficRouterProviderNotifier,
+                        builder: (context, useTrafficRouterProvider, child) {
+                          return _ProviderSwitchButton(
+                            useTrafficRouterProvider: useTrafficRouterProvider,
+                            onTap: _switchBriefInfoProvider,
+                          );
+                        },
                       ),
                       const Spacer(),
                     ],
                   ),
                   const Spacer(),
-                  Column(
-                    children: [
-                      const sdk.TrafficWidget(),
-                      const Spacer(),
-                      const sdk.ZoomWidget(),
-                      const Spacer(),
-                      const sdk.CompassWidget(),
-                      const SizedBox(height: 8),
-                      if (_myLocationController != null)
-                        sdk.MyLocationWidget(
-                          controller: _myLocationController!,
-                        ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: _getControlsInsets(context),
+                      top: isLandscape ? 8 : 0,
+                      bottom: isLandscape ? 8 : 0,
+                    ),
+                    child: Column(
+                      children: [
+                        const sdk.TrafficWidget(),
+                        const Spacer(),
+                        const sdk.ZoomWidget(),
+                        const Spacer(),
+                        const sdk.CompassWidget(),
+                        const SizedBox(height: 8),
+                        if (_myLocationController != null)
+                          sdk.MyLocationWidget(
+                            controller: _myLocationController!,
+                          ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          if (routeEditorController != null &&
-              showRouteEditor &&
-              !isSelectingLocation &&
-              !showPointsEditor)
-            sdk.RouteEditorWidget(
-              theme: useDarkTheme
-                  ? sdk.RouteEditorViewTheme.defaultDark
-                  : sdk.RouteEditorViewTheme.defaultLight,
-              controller: routeEditorController!,
-              onSwapCallback: _updateMarkers,
-              routeSearchPointBuilder: _CustomRouteSearchPointBuilder(
-                controller: routeEditorController!,
-                onTap: _showPointsEditor,
-              ),
-              onStartNavigation: (route) {
-                _showMessage('Starting navigation');
+          if (routeEditorController != null)
+            ValueListenableBuilder(
+              valueListenable: _isSelectingLocationNotifier,
+              builder: (context, isSelectingLocation, child) {
+                if (isSelectingLocation || child == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return child;
               },
-              onClose: () {
-                _setDefaultRoutePoints();
-                mapObjectManager?.removeAll();
-                _addDefaultMarkers();
-              },
-              onReservedInsetsChanged: (insets) {
-                setState(() {
-                  _editorInsets = insets;
-                });
-              },
-            ),
-          if (showPointsEditor && routeEditorController != null)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: RoutePointsEditorWidget(
-                controller: routeEditorController!,
-                theme: useDarkTheme
-                    ? RoutePointsEditorTheme.defaultDark
-                    : RoutePointsEditorTheme.defaultLight,
-                routeDuration: _getRouteDuration(),
-                onCancel: _hidePointsEditor,
-                onPointTap: _onPointTap,
-                onAddStop: _onAddStop,
-                onPointDeleted: _updateMarkers,
-              ),
-            ),
-          if (showCrosshair && isSelectingLocation)
-            const Center(
-              child: Icon(
-                Icons.add,
-                color: Colors.red,
-                size: 30,
-              ),
-            ),
-          if (showCrosshair && isSelectingLocation)
-            Positioned(
-              bottom: math.max(16, MediaQuery.of(context).padding.bottom),
-              left: 16,
-              right: 16,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _confirmLocationSelection,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Confirm Location'),
+              child: ValueListenableBuilder(
+                valueListenable: _showRouteEditorNotifier,
+                builder: (context, showRouteEditor, child) {
+                  if (!showRouteEditor || child == null) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return child;
+                },
+                child: ValueListenableBuilder(
+                  valueListenable: _showPointsEditorNotifier,
+                  builder: (context, showPointsEditor, child) {
+                    if (showPointsEditor || child == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return child;
+                  },
+                  child: sdk.RouteEditorWidget(
+                    controller: routeEditorController!,
+                    theme: theme,
+                    navigationSettings: sdk.NavigationSettingsOptions(
+                      repository: _navigationSettings,
                     ),
+                    onSwapCallback: _updateMarkers,
+                    routeSearchPointBuilder: _CustomRouteSearchPointBuilder(
+                      controller: routeEditorController!,
+                      onTap: _showPointsEditor,
+                    ),
+                    onStartNavigation: (route) {
+                      _showMessage('Starting navigation');
+                    },
+                    onClose: () {
+                      _setDefaultRoutePoints();
+                      mapObjectManager?.removeAll();
+                      _addDefaultMarkers();
+                    },
+                    onInitLayout: (height) {
+                      if (_hasRouteEditorInitializedNotifier.value) return;
+                      _hasRouteEditorInitializedNotifier.value = true;
+
+                      // It is necessary to adjust the camera to the route after
+                      // initialization [sdk.RouteEditorWidget] only once
+                      _editorInsetsNotifier.value = EdgeInsets.only(
+                        bottom: height,
+                      );
+                    },
+                    onReservedInsetsChanged: (insets) async {
+                      _editorInsetsNotifier.value = insets;
+
+                      final routesInfo = routeEditor?.routesInfoChannel.value;
+                      if (routesInfo == null || routesInfo.routes.isEmpty) {
+                        return;
+                      }
+                      await Future.delayed(
+                        const Duration(milliseconds: 10),
+                      );
+
+                      unawaited(_fitCameraToActiveRoute(routesInfo));
+                    },
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _cancelLocationSelection,
-                    child: const Text('Cancel'),
-                  ),
-                ],
+                ),
               ),
             ),
+          if (routeEditorController != null)
+            ValueListenableBuilder(
+              valueListenable: _showPointsEditorNotifier,
+              builder: (context, showPointsEditor, child) {
+                if (!showPointsEditor || child == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return child;
+              },
+              child: Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: RoutePointsEditorWidget(
+                  controller: routeEditorController!,
+                  theme: isSystemThemeDark
+                      ? RoutePointsEditorTheme.defaultDark
+                      : RoutePointsEditorTheme.defaultLight,
+                  routeDuration: _getRouteDuration(),
+                  onCancel: _hidePointsEditor,
+                  onPointTap: _onPointTap,
+                  onAddStop: _onAddStop,
+                  onPointDeleted: _updateMarkers,
+                ),
+              ),
+            ),
+          ValueListenableBuilder(
+            valueListenable: _showCrosshairNotifier,
+            builder: (context, showCrosshair, child) {
+              if (!showCrosshair || child == null) {
+                return const SizedBox.shrink();
+              }
+
+              return child;
+            },
+            child: ValueListenableBuilder(
+              valueListenable: _isSelectingLocationNotifier,
+              builder: (context, isSelectingLocation, child) {
+                if (!isSelectingLocation || child == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return child;
+              },
+              child: const Center(
+                child: Icon(Icons.add, color: Colors.red, size: 30),
+              ),
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: _showCrosshairNotifier,
+            builder: (context, showCrosshair, child) {
+              if (!showCrosshair || child == null) {
+                return const SizedBox.shrink();
+              }
+
+              return child;
+            },
+
+            child: ValueListenableBuilder(
+              valueListenable: _isSelectingLocationNotifier,
+              builder: (context, isSelectingLocation, child) {
+                if (!isSelectingLocation || child == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return child;
+              },
+              child: Positioned(
+                bottom: math.max(16, MediaQuery.of(context).padding.bottom),
+                left: 16,
+                right: 16,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _confirmLocationSelection,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Confirm Location'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _cancelLocationSelection,
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -334,28 +503,33 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   void _showLocationSelector(bool isStart) {
-    setState(() {
-      isSelectingStart = isStart;
-    });
+    _isSelectingStartNotifier.value = isStart;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _buildLocationSelectorSheet(),
-    );
-  }
+      builder: (context) {
+        final mediaQuery = MediaQuery.of(context);
+        final isSystemThemeDark =
+            mediaQuery.platformBrightness == Brightness.dark;
 
-  Widget _buildLocationSelectorSheet() {
-    return LocationSelectorSheet(
-      isSelectingStart: isSelectingStart,
-      searchManager: searchManager,
-      onDirectoryObjectSelected: _onSearchDirectoryObjectSelected,
-      onMyLocationPressed: _useMyLocation,
-      onChooseOnMapPressed: _chooseOnMap,
-      theme: useDarkTheme
-          ? LocationSelectorTheme.defaultDark
-          : LocationSelectorTheme.defaultLight,
+        return ValueListenableBuilder(
+          valueListenable: _isSelectingStartNotifier,
+          builder: (context, isSelectingStart, child) {
+            return LocationSelectorSheet(
+              isSelectingStart: isSelectingStart,
+              searchManager: searchManager,
+              onDirectoryObjectSelected: _onSearchDirectoryObjectSelected,
+              onMyLocationPressed: _useMyLocation,
+              onChooseOnMapPressed: _chooseOnMap,
+              theme: isSystemThemeDark
+                  ? LocationSelectorTheme.defaultDark
+                  : LocationSelectorTheme.defaultLight,
+            );
+          },
+        );
+      },
     );
   }
 
@@ -369,11 +543,12 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         label: location.title,
       );
 
-      final currentPoints =
-          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
-      if (isSelectingStart && currentPoints.isNotEmpty) {
+      final currentPoints = List<sdk.RoutePointUI>.from(
+        routeEditorController!.routePoints.value,
+      );
+      if (_isSelectingStartNotifier.value && currentPoints.isNotEmpty) {
         currentPoints[0] = routePoint;
-      } else if (!isSelectingStart && currentPoints.length > 1) {
+      } else if (!_isSelectingStartNotifier.value && currentPoints.length > 1) {
         currentPoints[currentPoints.length - 1] = routePoint;
       }
 
@@ -396,11 +571,12 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         label: 'My Location',
       );
 
-      final currentPoints =
-          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
-      if (isSelectingStart && currentPoints.isNotEmpty) {
+      final currentPoints = List<sdk.RoutePointUI>.from(
+        routeEditorController!.routePoints.value,
+      );
+      if (_isSelectingStartNotifier.value && currentPoints.isNotEmpty) {
         currentPoints[0] = routePoint;
-      } else if (!isSelectingStart && currentPoints.length > 1) {
+      } else if (!_isSelectingStartNotifier.value && currentPoints.length > 1) {
         currentPoints[currentPoints.length - 1] = routePoint;
       }
 
@@ -412,10 +588,10 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   void _chooseOnMap() {
     Navigator.pop(context);
-    setState(() {
-      isSelectingLocation = true;
-      showCrosshair = true;
-    });
+
+    _isSelectingLocationNotifier.value = true;
+    _showCrosshairNotifier.value = true;
+    _editorInsetsNotifier.value = EdgeInsets.zero;
   }
 
   Future<void> _confirmLocationSelection() async {
@@ -456,8 +632,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         coordinates = objectInfo.closestMapPoint.point;
         final objectId = object.id;
         if (searchManager != null) {
-          final directoryObjects =
-              await searchManager!.searchByDirectoryObjectIds([objectId]).value;
+          final directoryObjects = await searchManager!
+              .searchByDirectoryObjectIds([objectId])
+              .value;
           if (directoryObjects.isNotEmpty) {
             label = directoryObjects.first.title;
           }
@@ -471,34 +648,32 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       label: label,
     );
 
-    final currentPoints =
-        List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
+    final currentPoints = List<sdk.RoutePointUI>.from(
+      routeEditorController!.routePoints.value,
+    );
 
-    if (editingPointIndex == -1) {
+    if (_editingPointIndexNotifier.value == -1) {
       currentPoints.insert(currentPoints.length - 1, routePoint);
-    } else if (isSelectingStart && currentPoints.isNotEmpty) {
+    } else if (_isSelectingStartNotifier.value && currentPoints.isNotEmpty) {
       currentPoints[0] = routePoint;
-    } else if (!isSelectingStart && currentPoints.length > 1) {
+    } else if (!_isSelectingStartNotifier.value && currentPoints.length > 1) {
       currentPoints[currentPoints.length - 1] = routePoint;
     }
 
     routeEditorController!.setRoutePoints(currentPoints);
 
-    setState(() {
-      isSelectingLocation = false;
-      showCrosshair = false;
-      editingPointIndex = null;
-    });
+    _isSelectingLocationNotifier.value = false;
+    _showCrosshairNotifier.value = false;
+
+    _editingPointIndexNotifier.value = null;
 
     await _updateMarkers();
   }
 
   void _cancelLocationSelection() {
-    setState(() {
-      isSelectingLocation = false;
-      showCrosshair = false;
-      editingPointIndex = null;
-    });
+    _isSelectingLocationNotifier.value = false;
+    _showCrosshairNotifier.value = false;
+    _editingPointIndexNotifier.value = null;
   }
 
   Future<void> _updateMarkers() async {
@@ -578,8 +753,12 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   Future<void> _handleMapLongTouch(sdk.RenderedObjectInfo objectInfo) async {
-    if (!showRouteEditor || routeEditorController == null) return;
-    if (isSelectingLocation || showPointsEditor) return;
+    if (!_showRouteEditorNotifier.value || routeEditorController == null) {
+      return;
+    }
+    if (_isSelectingLocationNotifier.value || _showPointsEditorNotifier.value) {
+      return;
+    }
 
     final currentPoints = routeEditorController!.routePoints.value;
     if (currentPoints.length < 2) return;
@@ -595,8 +774,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
     if (object is sdk.DgisMapObject && searchManager != null) {
       final objectId = object.id;
-      final directoryObjects =
-          await searchManager!.searchByDirectoryObjectIds([objectId]).value;
+      final directoryObjects = await searchManager!.searchByDirectoryObjectIds([
+        objectId,
+      ]).value;
       final directoryObject = directoryObjects.firstOrNull;
 
       if (directoryObject != null) {
@@ -626,17 +806,11 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   sdk.BriefInfoProvider _createBriefInfoProvider() {
-    if (useTrafficRouterProvider && trafficRouter != null) {
+    if (_useTrafficRouterProviderNotifier.value && trafficRouter != null) {
       return sdk.TrafficRouterBriefInfoProvider(trafficRouter: trafficRouter!);
     } else {
       return sdk.ActiveRouteBriefInfoProvider();
     }
-  }
-
-  void _switchTheme() {
-    setState(() {
-      useDarkTheme = !useDarkTheme;
-    });
   }
 
   void _onRoutesChanged(sdk.RouteEditorRoutesInfo routesInfo) {
@@ -667,20 +841,19 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         routeEditor?.activeRouteIndexChannel.value?.value ?? 0;
     final activeRoute = routesInfo.routes[activeRouteIndex].route;
     final routeGeometry = activeRoute.geometry;
-
     final mapGeometry = sdk.toMapGeometry(routeGeometry);
-
-    final dpi = MediaQuery.of(context).devicePixelRatio;
-
+    final editorInsets = _editorInsetsNotifier.value;
+    final mediaQuery = MediaQuery.of(context);
+    final dpi = mediaQuery.devicePixelRatio;
     final cameraPosition = sdk.calcPositionForGeometry(
       map.camera,
       mapGeometry,
       null,
       sdk.Padding(
-        top: ((_editorInsets.top + _cameraPadding) * dpi).ceil(),
-        bottom: ((_editorInsets.bottom + _cameraPadding) * dpi).ceil(),
-        left: ((_editorInsets.left + _cameraPadding) * dpi).ceil(),
-        right: ((_editorInsets.right + _cameraPadding) * dpi).ceil(),
+        top: ((editorInsets.top + _cameraPadding) * dpi).ceil(),
+        bottom: ((editorInsets.bottom + _cameraPadding) * dpi).ceil(),
+        left: ((editorInsets.left + _cameraPadding) * dpi).ceil(),
+        right: ((editorInsets.right + _cameraPadding) * dpi).ceil(),
       ),
       null,
       null,
@@ -690,20 +863,27 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
     await map.camera.moveToCameraPosition(cameraPosition).value;
   }
 
-  void _switchBriefInfoProvider() {
-    setState(() {
-      useTrafficRouterProvider = !useTrafficRouterProvider;
-    });
+  Future<void> _switchBriefInfoProvider() async {
+    _useTrafficRouterProviderNotifier.value =
+        !_useTrafficRouterProviderNotifier.value;
 
     if (routeEditor != null) {
       final oldController = routeEditorController;
+      final oldNavigationSettings = _navigationSettings;
       final oldRoutePoints = oldController?.routePoints.value ?? [];
 
       oldController?.dispose();
+      oldNavigationSettings?.dispose();
+
+      _navigationSettings = await sdk.NavigationSettingsRepository.defaults();
+      _settingsProvider = sdk.SettingsTransportModeProvider(
+        _navigationSettings!,
+      );
 
       routeEditorController = sdk.RouteEditorController(
         routeEditor: routeEditor!,
         briefInfoProvider: _createBriefInfoProvider(),
+        transportTypeOptionsProvider: _settingsProvider,
       );
 
       if (oldRoutePoints.isNotEmpty) {
@@ -722,16 +902,13 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   void _showPointsEditor() {
-    setState(() {
-      showPointsEditor = true;
-    });
+    _showPointsEditorNotifier.value = true;
   }
 
   void _hidePointsEditor() {
-    setState(() {
-      showPointsEditor = false;
-      editingPointIndex = null;
-    });
+    _showPointsEditorNotifier.value = false;
+    _editingPointIndexNotifier.value = null;
+
     _updateMarkers();
   }
 
@@ -752,20 +929,19 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
   }
 
   void _onPointTap(int index) {
-    setState(() {
-      editingPointIndex = index;
-      isSelectingStart = index == 0;
-    });
+    _isSelectingStartNotifier.value = index == 0;
+    _editingPointIndexNotifier.value = index;
+
     _hidePointsEditor();
     _showLocationSelector(index == 0);
   }
 
   void _onAddStop() {
     _hidePointsEditor();
-    setState(() {
-      editingPointIndex = routeEditorController!.routePoints.value.length - 1;
-      isSelectingStart = false;
-    });
+    _isSelectingStartNotifier.value = false;
+    _editingPointIndexNotifier.value =
+        routeEditorController!.routePoints.value.length - 1;
+
     _showLocationSelectorForIntermediatePoint();
   }
 
@@ -774,16 +950,22 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => LocationSelectorSheet(
-        isSelectingStart: false,
-        searchManager: searchManager,
-        onDirectoryObjectSelected: _onIntermediatePointSelected,
-        onMyLocationPressed: _useMyLocationForIntermediatePoint,
-        onChooseOnMapPressed: _chooseOnMapForIntermediatePoint,
-        theme: useDarkTheme
-            ? LocationSelectorTheme.defaultDark
-            : LocationSelectorTheme.defaultLight,
-      ),
+      builder: (context) {
+        final mediaQuery = MediaQuery.of(context);
+        final isSystemThemeDark =
+            mediaQuery.platformBrightness == Brightness.dark;
+
+        return LocationSelectorSheet(
+          isSelectingStart: false,
+          searchManager: searchManager,
+          onDirectoryObjectSelected: _onIntermediatePointSelected,
+          onMyLocationPressed: _useMyLocationForIntermediatePoint,
+          onChooseOnMapPressed: _chooseOnMapForIntermediatePoint,
+          theme: isSystemThemeDark
+              ? LocationSelectorTheme.defaultDark
+              : LocationSelectorTheme.defaultLight,
+        );
+      },
     );
   }
 
@@ -797,8 +979,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         label: location.title,
       );
 
-      final currentPoints =
-          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
+      final currentPoints = List<sdk.RoutePointUI>.from(
+        routeEditorController!.routePoints.value,
+      );
       currentPoints.insert(currentPoints.length - 1, routePoint);
 
       routeEditorController!.setRoutePoints(currentPoints);
@@ -820,8 +1003,9 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
         label: 'My Location',
       );
 
-      final currentPoints =
-          List<sdk.RoutePointUI>.from(routeEditorController!.routePoints.value);
+      final currentPoints = List<sdk.RoutePointUI>.from(
+        routeEditorController!.routePoints.value,
+      );
 
       currentPoints.insert(currentPoints.length - 1, routePoint);
 
@@ -832,11 +1016,11 @@ class _RouteEditorNewPageState extends State<RouteEditorNewPage> {
 
   void _chooseOnMapForIntermediatePoint() {
     Navigator.pop(context);
-    setState(() {
-      isSelectingLocation = true;
-      showCrosshair = true;
-      editingPointIndex = -1;
-    });
+
+    _isSelectingLocationNotifier.value = true;
+    _showCrosshairNotifier.value = true;
+    _editingPointIndexNotifier.value = -1;
+    _editorInsetsNotifier.value = EdgeInsets.zero;
   }
 }
 

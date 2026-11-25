@@ -49,20 +49,20 @@ Future<void> showNavigationSettingsFlow({
     transitionDuration: _transitionDuration,
     pageBuilder: (dialogContext, animation, secondaryAnimation) =>
         _SettingsFlow(
-      repository: repository,
-      primarySection: primarySection,
-      visibilityConfig: visibilityConfig,
-      theme: resolvedTheme,
-      onClose: () => Navigator.of(dialogContext).pop(),
-    ),
+          repository: repository,
+          primarySection: primarySection,
+          visibilityConfig: visibilityConfig,
+          theme: resolvedTheme,
+          onClose: () => Navigator.of(dialogContext).pop(),
+        ),
     transitionBuilder: (context, animation, secondaryAnimation, child) =>
         SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(1, 0),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-      child: child,
-    ),
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+          child: child,
+        ),
   );
 }
 
@@ -104,21 +104,22 @@ class _SettingsFlowState extends State<_SettingsFlow> {
   @override
   // ignore: deprecated_member_use
   Widget build(BuildContext context) => WillPopScope(
-        onWillPop: _handleBack,
-        child: navigationSettingsTextScope(
-          theme: widget.theme,
-          child: Navigator(
-            key: _navigatorKey,
-            initialRoute: _SettingsRoutes.root,
-            onGenerateRoute: _onGenerateRoute,
-          ),
-        ),
-      );
+    onWillPop: _handleBack,
+    child: navigationSettingsTextScope(
+      theme: widget.theme,
+      child: Navigator(
+        key: _navigatorKey,
+        initialRoute: _SettingsRoutes.root,
+        onGenerateRoute: _onGenerateRoute,
+      ),
+    ),
+  );
 
   Route<void> _onGenerateRoute(RouteSettings settings) {
     final localizations =
         DgisLocalizations.of(context) ?? DgisLocalizationsEn();
-    final isFullHeightRoute = settings.name == _SettingsRoutes.root ||
+    final isFullHeightRoute =
+        settings.name == _SettingsRoutes.root ||
         settings.name == _SettingsRoutes.sounds ||
         settings.name == _SettingsRoutes.voices ||
         settings.name == _SettingsRoutes.voiceLanguage;
@@ -145,132 +146,134 @@ class _SettingsFlowState extends State<_SettingsFlow> {
       },
       transitionsBuilder: (context, animation, secondaryAnimation, child) =>
           SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-        child: child,
-      ),
+            position:
+                Tween<Offset>(
+                  begin: const Offset(1, 0),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                ),
+            child: child,
+          ),
     );
   }
 
   (String, Widget, VoidCallback) _pageFor(
     RouteSettings settings,
     DgisLocalizations localizations,
-  ) =>
-      switch (settings.name) {
-        _SettingsRoutes.root => (
-            localizations.dgis_settings_title,
-            RouteSettingsLayout(
-              repository: widget.repository,
-              primarySection: widget.primarySection,
-              theme: widget.theme,
-              visibilityConfig: widget.visibilityConfig,
-              onNavigateToCar: () => _open(_SettingsRoutes.car),
-              onNavigateToPedestrian: () => _open(_SettingsRoutes.pedestrian),
-              onNavigateToBicycle: () => _open(_SettingsRoutes.bicycle),
-              onNavigateToScooter: () => _open(_SettingsRoutes.scooter),
-              onNavigateToMotorcycle: () => _open(_SettingsRoutes.motorcycle),
-              onNavigateToPublicTransport: () =>
-                  _open(_SettingsRoutes.publicTransport),
-              onNavigateToTruck: () => _open(_SettingsRoutes.truck),
-              onNavigateToSounds: () => _open(_SettingsRoutes.sounds),
-              onNavigateToVoices: () => _open(_SettingsRoutes.voices),
-            ),
-            widget.onClose,
-          ),
-        _SettingsRoutes.car => (
-            localizations.dgis_settings_section_car,
-            CarRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.pedestrian => (
-            localizations.dgis_settings_section_pedestrian,
-            PedestrianRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.bicycle => (
-            localizations.dgis_settings_section_bicycle,
-            BicycleRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.scooter => (
-            localizations.dgis_settings_section_scooter,
-            ScooterRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.motorcycle => (
-            localizations.dgis_settings_section_motorcycle,
-            MotorcycleRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.publicTransport => (
-            localizations.dgis_settings_section_public_transport,
-            PublicTransportRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.truck => (
-            localizations.dgis_settings_truck_title,
-            TruckRouteSettingsLayout(
-              repository: widget.repository,
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.sounds => (
-            localizations.dgis_settings_sounds_and_alerts,
-            SoundSettingsLayout(
-              repository: widget.repository,
-              visibilityConfig: widget.visibilityConfig,
-              theme: widget.theme,
-              onNavigateToVoices: () => _open(_SettingsRoutes.voices),
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.voices => (
-            localizations.dgis_settings_voices,
-            VoicesLayout(
-              repository: widget.repository,
-              selectedLanguage: _voiceLanguage,
-              onNavigateToLanguageSelection: () =>
-                  _open(_SettingsRoutes.voiceLanguage),
-              theme: widget.theme,
-              visibilityConfig: widget.visibilityConfig,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _SettingsRoutes.voiceLanguage => (
-            localizations.dgis_settings_voices_language_selection,
-            VoicesLanguageLayout(
-              selectedLanguage: _voiceLanguage,
-              onLanguageSelected: (language) {
-                setState(() => _voiceLanguage = language);
-                _navigatorKey.currentState!.pop();
-              },
-              theme: widget.theme,
-            ),
-            () => _navigatorKey.currentState!.pop(),
-          ),
-        _ => throw ArgumentError.value(settings.name, 'settings.name'),
-      };
+  ) => switch (settings.name) {
+    _SettingsRoutes.root => (
+      localizations.dgis_settings_title,
+      RouteSettingsLayout(
+        repository: widget.repository,
+        primarySection: widget.primarySection,
+        theme: widget.theme,
+        visibilityConfig: widget.visibilityConfig,
+        onNavigateToCar: () => _open(_SettingsRoutes.car),
+        onNavigateToPedestrian: () => _open(_SettingsRoutes.pedestrian),
+        onNavigateToBicycle: () => _open(_SettingsRoutes.bicycle),
+        onNavigateToScooter: () => _open(_SettingsRoutes.scooter),
+        onNavigateToMotorcycle: () => _open(_SettingsRoutes.motorcycle),
+        onNavigateToPublicTransport: () =>
+            _open(_SettingsRoutes.publicTransport),
+        onNavigateToTruck: () => _open(_SettingsRoutes.truck),
+        onNavigateToSounds: () => _open(_SettingsRoutes.sounds),
+        onNavigateToVoices: () => _open(_SettingsRoutes.voices),
+      ),
+      widget.onClose,
+    ),
+    _SettingsRoutes.car => (
+      localizations.dgis_settings_section_car,
+      CarRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.pedestrian => (
+      localizations.dgis_settings_section_pedestrian,
+      PedestrianRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.bicycle => (
+      localizations.dgis_settings_section_bicycle,
+      BicycleRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.scooter => (
+      localizations.dgis_settings_section_scooter,
+      ScooterRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.motorcycle => (
+      localizations.dgis_settings_section_motorcycle,
+      MotorcycleRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.publicTransport => (
+      localizations.dgis_settings_section_public_transport,
+      PublicTransportRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.truck => (
+      localizations.dgis_settings_truck_title,
+      TruckRouteSettingsLayout(
+        repository: widget.repository,
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.sounds => (
+      localizations.dgis_settings_sounds_and_alerts,
+      SoundSettingsLayout(
+        repository: widget.repository,
+        visibilityConfig: widget.visibilityConfig,
+        theme: widget.theme,
+        onNavigateToVoices: () => _open(_SettingsRoutes.voices),
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.voices => (
+      localizations.dgis_settings_voices,
+      VoicesLayout(
+        repository: widget.repository,
+        selectedLanguage: _voiceLanguage,
+        onNavigateToLanguageSelection: () =>
+            _open(_SettingsRoutes.voiceLanguage),
+        theme: widget.theme,
+        visibilityConfig: widget.visibilityConfig,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _SettingsRoutes.voiceLanguage => (
+      localizations.dgis_settings_voices_language_selection,
+      VoicesLanguageLayout(
+        selectedLanguage: _voiceLanguage,
+        onLanguageSelected: (language) {
+          setState(() => _voiceLanguage = language);
+          _navigatorKey.currentState!.pop();
+        },
+        theme: widget.theme,
+      ),
+      () => _navigatorKey.currentState!.pop(),
+    ),
+    _ => throw ArgumentError.value(settings.name, 'settings.name'),
+  };
 }
 
 class _SettingsScreen extends StatelessWidget {
@@ -288,30 +291,30 @@ class _SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CupertinoPageScaffold(
-        backgroundColor: theme.colors.pickerBackground,
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: theme.colors.pickerBackground,
-          border: Border(bottom: BorderSide(color: theme.colors.divider)),
-          // Keep the bar and its bottom hairline visible before any scroll.
-          automaticBackgroundVisibility: false,
-          leading: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: onBack,
-            child: Icon(
-              CupertinoIcons.back,
-              color: theme.colors.settingLabel,
-            ),
-          ),
-          middle: navigationSettingsTextScope(
-            theme: theme,
-            child: Text(
-              title,
-              style: theme.typography.screenTitle.copyWith(
-                color: theme.colors.settingLabel,
-              ),
-            ),
+    backgroundColor: theme.colors.pickerBackground,
+    navigationBar: CupertinoNavigationBar(
+      backgroundColor: theme.colors.pickerBackground,
+      border: Border(bottom: BorderSide(color: theme.colors.divider)),
+      // Keep the bar and its bottom hairline visible before any scroll.
+      automaticBackgroundVisibility: false,
+      leading: CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onBack,
+        child: Icon(
+          CupertinoIcons.back,
+          color: theme.colors.settingLabel,
+        ),
+      ),
+      middle: navigationSettingsTextScope(
+        theme: theme,
+        child: Text(
+          title,
+          style: theme.typography.screenTitle.copyWith(
+            color: theme.colors.settingLabel,
           ),
         ),
-        child: SafeArea(top: false, child: child),
-      );
+      ),
+    ),
+    child: SafeArea(top: false, child: child),
+  );
 }

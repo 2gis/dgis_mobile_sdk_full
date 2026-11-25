@@ -25,34 +25,32 @@ Color _playColor(
   NavigationSettingsColors colors, {
   required bool playing,
   required VoidCallback? onPlay,
-}) =>
-    playing
-        ? colors.voiceAction
-        : onPlay == null
-            ? colors.inactiveActionIcon
-            : colors.actionIcon;
+}) => playing
+    ? colors.voiceAction
+    : onPlay == null
+    ? colors.inactiveActionIcon
+    : colors.actionIcon;
 
 Widget _buildDownloadProgress({
   required NavigationSettingsTheme theme,
   required NavigationSettingsColors colors,
   required int progress,
-}) =>
-    SizedBox.square(
-      dimension: _tapTargetSize,
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            NavigationSettingsProgressIndicator(
-              progress: progress,
-              theme: theme,
-              color: colors.voiceAction,
-            ),
-            _StopGlyph(color: colors.voiceAction),
-          ],
+}) => SizedBox.square(
+  dimension: _tapTargetSize,
+  child: Center(
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        NavigationSettingsProgressIndicator(
+          progress: progress,
+          theme: theme,
+          color: colors.voiceAction,
         ),
-      ),
-    );
+        _StopGlyph(color: colors.voiceAction),
+      ],
+    ),
+  ),
+);
 
 /// Row for an installed voice.
 ///
@@ -154,7 +152,8 @@ class NavigationSettingsSelectableListItem extends StatelessWidget {
           SizedBox.square(
             dimension: _tapTargetSize,
             child: Center(
-              child: checkIcon ??
+              child:
+                  checkIcon ??
                   _Glyph(asset: 'dgis_check', color: colors.voiceAction),
             ),
           ),
@@ -261,7 +260,7 @@ class NavigationSettingsDownloadableListItem extends StatelessWidget {
         icon: playIcon,
       ),
       trailingActions: [
-        if (trailing != null) trailing,
+        ?trailing,
       ],
     );
   }
@@ -392,12 +391,12 @@ class _Glyph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgPicture.asset(
-        _asset(asset),
-        width: _iconSize,
-        height: _iconSize,
-        fit: BoxFit.scaleDown,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    _asset(asset),
+    width: _iconSize,
+    height: _iconSize,
+    fit: BoxFit.scaleDown,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+  );
 }
 
 class _StopGlyph extends StatelessWidget {
@@ -407,12 +406,12 @@ class _StopGlyph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(_stopRadius),
-        ),
-        child: const SizedBox.square(dimension: _stopSize),
-      );
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(_stopRadius),
+    ),
+    child: const SizedBox.square(dimension: _stopSize),
+  );
 }
 
 class _ActionButton extends StatelessWidget {
@@ -451,7 +450,8 @@ class _ActionButton extends StatelessWidget {
         child: SizedBox.square(
           dimension: _tapTargetSize,
           child: Center(
-            child: icon ??
+            child:
+                icon ??
                 (asset == null ? null : _Glyph(asset: asset, color: color)),
           ),
         ),

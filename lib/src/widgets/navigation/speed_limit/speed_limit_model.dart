@@ -51,15 +51,16 @@ class SpeedLimitModel {
 
   @override
   int get hashCode => Object.hash(
-        location,
-        speedLimit,
-        exceeding,
-        cameraProgressInfo,
-        currentSpeed,
-      );
+    location,
+    speedLimit,
+    exceeding,
+    cameraProgressInfo,
+    currentSpeed,
+  );
 
   @override
-  String toString() => 'SpeedLimitModel('
+  String toString() =>
+      'SpeedLimitModel('
       'currentSpeed: $currentSpeed, '
       'location: $location, '
       'speedLimit: $speedLimit, '

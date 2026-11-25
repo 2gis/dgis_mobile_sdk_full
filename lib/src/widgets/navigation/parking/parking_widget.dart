@@ -25,9 +25,9 @@ class NavigationParkingWidget
     NavigationMapControlTheme? light,
     NavigationMapControlTheme? dark,
   }) : super(
-          light: light ?? NavigationMapControlTheme.defaultLight,
-          dark: dark ?? NavigationMapControlTheme.defaultDark,
-        );
+         light: light ?? NavigationMapControlTheme.defaultLight,
+         dark: dark ?? NavigationMapControlTheme.defaultDark,
+       );
 
   final RoundedCorners roundedCorners;
 
@@ -35,20 +35,25 @@ class NavigationParkingWidget
   static NavigationParkingWidget defaultBuilder(
     RoundedCorners corners,
     ParkingController controller,
-  ) =>
-      NavigationParkingWidget(
-        roundedCorners: corners,
-        controller: controller,
-      );
+  ) => NavigationParkingWidget(
+    roundedCorners: corners,
+    controller: controller,
+  );
 
   @override
-  ThemedMapControllingWidgetState<NavigationParkingWidget,
-          NavigationMapControlTheme>
-      createState() => _NavigationParkingWidgetState();
+  ThemedMapControllingWidgetState<
+    NavigationParkingWidget,
+    NavigationMapControlTheme
+  >
+  createState() => _NavigationParkingWidgetState();
 }
 
-class _NavigationParkingWidgetState extends ThemedMapControllingWidgetState<
-    NavigationParkingWidget, NavigationMapControlTheme> {
+class _NavigationParkingWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          NavigationParkingWidget,
+          NavigationMapControlTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 
@@ -59,7 +64,7 @@ class _NavigationParkingWidgetState extends ThemedMapControllingWidgetState<
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ParkingModel>(
       valueListenable: widget.controller.state,
-      builder: (_, state, __) {
+      builder: (_, state, _) {
         return BaseNavigationMapControl(
           theme: colorScheme,
           isEnabled: true,

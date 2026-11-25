@@ -14,8 +14,8 @@ class NavigationSettingsDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 1,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        color: theme.colors.divider,
-      );
+    height: 1,
+    margin: const EdgeInsets.symmetric(horizontal: 16),
+    color: theme.colors.divider,
+  );
 }

@@ -21,8 +21,9 @@ class ManeuverModel {
     AdditionalManeuverModel? Function()? additionalManeuver,
   }) {
     return ManeuverModel(
-      maneuverDistance:
-          maneuverDistance != null ? maneuverDistance() : this.maneuverDistance,
+      maneuverDistance: maneuverDistance != null
+          ? maneuverDistance()
+          : this.maneuverDistance,
       maneuverIcon: maneuverIcon != null ? maneuverIcon() : this.maneuverIcon,
       roadName: roadName != null ? roadName() : this.roadName,
       additionalManeuver: additionalManeuver != null
@@ -44,14 +45,15 @@ class ManeuverModel {
 
   @override
   int get hashCode => Object.hash(
-        roadName,
-        maneuverIcon,
-        maneuverDistance,
-        additionalManeuver,
-      );
+    roadName,
+    maneuverIcon,
+    maneuverDistance,
+    additionalManeuver,
+  );
 
   @override
-  String toString() => 'ManeuverModel('
+  String toString() =>
+      'ManeuverModel('
       'roadName: $roadName, '
       'maneuverIcon: $maneuverIcon, '
       'maneuverDistance: $maneuverDistance, '

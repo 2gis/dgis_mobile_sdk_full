@@ -137,27 +137,26 @@ class NavigationSettingsColors {
     Color? actionIcon,
     Color? inactiveActionIcon,
     Color? voiceAction,
-  }) =>
-      NavigationSettingsColors(
-        sectionHeader: sectionHeader ?? this.sectionHeader,
-        settingLabel: settingLabel ?? this.settingLabel,
-        settingDescription: settingDescription ?? this.settingDescription,
-        settingValue: settingValue ?? this.settingValue,
-        pickerValue: pickerValue ?? this.pickerValue,
-        primary: primary ?? this.primary,
-        divider: divider ?? this.divider,
-        segmentedTrack: segmentedTrack ?? this.segmentedTrack,
-        segmentedSelectedBackground:
-            segmentedSelectedBackground ?? this.segmentedSelectedBackground,
-        switchThumb: switchThumb ?? this.switchThumb,
-        chevron: chevron ?? this.chevron,
-        disabled: disabled ?? this.disabled,
-        pickerBackground: pickerBackground ?? this.pickerBackground,
-        sectionBackground: sectionBackground ?? this.sectionBackground,
-        actionIcon: actionIcon ?? this.actionIcon,
-        inactiveActionIcon: inactiveActionIcon ?? this.inactiveActionIcon,
-        voiceAction: voiceAction ?? this.voiceAction,
-      );
+  }) => NavigationSettingsColors(
+    sectionHeader: sectionHeader ?? this.sectionHeader,
+    settingLabel: settingLabel ?? this.settingLabel,
+    settingDescription: settingDescription ?? this.settingDescription,
+    settingValue: settingValue ?? this.settingValue,
+    pickerValue: pickerValue ?? this.pickerValue,
+    primary: primary ?? this.primary,
+    divider: divider ?? this.divider,
+    segmentedTrack: segmentedTrack ?? this.segmentedTrack,
+    segmentedSelectedBackground:
+        segmentedSelectedBackground ?? this.segmentedSelectedBackground,
+    switchThumb: switchThumb ?? this.switchThumb,
+    chevron: chevron ?? this.chevron,
+    disabled: disabled ?? this.disabled,
+    pickerBackground: pickerBackground ?? this.pickerBackground,
+    sectionBackground: sectionBackground ?? this.sectionBackground,
+    actionIcon: actionIcon ?? this.actionIcon,
+    inactiveActionIcon: inactiveActionIcon ?? this.inactiveActionIcon,
+    voiceAction: voiceAction ?? this.voiceAction,
+  );
 }
 
 /// Default of [NavigationSettingsTypography.screenDescription].
@@ -248,8 +247,10 @@ class NavigationSettingsTypography {
     actionLabel: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
     radioOptionLabel: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
     segmentedLabel: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-    radioOptionDescription:
-        TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+    radioOptionDescription: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+    ),
   );
 
   NavigationSettingsTypography copyWith({
@@ -263,20 +264,19 @@ class NavigationSettingsTypography {
     TextStyle? screenDescription,
     TextStyle? screenTitle,
     TextStyle? radioOptionDescription,
-  }) =>
-      NavigationSettingsTypography(
-        sectionHeader: sectionHeader ?? this.sectionHeader,
-        settingLabel: settingLabel ?? this.settingLabel,
-        settingDescription: settingDescription ?? this.settingDescription,
-        screenDescription: screenDescription ?? this.screenDescription,
-        screenTitle: screenTitle ?? this.screenTitle,
-        settingValue: settingValue ?? this.settingValue,
-        actionLabel: actionLabel ?? this.actionLabel,
-        segmentedLabel: segmentedLabel ?? this.segmentedLabel,
-        radioOptionLabel: radioOptionLabel ?? this.radioOptionLabel,
-        radioOptionDescription:
-            radioOptionDescription ?? this.radioOptionDescription,
-      );
+  }) => NavigationSettingsTypography(
+    sectionHeader: sectionHeader ?? this.sectionHeader,
+    settingLabel: settingLabel ?? this.settingLabel,
+    settingDescription: settingDescription ?? this.settingDescription,
+    screenDescription: screenDescription ?? this.screenDescription,
+    screenTitle: screenTitle ?? this.screenTitle,
+    settingValue: settingValue ?? this.settingValue,
+    actionLabel: actionLabel ?? this.actionLabel,
+    segmentedLabel: segmentedLabel ?? this.segmentedLabel,
+    radioOptionLabel: radioOptionLabel ?? this.radioOptionLabel,
+    radioOptionDescription:
+        radioOptionDescription ?? this.radioOptionDescription,
+  );
 }
 
 /// Theme bundle for the navigation settings UI.
@@ -307,9 +307,8 @@ class NavigationSettingsTheme {
   NavigationSettingsTheme copyWith({
     NavigationSettingsColors? colors,
     NavigationSettingsTypography? typography,
-  }) =>
-      NavigationSettingsTheme(
-        colors: colors ?? this.colors,
-        typography: typography ?? this.typography,
-      );
+  }) => NavigationSettingsTheme(
+    colors: colors ?? this.colors,
+    typography: typography ?? this.typography,
+  );
 }

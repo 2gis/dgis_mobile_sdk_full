@@ -96,12 +96,12 @@ class NavigationSettingsSlider extends StatelessWidget {
     this.showValue = true,
     super.key,
   }) : assert(
-          step <= 0 || (max - min) % step == 0,
-          'max - min must be a whole number of steps. The slider is built '
-          'from (max - min) ~/ step equal divisions, so a range the step '
-          'does not divide snaps to those divisions instead: 0..100 with '
-          'step 30 gives 0 / 33 / 67 / 100, not multiples of 30.',
-        );
+         step <= 0 || (max - min) % step == 0,
+         'max - min must be a whole number of steps. The slider is built '
+         'from (max - min) ~/ step equal divisions, so a range the step '
+         'does not divide snaps to those divisions instead: 0..100 with '
+         'step 30 gives 0 / 33 / 67 / 100, not multiples of 30.',
+       );
 
   @override
   Widget build(BuildContext context) {

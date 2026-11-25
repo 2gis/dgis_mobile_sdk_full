@@ -141,10 +141,10 @@ class NavigationSettingsRadioGroup<T> extends StatelessWidget {
                       if (description != null)
                         Text(
                           description,
-                          style:
-                              theme.typography.radioOptionDescription.copyWith(
-                            color: colors.settingDescription,
-                          ),
+                          style: theme.typography.radioOptionDescription
+                              .copyWith(
+                                color: colors.settingDescription,
+                              ),
                         ),
                     ],
                   ),
@@ -163,10 +163,10 @@ class NavigationSettingsRadioGroup<T> extends StatelessWidget {
   }
 
   Widget _defaultIcon(Color color) => SvgPicture.asset(
-        'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
-        width: 24,
-        height: 24,
-        fit: BoxFit.scaleDown,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
+    width: 24,
+    height: 24,
+    fit: BoxFit.scaleDown,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+  );
 }

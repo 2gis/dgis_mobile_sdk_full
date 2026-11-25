@@ -90,11 +90,11 @@ class _DataImageLoader extends sdk.ImageLoader {
   final sdk.ImageData _image;
 
   _DataImageLoader(ByteData data, sdk.ImageFormat format, int height, int width)
-      : _image = sdk.ImageData(
-          data: data,
-          format: format,
-          size: sdk.ScreenSize(height: height, width: width),
-        );
+    : _image = sdk.ImageData(
+        data: data,
+        format: format,
+        size: sdk.ScreenSize(height: height, width: width),
+      );
 
   @override
   sdk.ImageData load() => _image;

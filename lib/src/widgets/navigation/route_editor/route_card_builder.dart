@@ -101,35 +101,39 @@ class _DefaultRouteCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 1),
-                  child: Text(
-                    _formatDuration(duration, localizations),
-                    style: theme.durationTextStyle,
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15, bottom: 1),
+                    child: Text(
+                      _formatDuration(duration, localizations),
+                      style: theme.durationTextStyle,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 1, bottom: 7),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          _formatDistance(distance, localizations),
-                          style: theme.distanceTextStyle,
-                          overflow: TextOverflow.ellipsis,
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 1, bottom: 7),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            _formatDistance(distance, localizations),
+                            style: theme.distanceTextStyle,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      if (isBestRoute) ...[
-                        Text(
-                          ' • ',
-                          style: theme.distanceTextStyle,
-                        ),
-                        Text(
-                          localizations.dgis_best_route,
-                          style: theme.distanceTextStyle,
-                        ),
+                        if (isBestRoute) ...[
+                          Text(
+                            ' • ',
+                            style: theme.distanceTextStyle,
+                          ),
+                          Text(
+                            localizations.dgis_best_route,
+                            style: theme.distanceTextStyle,
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ],

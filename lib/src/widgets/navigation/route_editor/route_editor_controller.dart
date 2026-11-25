@@ -1,7 +1,10 @@
+import 'dart:async' show StreamSubscription;
+
 import 'package:flutter/foundation.dart';
 
 import '../../../generated/dart_bindings.dart' as sdk;
 import '../../../platform/bss_events_source.dart';
+import '../settings/settings_key.dart';
 import './brief_info_provider.dart';
 import './route_point_ui.dart';
 import 'transport_mode.dart';
@@ -83,19 +86,43 @@ class RouteEditorController {
   /// Must contain at least 2 points (start and finish) to calculate a route.
   final ValueNotifier<List<RoutePointUI>> routePoints = ValueNotifier([]);
 
+  sdk.RouteEditorRouteParams? _currentParams;
+
+  StreamSubscription<({SettingsKey<dynamic> key, dynamic value})>?
+  _optionsSubscription;
+
   RouteEditorController({
     required this.routeEditor,
     this.availableTransportModes = TransportMode.values,
     TransportModeOptionsProvider? transportTypeOptionsProvider,
     BriefInfoProvider? briefInfoProvider,
-  })  : transportTypeOptionsProvider = transportTypeOptionsProvider ??
-            const DefaultTransportModeOptionsProvider(),
-        briefInfoProvider =
-            briefInfoProvider ?? ActiveRouteBriefInfoProvider() {
+  }) : transportTypeOptionsProvider =
+           transportTypeOptionsProvider ??
+           const DefaultTransportModeOptionsProvider(),
+       briefInfoProvider = briefInfoProvider ?? ActiveRouteBriefInfoProvider() {
     if (availableTransportModes.isNotEmpty) {
       activeTransportMode.value = availableTransportModes.first;
     }
     this.briefInfoProvider.initialize(this);
+
+    _initSettingsProviderSubscription();
+  }
+
+  void _initSettingsProviderSubscription() {
+    final provider = transportTypeOptionsProvider;
+    if (provider is! SettingsTransportModeProvider) return;
+
+    _optionsSubscription = provider.navigationSettings.settingsStream
+        .distinct()
+        .listen(_onOptionsChanged);
+  }
+
+  void _onOptionsChanged(({SettingsKey<dynamic> key, dynamic value}) keyValue) {
+    final activeType = activeTransportMode.value;
+    if (activeType == null || routePoints.value.length < 2) return;
+
+    final options = transportTypeOptionsProvider.provide(activeType);
+    _changeRouteType(options);
   }
 
   /// Sets the active route by index.
@@ -111,17 +138,19 @@ class RouteEditorController {
   }
 
   (sdk.RouteSearchPoint?, sdk.RouteSearchPoint?, List<sdk.RouteSearchPoint>)
-      _mapRoutePoints() {
-    final firstPoint =
-        routePoints.value.isNotEmpty ? routePoints.value.first.point : null;
-    final lastPoint =
-        routePoints.value.isNotEmpty ? routePoints.value.last.point : null;
+  _mapRoutePoints() {
+    final firstPoint = routePoints.value.isNotEmpty
+        ? routePoints.value.first.point
+        : null;
+    final lastPoint = routePoints.value.isNotEmpty
+        ? routePoints.value.last.point
+        : null;
 
     final intermediatePoints = routePoints.value.length > 2
         ? routePoints.value
-            .sublist(1, routePoints.value.length - 1)
-            .map((p) => p.point)
-            .toList()
+              .sublist(1, routePoints.value.length - 1)
+              .map((p) => p.point)
+              .toList()
         : <sdk.RouteSearchPoint>[];
 
     return (firstPoint, lastPoint, intermediatePoints);
@@ -138,6 +167,10 @@ class RouteEditorController {
       intermediatePoints: intermediatePoints,
       routeSearchOptions: options,
     );
+
+    if (newParams == _currentParams) return;
+
+    _currentParams = newParams;
 
     withBssEventsSourceFromSdk(() => routeEditor.setRouteParams(newParams));
   }
@@ -185,6 +218,8 @@ class RouteEditorController {
       routeSearchOptions: options,
     );
 
+    _currentParams = params;
+
     withBssEventsSourceFromSdk(() => routeEditor.setRouteParams(params));
   }
 
@@ -196,5 +231,7 @@ class RouteEditorController {
     activeTransportMode.dispose();
     routePoints.dispose();
     briefInfoProvider.dispose();
+    _optionsSubscription?.cancel();
+    _optionsSubscription = null;
   }
 }

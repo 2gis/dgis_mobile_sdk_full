@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -19,15 +18,16 @@ import './zoom_model.dart';
 class NavigationZoomWidget
     extends ThemedMapControllingWidget<NavigationMapControlTheme> {
   final ZoomController controller;
+
   const NavigationZoomWidget({
     required this.controller,
     super.key,
     NavigationMapControlTheme? light,
     NavigationMapControlTheme? dark,
   }) : super(
-          light: light ?? NavigationMapControlTheme.defaultLight,
-          dark: dark ?? NavigationMapControlTheme.defaultDark,
-        );
+         light: light ?? NavigationMapControlTheme.defaultLight,
+         dark: dark ?? NavigationMapControlTheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static NavigationZoomWidget defaultBuilder(ZoomController controller) =>
@@ -36,12 +36,19 @@ class NavigationZoomWidget
       );
 
   @override
-  ThemedMapControllingWidgetState<NavigationZoomWidget,
-      NavigationMapControlTheme> createState() => _ZoomWidgetState();
+  ThemedMapControllingWidgetState<
+    NavigationZoomWidget,
+    NavigationMapControlTheme
+  >
+  createState() => _ZoomWidgetState();
 }
 
-class _ZoomWidgetState extends ThemedMapControllingWidgetState<
-    NavigationZoomWidget, NavigationMapControlTheme> {
+class _ZoomWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          NavigationZoomWidget,
+          NavigationMapControlTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 
@@ -56,7 +63,7 @@ class _ZoomWidgetState extends ThemedMapControllingWidgetState<
         children: [
           ValueListenableBuilder<ZoomModel>(
             valueListenable: widget.controller.state,
-            builder: (_, state, __) => BaseNavigationMapControl(
+            builder: (_, state, _) => BaseNavigationMapControl(
               theme: colorScheme,
               isEnabled: state.zoomInEnabled,
               onPress: () => widget.controller.startZoomIn(),
@@ -78,14 +85,10 @@ class _ZoomWidgetState extends ThemedMapControllingWidgetState<
               ),
             ),
           ),
-          const Divider(
-            height: 0,
-            thickness: 1,
-            color: CupertinoColors.separator,
-          ),
+          Divider(color: colorScheme.dividerColor, height: 0),
           ValueListenableBuilder<ZoomModel>(
             valueListenable: widget.controller.state,
-            builder: (_, state, __) => BaseNavigationMapControl(
+            builder: (_, state, _) => BaseNavigationMapControl(
               theme: colorScheme,
               isEnabled: state.zoomOutEnabled,
               onPress: () => widget.controller.startZoomOut(),

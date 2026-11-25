@@ -3,9 +3,19 @@ import 'package:flutter/widgets.dart';
 class DgisColorScheme {
   DgisColorScheme._();
 
+  // Theme Colors: Light
+  static const Color surfaceLightTheme = Color(0xFFFFFFFF);
+  static const Color pressedSurfaceLightTheme = Color(0xFFEAEAEA);
+
+  // Theme Colors: Dark
+  static const Color surfaceDarkTheme = Color(0xFF141414);
+  static const Color pressedSurfaceDarkTheme = Color(0xFF2A2A2A);
+
+  // General Colors
   static const Color whiteFiftyPercent = Color(0x80ffffff);
   static const Color surfaceLight = Color(0xffffffff);
   static const Color dimmedSurfaceLight = Color(0xffeeeeee);
+  static const Color dividerColor = Color(0x4D898989);
   static const Color surfaceDark = Color(0xff121212);
   static const Color blackSixPercent = Color(0x0FFFFFFF);
   static const Color dimmedGrey = Color(0xff4d4d4d);
@@ -18,6 +28,8 @@ class DgisColorScheme {
   static const Color activeBlueLight = Color(0xff057ddf);
   static const Color activeBlueDark = Color(0xff70aee0);
   static const Color speedometerRed = Color(0xffE91C21);
+  static const Color shadow8P = Color(0x14000000);
+  static const Color shadow4P = Color(0x0a000000);
   static const Color blackFiftyPercent = Color(0x80141414);
   static const Color slightlyDimmedGrey = Color(0xff5A5A5A);
   static const Color dimmedWhite = Color(0xffC4C4C4);

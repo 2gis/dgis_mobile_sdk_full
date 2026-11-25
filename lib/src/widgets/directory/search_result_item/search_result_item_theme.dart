@@ -308,7 +308,8 @@ class SearchResultItemTheme extends MapWidgetColorScheme {
       filledStarColor: filledStarColor ?? this.filledStarColor,
       highChargingAvailabilityColor:
           highChargingAvailabilityColor ?? this.highChargingAvailabilityColor,
-      mediumChargingAvailabilityColor: mediumChargingAvailabilityColor ??
+      mediumChargingAvailabilityColor:
+          mediumChargingAvailabilityColor ??
           this.mediumChargingAvailabilityColor,
       lowChargingAvailabilityColor:
           lowChargingAvailabilityColor ?? this.lowChargingAvailabilityColor,

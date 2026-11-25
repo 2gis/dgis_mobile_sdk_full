@@ -111,18 +111,21 @@ class NavigationSettingsApplier {
   }
 
   void _applyRouteSettings() {
-    navigationManager.routeRebuilder.enabled =
-        repository.get(NavigationSettingKeys.rebuildOnDeviation);
+    navigationManager.routeRebuilder.enabled = repository.get(
+      NavigationSettingKeys.rebuildOnDeviation,
+    );
     navigationManager.alternativeRoutesProviderSettings
-      ..betterRouteEnabled =
-          repository.get(NavigationSettingKeys.betterRouteEnabled)
-      ..alternativeRoutesEnabled =
-          repository.get(NavigationSettingKeys.alternativeRoutesEnabled);
+      ..betterRouteEnabled = repository.get(
+        NavigationSettingKeys.betterRouteEnabled,
+      )
+      ..alternativeRoutesEnabled = repository.get(
+        NavigationSettingKeys.alternativeRoutesEnabled,
+      );
   }
 
   void _applyCalloutVisualizationMode() {
-    navigationManager.routeSourceSettings.calloutVisualizationMode =
-        repository.get(NavigationSettingKeys.calloutVisualizationMode);
+    navigationManager.routeSourceSettings.calloutVisualizationMode = repository
+        .get(NavigationSettingKeys.calloutVisualizationMode);
   }
 
   void _applySoundSettings() {
@@ -134,12 +137,13 @@ class NavigationSettingsApplier {
         ..volume = repository.get(NavigationSettingKeys.soundVolume)
         ..audioFocusPolicy =
             repository.get(NavigationSettingKeys.soundDuckOtherAudio)
-                ? sdk.AudioFocusPolicy.duck
-                : sdk.AudioFocusPolicy.ignore;
+            ? sdk.AudioFocusPolicy.duck
+            : sdk.AudioFocusPolicy.ignore;
     }
 
     final categories = navigationManager
-        .soundNotificationSettings.enabledSoundCategories
+        .soundNotificationSettings
+        .enabledSoundCategories
         .toMutableEnumSet();
     for (final (key, category) in _soundKeyToCategory) {
       if (repository.get(key)) {
@@ -152,23 +156,26 @@ class NavigationSettingsApplier {
         categories.toEnumSet();
 
     navigationManager.exceedSpeedLimitSettings
-      ..exceedSpeedNotificationEnabled =
-          repository.get(NavigationSettingKeys.soundSpeedExceedEnabled)
-      ..allowableSpeedExcess =
-          repository.get(NavigationSettingKeys.soundSpeedExceedThreshold);
+      ..exceedSpeedNotificationEnabled = repository.get(
+        NavigationSettingKeys.soundSpeedExceedEnabled,
+      )
+      ..allowableSpeedExcess = repository.get(
+        NavigationSettingKeys.soundSpeedExceedThreshold,
+      );
 
     navigationManager.soundNotificationSettings.speedCameraNotification =
         repository.get(NavigationSettingKeys.soundSpeedCameraAlways)
-            ? sdk.SpeedCameraNotification.always
-            : sdk.SpeedCameraNotification.withSpeedLimitExceeded;
+        ? sdk.SpeedCameraNotification.always
+        : sdk.SpeedCameraNotification.withSpeedLimitExceeded;
   }
 
   void _applyMapEventSettings() {
     final routeMapSettings = navigationManager.routeMapSettings;
-    final displayFlags =
-        routeMapSettings.onRouteDisplayFlags.toMutableEnumSet();
-    final displayEnabled =
-        repository.get(NavigationSettingKeys.mapEventsEnabled);
+    final displayFlags = routeMapSettings.onRouteDisplayFlags
+        .toMutableEnumSet();
+    final displayEnabled = repository.get(
+      NavigationSettingKeys.mapEventsEnabled,
+    );
     for (final (key, flag) in _displayKeyToFlag) {
       if (displayEnabled && repository.get(key)) {
         displayFlags.add(flag);
@@ -178,10 +185,11 @@ class NavigationSettingsApplier {
     }
     routeMapSettings.onRouteDisplayFlags = displayFlags.toEnumSet();
 
-    final permanentFlags =
-        routeMapSettings.onRoutePermanentDisplayFlags.toMutableEnumSet();
-    final permanentEnabled =
-        repository.get(NavigationSettingKeys.mapEventsPermanentEnabled);
+    final permanentFlags = routeMapSettings.onRoutePermanentDisplayFlags
+        .toMutableEnumSet();
+    final permanentEnabled = repository.get(
+      NavigationSettingKeys.mapEventsPermanentEnabled,
+    );
     for (final (key, flag) in _permanentKeyToFlag) {
       if (permanentEnabled && repository.get(key)) {
         permanentFlags.add(flag);
@@ -197,10 +205,12 @@ class NavigationSettingsApplier {
     final selectedVoiceId = repository.get(NavigationSettingKeys.voiceSelected);
     final savedVoice = selectedVoiceId == null
         ? null
-        : voiceManager.voices
-            .firstWhereOrNull((voice) => voice.id == selectedVoiceId);
-    final usableVoice =
-        savedVoice != null && _isUsable(savedVoice) ? savedVoice : null;
+        : voiceManager.voices.firstWhereOrNull(
+            (voice) => voice.id == selectedVoiceId,
+          );
+    final usableVoice = savedVoice != null && _isUsable(savedVoice)
+        ? savedVoice
+        : null;
     navigationManager.voiceSelector.voice =
         (usableVoice ?? voiceManager.defaultVoice)?.navigationVoice;
     if (savedVoice != null && !savedVoice.info.installed) {
@@ -224,7 +234,7 @@ class NavigationSettingsApplier {
 final _soundKeyToCategory = <(BoolSettingsKey, sdk.SoundCategory)>[
   (
     NavigationSettingKeys.soundCrossroadCameras,
-    sdk.SoundCategory.crossroadCameras
+    sdk.SoundCategory.crossroadCameras,
   ),
   (NavigationSettingKeys.soundLaneCameras, sdk.SoundCategory.laneCameras),
   (
@@ -241,7 +251,7 @@ final _soundKeyToCategory = <(BoolSettingsKey, sdk.SoundCategory)>[
   ),
   (
     NavigationSettingKeys.soundMaxSpeedCameras,
-    sdk.SoundCategory.maxSpeedCameras
+    sdk.SoundCategory.maxSpeedCameras,
   ),
   (NavigationSettingKeys.soundAccidents, sdk.SoundCategory.accidents),
   (NavigationSettingKeys.soundRoadWorks, sdk.SoundCategory.roadWorks),
@@ -266,7 +276,7 @@ final _soundKeyToCategory = <(BoolSettingsKey, sdk.SoundCategory)>[
 final _displayKeyToFlag = <(BoolSettingsKey, sdk.RouteMapObjectDisplayFlag)>[
   (
     NavigationSettingKeys.mapEventsCameras,
-    sdk.RouteMapObjectDisplayFlag.cameras
+    sdk.RouteMapObjectDisplayFlag.cameras,
   ),
   (
     NavigationSettingKeys.mapEventsAccidents,
@@ -290,7 +300,7 @@ final _displayKeyToFlag = <(BoolSettingsKey, sdk.RouteMapObjectDisplayFlag)>[
   ),
   (
     NavigationSettingKeys.mapEventsBubbles,
-    sdk.RouteMapObjectDisplayFlag.bubbles
+    sdk.RouteMapObjectDisplayFlag.bubbles,
   ),
   (
     NavigationSettingKeys.mapEventsLanesBubbles,
@@ -300,44 +310,44 @@ final _displayKeyToFlag = <(BoolSettingsKey, sdk.RouteMapObjectDisplayFlag)>[
 
 final _permanentKeyToFlag =
     <(BoolSettingsKey, sdk.RouteMapObjectPermanentDisplayFlag)>[
-  (
-    NavigationSettingKeys.mapEventsPermanentStartPoint,
-    sdk.RouteMapObjectPermanentDisplayFlag.startPoint,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentFinishPoint,
-    sdk.RouteMapObjectPermanentDisplayFlag.finishPoint,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentIntermediatePoints,
-    sdk.RouteMapObjectPermanentDisplayFlag.intermediatePoints,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentCameras,
-    sdk.RouteMapObjectPermanentDisplayFlag.cameras,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentAccidents,
-    sdk.RouteMapObjectPermanentDisplayFlag.accidents,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentRoadWorks,
-    sdk.RouteMapObjectPermanentDisplayFlag.roadWorks,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentComments,
-    sdk.RouteMapObjectPermanentDisplayFlag.comments,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentRoadRestrictions,
-    sdk.RouteMapObjectPermanentDisplayFlag.roadRestrictions,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentOtherEvents,
-    sdk.RouteMapObjectPermanentDisplayFlag.otherEvents,
-  ),
-  (
-    NavigationSettingKeys.mapEventsPermanentTollRoads,
-    sdk.RouteMapObjectPermanentDisplayFlag.tollRoads,
-  ),
-];
+      (
+        NavigationSettingKeys.mapEventsPermanentStartPoint,
+        sdk.RouteMapObjectPermanentDisplayFlag.startPoint,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentFinishPoint,
+        sdk.RouteMapObjectPermanentDisplayFlag.finishPoint,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentIntermediatePoints,
+        sdk.RouteMapObjectPermanentDisplayFlag.intermediatePoints,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentCameras,
+        sdk.RouteMapObjectPermanentDisplayFlag.cameras,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentAccidents,
+        sdk.RouteMapObjectPermanentDisplayFlag.accidents,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentRoadWorks,
+        sdk.RouteMapObjectPermanentDisplayFlag.roadWorks,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentComments,
+        sdk.RouteMapObjectPermanentDisplayFlag.comments,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentRoadRestrictions,
+        sdk.RouteMapObjectPermanentDisplayFlag.roadRestrictions,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentOtherEvents,
+        sdk.RouteMapObjectPermanentDisplayFlag.otherEvents,
+      ),
+      (
+        NavigationSettingKeys.mapEventsPermanentTollRoads,
+        sdk.RouteMapObjectPermanentDisplayFlag.tollRoads,
+      ),
+    ];

@@ -40,9 +40,9 @@ enum TruckDimension {
     required int small,
     required int medium,
     required int large,
-  })  : _small = small,
-        _medium = medium,
-        _large = large;
+  }) : _small = small,
+       _medium = medium,
+       _large = large;
 
   /// Largest accepted value, in thousandths of the displayed unit.
   final int maxValue;
@@ -60,10 +60,10 @@ enum TruckDimension {
   /// Value this parameter takes while [preset] is selected and the user has
   /// not overridden it.
   int defaultFor(TruckPreset preset) => switch (preset) {
-        TruckPreset.small => _small,
-        TruckPreset.medium => _medium,
-        TruckPreset.large => _large,
-      };
+    TruckPreset.small => _small,
+    TruckPreset.medium => _medium,
+    TruckPreset.large => _large,
+  };
 
   /// Value to display for [preset], where [override] is the stored user value
   /// or null when the parameter still follows the preset.

@@ -13,6 +13,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
   final Size scoreStrokeSize;
   final double iconSize;
   final NavigationMapControlTheme controlTheme;
+  final TextStyle? scoreTextStyleEnabled;
 
   const TrafficWidgetTheme({
     required this.scoreStrokeSize,
@@ -22,6 +23,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     required this.scoreTextStyle,
     required this.iconSize,
     required this.controlTheme,
+    this.scoreTextStyleEnabled,
   });
 
   /// Widget color scheme for default light mode.
@@ -53,6 +55,12 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     ),
     iconSize: 24,
     controlTheme: NavigationMapControlTheme.defaultLight,
+    scoreTextStyleEnabled: TextStyle(
+      leadingDistribution: TextLeadingDistribution.even,
+      height: 1,
+      color: DgisColorScheme.surfaceLight,
+      fontSize: 19,
+    ),
   );
 
   /// Widget color scheme for default dark mode.
@@ -84,6 +92,12 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     ),
     iconSize: 24,
     controlTheme: NavigationMapControlTheme.defaultDark,
+    scoreTextStyleEnabled: TextStyle(
+      leadingDistribution: TextLeadingDistribution.even,
+      height: 1,
+      color: DgisColorScheme.surfaceLight,
+      fontSize: 19,
+    ),
   );
 
   @override
@@ -95,6 +109,7 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
     TextStyle? scoreTextStyle,
     double? iconSize,
     NavigationMapControlTheme? controlTheme,
+    TextStyle? scoreTextStyleEnabled,
   }) {
     return TrafficWidgetTheme(
       scoreStrokeSize: scoreStrokeSize ?? this.scoreStrokeSize,
@@ -104,6 +119,8 @@ class TrafficWidgetTheme extends MapWidgetColorScheme {
       scoreTextStyle: scoreTextStyle ?? this.scoreTextStyle,
       iconSize: iconSize ?? this.iconSize,
       controlTheme: controlTheme ?? this.controlTheme,
+      scoreTextStyleEnabled:
+          scoreTextStyleEnabled ?? this.scoreTextStyleEnabled,
     );
   }
 }

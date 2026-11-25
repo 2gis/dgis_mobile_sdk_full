@@ -84,7 +84,7 @@ class MainManeuverTheme extends MapWidgetColorScheme {
     iconSize: 36,
     maxWidth: 150,
     minWidth: 150,
-    borderRadius: 8,
+    borderRadius: 16,
     surfaceColor: DgisColorScheme.surfaceLight,
     shadows: WidgetShadows.naviWidgetBoxShadowsLight,
   );
@@ -112,7 +112,7 @@ class MainManeuverTheme extends MapWidgetColorScheme {
     iconSize: 36,
     maxWidth: 150,
     minWidth: 150,
-    borderRadius: 8,
+    borderRadius: 16,
     surfaceColor: DgisColorScheme.surfaceDark,
     shadows: WidgetShadows.naviWidgetBoxShadowsDark,
   );
@@ -174,7 +174,7 @@ class AdditionalManeuverTheme extends MapWidgetColorScheme {
     iconSize: Size(24, 24),
     containerHeight: 32,
     shadows: WidgetShadows.naviWidgetBoxShadowsLight,
-    containerBorderRadius: 8,
+    containerBorderRadius: 16,
   );
 
   /// Widget color scheme for default dark mode.
@@ -189,7 +189,7 @@ class AdditionalManeuverTheme extends MapWidgetColorScheme {
     iconSize: Size(24, 24),
     containerHeight: 32,
     shadows: WidgetShadows.naviWidgetBoxShadowsDark,
-    containerBorderRadius: 8,
+    containerBorderRadius: 16,
   );
 
   @override

@@ -88,10 +88,10 @@ class NavigationSettingsCheckmark extends StatelessWidget {
   }
 
   Widget _defaultIcon(Color color) => SvgPicture.asset(
-        'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
-        width: 24,
-        height: 24,
-        fit: BoxFit.scaleDown,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-      );
+    'packages/$pluginName/assets/icons/navigation/dgis_check.svg',
+    width: 24,
+    height: 24,
+    fit: BoxFit.scaleDown,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+  );
 }

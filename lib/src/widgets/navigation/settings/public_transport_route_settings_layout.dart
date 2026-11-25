@@ -13,8 +13,9 @@ import 'settings_layout_helpers.dart';
 import 'settings_multi_select.dart';
 import 'settings_section_header.dart';
 
-final Set<sdk.PublicTransportType> _allTransportTypes =
-    Set.unmodifiable(sdk.PublicTransportType.values);
+final Set<sdk.PublicTransportType> _allTransportTypes = Set.unmodifiable(
+  sdk.PublicTransportType.values,
+);
 
 /// Repository-backed public-transport route-search settings.
 ///
@@ -83,7 +84,8 @@ class _PublicTransportRouteSettingsLayoutState
               repository: repository,
               key: NavigationSettingKeys.ptTransportTypes,
               builder: (context, value, child) {
-                final selected = _isAllTransportTypes(value) &&
+                final selected =
+                    _isAllTransportTypes(value) &&
                         !_showAllTransportTypesSelected
                     ? const <sdk.PublicTransportType>{}
                     : value;
@@ -94,8 +96,9 @@ class _PublicTransportRouteSettingsLayoutState
                   ),
                   selected: selected,
                   onChanged: (value) {
-                    _showAllTransportTypesSelected =
-                        _isAllTransportTypes(value);
+                    _showAllTransportTypesSelected = _isAllTransportTypes(
+                      value,
+                    );
                     setNavigationSetting(
                       repository,
                       NavigationSettingKeys.ptTransportTypes,
@@ -118,125 +121,123 @@ bool _isAllTransportTypes(Set<sdk.PublicTransportType> value) =>
     value.containsAll(_allTransportTypes);
 
 List<NavigationSettingsMultiSelectOption<sdk.PublicTransportType>>
-    _transportTypeOptions(
+_transportTypeOptions(
   DgisLocalizations localizations,
   Color iconColor,
-) =>
-        [
-          _transportTypeOption(
-            sdk.PublicTransportType.bus,
-            localizations.dgis_public_transport_type_bus,
-            'bus',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.trolleybus,
-            localizations.dgis_public_transport_type_trolleybus,
-            'trolleybus',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.tram,
-            localizations.dgis_public_transport_type_tram,
-            'tram',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.shuttleBus,
-            localizations.dgis_public_transport_type_shuttle_bus,
-            'minibus',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.metro,
-            localizations.dgis_public_transport_type_metro,
-            'metro',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.suburbanTrain,
-            localizations.dgis_public_transport_type_suburban_train,
-            'train',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.funicularRailway,
-            localizations.dgis_public_transport_type_funicular_railway,
-            'funicular',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.monorail,
-            localizations.dgis_public_transport_type_monorail,
-            'monorail',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.waterwayTransport,
-            localizations.dgis_public_transport_type_waterway,
-            'ship',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.cableCar,
-            localizations.dgis_public_transport_type_cable_car,
-            'aerial_lift',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.speedTram,
-            localizations.dgis_public_transport_type_speed_tram,
-            'light_rail',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.premetro,
-            localizations.dgis_public_transport_type_premetro,
-            'light_rail',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.lightMetro,
-            localizations.dgis_public_transport_type_light_metro,
-            'light_rail',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.aeroexpress,
-            localizations.dgis_public_transport_type_aeroexpress,
-            'aeroexpress',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.moscowCentralRing,
-            localizations.dgis_public_transport_type_mcc,
-            'mcc',
-            iconColor,
-          ),
-          _transportTypeOption(
-            sdk.PublicTransportType.moscowCentralDiameters,
-            localizations.dgis_public_transport_type_mcd,
-            'mcd',
-            iconColor,
-          ),
-        ];
+) => [
+  _transportTypeOption(
+    sdk.PublicTransportType.bus,
+    localizations.dgis_public_transport_type_bus,
+    'bus',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.trolleybus,
+    localizations.dgis_public_transport_type_trolleybus,
+    'trolleybus',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.tram,
+    localizations.dgis_public_transport_type_tram,
+    'tram',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.shuttleBus,
+    localizations.dgis_public_transport_type_shuttle_bus,
+    'minibus',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.metro,
+    localizations.dgis_public_transport_type_metro,
+    'metro',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.suburbanTrain,
+    localizations.dgis_public_transport_type_suburban_train,
+    'train',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.funicularRailway,
+    localizations.dgis_public_transport_type_funicular_railway,
+    'funicular',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.monorail,
+    localizations.dgis_public_transport_type_monorail,
+    'monorail',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.waterwayTransport,
+    localizations.dgis_public_transport_type_waterway,
+    'ship',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.cableCar,
+    localizations.dgis_public_transport_type_cable_car,
+    'aerial_lift',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.speedTram,
+    localizations.dgis_public_transport_type_speed_tram,
+    'light_rail',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.premetro,
+    localizations.dgis_public_transport_type_premetro,
+    'light_rail',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.lightMetro,
+    localizations.dgis_public_transport_type_light_metro,
+    'light_rail',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.aeroexpress,
+    localizations.dgis_public_transport_type_aeroexpress,
+    'aeroexpress',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.moscowCentralRing,
+    localizations.dgis_public_transport_type_mcc,
+    'mcc',
+    iconColor,
+  ),
+  _transportTypeOption(
+    sdk.PublicTransportType.moscowCentralDiameters,
+    localizations.dgis_public_transport_type_mcd,
+    'mcd',
+    iconColor,
+  ),
+];
 
 NavigationSettingsMultiSelectOption<sdk.PublicTransportType>
-    _transportTypeOption(
+_transportTypeOption(
   sdk.PublicTransportType value,
   String label,
   String icon,
   Color iconColor,
-) =>
-        NavigationSettingsMultiSelectOption(
-          value: value,
-          label: label,
-          icon: SvgPicture.asset(
-            'packages/$pluginName/assets/icons/navigation/public_transport/'
-            'dgis_transport_types_$icon.svg',
-            width: 24,
-            height: 24,
-            fit: BoxFit.scaleDown,
-            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-          ),
-        );
+) => NavigationSettingsMultiSelectOption(
+  value: value,
+  label: label,
+  icon: SvgPicture.asset(
+    'packages/$pluginName/assets/icons/navigation/public_transport/'
+    'dgis_transport_types_$icon.svg',
+    width: 24,
+    height: 24,
+    fit: BoxFit.scaleDown,
+    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+  ),
+);

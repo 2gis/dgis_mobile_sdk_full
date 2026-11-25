@@ -21,9 +21,9 @@ class ManeuverWidget extends ThemedMapControllingWidget<ManeuverWidgetTheme> {
     ManeuverWidgetTheme? dark,
     super.key,
   }) : super(
-          light: light ?? ManeuverWidgetTheme.defaultLight,
-          dark: dark ?? ManeuverWidgetTheme.defaultDark,
-        );
+         light: light ?? ManeuverWidgetTheme.defaultLight,
+         dark: dark ?? ManeuverWidgetTheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static ManeuverWidget defaultBuilder(ManeuverController controller) =>
@@ -32,11 +32,12 @@ class ManeuverWidget extends ThemedMapControllingWidget<ManeuverWidgetTheme> {
       );
   @override
   ThemedMapControllingWidgetState<ManeuverWidget, ManeuverWidgetTheme>
-      createState() => _ManeuverWidgetState();
+  createState() => _ManeuverWidgetState();
 }
 
-class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
-    ManeuverWidget, ManeuverWidgetTheme> {
+class _ManeuverWidgetState
+    extends
+        ThemedMapControllingWidgetState<ManeuverWidget, ManeuverWidgetTheme> {
   final ValueNotifier<double> _mainManeuverHeight = ValueNotifier(0);
 
   @override
@@ -48,39 +49,39 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
   ) {
     return switch (model) {
       ManeuverWithIcon() => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              localizations.dgis_navi_maneuver_next,
-              style: colorScheme.additionalManeuverTheme.textStyle,
-            ),
-            const Spacer(),
-            if (model.icon != null)
-              Transform.scale(
-                scaleX: model.icon!.$2 ? -1 : 1,
-                child: SvgPicture.asset(
-                  model.icon!.$1,
-                  width: colorScheme.additionalManeuverTheme.iconSize.width,
-                  height: colorScheme.additionalManeuverTheme.iconSize.height,
-                ),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            localizations.dgis_navi_maneuver_next,
+            style: colorScheme.additionalManeuverTheme.textStyle,
+          ),
+          const Spacer(),
+          if (model.icon != null)
+            Transform.scale(
+              scaleX: model.icon!.$2 ? -1 : 1,
+              child: SvgPicture.asset(
+                model.icon!.$1,
+                width: colorScheme.additionalManeuverTheme.iconSize.width,
+                height: colorScheme.additionalManeuverTheme.iconSize.height,
               ),
-            const Spacer(),
-          ],
-        ),
+            ),
+          const Spacer(),
+        ],
+      ),
       ExitName() => Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: Text(
-            model.exitName,
-            style: colorScheme.additionalManeuverTheme.textStyle,
-          ),
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          model.exitName,
+          style: colorScheme.additionalManeuverTheme.textStyle,
         ),
+      ),
       ExitNumber() => Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: Text(
-            localizations.dgis_navi_maneuver_exit_number(model.exitNumber),
-            style: colorScheme.additionalManeuverTheme.textStyle,
-          ),
-        )
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          localizations.dgis_navi_maneuver_exit_number(model.exitNumber),
+          style: colorScheme.additionalManeuverTheme.textStyle,
+        ),
+      ),
     };
   }
 
@@ -113,7 +114,8 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                   ),
                 ),
                 builder: (context, height, child) {
-                  final additionaManeuverHeight = height +
+                  final additionaManeuverHeight =
+                      height +
                       colorScheme.additionalManeuverTheme.containerHeight;
                   return Container(
                     constraints: BoxConstraints(
@@ -125,11 +127,14 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                       boxShadow: colorScheme.additionalManeuverTheme.shadows,
                       borderRadius: BorderRadius.circular(
                         colorScheme
-                            .additionalManeuverTheme.containerBorderRadius,
+                            .additionalManeuverTheme
+                            .containerBorderRadius,
                       ),
                     ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
                     child: child,
                   );
                 },
@@ -190,7 +195,8 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                                           maneuverDistance,
                                           localizations,
                                         ).value,
-                                        style: colorScheme.mainManeuverTheme
+                                        style: colorScheme
+                                            .mainManeuverTheme
                                             .maneuverDistanceTextStyle,
                                       ),
                                       TextSpan(
@@ -198,7 +204,8 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                                           maneuverDistance,
                                           localizations,
                                         ).unit,
-                                        style: colorScheme.mainManeuverTheme
+                                        style: colorScheme
+                                            .mainManeuverTheme
                                             .maneuverDistanceUnitTextStyle,
                                       ),
                                     ],
@@ -226,7 +233,8 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                                   Text(
                                     firstWord,
                                     style: colorScheme
-                                        .mainManeuverTheme.roadNameTextStyle,
+                                        .mainManeuverTheme
+                                        .roadNameTextStyle,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -234,7 +242,8 @@ class _ManeuverWidgetState extends ThemedMapControllingWidgetState<
                                     Text(
                                       remainingWords,
                                       style: colorScheme
-                                          .mainManeuverTheme.roadNameTextStyle,
+                                          .mainManeuverTheme
+                                          .roadNameTextStyle,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),

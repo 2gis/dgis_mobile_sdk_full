@@ -82,7 +82,8 @@ class NavigationSettingsDateTimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = theme.colors;
-    final materialLocalizations = Localizations.of<MaterialLocalizations>(
+    final materialLocalizations =
+        Localizations.of<MaterialLocalizations>(
           context,
           MaterialLocalizations,
         ) ??
@@ -200,8 +201,10 @@ class _DateTimeWheelSheetState extends State<_DateTimeWheelSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     _SheetButton(

@@ -14,6 +14,7 @@ sealed class SettingsKey<T> {
   const SettingsKey(this.key, this.defaultValue);
 
   T readFrom(SettingsStorage storage);
+
   Future<bool> writeTo(SettingsStorage storage, T value);
 
   @override
@@ -119,6 +120,29 @@ class EnumSettingsKey<T extends Enum> extends SettingsKey<T> {
   @override
   Future<bool> writeTo(SettingsStorage storage, T value) =>
       storage.putString(key, value.name);
+}
+
+class NullableEnumSettingsKey<T extends Enum> extends SettingsKey<T?> {
+  const NullableEnumSettingsKey(String key, this.values) : super(key, null);
+
+  final List<T> values;
+
+  @override
+  T? readFrom(SettingsStorage storage) {
+    final raw = storage.getString(
+      key,
+      defaultValue?.name ?? _sentinelNullString,
+    );
+
+    if (raw == _sentinelNullString) return null;
+
+    return values.firstWhereOrNull((v) => v.name == raw);
+  }
+
+  @override
+  Future<bool> writeTo(SettingsStorage storage, T? value) {
+    return storage.putString(key, value?.name ?? _sentinelNullString);
+  }
 }
 
 class EnumSetSettingsKey<T extends Enum> extends SettingsKey<Set<T>> {

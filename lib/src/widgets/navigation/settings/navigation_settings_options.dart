@@ -4,6 +4,7 @@ import 'navigation_settings_repository.dart';
 import 'navigation_settings_theme.dart';
 import 'section_visibility_config.dart';
 
+/// {@template navigation_settings_options}
 /// Navigation settings configuration for `NavigationLayoutWidget`.
 ///
 /// The default instance disables the feature: the dashboard shows no settings
@@ -16,6 +17,7 @@ import 'section_visibility_config.dart';
 /// - [onSettingsClick] replaces the built-in flow with the host app's own UI.
 ///   The settings row then appears even without a [repository], and
 ///   [theme], [sectionVisibility] and [primarySection] have no effect.
+/// {@endtemplate}
 @immutable
 class NavigationSettingsOptions {
   /// Repository read and written by the settings UI and the runtime applier.

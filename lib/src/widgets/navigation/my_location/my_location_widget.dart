@@ -22,25 +22,31 @@ class NavigationMyLocationWidget
     NavigationMapControlTheme? light,
     NavigationMapControlTheme? dark,
   }) : super(
-          light: light ?? NavigationMapControlTheme.defaultLight,
-          dark: dark ?? NavigationMapControlTheme.defaultDark,
-        );
+         light: light ?? NavigationMapControlTheme.defaultLight,
+         dark: dark ?? NavigationMapControlTheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static NavigationMyLocationWidget defaultBuilder(
     NavigationMyLocationController controller,
-  ) =>
-      NavigationMyLocationWidget(
-        controller: controller,
-      );
+  ) => NavigationMyLocationWidget(
+    controller: controller,
+  );
 
   @override
-  ThemedMapControllingWidgetState<NavigationMyLocationWidget,
-      NavigationMapControlTheme> createState() => _MyLocationWidgetState();
+  ThemedMapControllingWidgetState<
+    NavigationMyLocationWidget,
+    NavigationMapControlTheme
+  >
+  createState() => _MyLocationWidgetState();
 }
 
-class _MyLocationWidgetState extends ThemedMapControllingWidgetState<
-    NavigationMyLocationWidget, NavigationMapControlTheme> {
+class _MyLocationWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          NavigationMyLocationWidget,
+          NavigationMapControlTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 

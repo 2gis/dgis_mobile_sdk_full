@@ -63,8 +63,9 @@ class CompassController {
   }
 
   void _init() {
-    _compassModel =
-        withBssEventsSourceFromSdk(() => sdk.CompassControlModel(map));
+    _compassModel = withBssEventsSourceFromSdk(
+      () => sdk.CompassControlModel(map),
+    );
     _previousAngle = _compassModel.bearing.value;
     _bearingSubscription = _compassModel.bearingChannel.listen((bearing) {
       if ((bearing.value - _previousAngle).abs() > 1.0) {

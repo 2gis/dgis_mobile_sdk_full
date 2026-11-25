@@ -27,3 +27,8 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
+
+# Fetched native artifacts: the PlatformCDart.xcframework that the iOS podspec
+# downloads from artifactory (see ios/fetch_platform_cdart.sh). Never commit
+# or publish these - they are ~192 MB and are version-keyed by the podspec.
+/ios/Frameworks/

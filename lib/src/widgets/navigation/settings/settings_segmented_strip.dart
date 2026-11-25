@@ -31,14 +31,14 @@ class NavigationSettingsSegmentedStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: _trackHeight,
-        padding: _trackPadding,
-        decoration: BoxDecoration(
-          color: theme.colors.segmentedTrack,
-          borderRadius: BorderRadius.circular(_trackRadius),
-        ),
-        child: Row(children: segments),
-      );
+    height: _trackHeight,
+    padding: _trackPadding,
+    decoration: BoxDecoration(
+      color: theme.colors.segmentedTrack,
+      borderRadius: BorderRadius.circular(_trackRadius),
+    ),
+    child: Row(children: segments),
+  );
 }
 
 /// One choice of a [NavigationSettingsSegmentedStrip].
@@ -66,27 +66,27 @@ class NavigationSettingsSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Expanded(
-        child: MergeSemantics(
-          child: Semantics(
-            selected: isSelected,
-            button: true,
-            child: GestureDetector(
-              onTap: onTap,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                height: _segmentHeight,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? theme.colors.segmentedSelectedBackground
-                      : null,
-                  borderRadius: BorderRadius.circular(_segmentRadius),
-                  boxShadow: isSelected ? _selectedShadow : null,
-                ),
-                child: child,
-              ),
+    child: MergeSemantics(
+      child: Semantics(
+        selected: isSelected,
+        button: true,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: _segmentHeight,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? theme.colors.segmentedSelectedBackground
+                  : null,
+              borderRadius: BorderRadius.circular(_segmentRadius),
+              boxShadow: isSelected ? _selectedShadow : null,
             ),
+            child: child,
           ),
         ),
-      );
+      ),
+    ),
+  );
 }

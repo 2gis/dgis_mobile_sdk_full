@@ -56,15 +56,15 @@ class WorkingHoursFactory {
         isOpenSoon = true;
         alertLevel =
             openingSoon.timeUntilOpen.inMinutes <= _criticalCloseMinutes
-                ? WorkingHoursAlertLevel.high
-                : WorkingHoursAlertLevel.medium;
+            ? WorkingHoursAlertLevel.high
+            : WorkingHoursAlertLevel.medium;
       },
       closingSoon: (closingSoon) {
         shortTitle = workStatus.openStatusHint;
         alertLevel =
             closingSoon.timeUntilClose.inMinutes <= _criticalCloseMinutes
-                ? WorkingHoursAlertLevel.high
-                : WorkingHoursAlertLevel.medium;
+            ? WorkingHoursAlertLevel.high
+            : WorkingHoursAlertLevel.medium;
       },
       closed: (_) {
         shortTitle = workStatus.openStatusHint;
@@ -276,13 +276,15 @@ class WorkingHoursFactory {
       final gaps = dayClosings
           .where((c) => c.reason != sdk.ClosedReason.workTime)
           .map((closing) {
-        final breakLabel = switch (closing.reason) {
-          sdk.ClosedReason.lunch => _localizations.dgis_working_hours_lunch,
-          sdk.ClosedReason.break_ => _localizations.dgis_working_hours_break,
-          sdk.ClosedReason.workTime => '',
-        };
-        return '$breakLabel ${_formatTime(closing.startMinutes)}–${_formatTime(closing.endMinutes)}';
-      }).toList();
+            final breakLabel = switch (closing.reason) {
+              sdk.ClosedReason.lunch => _localizations.dgis_working_hours_lunch,
+              sdk.ClosedReason.break_ =>
+                _localizations.dgis_working_hours_break,
+              sdk.ClosedReason.workTime => '',
+            };
+            return '$breakLabel ${_formatTime(closing.startMinutes)}–${_formatTime(closing.endMinutes)}';
+          })
+          .toList();
 
       fullRows.add(
         WorkingHoursFullRow(

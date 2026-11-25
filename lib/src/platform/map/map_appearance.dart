@@ -1,3 +1,6 @@
+// ignore: unnecessary_import
+import 'dart:ui' show Brightness;
+
 import 'package:flutter/widgets.dart';
 
 import '../../generated/dart_bindings.dart' as sdk;

@@ -30,7 +30,8 @@ class ZoomModel {
   int get hashCode => Object.hash(zoomInEnabled, zoomOutEnabled);
 
   @override
-  String toString() => 'ZoomModel('
+  String toString() =>
+      'ZoomModel('
       'zoomInEnabled: $zoomInEnabled, '
       'zoomOutEnabled: $zoomOutEnabled'
       ')';

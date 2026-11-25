@@ -63,30 +63,35 @@ class ZoomController {
   }
 
   void _init() {
-    _zoomControlModel =
-        withBssEventsSourceFromSdk(() => sdk.ZoomControlModel(map));
+    _zoomControlModel = withBssEventsSourceFromSdk(
+      () => sdk.ZoomControlModel(map),
+    );
 
     _model = ValueNotifier(
       ZoomModel(
-        zoomInEnabled:
-            _zoomControlModel.isEnabled(sdk.ZoomControlButton.zoomIn).value,
-        zoomOutEnabled:
-            _zoomControlModel.isEnabled(sdk.ZoomControlButton.zoomOut).value,
+        zoomInEnabled: _zoomControlModel
+            .isEnabled(sdk.ZoomControlButton.zoomIn)
+            .value,
+        zoomOutEnabled: _zoomControlModel
+            .isEnabled(sdk.ZoomControlButton.zoomOut)
+            .value,
       ),
     );
 
-    _zoomInSubscription =
-        _zoomControlModel.isEnabled(sdk.ZoomControlButton.zoomIn).listen(
-      (isEnabled) {
-        _model.value = _model.value.copyWith(zoomInEnabled: isEnabled);
-      },
-    );
-    _zoomOutSubscription =
-        _zoomControlModel.isEnabled(sdk.ZoomControlButton.zoomOut).listen(
-      (isEnabled) {
-        _model.value = _model.value.copyWith(zoomOutEnabled: isEnabled);
-      },
-    );
+    _zoomInSubscription = _zoomControlModel
+        .isEnabled(sdk.ZoomControlButton.zoomIn)
+        .listen(
+          (isEnabled) {
+            _model.value = _model.value.copyWith(zoomInEnabled: isEnabled);
+          },
+        );
+    _zoomOutSubscription = _zoomControlModel
+        .isEnabled(sdk.ZoomControlButton.zoomOut)
+        .listen(
+          (isEnabled) {
+            _model.value = _model.value.copyWith(zoomOutEnabled: isEnabled);
+          },
+        );
   }
 
   void startZoomIn() {

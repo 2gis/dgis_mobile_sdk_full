@@ -9,9 +9,10 @@ import '../../generated/dart_bindings.dart' as sdk;
 import '../../util/plugin_name.dart';
 import 'base_map_state.dart';
 
-typedef UriOpener = void Function(
-  String uri,
-);
+typedef UriOpener =
+    void Function(
+      String uri,
+    );
 
 class CopyrightAlignment {
   final EdgeInsets edgeInsets;
@@ -34,8 +35,9 @@ class CopyrightAlignment {
 }
 
 class CopyrightWidgetController {
-  final ValueNotifier<CopyrightAlignment> copyrightAlignment =
-      ValueNotifier(const CopyrightAlignment());
+  final ValueNotifier<CopyrightAlignment> copyrightAlignment = ValueNotifier(
+    const CopyrightAlignment(),
+  );
 
   UriOpener uriOpener = (uri) async {
     final url = Uri.parse(uri);
@@ -78,8 +80,9 @@ class _CopyrightState {
 }
 
 class _CopyrightWidgetState extends BaseMapWidgetState<CopyrightWidget> {
-  final ValueNotifier<_CopyrightState> copyrightState =
-      ValueNotifier(const _CopyrightState());
+  final ValueNotifier<_CopyrightState> copyrightState = ValueNotifier(
+    const _CopyrightState(),
+  );
   bool interactive = true;
 
   StreamSubscription<bool>? interactiveSubscription;
@@ -95,14 +98,16 @@ class _CopyrightWidgetState extends BaseMapWidgetState<CopyrightWidget> {
     );
     hideCopyrightSubscription = map.hideCopyrightChannel.listen(
       (hideCopyright) {
-        copyrightState.value =
-            copyrightState.value.copyWith(hideCopyright: hideCopyright);
+        copyrightState.value = copyrightState.value.copyWith(
+          hideCopyright: hideCopyright,
+        );
       },
     );
     productTypeSubscription = map.productTypeChannel.listen(
       (productType) {
-        copyrightState.value =
-            copyrightState.value.copyWith(productType: productType);
+        copyrightState.value = copyrightState.value.copyWith(
+          productType: productType,
+        );
       },
     );
   }
@@ -121,7 +126,7 @@ class _CopyrightWidgetState extends BaseMapWidgetState<CopyrightWidget> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<_CopyrightState>(
       valueListenable: copyrightState,
-      builder: (_, currentState, __) => SafeArea(
+      builder: (_, currentState, _) => SafeArea(
         minimum: widget._controller.copyrightAlignment.value.edgeInsets,
         child: _createCopyrightWidget(currentState),
       ),
@@ -135,8 +140,9 @@ class _CopyrightWidgetState extends BaseMapWidgetState<CopyrightWidget> {
     return GestureDetector(
       onTap: () {
         if (interactive) {
-          widget._controller
-              .uriOpener(_getApiUri(copyrightState.value.productType));
+          widget._controller.uriOpener(
+            _getApiUri(copyrightState.value.productType),
+          );
         }
       },
       child: SvgPicture.asset(

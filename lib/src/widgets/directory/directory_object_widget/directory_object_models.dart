@@ -316,16 +316,16 @@ class WorkingHoursData {
 
   @override
   int get hashCode => Object.hash(
-        shortTitle,
-        alertLevel,
-        mediumTitle,
-        mediumSubtitle,
-        Object.hashAll(full),
-        scheduleLabel,
-        isUniformDaily,
-        isOpenSoon,
-        isOpen24x7,
-      );
+    shortTitle,
+    alertLevel,
+    mediumTitle,
+    mediumSubtitle,
+    Object.hashAll(full),
+    scheduleLabel,
+    isUniformDaily,
+    isOpenSoon,
+    isOpen24x7,
+  );
 
   @override
   String toString() {

@@ -14,6 +14,8 @@ class RouteEditorViewTheme extends MapWidgetColorScheme {
     required this.finishLabelTextStyle,
     required this.finishPointColor,
     required this.routeLineColor,
+    this.iconColor = const Color(0xFF000000),
+    this.buttonPrimaryColor = const Color(0xFFFFFFFF),
     this.handleHeight = 16,
     this.routeListHeight = 100,
     this.routeListVerticalPadding = 16,
@@ -25,11 +27,13 @@ class RouteEditorViewTheme extends MapWidgetColorScheme {
   });
 
   final Color backgroundColor;
+  final Color iconColor;
   final RouteCardTheme cardTheme;
   final RouteTabTheme tabTheme;
 
   final Color headerButtonBackground;
   final Color headerButtonColor;
+  final Color buttonPrimaryColor;
 
   final TextStyle startLabelTextStyle;
   final Color startPointColor;
@@ -75,10 +79,12 @@ class RouteEditorViewTheme extends MapWidgetColorScheme {
 
   static const defaultDark = RouteEditorViewTheme(
     backgroundColor: Color(0xFF141414),
+    iconColor: Color(0xFFFFFFFF),
     cardTheme: RouteCardTheme.defaultDark,
     tabTheme: RouteTabTheme.defaultDark,
     headerButtonBackground: Color(0x0FFFFFFF),
     headerButtonColor: Color(0xFFB8B8B8),
+    buttonPrimaryColor: Color(0xFF000000),
     startLabelTextStyle: TextStyle(
       leadingDistribution: TextLeadingDistribution.even,
       fontWeight: FontWeight.w500,
@@ -101,10 +107,12 @@ class RouteEditorViewTheme extends MapWidgetColorScheme {
   @override
   RouteEditorViewTheme copyWith({
     Color? backgroundColor,
+    Color? iconColor,
     RouteCardTheme? cardTheme,
     RouteTabTheme? tabTheme,
     Color? headerButtonBackground,
     Color? headerButtonColor,
+    Color? buttonPrimaryColor,
     TextStyle? startLabelTextStyle,
     Color? startPointColor,
     TextStyle? finishLabelTextStyle,
@@ -121,11 +129,13 @@ class RouteEditorViewTheme extends MapWidgetColorScheme {
   }) {
     return RouteEditorViewTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      iconColor: iconColor ?? this.iconColor,
       cardTheme: cardTheme ?? this.cardTheme,
       tabTheme: tabTheme ?? this.tabTheme,
       headerButtonBackground:
           headerButtonBackground ?? this.headerButtonBackground,
       headerButtonColor: headerButtonColor ?? this.headerButtonColor,
+      buttonPrimaryColor: buttonPrimaryColor ?? this.buttonPrimaryColor,
       startLabelTextStyle: startLabelTextStyle ?? this.startLabelTextStyle,
       startPointColor: startPointColor ?? this.startPointColor,
       finishLabelTextStyle: finishLabelTextStyle ?? this.finishLabelTextStyle,

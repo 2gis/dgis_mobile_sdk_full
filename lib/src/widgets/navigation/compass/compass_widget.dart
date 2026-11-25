@@ -21,9 +21,9 @@ class NavigationCompassWidget
     NavigationCompassWidgetTheme? light,
     NavigationCompassWidgetTheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   /// Widget color scheme for default light mode.
   static const defaultLightColorScheme = NavigationCompassWidgetTheme(
@@ -40,12 +40,19 @@ class NavigationCompassWidget
       NavigationCompassWidget(controller: controller);
 
   @override
-  ThemedMapControllingWidgetState<NavigationCompassWidget,
-      NavigationCompassWidgetTheme> createState() => _CompassWidgetState();
+  ThemedMapControllingWidgetState<
+    NavigationCompassWidget,
+    NavigationCompassWidgetTheme
+  >
+  createState() => _CompassWidgetState();
 }
 
-class _CompassWidgetState extends ThemedMapControllingWidgetState<
-    NavigationCompassWidget, NavigationCompassWidgetTheme> {
+class _CompassWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          NavigationCompassWidget,
+          NavigationCompassWidgetTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 

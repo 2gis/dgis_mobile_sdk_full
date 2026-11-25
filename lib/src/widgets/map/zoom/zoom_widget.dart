@@ -9,7 +9,7 @@ import '../themed_map_controlling_widget.dart';
 import '../themed_map_controlling_widget_state.dart';
 import 'zoom_button_widget.dart';
 
-/// Виджет карты, предоставлящий элементы для управления зумом (modern-версия).
+/// Виджет карты, предоставляющий элементы для управления зумом (modern-версия).
 /// Может использоваться только как child в MapWidget на любом уровне вложенности.
 class ZoomWidget extends ThemedMapControllingWidget<ZoomWidgetColorScheme> {
   const ZoomWidget({
@@ -17,31 +17,31 @@ class ZoomWidget extends ThemedMapControllingWidget<ZoomWidgetColorScheme> {
     ZoomWidgetColorScheme? light,
     ZoomWidgetColorScheme? dark,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   @override
   ThemedMapControllingWidgetState<ZoomWidget, ZoomWidgetColorScheme>
-      createState() => _ZoomWidgetState();
+  createState() => _ZoomWidgetState();
 
   /// Default color scheme of the UI element for light mode.
   static const ZoomWidgetColorScheme defaultLightColorScheme =
       ZoomWidgetColorScheme(
-    backgroundColor: Color(0xFFFFFFFF),
-    pressedBackgroundColor: Color(0xFFEEEEEE),
-    activeIconColor: Color(0xFF141414),
-    inactiveIconColor: Color(0xFFB8B8B8),
-  );
+        backgroundColor: Color(0xFFFFFFFF),
+        pressedBackgroundColor: Color(0xFFEEEEEE),
+        activeIconColor: Color(0xFF141414),
+        inactiveIconColor: Color(0xFFB8B8B8),
+      );
 
   /// Default color scheme of the UI element for dark mode.
   static const ZoomWidgetColorScheme defaultDarkColorScheme =
       ZoomWidgetColorScheme(
-    backgroundColor: Color(0xFF141414),
-    pressedBackgroundColor: Color(0xFF3C3C3C),
-    activeIconColor: Color(0xFFFFFFFF),
-    inactiveIconColor: Color(0xFF5A5A5A),
-  );
+        backgroundColor: Color(0xFF141414),
+        pressedBackgroundColor: Color(0xFF3C3C3C),
+        activeIconColor: Color(0xFFFFFFFF),
+        inactiveIconColor: Color(0xFF5A5A5A),
+      );
 }
 
 class _ZoomWidgetState
@@ -57,10 +57,14 @@ class _ZoomWidgetState
   void onAttachedToMap(sdk.Map map) {
     model = withBssEventsSourceFromSdk(() => sdk.ZoomControlModel(map));
 
-    zoomInSubscription = model.isEnabled(sdk.ZoomControlButton.zoomIn).listen(
+    zoomInSubscription = model
+        .isEnabled(sdk.ZoomControlButton.zoomIn)
+        .listen(
           (isEnabled) => isZoomInEnabled.value = isEnabled,
         );
-    zoomOutSubscription = model.isEnabled(sdk.ZoomControlButton.zoomOut).listen(
+    zoomOutSubscription = model
+        .isEnabled(sdk.ZoomControlButton.zoomOut)
+        .listen(
           (isEnabled) => isZoomOutEnabled.value = isEnabled,
         );
   }
@@ -85,11 +89,8 @@ class _ZoomWidgetState
         children: [
           ValueListenableBuilder<bool>(
             valueListenable: isZoomInEnabled,
-            builder: (_, isEnabled, __) => ZoomButton(
-              activeIconColor: colorScheme.activeIconColor,
-              inactiveIconColor: colorScheme.inactiveIconColor,
-              backgroundColor: colorScheme.backgroundColor,
-              pressedBackgroundColor: colorScheme.pressedBackgroundColor,
+            builder: (_, isEnabled, _) => ZoomButton(
+              colorScheme: colorScheme,
               isEnabled: isEnabled,
               onClick: () =>
                   model.setPressed(sdk.ZoomControlButton.zoomIn, true),
@@ -100,13 +101,11 @@ class _ZoomWidgetState
               position: ZoomButtonPosition.top,
             ),
           ),
+          Divider(color: colorScheme.dividerColor, height: 0),
           ValueListenableBuilder<bool>(
             valueListenable: isZoomOutEnabled,
-            builder: (_, isEnabled, __) => ZoomButton(
-              activeIconColor: colorScheme.activeIconColor,
-              inactiveIconColor: colorScheme.inactiveIconColor,
-              backgroundColor: colorScheme.backgroundColor,
-              pressedBackgroundColor: colorScheme.pressedBackgroundColor,
+            builder: (_, isEnabled, _) => ZoomButton(
+              colorScheme: colorScheme,
               isEnabled: isEnabled,
               onClick: () =>
                   model.setPressed(sdk.ZoomControlButton.zoomOut, true),
@@ -129,12 +128,27 @@ class ZoomWidgetColorScheme extends MapWidgetColorScheme {
   final Color pressedBackgroundColor;
   final Color activeIconColor;
   final Color inactiveIconColor;
+  final Color dividerColor;
+
+  final List<BoxShadow> shadows;
 
   const ZoomWidgetColorScheme({
     required this.backgroundColor,
     required this.pressedBackgroundColor,
     required this.activeIconColor,
     required this.inactiveIconColor,
+    this.dividerColor = const Color(0x4D898989),
+    this.shadows = const [
+      BoxShadow(
+        offset: Offset(0, 1),
+        color: Color(0x14000000),
+        blurRadius: 4,
+      ),
+      BoxShadow(
+        color: Color(0x0a000000),
+        spreadRadius: 0.5,
+      ),
+    ],
   });
 
   @override
@@ -143,6 +157,8 @@ class ZoomWidgetColorScheme extends MapWidgetColorScheme {
     Color? inactiveIconColor,
     Color? backgroundColor,
     Color? pressedBackgroundColor,
+    Color? dividerColor,
+    List<BoxShadow>? shadows,
   }) {
     return ZoomWidgetColorScheme(
       activeIconColor: activeIconColor ?? this.activeIconColor,
@@ -150,6 +166,8 @@ class ZoomWidgetColorScheme extends MapWidgetColorScheme {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       pressedBackgroundColor:
           pressedBackgroundColor ?? this.pressedBackgroundColor,
+      dividerColor: dividerColor ?? this.dividerColor,
+      shadows: shadows ?? this.shadows,
     );
   }
 }

@@ -15,12 +15,11 @@ Widget observeNavigationSetting<T>({
   required SettingsKey<T> key,
   required ValueWidgetBuilder<T> builder,
   Widget? child,
-}) =>
-    ValueListenableBuilder<T>(
-      valueListenable: repository.observe(key),
-      builder: builder,
-      child: child,
-    );
+}) => ValueListenableBuilder<T>(
+  valueListenable: repository.observe(key),
+  builder: builder,
+  child: child,
+);
 
 /// Observes a boolean [key] and renders a labelled [NavigationSettingsToggle]
 /// that persists changes through [setNavigationSetting].
@@ -30,17 +29,16 @@ Widget observeNavigationToggle({
   required BoolSettingsKey key,
   required String label,
   required NavigationSettingsTheme theme,
-}) =>
-    observeNavigationSetting<bool>(
-      repository: repository,
-      key: key,
-      builder: (context, value, child) => NavigationSettingsToggle(
-        label: label,
-        value: value,
-        onChanged: (value) => setNavigationSetting(repository, key, value),
-        theme: theme,
-      ),
-    );
+}) => observeNavigationSetting<bool>(
+  repository: repository,
+  key: key,
+  builder: (context, value, child) => NavigationSettingsToggle(
+    label: label,
+    value: value,
+    onChanged: (value) => setNavigationSetting(repository, key, value),
+    theme: theme,
+  ),
+);
 
 /// Updates [key] without waiting for persistence.
 @internal

@@ -66,21 +66,34 @@ class TrafficLineController {
         intermediatePoints:
             navigationManager.uiModel.route.route.intermediatePoints.entries,
         routeLength: navigationManager
-            .uiModel.route.route.geometry.length.millimeters
+            .uiModel
+            .route
+            .route
+            .geometry
+            .length
+            .millimeters
             .toDouble(),
         routePosition: navigationManager
-            .uiModel.routePosition?.distance.millimeters
+            .uiModel
+            .routePosition
+            ?.distance
+            .millimeters
             .toDouble(),
         routeProgress: 0,
         speedColors: navigationManager
-            .uiModel.dynamicRouteInfo.traffic.speedColors.entries,
+            .uiModel
+            .dynamicRouteInfo
+            .traffic
+            .speedColors
+            .entries,
         roadEvents:
             navigationManager.uiModel.dynamicRouteInfo.roadEvents.entries,
       ),
     );
 
-    _routeChannelSubscription =
-        navigationManager.uiModel.routeChannel.listen((routeInfo) {
+    _routeChannelSubscription = navigationManager.uiModel.routeChannel.listen((
+      routeInfo,
+    ) {
       _model.value = _model.value.copyWith(
         routeLength: routeInfo.route.geometry.length.millimeters.toDouble(),
         intermediatePoints: routeInfo.route.intermediatePoints.entries,
@@ -88,30 +101,33 @@ class TrafficLineController {
       _updateRouteProgress();
     });
 
-    _routePositionChannelSubscription =
-        navigationManager.uiModel.routePositionChannel.listen((position) {
-      if (position != null) {
-        _model.value = _model.value.copyWith(
-          routePosition: () => position.distance.millimeters.toDouble(),
-        );
-      }
-      _updateRouteProgress();
-    });
+    _routePositionChannelSubscription = navigationManager
+        .uiModel
+        .routePositionChannel
+        .listen((position) {
+          if (position != null) {
+            _model.value = _model.value.copyWith(
+              routePosition: () => position.distance.millimeters.toDouble(),
+            );
+          }
+          _updateRouteProgress();
+        });
 
     _dynamicRouteInfoSubscription = navigationManager
-        .uiModel.dynamicRouteInfoChannel
+        .uiModel
+        .dynamicRouteInfoChannel
         .listen((dynamicRouteInfo) {
-      _model.value = _model.value.copyWith(
-        speedColors: dynamicRouteInfo.traffic.speedColors.entries,
-        roadEvents: dynamicRouteInfo.roadEvents.entries
-            .where(
-              (event) =>
-                  event.value.eventType == sdk.RoadEventType.accident ||
-                  event.value.eventType == sdk.RoadEventType.roadWorks,
-            )
-            .toList(),
-      );
-    });
+          _model.value = _model.value.copyWith(
+            speedColors: dynamicRouteInfo.traffic.speedColors.entries,
+            roadEvents: dynamicRouteInfo.roadEvents.entries
+                .where(
+                  (event) =>
+                      event.value.eventType == sdk.RoadEventType.accident ||
+                      event.value.eventType == sdk.RoadEventType.roadWorks,
+                )
+                .toList(),
+          );
+        });
   }
 
   void _updateRouteProgress() {

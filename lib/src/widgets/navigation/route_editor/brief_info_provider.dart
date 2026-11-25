@@ -108,8 +108,9 @@ class TrafficRouterBriefInfoProvider extends BriefInfoProvider {
 
       await Future.wait(
         controller!.availableTransportModes.map((transportType) async {
-          final options =
-              controller!.transportTypeOptionsProvider.provide(transportType);
+          final options = controller!.transportTypeOptionsProvider.provide(
+            transportType,
+          );
           final briefInfoList = await trafficRouter.findBriefRouteInfos(
             [
               sdk.BriefRouteInfoSearchPoints(

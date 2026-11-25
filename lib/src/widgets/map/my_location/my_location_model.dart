@@ -51,7 +51,8 @@ class MyLocationModel {
   int get hashCode => Object.hash(isEnabled, followState, isPermissionRequired);
 
   @override
-  String toString() => 'MyLocationModel('
+  String toString() =>
+      'MyLocationModel('
       'isEnabled: $isEnabled, '
       'followState: $followState, '
       'isPermissionRequired: $isPermissionRequired'

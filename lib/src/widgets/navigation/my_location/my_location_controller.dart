@@ -85,7 +85,8 @@ class NavigationMyLocationController {
   void _init() {
     _model = ValueNotifier(
       NavigationMyLocationModel(
-        isActive: map.camera.behaviour.newBehaviour == _Behaviour.full.value ||
+        isActive:
+            map.camera.behaviour.newBehaviour == _Behaviour.full.value ||
             map.camera.behaviour.newBehaviour ==
                 _Behaviour.withoutBearing.value,
         behaviour: _Behaviour.full.value,

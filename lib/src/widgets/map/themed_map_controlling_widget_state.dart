@@ -12,8 +12,10 @@ import 'themed_map_controlling_widget.dart';
 /// Виджет, использующий этот класс как базовый для своего State, должен быть помещен
 /// в child виджета [MapWidget]. В ином случае будет брошено исключение при использовании.
 abstract class ThemedMapControllingWidgetState<
-    T extends ThemedMapControllingWidget<S>,
-    S extends MapWidgetColorScheme> extends BaseMapWidgetState<T> {
+  T extends ThemedMapControllingWidget<S>,
+  S extends MapWidgetColorScheme
+>
+    extends BaseMapWidgetState<T> {
   late S colorScheme;
   sdk.MapTheme? _mapTheme;
 

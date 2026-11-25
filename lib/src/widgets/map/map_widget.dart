@@ -14,12 +14,14 @@ import '../../platform/map/map_widget_options.dart';
 import '../../platform/map/touch_events_observer.dart';
 import 'copyright_widget.dart';
 
-typedef OnMapThemeChangedCallback = void Function(
-  sdk.MapTheme appearance,
-);
-typedef MapObjectTappedCallback = void Function(
-  sdk.RenderedObjectInfo objectInfo,
-);
+typedef OnMapThemeChangedCallback =
+    void Function(
+      sdk.MapTheme appearance,
+    );
+typedef MapObjectTappedCallback =
+    void Function(
+      sdk.RenderedObjectInfo objectInfo,
+    );
 
 /// Контроллер для работы с картой.
 class MapWidgetController {
@@ -45,9 +47,9 @@ class MapWidgetController {
     sdk.Context sdkContext, {
     sdk.MapControllerOptions controllerOptions =
         const sdk.MapControllerOptions(),
-  })  : _appearance = controllerOptions.mapAppearance ?? defaultMapAppearance(),
-        _maxFps = controllerOptions.maxFps,
-        _powerSavingMaxFps = controllerOptions.powerSavingMaxFps {
+  }) : _appearance = controllerOptions.mapAppearance ?? defaultMapAppearance(),
+       _maxFps = controllerOptions.maxFps,
+       _powerSavingMaxFps = controllerOptions.powerSavingMaxFps {
     _backgroundColor = _appearance.mapTheme.loadingBackground;
     _mapControllerOperation = sdk.MapController.create(
       sdkContext,
@@ -58,10 +60,10 @@ class MapWidgetController {
 
   MapWidgetController.fromMapController(
     sdk.MapController mapController,
-  )   : _appearance = defaultMapAppearance(),
-        _mapControllerOperation = CancelableOperation.fromFuture(
-          Future.value(mapController),
-        ) {
+  ) : _appearance = defaultMapAppearance(),
+      _mapControllerOperation = CancelableOperation.fromFuture(
+        Future.value(mapController),
+      ) {
     _backgroundColor = _appearance.mapTheme.loadingBackground;
     _bindMapController(mapController);
   }
@@ -139,8 +141,9 @@ class MapWidgetController {
       _copyrightWidgetController.copyrightAlignment.value.edgeInsets;
   set copyrightEdgeInsets(EdgeInsets insets) {
     _copyrightWidgetController.copyrightAlignment.value =
-        _copyrightWidgetController.copyrightAlignment.value
-            .copyWith(edgeInsets: insets);
+        _copyrightWidgetController.copyrightAlignment.value.copyWith(
+          edgeInsets: insets,
+        );
   }
 
   /// Позиция копирайта на экране.
@@ -148,8 +151,9 @@ class MapWidgetController {
       _copyrightWidgetController.copyrightAlignment.value.alignment;
   set copyrightAlignment(Alignment value) {
     _copyrightWidgetController.copyrightAlignment.value =
-        _copyrightWidgetController.copyrightAlignment.value
-            .copyWith(alignment: value);
+        _copyrightWidgetController.copyrightAlignment.value.copyWith(
+          alignment: value,
+        );
   }
 
   /// Класс для управления обработкой жестов.
@@ -365,10 +369,9 @@ class MapWidgetController {
     if (map == null || callbacks.isEmpty) {
       return;
     }
-    await map
-        .getMapObject(point, const sdk.ScreenDistance(1))
-        .value
-        .then((objectInfo) {
+    await map.getMapObject(point, const sdk.ScreenDistance(1)).value.then((
+      objectInfo,
+    ) {
       if (objectInfo != null) {
         for (final callback in callbacks) {
           callback(objectInfo);
@@ -418,13 +421,14 @@ class MapWidget extends MapWidgetInternal {
     super.child,
     super.key,
   }) : super(
-          showCopyright: true,
-        );
+         showCopyright: true,
+       );
 }
 
 class _TextureController {
-  static const MethodChannel _channel =
-      MethodChannel('flutter_map_surface_plugin');
+  static const MethodChannel _channel = MethodChannel(
+    'flutter_map_surface_plugin',
+  );
 
   Future<int?> initialize(int mapSurfaceId) async {
     return _channel.invokeMethod('setSurface', {'mapSurfaceId': mapSurfaceId});
@@ -646,8 +650,9 @@ class _MapGestureController {
 
   void _addTouchPoint(PointerEvent event, sdk.TouchPointState state) {
     final poisition = _getScreenPoint(event);
-    final touchPoint =
-        _touchPoints.where((element) => element._id == event.pointer);
+    final touchPoint = _touchPoints.where(
+      (element) => element._id == event.pointer,
+    );
     if (touchPoint.isEmpty) {
       _touchPoints.add(_TouchPoint(event.pointer, poisition, state));
     } else {
@@ -701,7 +706,8 @@ class MapWidgetState extends State<MapWidgetInternal>
   void initState() {
     super.initState();
     _ownsMapWidgetController = widget.controller == null;
-    mapWidgetController = widget.controller ??
+    mapWidgetController =
+        widget.controller ??
         MapWidgetController(
           widget.sdkContext,
           controllerOptions: widget.controllerOptions,
@@ -720,7 +726,8 @@ class MapWidgetState extends State<MapWidgetInternal>
     super.didChangeDependencies();
     if (!isMapInitialized) {
       isMapInitialized = true;
-      _deviceDensity = widget.viewOptions.deviceDensity?.value ??
+      _deviceDensity =
+          widget.viewOptions.deviceDensity?.value ??
           MediaQuery.devicePixelRatioOf(context);
       _devicePpi =
           widget.viewOptions.devicePPI?.value ?? _deviceDensity * 160.0;
@@ -785,8 +792,9 @@ class MapWidgetState extends State<MapWidgetInternal>
               mapTheme: _mapTheme.value,
               child: ValueListenableBuilder(
                 valueListenable: mapWidgetController
-                    ._copyrightWidgetController.copyrightAlignment,
-                builder: (_, copyrightAlignment, __) => Align(
+                    ._copyrightWidgetController
+                    .copyrightAlignment,
+                builder: (_, copyrightAlignment, _) => Align(
                   alignment: copyrightAlignment.alignment,
                   child: CopyrightWidget(
                     controller: mapWidgetController._copyrightWidgetController,
@@ -797,7 +805,7 @@ class MapWidgetState extends State<MapWidgetInternal>
           if (widget.child != null)
             ValueListenableBuilder(
               valueListenable: _mapTheme,
-              builder: (_, theme, __) => _MapProvider(
+              builder: (_, theme, _) => _MapProvider(
                 map: map,
                 mapTheme: theme,
                 child: widget.child!,
@@ -865,8 +873,9 @@ class MapWidgetState extends State<MapWidgetInternal>
       );
       _cameraChangeSubscription = map.camera.changed.listen((changes) {
         if (changes.changeReasons.contains(sdk.CameraChangeReason.devicePPI)) {
-          _mapGestureController?._mapGestureRecognizer
-              .onDevicePpiChanged(map.camera.devicePpi);
+          _mapGestureController?._mapGestureRecognizer.onDevicePpiChanged(
+            map.camera.devicePpi,
+          );
         }
       });
 

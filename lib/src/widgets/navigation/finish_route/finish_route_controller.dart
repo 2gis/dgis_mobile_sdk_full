@@ -62,12 +62,13 @@ class FinishRouteController {
   }
 
   void _init() {
-    _parkingControlModel =
-        withBssEventsSourceFromSdk(() => sdk.ParkingControlModel(map));
-    _isParkingsEnabledSubscription =
-        _parkingControlModel.isEnabledChannel.listen((isEnabled) {
-      _model.value = _model.value.copyWith(isParkingEnabled: isEnabled);
-    });
+    _parkingControlModel = withBssEventsSourceFromSdk(
+      () => sdk.ParkingControlModel(map),
+    );
+    _isParkingsEnabledSubscription = _parkingControlModel.isEnabledChannel
+        .listen((isEnabled) {
+          _model.value = _model.value.copyWith(isParkingEnabled: isEnabled);
+        });
     _model = ValueNotifier(
       FinishRouteModel(isParkingEnabled: _isParkingEnabled),
     );

@@ -17,9 +17,9 @@ class SpeedLimitWidget
     SpeedLimitWidgetTheme? dark,
     super.key,
   }) : super(
-          light: light ?? SpeedLimitWidgetTheme.defaultLight,
-          dark: dark ?? SpeedLimitWidgetTheme.defaultDark,
-        );
+         light: light ?? SpeedLimitWidgetTheme.defaultLight,
+         dark: dark ?? SpeedLimitWidgetTheme.defaultDark,
+       );
 
   // ignore: prefer_constructors_over_static_methods
   static SpeedLimitWidget defaultBuilder(SpeedLimitController controller) =>
@@ -29,11 +29,15 @@ class SpeedLimitWidget
 
   @override
   ThemedMapControllingWidgetState<SpeedLimitWidget, SpeedLimitWidgetTheme>
-      createState() => _SpeedLimitWidgetState();
+  createState() => _SpeedLimitWidgetState();
 }
 
-class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
-    SpeedLimitWidget, SpeedLimitWidgetTheme> {
+class _SpeedLimitWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          SpeedLimitWidget,
+          SpeedLimitWidgetTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 
@@ -85,7 +89,8 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                     height: colorScheme.speedometerTheme.size,
                     child: OverflowBox(
                       alignment: Alignment.topCenter,
-                      maxHeight: colorScheme.speedometerTheme.size +
+                      maxHeight:
+                          colorScheme.speedometerTheme.size +
                           colorScheme.speedometerTheme.iconSize,
                       child: Stack(
                         children: [
@@ -98,9 +103,11 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                                   side: state.cameraProgressInfo != null
                                       ? BorderSide(
                                           width: colorScheme
-                                              .cameraProgressTheme.thickness,
+                                              .cameraProgressTheme
+                                              .thickness,
                                           color: colorScheme
-                                              .cameraProgressTheme.surfaceColor,
+                                              .cameraProgressTheme
+                                              .surfaceColor,
                                           strokeAlign:
                                               BorderSide.strokeAlignCenter,
                                         )
@@ -114,7 +121,9 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                                 child: Baseline(
                                   baselineType: TextBaseline.alphabetic,
                                   baseline: colorScheme
-                                      .speedometerTheme.textStyle.fontSize!,
+                                      .speedometerTheme
+                                      .textStyle
+                                      .fontSize!,
                                   child: Text(
                                     '${(state.currentSpeed ?? 0).floor()}',
                                     style:
@@ -131,10 +140,12 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                               height: colorScheme.speedometerTheme.size,
                               child: CircularProgressIndicator(
                                 color: state.exceeding
-                                    ? colorScheme.cameraProgressTheme
-                                        .progressExceededColor
+                                    ? colorScheme
+                                          .cameraProgressTheme
+                                          .progressExceededColor
                                     : colorScheme
-                                        .cameraProgressTheme.progressColor,
+                                          .cameraProgressTheme
+                                          .progressColor,
                                 value: state.cameraProgressInfo!.progress,
                               ),
                             ),
@@ -169,7 +180,8 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: colorScheme
-                                    .speedLimitTheme.exceededSurfaceColor,
+                                    .speedLimitTheme
+                                    .exceededSurfaceColor,
                                 width: colorScheme.speedLimitTheme.borderWidth,
                               ),
                               boxShadow: state.exceeding
@@ -177,7 +189,8 @@ class _SpeedLimitWidgetState extends ThemedMapControllingWidgetState<
                                   : null,
                               color: state.exceeding
                                   ? colorScheme
-                                      .speedLimitTheme.exceededSurfaceColor
+                                        .speedLimitTheme
+                                        .exceededSurfaceColor
                                   : colorScheme.speedLimitTheme.surfaceColor,
                             ),
                             child: Center(
@@ -230,21 +243,22 @@ class _PulsatingAnimationWidgetState extends State<_PulsatingAnimationWidget>
       duration: const Duration(milliseconds: 1200),
     );
 
-    _animation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1, end: 1.1),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.1, end: 1),
-        weight: 50,
-      ),
-    ]).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    _animation =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1, end: 1.1),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.1, end: 1),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOut,
+          ),
+        );
 
     if (widget.shouldPulsate) {
       _controller.repeat();

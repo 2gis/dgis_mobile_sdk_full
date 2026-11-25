@@ -23,28 +23,34 @@ class BetterRoutePromptWidget
     BetterRoutePromptTheme? light,
     BetterRoutePromptTheme? dark,
   }) : super(
-          dark: dark ?? BetterRoutePromptTheme.defaultDark,
-          light: light ?? BetterRoutePromptTheme.defaultLight,
-        );
+         dark: dark ?? BetterRoutePromptTheme.defaultDark,
+         light: light ?? BetterRoutePromptTheme.defaultLight,
+       );
 
   @override
-  ThemedMapControllingWidgetState<BetterRoutePromptWidget,
-      BetterRoutePromptTheme> createState() => _BetterRoutePromptWidgetState();
+  ThemedMapControllingWidgetState<
+    BetterRoutePromptWidget,
+    BetterRoutePromptTheme
+  >
+  createState() => _BetterRoutePromptWidgetState();
 
   // ignore: prefer_constructors_over_static_methods
   static BetterRoutePromptWidget defaultBuilder(
     BetterRoutePromptController controller,
     Duration propmtDuration,
-  ) =>
-      BetterRoutePromptWidget(
-        controller: controller,
-        promptDuration: propmtDuration,
-      );
+  ) => BetterRoutePromptWidget(
+    controller: controller,
+    promptDuration: propmtDuration,
+  );
 }
 
-class _BetterRoutePromptWidgetState extends ThemedMapControllingWidgetState<
-    BetterRoutePromptWidget,
-    BetterRoutePromptTheme> with SingleTickerProviderStateMixin {
+class _BetterRoutePromptWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          BetterRoutePromptWidget,
+          BetterRoutePromptTheme
+        >
+    with SingleTickerProviderStateMixin {
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
 

@@ -11,6 +11,7 @@ import 'route_editor_scroll_physics.dart';
 
 class RouteListWidget extends StatefulWidget {
   final RouteEditorController controller;
+  final ScrollController verticalScrollController;
   final RouteCardTheme cardTheme;
   final TextStyle emptyTextStyle;
   final RouteCardBuilder routeCardBuilder;
@@ -25,6 +26,7 @@ class RouteListWidget extends StatefulWidget {
 
   const RouteListWidget({
     required this.controller,
+    required this.verticalScrollController,
     required this.cardTheme,
     required this.emptyTextStyle,
     required this.routeCardBuilder,
@@ -44,16 +46,29 @@ class RouteListWidget extends StatefulWidget {
 }
 
 class RouteListWidgetState extends State<RouteListWidget> {
-  final ScrollController _horizontalScrollController = ScrollController();
-  final ScrollController _verticalScrollController = ScrollController();
-  final Map<int, GlobalKey> _routeCardKeys = {};
+  late final ScrollController _horizontalScrollController = ScrollController();
+  late StatefulChannelValueListenable<sdk.RouteEditorRoutesInfo>
+  _listenableRoutesValue;
 
+  /// A flag that blocks manual scrolling while automating scrolling
   bool _isScrollingProgrammatically = false;
 
   @override
   void initState() {
     super.initState();
+
     _horizontalScrollController.addListener(_onHorizontalScroll);
+    _listenableRoutesValue = widget.controller.routeEditor.routesInfoChannel
+        .asValueListenable();
+  }
+
+  @override
+  void didUpdateWidget(covariant RouteListWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.controller == widget.controller) return;
+    _listenableRoutesValue = widget.controller.routeEditor.routesInfoChannel
+        .asValueListenable();
   }
 
   @override
@@ -61,34 +76,27 @@ class RouteListWidgetState extends State<RouteListWidget> {
     _horizontalScrollController
       ..removeListener(_onHorizontalScroll)
       ..dispose();
-    _verticalScrollController.dispose();
     super.dispose();
   }
 
+  /// Calculates the width of the route card and the distance between them to
+  /// determine scroll distance value
   void _onHorizontalScroll() {
-    if (_isScrollingProgrammatically) return;
-    if (!_horizontalScrollController.hasClients) return;
-
-    int? closestIndex;
-    var minDistance = double.infinity;
-
-    for (final entry in _routeCardKeys.entries) {
-      final itemContext = entry.value.currentContext;
-      if (itemContext == null) continue;
-
-      final renderBox = itemContext.findRenderObject() as RenderBox?;
-      if (renderBox == null) continue;
-
-      final itemPosition = renderBox.localToGlobal(Offset.zero);
-      final distance = (itemPosition.dx - widget.horizontalPadding).abs();
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = entry.key;
-      }
+    if (_isScrollingProgrammatically ||
+        !_horizontalScrollController.hasClients) {
+      return;
     }
 
-    if (closestIndex == null) return;
+    final routesCount = _listenableRoutesValue.value.routes.length;
+    if (routesCount == 0) return;
+
+    final itemExtent = widget.cardWidth + widget.cardSpacing;
+    if (itemExtent <= 0) return;
+
+    // We are looking for the nearest card in size and take it index
+    final closestIndex = (_horizontalScrollController.offset / itemExtent)
+        .round()
+        .clamp(0, routesCount - 1);
 
     final currentActiveIndex =
         widget.controller.routeEditor.activeRouteIndexChannel.value?.value;
@@ -106,46 +114,38 @@ class RouteListWidgetState extends State<RouteListWidget> {
     }
   }
 
-  void _scrollToHorizontalCard(int index) {
+  Future<void> _scrollToHorizontalCard(int index) async {
     if (!_horizontalScrollController.hasClients) return;
 
-    final itemContext = _routeCardKeys[index]?.currentContext;
-    if (itemContext == null) return;
+    try {
+      _isScrollingProgrammatically = true;
 
-    final renderBox = itemContext.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
+      // Since we know the size of the card, we can scroll based on its size
+      final targetScrollOffset =
+          index * (widget.cardWidth + widget.cardSpacing);
 
-    _isScrollingProgrammatically = true;
-
-    final itemPosition = renderBox.localToGlobal(Offset.zero);
-    final currentScrollOffset = _horizontalScrollController.offset;
-
-    final targetScrollOffset =
-        currentScrollOffset + itemPosition.dx - widget.horizontalPadding;
-
-    _horizontalScrollController
-        .animateTo(
-          targetScrollOffset.clamp(
-            0.0,
-            _horizontalScrollController.position.maxScrollExtent,
-          ),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        )
-        .then((_) => _isScrollingProgrammatically = false);
+      await _horizontalScrollController.animateTo(
+        targetScrollOffset.clamp(
+          0.0,
+          _horizontalScrollController.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } finally {
+      _isScrollingProgrammatically = false;
+    }
   }
 
   void _scrollToVerticalCard(int index) {
-    if (!_verticalScrollController.hasClients) return;
+    final controller = widget.verticalScrollController;
+    if (!controller.hasClients) return;
 
     final targetOffset =
         index * (widget.expandedCardHeight + widget.cardSpacing);
 
-    _verticalScrollController.animateTo(
-      targetOffset.clamp(
-        0.0,
-        _verticalScrollController.position.maxScrollExtent,
-      ),
+    controller.animateTo(
+      targetOffset.clamp(0.0, controller.position.maxScrollExtent),
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -156,21 +156,16 @@ class RouteListWidgetState extends State<RouteListWidget> {
     final localizations =
         DgisLocalizations.of(context) ?? DgisLocalizationsEn();
 
-    return ValueListenableBuilder<sdk.RouteEditorRoutesInfo?>(
-      valueListenable:
-          widget.controller.routeEditor.routesInfoChannel.asValueListenable(),
+    return ValueListenableBuilder<sdk.RouteEditorRoutesInfo>(
+      valueListenable: _listenableRoutesValue,
       builder: (context, routesInfo, _) {
-        if (routesInfo == null || routesInfo.routes.isEmpty) {
+        if (routesInfo.routes.isEmpty) {
           return Center(
             child: Text(
               localizations.dgis_no_routes_found,
               style: widget.emptyTextStyle,
             ),
           );
-        }
-
-        for (var i = 0; i < routesInfo.routes.length; i++) {
-          _routeCardKeys.putIfAbsent(i, GlobalKey.new);
         }
 
         final horizontalOpacity = 1.0 - widget.expandProgress;
@@ -182,14 +177,60 @@ class RouteListWidgetState extends State<RouteListWidget> {
               opacity: horizontalOpacity,
               child: IgnorePointer(
                 ignoring: widget.expandProgress > 0.5,
-                child: _buildHorizontalList(routesInfo),
+                child: _HorizontalCardListView(
+                  routesInfo: routesInfo,
+                  horizontalScrollController: _horizontalScrollController,
+                  horizontalPadding: widget.horizontalPadding,
+                  collapsedCardHeight: widget.collapsedCardHeight,
+                  cardWidth: widget.cardWidth,
+                  cardSpacing: widget.cardSpacing,
+                  onPressCard: (index) {
+                    widget.controller.setActiveRouteIndex(index);
+                    widget.onRouteTapped?.call(index);
+                  },
+                  listChild: (context, index) {
+                    return widget.routeCardBuilder.build(
+                      routesInfo.routes[index],
+                      () {
+                        widget.onStartNavigation?.call(
+                          routesInfo.routes[index],
+                        );
+                      },
+                      index,
+                      widget.controller,
+                      widget.cardTheme,
+                    );
+                  },
+                ),
               ),
             ),
             Opacity(
               opacity: verticalOpacity,
               child: IgnorePointer(
                 ignoring: widget.expandProgress <= 0.5,
-                child: _buildVerticalList(routesInfo),
+                child: _VerticalCardListView(
+                  routesInfo: routesInfo,
+                  expandedCardHeight: widget.expandedCardHeight,
+                  cardSpacing: widget.cardSpacing,
+                  horizontalPadding: widget.horizontalPadding,
+                  onPressCard: (index) {
+                    widget.controller.setActiveRouteIndex(index);
+                    widget.onRouteTapped?.call(index);
+                  },
+                  listChild: (context, index) {
+                    return widget.routeCardBuilder.build(
+                      routesInfo.routes[index],
+                      () {
+                        widget.onStartNavigation?.call(
+                          routesInfo.routes[index],
+                        );
+                      },
+                      index,
+                      widget.controller,
+                      widget.cardTheme,
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -197,73 +238,105 @@ class RouteListWidgetState extends State<RouteListWidget> {
       },
     );
   }
+}
 
-  Widget _buildHorizontalList(sdk.RouteEditorRoutesInfo routesInfo) {
+class _VerticalCardListView extends StatelessWidget {
+  const _VerticalCardListView({
+    required this.routesInfo,
+    required this.expandedCardHeight,
+    required this.horizontalPadding,
+    required this.cardSpacing,
+    required this.onPressCard,
+    required this.listChild,
+  });
+
+  final sdk.RouteEditorRoutesInfo routesInfo;
+  final double expandedCardHeight;
+  final double horizontalPadding;
+  final double cardSpacing;
+  final ValueChanged<int> onPressCard;
+  final Widget Function(BuildContext context, int index) listChild;
+
+  @override
+  Widget build(BuildContext context) {
+    final length = routesInfo.routes.length;
+    final allCardsHeight = expandedCardHeight * length;
+    final allCardsSpacing = length > 1 ? cardSpacing * (length - 1) : 0.0;
+
     return SizedBox(
-      height: widget.collapsedCardHeight,
+      height: allCardsHeight + allCardsSpacing,
       child: ListView.separated(
-        controller: _horizontalScrollController,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-        itemCount: routesInfo.routes.length,
-        separatorBuilder: (_, __) => SizedBox(width: widget.cardSpacing),
-        physics: RouteEditorScrollPhysics(
-          elementWidth: widget.cardWidth,
-          elementPadding: widget.cardSpacing,
-        ),
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        itemCount: length,
+        separatorBuilder: (_, _) => SizedBox(height: cardSpacing),
         itemBuilder: (context, index) {
-          return KeyedSubtree(
-            key: _routeCardKeys[index],
-            child: SizedBox(
-              width: widget.cardWidth,
-              child: GestureDetector(
-                onTap: () {
-                  widget.controller.setActiveRouteIndex(index);
-                  widget.onRouteTapped?.call(index);
-                },
-                child: widget.routeCardBuilder.build(
-                  routesInfo.routes[index],
-                  () {
-                    widget.onStartNavigation?.call(routesInfo.routes[index]);
-                  },
-                  index,
-                  widget.controller,
-                  widget.cardTheme,
-                ),
-              ),
+          return SizedBox(
+            height: expandedCardHeight,
+            child: GestureDetector(
+              onTap: () => onPressCard(index),
+              child: listChild(context, index),
             ),
           );
         },
       ),
     );
   }
+}
 
-  Widget _buildVerticalList(sdk.RouteEditorRoutesInfo routesInfo) {
-    return ListView.separated(
-      controller: _verticalScrollController,
-      padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-      itemCount: routesInfo.routes.length,
-      separatorBuilder: (_, __) => SizedBox(height: widget.cardSpacing),
-      itemBuilder: (context, index) {
-        return SizedBox(
-          height: widget.expandedCardHeight,
-          child: GestureDetector(
-            onTap: () {
-              widget.controller.setActiveRouteIndex(index);
-              widget.onRouteTapped?.call(index);
-            },
-            child: widget.routeCardBuilder.build(
-              routesInfo.routes[index],
-              () {
-                widget.onStartNavigation?.call(routesInfo.routes[index]);
-              },
-              index,
-              widget.controller,
-              widget.cardTheme,
+class _HorizontalCardListView extends StatelessWidget {
+  const _HorizontalCardListView({
+    required this.routesInfo,
+    required this.horizontalScrollController,
+    required this.horizontalPadding,
+    required this.collapsedCardHeight,
+    required this.cardWidth,
+    required this.cardSpacing,
+    required this.onPressCard,
+    required this.listChild,
+  });
+
+  final sdk.RouteEditorRoutesInfo routesInfo;
+  final ScrollController horizontalScrollController;
+  final double horizontalPadding;
+  final double collapsedCardHeight;
+  final double cardWidth;
+  final double cardSpacing;
+  final ValueChanged<int> onPressCard;
+  final Widget Function(BuildContext context, int index) listChild;
+
+  @override
+  Widget build(BuildContext context) {
+    final length = routesInfo.routes.length;
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final cardWidth = length == 1
+        ? screenWidth - (horizontalPadding * 2)
+        : this.cardWidth;
+
+    return SizedBox(
+      height: collapsedCardHeight,
+      child: ListView.separated(
+        primary: false,
+        controller: horizontalScrollController,
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        itemCount: length,
+        separatorBuilder: (_, _) => SizedBox(width: cardSpacing),
+        physics: RouteEditorScrollPhysics(
+          elementWidth: this.cardWidth,
+          elementPadding: cardSpacing,
+        ),
+        itemBuilder: (context, index) {
+          return SizedBox(
+            width: cardWidth,
+            child: GestureDetector(
+              onTap: () => onPressCard(index),
+              child: listChild(context, index),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

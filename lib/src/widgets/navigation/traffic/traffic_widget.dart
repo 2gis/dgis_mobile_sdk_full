@@ -17,6 +17,7 @@ import './traffic_widget_theme.dart';
 class NavigationTrafficWidget
     extends ThemedMapControllingWidget<TrafficWidgetTheme> {
   final TrafficController controller;
+
   const NavigationTrafficWidget({
     required this.controller,
     super.key,
@@ -24,9 +25,9 @@ class NavigationTrafficWidget
     TrafficWidgetTheme? light,
     TrafficWidgetTheme? dark,
   }) : super(
-          light: light ?? TrafficWidgetTheme.defaultLight,
-          dark: dark ?? TrafficWidgetTheme.defaultDark,
-        );
+         light: light ?? TrafficWidgetTheme.defaultLight,
+         dark: dark ?? TrafficWidgetTheme.defaultDark,
+       );
 
   final RoundedCorners roundedCorners;
 
@@ -34,19 +35,22 @@ class NavigationTrafficWidget
   static NavigationTrafficWidget defaultBuilder(
     RoundedCorners roundedCorners,
     TrafficController controller,
-  ) =>
-      NavigationTrafficWidget(
-        controller: controller,
-        roundedCorners: roundedCorners,
-      );
+  ) => NavigationTrafficWidget(
+    controller: controller,
+    roundedCorners: roundedCorners,
+  );
 
   @override
   ThemedMapControllingWidgetState<NavigationTrafficWidget, TrafficWidgetTheme>
-      createState() => _NavigationTrafficWidgetState();
+  createState() => _NavigationTrafficWidgetState();
 }
 
-class _NavigationTrafficWidgetState extends ThemedMapControllingWidgetState<
-    NavigationTrafficWidget, TrafficWidgetTheme> {
+class _NavigationTrafficWidgetState
+    extends
+        ThemedMapControllingWidgetState<
+          NavigationTrafficWidget,
+          TrafficWidgetTheme
+        > {
   @override
   void onAttachedToMap(sdk.Map map) {}
 
@@ -57,16 +61,14 @@ class _NavigationTrafficWidgetState extends ThemedMapControllingWidgetState<
   Widget build(BuildContext context) {
     return ValueListenableBuilder<TrafficModel>(
       valueListenable: widget.controller.state,
-      builder: (_, currentState, __) {
+      builder: (_, currentState, _) {
         return Visibility(
           maintainSize: true,
           maintainState: true,
           maintainAnimation: true,
           child: BaseNavigationMapControl(
             theme: colorScheme.controlTheme,
-            isEnabled:
-                currentState.status != sdk.TrafficControlStatus.disabled &&
-                    currentState.status != sdk.TrafficControlStatus.hidden,
+            isEnabled: true,
             roundedCorners: widget.roundedCorners,
             onTap: widget.controller.toggleTraffic,
             child: Center(
@@ -81,48 +83,53 @@ class _NavigationTrafficWidgetState extends ThemedMapControllingWidgetState<
                     duration: const Duration(milliseconds: 2500),
                   ),
                 (null, _) => Center(
-                    child: SvgPicture.asset(
-                      'packages/$pluginName/assets/icons/dgis_traffic_icon.svg',
-                      width: colorScheme.iconSize,
-                      height: colorScheme.iconSize,
-                      fit: BoxFit.scaleDown,
-                      colorFilter: ColorFilter.mode(
-                        switch (currentState.status) {
-                          sdk.TrafficControlStatus.enabled =>
-                            colorScheme.controlTheme.iconActiveColor,
-                          sdk.TrafficControlStatus.disabled =>
-                            colorScheme.controlTheme.iconDisabledColor,
-                          _ => colorScheme.controlTheme.iconInactiveColor,
-                        },
-                        BlendMode.srcIn,
-                      ),
+                  child: SvgPicture.asset(
+                    'packages/$pluginName/assets/icons/dgis_traffic_icon.svg',
+                    width: colorScheme.iconSize,
+                    height: colorScheme.iconSize,
+                    fit: BoxFit.scaleDown,
+                    colorFilter: ColorFilter.mode(
+                      switch (currentState.status) {
+                        sdk.TrafficControlStatus.enabled =>
+                          colorScheme.controlTheme.iconActiveColor,
+                        sdk.TrafficControlStatus.disabled =>
+                          colorScheme.controlTheme.iconDisabledColor,
+                        _ => colorScheme.controlTheme.iconInactiveColor,
+                      },
+                      BlendMode.srcIn,
                     ),
                   ),
+                ),
                 (_, _) => Container(
-                    width: colorScheme.scoreStrokeSize.width,
-                    height: colorScheme.scoreStrokeSize.height,
-                    decoration: BoxDecoration(
-                      color: currentState.status ==
-                              sdk.TrafficControlStatus.enabled
-                          ? _getTrafficColor(currentState.score)
-                          : colorScheme
-                              .controlTheme.surfaceColor, // Inner color
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: _getTrafficColor(
-                          currentState.score,
-                        ),
-                        width: 2, // Border width
+                  width: colorScheme.scoreStrokeSize.width,
+                  height: colorScheme.scoreStrokeSize.height,
+                  decoration: BoxDecoration(
+                    // Inner color
+                    color:
+                        currentState.status == sdk.TrafficControlStatus.enabled
+                        ? _getTrafficColor(currentState.score)
+                        : colorScheme.controlTheme.surfaceColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: _getTrafficColor(
+                        currentState.score,
                       ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        currentState.score.toString(),
-                        textAlign: TextAlign.center,
-                        style: colorScheme.scoreTextStyle,
-                      ),
+                      width: 2, // Border width
                     ),
                   ),
+                  child: Center(
+                    child: Text(
+                      currentState.score.toString(),
+                      textAlign: TextAlign.center,
+                      style:
+                          currentState.status ==
+                              sdk.TrafficControlStatus.enabled
+                          ? colorScheme.scoreTextStyleEnabled ??
+                                colorScheme.scoreTextStyle
+                          : colorScheme.scoreTextStyle,
+                    ),
+                  ),
+                ),
               },
             ),
           ),

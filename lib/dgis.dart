@@ -1,6 +1,6 @@
 // TODO: написать док коммент для библиотеки
 // ignore: unnecessary_library_directive
-library dgis_mobile_sdk;
+library;
 
 export 'src/generated/class_message.dart';
 export 'src/generated/dart_bindings.dart'

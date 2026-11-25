@@ -197,8 +197,9 @@ class _DirectoryObjectWidgetState extends State<DirectoryObjectWidget> {
     if (widget.onHeaderHeightChanged == null) {
       return;
     }
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _measureAndReportHeaderHeight());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _measureAndReportHeaderHeight(),
+    );
   }
 
   @override
@@ -401,8 +402,9 @@ class _DirectoryObjectDraggableSheet extends StatefulWidget {
 
 class _DirectoryObjectDraggableSheetState
     extends State<_DirectoryObjectDraggableSheet> {
-  static const Duration _sheetExtentAnimationDuration =
-      Duration(milliseconds: 250);
+  static const Duration _sheetExtentAnimationDuration = Duration(
+    milliseconds: 250,
+  );
   static const double _sheetSnapVelocityThreshold = 250;
 
   final DraggableScrollableController _sheetController =

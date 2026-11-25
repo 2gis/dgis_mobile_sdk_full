@@ -46,15 +46,16 @@ class DashboardModel {
 
   @override
   int get hashCode => Object.hash(
-        distance,
-        duration,
-        soundsEnabled,
-        isRouteViewMode,
-        isMinimapVisible,
-      );
+    distance,
+    duration,
+    soundsEnabled,
+    isRouteViewMode,
+    isMinimapVisible,
+  );
 
   @override
-  String toString() => 'DashboardModel('
+  String toString() =>
+      'DashboardModel('
       'distance: $distance, '
       'duration: $duration, '
       'soundsEnabled: $soundsEnabled, '

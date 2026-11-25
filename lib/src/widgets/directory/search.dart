@@ -90,25 +90,27 @@ class DgisSearchWidget extends StatefulWidget {
     SuggestQueryProvider? suggestQueryProvider,
     sdk.LocationService? locationService,
     super.key,
-  })  : _onObjectSelected = onObjectSelected,
-        _searchManager = searchManager,
-        _locationService = locationService,
-        _searchQueryProvider =
-            searchQueryProvider ?? _defaultSearchQueryProvider,
-        _suggestQueryProvider =
-            suggestQueryProvider ?? _defaultSuggestQueryProvider,
-        assert(
-          onObjectSelected == null || resultBuilder == null,
-          'You can only provide either onObjectSelected or resultBuilder, not both.',
-        );
+  }) : _onObjectSelected = onObjectSelected,
+       _searchManager = searchManager,
+       _locationService = locationService,
+       _searchQueryProvider =
+           searchQueryProvider ?? _defaultSearchQueryProvider,
+       _suggestQueryProvider =
+           suggestQueryProvider ?? _defaultSuggestQueryProvider,
+       assert(
+         onObjectSelected == null || resultBuilder == null,
+         'You can only provide either onObjectSelected or resultBuilder, not both.',
+       );
 
   // Цветовая схема виджета по-умолчанию.
   static const defaultSearchWidgetColorScheme = SearchWidgetColorScheme(
     searchBarBackgroundColor: Colors.white,
     searchBarTextFieldColor: Colors.grey,
     objectCardTileColor: Colors.white,
-    objectCardHighlightedTextStyle:
-        TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    objectCardHighlightedTextStyle: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+    ),
     objectCardNormalTextStyle: TextStyle(color: Colors.black),
     objectListSeparatorColor: Colors.grey,
     objectListBackgroundColor: Colors.white,
@@ -272,8 +274,10 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
       latitude: objectPosition.latitude,
       longitude: objectPosition.longitude,
     );
-    final distanceMeters =
-        sdk.calculateDistance(myLocation.coordinates.value, objectGeoPoint);
+    final distanceMeters = sdk.calculateDistance(
+      myLocation.coordinates.value,
+      objectGeoPoint,
+    );
     return _formatDistance(distanceMeters.toInt(), localizations);
   }
 
@@ -285,8 +289,9 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
         DgisLocalizations.of(context) ?? DgisLocalizationsEn();
 
     return DecoratedSliver(
-      decoration:
-          BoxDecoration(color: widget.colorScheme.objectListBackgroundColor),
+      decoration: BoxDecoration(
+        color: widget.colorScheme.objectListBackgroundColor,
+      ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -301,8 +306,10 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
                     object: object,
                     onTap: (object) => widget._onObjectSelected?.call(object),
                     localizations: localizations,
-                    formattedDistance:
-                        _getFormattedDistance(object, localizations),
+                    formattedDistance: _getFormattedDistance(
+                      object,
+                      localizations,
+                    ),
                   );
                   return Padding(
                     padding: EdgeInsets.all(
@@ -377,10 +384,11 @@ class _DgisSearchWidgetState extends State<DgisSearchWidget> {
   }
 }
 
-typedef SearchResultBuilder = Widget Function(
-  BuildContext context,
-  List<EitherDirectoryObjOrSuggest> objects,
-);
+typedef SearchResultBuilder =
+    Widget Function(
+      BuildContext context,
+      List<EitherDirectoryObjOrSuggest> objects,
+    );
 
 /// Билдер для SearchQuery, передаваемый в DgisSearchWidget.
 /// Стандартная реализация:
@@ -393,9 +401,10 @@ typedef SearchResultBuilder = Widget Function(
 ///      (queryText) => sdk.SearchQueryBuilder(queryText).build(),
 ///    );
 ///  }
-typedef SearchQueryProvider = sdk.SearchQuery Function(
-  Either<sdk.SearchQuery, String>,
-);
+typedef SearchQueryProvider =
+    sdk.SearchQuery Function(
+      Either<sdk.SearchQuery, String>,
+    );
 
 /// Билдер для SuggestQuery, передаваемый в DgisSearchWidget.
 /// Стандартная реализация:
@@ -408,6 +417,7 @@ typedef SearchQueryProvider = sdk.SearchQuery Function(
 ///      (queryText) => sdk.SuggestQueryBuilder.fromQueryText(queryText).build(),
 ///    );
 ///  }
-typedef SuggestQueryProvider = sdk.SuggestQuery Function(
-  Either<sdk.SuggestQuery, String>,
-);
+typedef SuggestQueryProvider =
+    sdk.SuggestQuery Function(
+      Either<sdk.SuggestQuery, String>,
+    );

@@ -180,17 +180,17 @@ class TruckRouteSettingsLayout extends StatelessWidget {
           value: format(value),
           onDecrement: value > TruckDimension.minValue
               ? () => setNavigationSetting(
-                    repository,
-                    key,
-                    dimension.stepped(value, -1),
-                  )
+                  repository,
+                  key,
+                  dimension.stepped(value, -1),
+                )
               : null,
           onIncrement: value < dimension.maxValue
               ? () => setNavigationSetting(
-                    repository,
-                    key,
-                    dimension.stepped(value, 1),
-                  )
+                  repository,
+                  key,
+                  dimension.stepped(value, 1),
+                )
               : null,
           theme: theme,
         );

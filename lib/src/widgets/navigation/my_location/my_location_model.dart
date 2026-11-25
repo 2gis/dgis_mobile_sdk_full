@@ -42,14 +42,15 @@ class NavigationMyLocationModel {
 
   @override
   int get hashCode => Object.hash(
-        isActive,
-        isHideable,
-        behaviour,
-        iconAssetName,
-      );
+    isActive,
+    isHideable,
+    behaviour,
+    iconAssetName,
+  );
 
   @override
-  String toString() => 'MyLocationModel('
+  String toString() =>
+      'MyLocationModel('
       'isActive: $isActive, '
       'isHideable: $isHideable, '
       'behaviour: $behaviour, '

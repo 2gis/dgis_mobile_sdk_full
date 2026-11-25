@@ -40,37 +40,37 @@ class TruckPresetSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: _padding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            NavigationSettingsSegmentedStrip(
-              theme: theme,
-              segments: [
-                for (final preset in TruckPreset.values) _segment(preset),
-              ],
-            ),
-            const SizedBox(height: _captionGap),
-            Row(
-              children: [
-                for (final preset in TruckPreset.values)
-                  Expanded(
-                    child: Text(
-                      captionBuilder(preset),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.typography.settingValue.copyWith(
-                        color: theme.colors.settingDescription,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+    padding: _padding,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        NavigationSettingsSegmentedStrip(
+          theme: theme,
+          segments: [
+            for (final preset in TruckPreset.values) _segment(preset),
           ],
         ),
-      );
+        const SizedBox(height: _captionGap),
+        Row(
+          children: [
+            for (final preset in TruckPreset.values)
+              Expanded(
+                child: Text(
+                  captionBuilder(preset),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.typography.settingValue.copyWith(
+                    color: theme.colors.settingDescription,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
+    ),
+  );
 
   Widget _segment(TruckPreset preset) {
     final isSelected = preset == selected;
@@ -96,8 +96,8 @@ class TruckPresetSelector extends StatelessWidget {
   }
 
   String _asset(TruckPreset preset) => switch (preset) {
-        TruckPreset.small => 'dgis_truck_preset_small',
-        TruckPreset.medium => 'dgis_truck_preset_medium',
-        TruckPreset.large => 'dgis_truck_preset_large',
-      };
+    TruckPreset.small => 'dgis_truck_preset_small',
+    TruckPreset.medium => 'dgis_truck_preset_medium',
+    TruckPreset.large => 'dgis_truck_preset_large',
+  };
 }

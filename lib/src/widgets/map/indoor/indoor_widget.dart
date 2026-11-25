@@ -31,39 +31,40 @@ class IndoorWidget extends ThemedMapControllingWidget<IndoorWidgetColorScheme> {
     this.showRoof = true,
     super.key,
   }) : super(
-          light: light ?? defaultLightColorScheme,
-          dark: dark ?? defaultDarkColorScheme,
-        );
+         light: light ?? defaultLightColorScheme,
+         dark: dark ?? defaultDarkColorScheme,
+       );
 
   /// Default color scheme for light mode.
   static const IndoorWidgetColorScheme defaultLightColorScheme =
       IndoorWidgetColorScheme(
-    surfaceColor: Color(0xffffffff),
-    selectedFloorColor: Color(0x17141414),
-    floorTextColor: Color(0xFF898989),
-    selectedFloorTextColor: Color(0xFF141414),
-    floorMarkColor: Color(0xFF0059D6),
-    separatorColor: Color(0x4D898989),
-  );
+        surfaceColor: Color(0xffffffff),
+        selectedFloorColor: Color(0x17141414),
+        floorTextColor: Color(0xFF898989),
+        selectedFloorTextColor: Color(0xFF141414),
+        floorMarkColor: Color(0xFF0059D6),
+        separatorColor: Color(0x4D898989),
+      );
 
   /// Default color scheme for dark mode.
   static const IndoorWidgetColorScheme defaultDarkColorScheme =
       IndoorWidgetColorScheme(
-    surfaceColor: Color(0xff141414),
-    selectedFloorColor: Color(0x17FFFFFF),
-    floorTextColor: Color(0xFF898989),
-    selectedFloorTextColor: Color(0xffffffff),
-    floorMarkColor: Color(0xFF057DDF),
-    separatorColor: Color(0x4D898989),
-  );
+        surfaceColor: Color(0xff141414),
+        selectedFloorColor: Color(0x17FFFFFF),
+        floorTextColor: Color(0xFF898989),
+        selectedFloorTextColor: Color(0xffffffff),
+        floorMarkColor: Color(0xFF057DDF),
+        separatorColor: Color(0x4D898989),
+      );
 
   @override
   ThemedMapControllingWidgetState<IndoorWidget, IndoorWidgetColorScheme>
-      createState() => _IndoorWidgetState();
+  createState() => _IndoorWidgetState();
 }
 
-class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
-    IndoorWidgetColorScheme> {
+class _IndoorWidgetState
+    extends
+        ThemedMapControllingWidgetState<IndoorWidget, IndoorWidgetColorScheme> {
   final scrollController = ScrollController();
 
   static const singleElementHeight = 44.0;
@@ -445,8 +446,10 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
     final currentOffset = scrollController.offset;
     final centerY = currentOffset + halfScrollViewHeight;
 
-    final targetReversedIndex =
-        (centerY / singleElementHeight).floor().clamp(0, count - 1);
+    final targetReversedIndex = (centerY / singleElementHeight).floor().clamp(
+      0,
+      count - 1,
+    );
     final floorTopY = targetReversedIndex * singleElementHeight;
 
     final targetOriginalIndex = count - 1 - targetReversedIndex;
@@ -495,7 +498,8 @@ class _IndoorWidgetState extends ThemedMapControllingWidgetState<IndoorWidget,
     if (!scrollController.hasClients) return;
 
     final offset = scrollController.offset;
-    final contentHeight = scrollController.position.maxScrollExtent +
+    final contentHeight =
+        scrollController.position.maxScrollExtent +
         scrollController.position.viewportDimension;
     final viewportHeight = scrollController.position.viewportDimension;
 

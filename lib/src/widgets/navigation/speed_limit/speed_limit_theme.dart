@@ -30,7 +30,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
 
   /// Widget color scheme for default light mode.
   static const defaultLight = SpeedLimitTheme(
-    size: 48,
+    size: 54,
     borderWidth: 4,
     surfaceColor: DgisColorScheme.surfaceLight,
     textStyle: TextStyle(
@@ -44,7 +44,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       height: 1.16,
       color: DgisColorScheme.surfaceDark,
       fontWeight: FontWeight.w600,
-      fontSize: 18,
+      fontSize: 22,
       letterSpacing: -0.55,
     ),
     exceededTextStyle: TextStyle(
@@ -58,7 +58,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       height: 1.16,
       color: DgisColorScheme.surfaceLight,
       fontWeight: FontWeight.w600,
-      fontSize: 18,
+      fontSize: 22,
       letterSpacing: -0.55,
     ),
     exceededSurfaceColor: DgisColorScheme.speedometerRed,
@@ -70,7 +70,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
     surfaceColor: DgisColorScheme.surfaceDark,
     exceededSurfaceColor: DgisColorScheme.speedometerRed,
     borderWidth: 4,
-    size: 48,
+    size: 54,
     exceededTextStyle: TextStyle(
       height: 1.16,
       color: DgisColorScheme.surfaceLight,
@@ -82,7 +82,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       height: 1.16,
       color: DgisColorScheme.surfaceLight,
       fontWeight: FontWeight.w600,
-      fontSize: 18,
+      fontSize: 22,
       letterSpacing: -0.55,
     ),
     textStyle: TextStyle(
@@ -96,7 +96,7 @@ class SpeedLimitTheme extends MapWidgetColorScheme {
       height: 1.16,
       color: DgisColorScheme.surfaceLight,
       fontWeight: FontWeight.w600,
-      fontSize: 18,
+      fontSize: 22,
       letterSpacing: -0.55,
     ),
     exceededShadows: [],

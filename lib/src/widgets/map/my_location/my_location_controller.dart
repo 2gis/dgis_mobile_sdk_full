@@ -85,14 +85,17 @@ class MyLocationController {
     _isEnabledSubscription = _sdkModel.isEnabledChannel.listen((enabled) {
       _model.value = _model.value.copyWith(isEnabled: enabled);
     });
-    _followStateSubscription =
-        _sdkModel.followStateChannel.listen((followState) {
+    _followStateSubscription = _sdkModel.followStateChannel.listen((
+      followState,
+    ) {
       _model.value = _model.value.copyWith(followState: followState);
     });
-    _locationQualitySubscription =
-        _sdkModel.locationQualityChannel.listen((quality) {
-      _model.value = _model.value
-          .copyWith(isPermissionRequired: _isPermissionRequired(quality));
+    _locationQualitySubscription = _sdkModel.locationQualityChannel.listen((
+      quality,
+    ) {
+      _model.value = _model.value.copyWith(
+        isPermissionRequired: _isPermissionRequired(quality),
+      );
     });
   }
 

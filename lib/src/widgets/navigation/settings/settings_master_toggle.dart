@@ -9,11 +9,12 @@ import 'settings_toggle.dart';
 /// It can forward [enabled] to the `enabled` argument of the child rows, which
 /// dims them while the master is off, or hide the rows entirely when the
 /// master is off. Both strategies are used in the SDK.
-typedef NavigationSettingsGroupBuilder = Widget Function(
-  BuildContext context,
-  // ignore: avoid_positional_boolean_parameters
-  bool enabled,
-);
+typedef NavigationSettingsGroupBuilder =
+    Widget Function(
+      BuildContext context,
+      // ignore: avoid_positional_boolean_parameters
+      bool enabled,
+    );
 
 /// Master switch that gates a group of dependent rows.
 class NavigationSettingsMasterToggle extends StatelessWidget {
